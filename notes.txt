@@ -1,0 +1,10 @@
+1. Настройка Solution Explorer:
+
+1.1. Для запрета auto file nesting для файлов C# убрать ".cs" из файла:
+C:\Users(youruser)\AppData\Local\Microsoft\VisualStudio\15.0_(yourinstanceid)\toolSettings.json
+
+Либо поставить расширение File Nesting, в Solution Explorer содать новую конфмгурацию для File Nesting, 
+и убрать там в секции pathSegment\add
+
+
+1.2. Для скрытия отбражения классов - установить расширение Disable Solution Explorer's Dynamic Nodes
