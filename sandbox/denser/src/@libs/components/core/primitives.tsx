@@ -408,7 +408,7 @@ export function GlobalStylesOfPrimitives(props: {
 		},
 
 		...range('flex', 1, 24, 1, i => ({
-			flex: i,
+			flex: `${i}!important`,
 		})),
 
 
