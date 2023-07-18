@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { styled } from "@mui/material";
 import { createContext, ReactNode, useContext, useRef } from "react";
 import { createPrimitive, PrimitiveProps } from "../core";
 import { BgColor } from "./BgColor";
+import { BlockProps } from "./Bock";
 
 
 
 
-export interface ContainerProps
+export interface ContainerProps extends BlockProps
 {
 
 	dense?: boolean;
@@ -15,20 +17,11 @@ export interface ContainerProps
 	denseTop?: boolean;
 	denseBottom?: boolean;
 
-	bgcolor?: BgColor;
-
-	borderRadius?: number | boolean;
-
-	borderWidth?: number | boolean;
-
-
 }
 
 
 const containerPropNames: Array<keyof ContainerProps> = [
-	'dense', 'denseLeft', 'denseRight', 'denseTop', 'denseBottom',
-	'bgcolor', 'borderRadius', 'borderWidth'
-	//'model', 'ff', 'g', 's', 'w', 'min', 'max',
+	"dense", "denseLeft", "denseRight", "denseTop", "denseBottom",
 ];
 
 
@@ -44,7 +37,7 @@ export module Container
 
 	export interface ContainerInfo extends ContainerProps
 	{
-		dir?: 'col' | 'row';
+		dir?: "col" | "row";
 	}
 
 
@@ -56,10 +49,62 @@ export module Container
 	{
 		return useContext(Container.Context);
 	}
+	
+
+
+	//---
 
 
 
-	export function useProvider(dir: ContainerInfo['dir'], props: ContainerProps, children: ReactNode)
+	export const Root = styled(
+		"div",
+		{
+			shouldForwardProp: p =>
+				p !== "flex" &&
+				p !== "width" && p !== "minWidth" && p !== "maxWidth" &&
+				p !== "height" && p !== "minHeight" && p !== "maxHeight"
+			,
+		}
+	)<{
+
+		flex?: number | string;
+
+		width?: number | string;
+		minWidth?: number | string;
+		maxWidth?: number | string;
+
+		height?: number | string;
+		minHeight?: number | string;
+		maxHeight?: number | string;
+
+	}>((props) => ({
+
+
+		boxSizing: 'border-box',
+
+		flex: props.flex,
+
+		width: props.width,
+		minWidth: props.minWidth,
+		maxWidth: props.maxWidth,
+
+		height: props.height,
+		minHeight: props.minHeight,
+		maxHeight: props.maxHeight,
+
+	}));
+
+
+
+	//---
+
+
+
+	export function renderProvider(
+		dir: ContainerInfo["dir"],
+		props: ContainerProps,
+		className: string
+	)
 	{
 
 		let parentProps = use();
@@ -69,7 +114,7 @@ export module Container
 
 		if (valueRef.current == null)
 		{
-			valueRef.current = { dir};
+			valueRef.current = { dir };
 		}
 
 
@@ -102,10 +147,21 @@ export module Container
 		}
 
 
-		return <Context.Provider
+		let body = createPrimitive(
+			Root,
+			{ className, ...BlockProps.getBoxSizes(parentProps?.dir, props) },
+			props,
+			containerPropNames, BlockProps.propNames
+		);
+
+
+		body = <Context.Provider
 			value={valueRef.current}
-			children={children}
+			children={body}
 		/>;
+
+
+		return body;
 
 	}
 
@@ -115,24 +171,16 @@ export module Container
 
 
 
-	export function Col(props: Omit<ContainerProps, 'denseTop' | 'denseBottom'> & PrimitiveProps<HTMLDivElement>)
+	export function Col(props: Omit<ContainerProps, "denseTop" | "denseBottom">)
 	{
-		return useProvider(
-			'col',
-			props,
-			createPrimitive('div', { className: 'vflex' }, props, containerPropNames)
-		);
+		return renderProvider("col", props, "vflex");
 	}
 
 
 
-	export function Row(props: Omit<ContainerProps, 'denseLeft' | 'denseRight'> & PrimitiveProps<HTMLDivElement>)
+	export function Row(props: Omit<ContainerProps, "denseLeft" | "denseRight">)
 	{
-		return useProvider(
-			'row',
-			props,
-			createPrimitive('div', { className: 'flex' }, props, containerPropNames)
-		);
+		return renderProvider("row", props, "flex");
 	}
 
 

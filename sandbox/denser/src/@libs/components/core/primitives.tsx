@@ -708,7 +708,7 @@ export function createPrimitive<TElement extends Element>(
 	primitiveProps: PrimitiveProps<TElement>,
 
 	ignoreClassProps?: string[],
-	//	ignoreClassProps2?: string[],
+	ignoreClassProps2?: string[],
 )
 {
 
@@ -721,7 +721,7 @@ export function createPrimitive<TElement extends Element>(
 	let className = clsx(
 		elementProps.className,
 		primitiveProps.className,
-		primitivePropsToClassName(primitiveProps, ignoreClassProps/*, ignoreClassProps2*/)
+		primitivePropsToClassName(primitiveProps, ignoreClassProps, ignoreClassProps2)
 	);
 
 
@@ -793,7 +793,7 @@ export function createPrimitive<TElement extends Element>(
 export function primitivePropsToClassName(
 	props: PrimitiveClassesProps,
 	ignoreClassProps: string[] | undefined,
-	//	ignoreClassProps2?: string[],
+	ignoreClassProps2?: string[],
 )
 {
 
@@ -822,8 +822,8 @@ export function primitivePropsToClassName(
 		if (ignoreClassProps && ignoreClassProps.indexOf(prop) >= 0)
 			continue;
 
-		//if (ignoreClassProps2 && ignoreClassProps2.indexOf(prop) >= 0)
-		//	continue;
+		if (ignoreClassProps2 && ignoreClassProps2.indexOf(prop) >= 0)
+			continue;
 
 
 		value = (props as any)[prop];
@@ -839,7 +839,7 @@ export function primitivePropsToClassName(
 
 		else if (typeof value === 'string')
 		{
-			classes.push(`${prefix}${prop}${value.substr(0, 1).toUpperCase() + value.substr(1)}`);
+			classes.push(`${prefix}${prop}${value.substring(0, 1).toUpperCase() + value.substring(1)}`);
 		}
 
 		else if (typeof value === 'number')

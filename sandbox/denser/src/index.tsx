@@ -1,5 +1,7 @@
+import { CssBaseline } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { AppThemes, GlobalStylesOfPrimitives } from './@libs';
 import App from './App';
 
 
@@ -11,6 +13,16 @@ const root = ReactDOM.createRoot(
 
 root.render(
 	<React.StrictMode>
-		<App />
+
+		<CssBaseline />
+
+		<GlobalStylesOfPrimitives />
+
+		<AppThemes>
+
+			<App />
+
+		</AppThemes>
+
 	</React.StrictMode>
 );

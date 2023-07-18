@@ -49,9 +49,13 @@ export module BgColor
 
 	export const Light = {
 		Default: '#ffffff',
+		//Background: '#d6e8f5',
+		//Container: '#eef4f9',
+		Surface: '#ffffff',
+		//Default: '#ffffff',
 		Background: '#c2d0d9',
 		Container: '#e4eaee',
-		Surface: '#ffffff',
+		//Surface: '#ffffff',
 	};
 
 	export const Dark = {
