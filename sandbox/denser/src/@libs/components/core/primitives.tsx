@@ -140,7 +140,6 @@ export interface PrimitiveClassesProps extends
 	//---
 
 
-
 	position?: 'absolute' | 'fixed' | 'relative' | 'sticky';
 
 	absolute?: boolean;
@@ -158,9 +157,7 @@ export interface PrimitiveClassesProps extends
 	fullScreen?: boolean;
 
 
-
 	//---
-
 
 
 	flex?: boolean;
@@ -219,9 +216,7 @@ export interface PrimitiveClassesProps extends
 	scrollYThin?: boolean;
 
 
-
 	//---
-
 
 
 	m?: MarginOrPadding;
@@ -240,11 +235,11 @@ export interface PrimitiveClassesProps extends
 	pt?: MarginOrPadding;
 	pb?: MarginOrPadding;
 
+	gap?: MarginOrPadding;
 	gapi?: boolean;
 
 
 	//---
-
 
 
 	opacity?: number;
@@ -262,9 +257,7 @@ export interface PrimitiveClassesProps extends
 	opacity10?: boolean;
 
 
-
 	//---
-
 
 
 	border?: 'blue' | 'green' | 'red';
@@ -276,9 +269,7 @@ export interface PrimitiveClassesProps extends
 	//---
 
 
-
 	text?: undefined | 'primary';
-
 
 
 	bold?: boolean;
@@ -320,9 +311,7 @@ export interface PrimitiveClassesProps extends
 	lineHeight15?: boolean;
 
 
-
 	//---
-
 
 
 	textLeft?: boolean;
@@ -339,9 +328,7 @@ export interface PrimitiveClassesProps extends
 	upperCase?: boolean;
 
 
-
 	//---
-
 
 
 	cursorPointer?: boolean;
@@ -353,9 +340,7 @@ export interface PrimitiveClassesProps extends
 	//---
 
 
-
 	white?: boolean;
-
 
 
 	//---

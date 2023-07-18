@@ -61,20 +61,20 @@ function App()
 							<Pane end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
 
-						<Pane.Row dense>
-							<Pane start p24>111 1111 11111 111111</Pane>
-							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane end p24>333 3333 33333 333333</Pane>
+						<Pane.Row dense gap={1}>
+							<Pane l={1} start p24>111 1111 11111 111111</Pane>
+							<Pane l={2}p24>222 2222 22222 222222</Pane>
+							<Pane l="50%" end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
-						<Pane.Row dense>
-							<Pane start p24>111 1111 11111 111111</Pane>
+						<Pane.Row dense gap1>
+							<Pane l={300} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane end p24>333 3333 33333 333333</Pane>
+							<Pane l={300} end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
-						<Pane.Row dense>
-							<Pane start p24>111 1111 11111 111111</Pane>
+						<Pane.Row dense gap1>
+							<Pane l={150} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane end p24>333 3333 33333 333333</Pane>
+							<Pane l={150} end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
 						<Pane.Row dense>
 							<Pane start p24>111 1111 11111 111111</Pane>

@@ -1,21 +1,28 @@
 {
+
 	"compilerOptions": {
-		"target": "es5",
+
+		"target": "es6",
+
 		"lib": [
 			"dom",
 			"dom.iterable",
+			"es2021",
 			"esnext"
 		],
+
 		"baseUrl": "src",
 		"paths": {
 			"@libs": [ "@libs" ],
 			"@models": [ "@models" ]
 		},
+
 		"allowJs": true,
 		"skipLibCheck": true,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
+		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
 		"noFallthroughCasesInSwitch": true,
 		"module": "esnext",
@@ -24,8 +31,11 @@
 		//"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "react-jsx"
+
 	},
+
 	"include": [
 		"src"
 	]
+
 }
