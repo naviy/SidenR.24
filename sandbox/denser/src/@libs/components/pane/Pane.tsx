@@ -1,5 +1,4 @@
 import { styled } from "@mui/material";
-import { log } from "console";
 
 import { $log, createPrimitive, _$log } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
@@ -33,7 +32,7 @@ export function Pane(props: PaneProps)
 
 	let cprops = Container.use() || {};
 
-	let { rounded, dense, denseLeft, denseRight, denseTop, denseBottom, } = cprops;
+	let { rounded, dense, denseLeft, denseRight, denseTop, denseBottom, gap, } = cprops;
 
 	let { start, end, } = props;
 
@@ -47,15 +46,17 @@ export function Pane(props: PaneProps)
 	let br = props.borderRadius !== undefined ? props.borderRadius : cprops.borderRadius;
 	let br2 = br === true || br === undefined ? "12px" : br === false || br === null ? undefined : `${br}px`;
 
+	let br0 = /*!gap ? "0" :*/ /*gap <=2 ? `${gap}px`:*/ "8px";
+
 	let borderRadius = br2 && ([
-		rounded && start && !denseLeft && !denseTop && !dense ? br2 : "0",
-		rounded && (isRow && end || isCol && start) && !denseRight && !denseTop && !dense ? br2 : "0",
-		rounded && end && !denseRight && !denseBottom && !dense ? br2 : "0",
-		rounded && (isRow && start || isCol && end) && !denseLeft && !denseBottom && !dense ? br2 : "0",
+		rounded && start && !denseLeft && !denseTop && !dense ? br2 : br0,
+		rounded && (isRow && end || isCol && start) && !denseRight && !denseTop && !dense ? br2 : br0,
+		rounded && end && !denseRight && !denseBottom && !dense ? br2 : br0,
+		rounded && (isRow && start || isCol && end) && !denseLeft && !denseBottom && !dense ? br2 : br0,
 	].join(" "));
 
-	//$log(props.children)
-	//_$log('br2:', br2)
+	$log(props.children)
+	_$log('gap:', gap)
 	//_$log('start:', start)
 	//_$log('denseLeft:', denseLeft)
 	//_$log('denseTop:', denseTop)

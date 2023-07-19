@@ -3,17 +3,13 @@ import { GlobalStyles, styled } from "@mui/material";
 import clsx from "clsx";
 import * as React from "react";
 import { forwardRef, ReactNode } from "react";
+import { $log } from "./logging";
 import { $defaultAnimationDurationMs } from "./__debug";
 
 
 
 
-
-
 //===
-
-
-
 
 
 
@@ -23,11 +19,7 @@ var primitiveClsPrefix: string = '';
 
 
 
-
-
 //===
-
-
 
 
 
@@ -38,6 +30,43 @@ export interface PrimitiveProps<T extends Element = Element>
 }
 
 
+
+
+export module PrimitiveProps
+{
+
+	const reGap = /gap(\d+)/;
+
+	export function getGap(props: PrimitiveClassesProps): "inherit" | number | undefined
+	{
+
+		let { gap, gapi } = props;
+
+		if (gap !== undefined)
+			return gap;
+
+		if (gapi)
+			return "inherit";
+
+
+		for (let prop in props)
+		{
+			let m = reGap.exec(prop);
+			if (m?.[1])
+				return parseInt(m[1]);
+		}
+
+
+		return undefined;
+
+	}
+
+}
+
+
+
+
+//===
 
 
 

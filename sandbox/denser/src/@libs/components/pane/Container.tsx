@@ -2,7 +2,7 @@
 import { styled } from "@mui/material";
 import React from "react";
 import { createContext, useContext, useRef } from "react";
-import { $log, createPrimitive } from "../core";
+import { $log, createPrimitive, PrimitiveProps } from "../core";
 import { Block, isBlockElement } from "./Bock";
 
 
@@ -39,9 +39,10 @@ export module Container
 
 
 
-	export interface ContainerInfo extends ContainerProps //Omit<ContainerProps, 'start' | 'end'>
+	export interface ContainerInfo extends Omit<ContainerProps, "gap">
 	{
 		dir?: "col" | "row";
+		gap?: number;
 	}
 
 
@@ -135,22 +136,34 @@ export module Container
 		}
 
 
-		parentProps && appendContainerProps(parentProps);
+		parentProps && appendContainerProps(parentProps as any);
 		appendContainerProps(props);
 
 		v.start = props.start;
 		v.end = props.end;
 
+		$log('props.gap:', props.gap);
+
+		let gap = PrimitiveProps.getGap(props);
+
+		v.gap = gap === "inherit" ? parentProps?.gap : gap;
+
+
 		if (parentProps?.rounded)
 		{
+
 			if (v.denseLeft === undefined && parentProps.dir === "row" && !v.start)
 				v.denseLeft = true;
+
 			if (v.denseRight === undefined && parentProps.dir === "row" && !v.end)
 				v.denseRight = true;
+
 			if (v.denseTop === undefined && parentProps.dir === "col" && !v.start)
 				v.denseTop = true;
+
 			if (v.denseBottom === undefined && parentProps.dir === "col" && !v.end)
 				v.denseBottom = true;
+
 		}
 
 
