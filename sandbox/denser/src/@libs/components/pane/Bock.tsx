@@ -1,3 +1,4 @@
+import { isValidElement, ReactElement } from "react";
 import { PrimitiveProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 
@@ -9,29 +10,7 @@ import { BgColor as PaneBgColor } from "./BgColor";
 
 
 
-export interface BlockProps extends PrimitiveProps<HTMLDivElement>
-{
-
-	bgcolor?: PaneBgColor | undefined;
-	borderRadius?: number | boolean | undefined;
-	borderWidth?: number | boolean | undefined;
-
-	l?: number | string | undefined;
-	min?: number | string | true | undefined;
-	max?: number | string | true | undefined;
-
-	width?: number | string | undefined;
-	minWidth?: number | string | undefined;
-	maxWidth?: number | string | undefined;
-
-	height?: number | string | undefined;
-	minHeight?: number | string | undefined;
-	maxHeight?: number | string | undefined;
-
-}
-
-
-export module BlockProps
+export module Block
 {
 
 
@@ -39,14 +18,45 @@ export module BlockProps
 
 
 
-	export const propNames: Array<keyof BlockProps> = [
+	export interface Props extends PrimitiveProps<HTMLDivElement>
+	{
+
+		bgcolor?: PaneBgColor;
+		borderRadius?: number | boolean;
+		borderWidth?: number | boolean;
+
+		start?: boolean;
+		end?: boolean;
+
+		l?: number | string;
+		min?: number | string | true;
+		max?: number | string | true;
+
+		width?: number | string;
+		minWidth?: number | string;
+		maxWidth?: number | string;
+
+		height?: number | string;
+		minHeight?: number | string;
+		maxHeight?: number | string;
+
+	}
+
+
+
+	//---
+
+
+
+	export const propNames: Array<keyof Props> = [
 		"bgcolor", "borderRadius", "borderWidth",
+		"start", "end",
 		"l", "min", "max", "width", "minWidth", "maxWidth", "height", "minHeight", "maxHeight",
 	];
 
 
 
-	export function getBoxSizes(dir: "col" | "row" | undefined, props: BlockProps)
+	export function getBoxSizes(dir: "col" | "row" | undefined, props: Props)
 	{
 
 		let { l, min, max, width, minWidth, maxWidth, height, minHeight, maxHeight, } = props;
@@ -98,4 +108,18 @@ export module BlockProps
 	//---
 
 
+}
+
+
+
+//---
+
+
+
+export function isBlockElement<P>(obj: {} | null | undefined): obj is ReactElement<P>
+{
+	return (
+		isValidElement<P>(obj) && typeof obj.type === "function" &&
+		(obj.type.name === "Col" || obj.type.name === "Row" || obj.type.name === "Pane")
+	);
 }

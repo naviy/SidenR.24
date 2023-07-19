@@ -12,8 +12,8 @@ const root = ReactDOM.createRoot(
 
 
 root.render(
-	<React.StrictMode>
-
+	//<React.StrictMode>
+	<>
 		<CssBaseline />
 
 		<GlobalStylesOfPrimitives />
@@ -23,6 +23,6 @@ root.render(
 			<App />
 
 		</AppThemes>
-
-	</React.StrictMode>
+	</>
+	//</React.StrictMode>
 );

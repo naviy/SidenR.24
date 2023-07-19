@@ -1,15 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { styled } from "@mui/material";
-import { createContext, ReactNode, useContext, useRef } from "react";
-import { createPrimitive, PrimitiveProps } from "../core";
-import { BgColor } from "./BgColor";
-import { BlockProps } from "./Bock";
+import React from "react";
+import { createContext, useContext, useRef } from "react";
+import { $log, createPrimitive } from "../core";
+import { Block, isBlockElement } from "./Bock";
 
 
 
 
-export interface ContainerProps extends BlockProps
+export interface ContainerProps extends Block.Props
 {
+
+	rounded?: boolean;
 
 	dense?: boolean;
 	denseLeft?: boolean;
@@ -21,7 +23,9 @@ export interface ContainerProps extends BlockProps
 
 
 const containerPropNames: Array<keyof ContainerProps> = [
+	"rounded",
 	"dense", "denseLeft", "denseRight", "denseTop", "denseBottom",
+	...Block.propNames
 ];
 
 
@@ -35,7 +39,7 @@ export module Container
 
 
 
-	export interface ContainerInfo extends ContainerProps
+	export interface ContainerInfo extends ContainerProps //Omit<ContainerProps, 'start' | 'end'>
 	{
 		dir?: "col" | "row";
 	}
@@ -49,7 +53,7 @@ export module Container
 	{
 		return useContext(Container.Context);
 	}
-	
+
 
 
 	//---
@@ -60,9 +64,7 @@ export module Container
 		"div",
 		{
 			shouldForwardProp: p =>
-				p !== "flex" &&
-				p !== "width" && p !== "minWidth" && p !== "maxWidth" &&
-				p !== "height" && p !== "minHeight" && p !== "maxHeight"
+				containerPropNames.indexOf(p as any) < 0
 			,
 		}
 	)<{
@@ -136,6 +138,21 @@ export module Container
 		parentProps && appendContainerProps(parentProps);
 		appendContainerProps(props);
 
+		v.start = props.start;
+		v.end = props.end;
+
+		if (parentProps?.rounded)
+		{
+			if (v.denseLeft === undefined && parentProps.dir === "row" && !v.start)
+				v.denseLeft = true;
+			if (v.denseRight === undefined && parentProps.dir === "row" && !v.end)
+				v.denseRight = true;
+			if (v.denseTop === undefined && parentProps.dir === "col" && !v.start)
+				v.denseTop = true;
+			if (v.denseBottom === undefined && parentProps.dir === "col" && !v.end)
+				v.denseBottom = true;
+		}
+
 
 		for (let prop of containerPropNames)
 		{
@@ -147,11 +164,39 @@ export module Container
 		}
 
 
+		let { children } = props;
+
+		let childrenCount = React.Children.count(children);
+
+		children = React.Children.map(children, (child, index) =>
+		{
+			if (isBlockElement(child) && (
+				index === 0 && child.props.start === undefined ||
+				index === childrenCount - 1 && child.props.end === undefined
+			))
+			{
+				//$log('child:', child.props.children);
+				return React.cloneElement(
+					child,
+					{
+						...index === 0 && { start: true },
+						...index === childrenCount - 1 && { end: true },
+					}
+				);
+			}
+
+			return child;
+		});
+
+
 		let body = createPrimitive(
 			Root,
-			{ className, ...BlockProps.getBoxSizes(parentProps?.dir, props) },
+			{
+				className, children,
+				...Block.getBoxSizes(parentProps?.dir, props)
+			},
 			props,
-			containerPropNames, BlockProps.propNames
+			containerPropNames
 		);
 
 
