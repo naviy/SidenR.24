@@ -36,8 +36,8 @@ export function Pane(props: PaneProps)
 
 	let { start, end, } = props;
 
-	let isRow = cprops.dir === "row";
-	let isCol = cprops.dir === "col";
+	let inRow = cprops.dir === "row";
+	let inCol = cprops.dir === "col";
 
 
 	let sizes = Block.getBoxSizes(cprops.dir!, props);
@@ -46,22 +46,14 @@ export function Pane(props: PaneProps)
 	let br = props.borderRadius !== undefined ? props.borderRadius : cprops.borderRadius;
 	let br2 = br === true || br === undefined ? "12px" : br === false || br === null ? undefined : `${br}px`;
 
-	let br0 = /*!gap ? "0" :*/ /*gap <=2 ? `${gap}px`:*/ "8px";
+	let br0 = "3px";
 
 	let borderRadius = br2 && ([
-		rounded && start && !denseLeft && !denseTop && !dense ? br2 : br0,
-		rounded && (isRow && end || isCol && start) && !denseRight && !denseTop && !dense ? br2 : br0,
-		rounded && end && !denseRight && !denseBottom && !dense ? br2 : br0,
-		rounded && (isRow && start || isCol && end) && !denseLeft && !denseBottom && !dense ? br2 : br0,
+		rounded && start && !denseLeft && !denseTop && !dense ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
+		rounded && (inRow && end || inCol && start) && !denseRight && !denseTop && !dense ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
+		rounded && end && !denseRight && !denseBottom && !dense ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
+		rounded && (inRow && start || inCol && end) && !denseLeft && !denseBottom && !dense ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
 	].join(" "));
-
-	$log(props.children)
-	_$log('gap:', gap)
-	//_$log('start:', start)
-	//_$log('denseLeft:', denseLeft)
-	//_$log('denseTop:', denseTop)
-	//_$log('dense:', dense)
-	//_$log("borderRadius:", borderRadius);		
 
 
 	let bw = props.borderWidth !== undefined ? props.borderWidth : cprops.borderWidth;

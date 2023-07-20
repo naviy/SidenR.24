@@ -87,7 +87,7 @@ function App()
 					</Pane.Row>
 
 
-					<Pane.Row rounded gap4>
+					<Pane.Row rounded gap8>
 
 						<Pane.Col start gap1>
 

@@ -43,8 +43,15 @@ export module Container
 	{
 		dir?: "col" | "row";
 		gap?: number;
+
 	}
 
+
+	const containerInfoPropNames: Array<keyof ContainerInfo> = [
+		"dir",
+		"gap", 
+		...containerPropNames
+	];
 
 
 	export const Context = createContext<ContainerInfo | null>(null);
@@ -117,16 +124,16 @@ export module Container
 
 		if (valueRef.current == null)
 		{
-			valueRef.current = { dir };
+			valueRef.current = {};
 		}
 
 
 		let v0 = valueRef.current;
-		let v: ContainerInfo = { dir };
+		let v: ContainerInfo = {};
 
-		function appendContainerProps(props: ContainerProps)
+		function appendContainerProps(props: ContainerInfo)
 		{
-			for (let prop of containerPropNames)
+			for (let prop of containerInfoPropNames)
 			{
 				if (props[prop] !== undefined)
 				{
@@ -139,10 +146,9 @@ export module Container
 		parentProps && appendContainerProps(parentProps as any);
 		appendContainerProps(props);
 
+		v.dir = dir;
 		v.start = props.start;
 		v.end = props.end;
-
-		$log('props.gap:', props.gap);
 
 		let gap = PrimitiveProps.getGap(props);
 
@@ -167,7 +173,7 @@ export module Container
 		}
 
 
-		for (let prop of containerPropNames)
+		for (let prop of containerInfoPropNames)
 		{
 			if (v[prop] !== v0[prop])
 			{
