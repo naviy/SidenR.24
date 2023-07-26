@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { styled } from "@mui/material";
-import React from "react";
-import { createContext, useContext, useRef } from "react";
-import { $log, createPrimitive, PrimitiveProps } from "../core";
+import React, { createContext, ReactNode, useContext, useRef } from "react";
+import { $log, createPrimitive, PrimitiveClassesProps, PrimitiveProps } from "../core";
+import { mui3 } from "../core/mui3";
 import { Block, isBlockElement } from "./Bock";
 
 
@@ -19,12 +19,20 @@ export interface ContainerProps extends Block.Props
 	denseTop?: boolean;
 	denseBottom?: boolean;
 
+	//bgcolor?: number | Property.BackgroundColor;
+	//boxShadow?: number | Property.BoxShadow;
+	e?: mui3.BoxShadow;
+
+	children?: ReactNode;
+
 }
 
 
 const containerPropNames: Array<keyof ContainerProps> = [
 	"rounded",
 	"dense", "denseLeft", "denseRight", "denseTop", "denseBottom",
+	/*"bgcolor",*/ /*"boxShadow",*/
+	"e",
 	...Block.propNames
 ];
 
@@ -39,17 +47,29 @@ export module Container
 
 
 
-	export interface ContainerInfo extends Omit<ContainerProps, "gap">
+	export interface ContainerInfo extends ContainerProps
 	{
 		dir?: "col" | "row";
 		gap?: number;
+
+		ml?: number;
+		mr?: number;
+		mt?: number;
+		mb?: number;
+
+		pl?: number;
+		pr?: number;
+		pt?: number;
+		pb?: number;
 
 	}
 
 
 	const containerInfoPropNames: Array<keyof ContainerInfo> = [
 		"dir",
-		"gap", 
+		"gap",
+		"ml", "mr", "mt", "mb",
+		"pl", "pr", "pt", "pb",
 		...containerPropNames
 	];
 
@@ -57,7 +77,7 @@ export module Container
 	export const Context = createContext<ContainerInfo | null>(null);
 
 
-	export function use()
+	export function use(): ContainerInfo | null
 	{
 		return useContext(Container.Context);
 	}
@@ -87,12 +107,20 @@ export module Container
 		minHeight?: number | string;
 		maxHeight?: number | string;
 
+		borderRadius?: number;
+		e?: mui3.BoxShadow;
+
 	}>((props) => ({
 
 
-		boxSizing: 'border-box',
+		boxSizing: "border-box",
 
 		flex: props.flex,
+
+		borderRadius: props.borderRadius || "0",
+
+		background: props.e == null ? "none" : mui3.Elevation[props.e].background,
+		boxShadow: props.e == null ? "none" : mui3.Elevation[props.e].boxShadow,
 
 		width: props.width,
 		minWidth: props.minWidth,
@@ -112,7 +140,7 @@ export module Container
 
 	export function renderProvider(
 		dir: ContainerInfo["dir"],
-		props: ContainerProps,
+		props: ContainerProps & PrimitiveProps<HTMLDivElement>,
 		className: string
 	)
 	{
@@ -128,7 +156,7 @@ export module Container
 		}
 
 
-		let v0 = valueRef.current;
+		let v0 = valueRef.current!;
 		let v: ContainerInfo = {};
 
 		function appendContainerProps(props: ContainerInfo)
@@ -143,16 +171,29 @@ export module Container
 		}
 
 
-		parentProps && appendContainerProps(parentProps as any);
+		parentProps && appendContainerProps(parentProps);
 		appendContainerProps(props);
 
 		v.dir = dir;
 		v.start = props.start;
 		v.end = props.end;
 
+
+		let ms = PrimitiveProps.getMargins(props);
+		let ps = PrimitiveProps.getPaddings(props);
+
+		v.ml = ms.ml;
+		v.mr = ms.mr;
+		v.mt = ms.mt;
+		v.mb = ms.mb;
+		v.pl = ps.pl;
+		v.pr = ps.pr;
+		v.pt = ps.pt;
+		v.pb = ps.pb;
+
 		let gap = PrimitiveProps.getGap(props);
 
-		v.gap = gap === "inherit" ? parentProps?.gap : gap;
+		v.gap = gap === "inherit" ? parentProps?.gap || 0 : gap || 0;
 
 
 		if (parentProps?.rounded)
@@ -171,6 +212,7 @@ export module Container
 				v.denseBottom = true;
 
 		}
+
 
 
 		for (let prop of containerInfoPropNames)
@@ -208,10 +250,17 @@ export module Container
 		});
 
 
-		let body = createPrimitive(
+		let p = ps.p || 0;
+		let borderRadius = props.rounded ? 12 + p : 3 + p;
+
+
+		let body: ReactNode = createPrimitive(
 			Root,
 			{
-				className, children,
+				className,
+				borderRadius,
+				e: props.e,
+				children,
 				...Block.getBoxSizes(parentProps?.dir, props)
 			},
 			props,
@@ -220,7 +269,7 @@ export module Container
 
 
 		body = <Context.Provider
-			value={valueRef.current}
+			value={valueRef.current!}
 			children={body}
 		/>;
 
@@ -235,14 +284,14 @@ export module Container
 
 
 
-	export function Col(props: Omit<ContainerProps, "denseTop" | "denseBottom">)
+	export function Col(props: Omit<ContainerProps, "denseTop" | "denseBottom"> & PrimitiveProps<HTMLDivElement>)
 	{
 		return renderProvider("col", props, "vflex");
 	}
 
 
 
-	export function Row(props: Omit<ContainerProps, "denseLeft" | "denseRight">)
+	export function Row(props: Omit<ContainerProps, "denseLeft" | "denseRight"> & PrimitiveProps<HTMLDivElement>)
 	{
 		return renderProvider("row", props, "flex");
 	}

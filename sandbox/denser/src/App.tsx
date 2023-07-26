@@ -1,4 +1,6 @@
-import { Div, Pane } from '@libs';
+import { $log, Div, Pane, PrimitiveProps } from '@libs';
+import { Box } from '@mui/material';
+import { mui3 } from './@libs/components/core/mui3';
 
 
 
@@ -6,55 +8,17 @@ import { Div, Pane } from '@libs';
 function App()
 {
 
-	//return <>
+	let ps1 = PrimitiveProps.getPaddings({ gap1: true, p8: true } as any)
+	$log("ps1:", ps1);
 
-	//	<Div fill overflowAutoX scrollY style={{ background: Pane.BgColor('light', 'background') }}>
-
-	//		<Div m24>
-
-	//			<Pane.Row gap24>
-
-	//				<Pane.Col flex2 rounded gap1>
-
-	//					<Pane.Row>
-	//						<Pane p24>111 1111 11111 111111</Pane>
-	//						<Pane p24>222 2222 22222 222222</Pane>
-	//						<Pane p24>333 3333 33333 333333</Pane>
-	//					</Pane.Row>
-
-	//					<Pane.Row gap1>
-	//						<Pane p24>111 1111 11111 111111</Pane>
-	//						<Pane p24>222 2222 22222 222222</Pane>
-	//						<Pane p24>333 3333 33333 333333</Pane>
-	//					</Pane.Row>
-
-	//				</Pane.Col>
-
-	//				<Pane.Row l={2} rounded gap1>
-	//					<Pane.Col gapi l={150}>
-	//						<Pane p12 vcenter>aaa aaa aaaa</Pane>
-	//						<Pane p12 vcenter>bbb bbb bbbb</Pane>
-	//						<Pane p12 vcenter>ccc ccc cccc</Pane>
-	//					</Pane.Col>
-	//					<Pane p24 vcenter>222 2222 22222 222222</Pane>
-	//					<Pane p24 vcenter>333 3333 33333 333333</Pane>
-	//				</Pane.Row>
-
-	//			</Pane.Row>
-
-	//		</Div>
-
-	//	</Div>
-
-	//</>;
 
 	return <>
 
-		<Div fill overflowAutoX scrollY style={{ background: Pane.BgColor('light', 'background') }}>
+		<Div fill overflowAutoX scrollY style={{ background: Pane.BgColor('light', 'container') }}>
 
-			<Div m24>
+			<Div m48>
 
-				<Pane.Col gap24>
+				<Pane.Col gap48>
 
 					<Pane.Row gapi>
 
@@ -87,9 +51,44 @@ function App()
 					</Pane.Row>
 
 
-					<Pane.Row rounded gap8>
+					<Box sx={{ padding: '1px', borderRadius: '13px', ...mui3.Elevation[3] }}>
 
-						<Pane.Col start gap1>
+						<Pane.Row rounded gap1>
+
+							<Pane.Col start gapi>
+
+								<Pane.Row>
+									<Pane start p24>111 1111 11111 111111</Pane>
+									<Pane p24>222 2222 22222 222222</Pane>
+									<Pane end p24>333 3333 33333 333333</Pane>
+								</Pane.Row>
+
+								<Pane.Row gapi>
+									<Pane start p24>111 1111 11111 111111</Pane>
+									<Pane p24>222 2222 22222 222222</Pane>
+									<Pane end p24>333 3333 33333 333333</Pane>
+								</Pane.Row>
+
+							</Pane.Col>
+
+							<Pane.Row l={2} gapi>
+								<Pane.Col gapi l={150} >
+									<Pane p8 center vcenter>aaa aaa aaaa</Pane>
+									<Pane p8 center vcenter>bbb bbb bbbb</Pane>
+									<Pane p8 center vcenter>ccc ccc cccc</Pane>
+								</Pane.Col>
+								<Pane p24 center vcenter>222 2222 22222 222222</Pane>
+								<Pane end p24 center vcenter>333 3333 33333 333333</Pane>
+							</Pane.Row>
+
+						</Pane.Row>
+
+					</Box>
+
+
+					<Pane.Row rounded gap1 p1 e={0}>
+
+						<Pane.Col start gapi>
 
 							<Pane.Row>
 								<Pane start p24>111 1111 11111 111111</Pane>
@@ -105,7 +104,7 @@ function App()
 
 						</Pane.Col>
 
-						<Pane.Row l={2} gap1>
+						<Pane.Row l={2} gapi>
 							<Pane.Col gapi l={150} >
 								<Pane p8 center vcenter>aaa aaa aaaa</Pane>
 								<Pane p8 center vcenter>bbb bbb bbbb</Pane>
@@ -118,9 +117,9 @@ function App()
 					</Pane.Row>
 
 
-					<Pane.Col gap1>
+					<Pane.Col gap1 rounded e={0} p1>
 
-						<Pane.Row rounded denseBottom>
+						<Pane.Row denseBottom>
 							<Pane start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
 							<Pane end p24>333 3333 33333 333333</Pane>
@@ -131,11 +130,29 @@ function App()
 							<Pane l={2} p24>222 2222 22222 222222</Pane>
 							<Pane l="50%" end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
+
 						<Pane.Row gap1>
 							<Pane l={300} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
 							<Pane l={300} end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
+						<Pane.Row gap1 my24 e={3} mx={-24} p8>
+							<Pane l={300} start p24>111 1111 11111 111111</Pane>
+							<Pane p24>222 2222 22222 222222</Pane>
+							<Pane l={300} end p24>333 3333 33333 333333</Pane>
+						</Pane.Row>
+						<Pane.Row gap1 my24 e={3} mx={-48} p12>
+							<Pane l={300} start p24>111 1111 11111 111111</Pane>
+							<Pane p24>222 2222 22222 222222</Pane>
+							<Pane l={300} end p24>333 3333 33333 333333</Pane>
+						</Pane.Row>
+
+						<Pane.Row gap1>
+							<Pane l={300} start p24>111 1111 11111 111111</Pane>
+							<Pane p24>222 2222 22222 222222</Pane>
+							<Pane l={300} end p24>333 3333 33333 333333</Pane>
+						</Pane.Row>
+
 						<Pane.Row gap1>
 							<Pane l={150} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
@@ -151,7 +168,13 @@ function App()
 							<Pane p24>222 2222 22222 222222</Pane>
 							<Pane end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
-						<Pane.Row gap1>
+
+					</Pane.Col>
+
+
+					<Pane.Col gap1>
+
+						<Pane.Row gapi>
 							<Pane.Col gapi l={150} >
 								<Pane p8>aaa aaa aaaa</Pane>
 								<Pane p8>bbb bbb bbbb</Pane>
@@ -160,13 +183,13 @@ function App()
 							<Pane p24>222 2222 22222 222222</Pane>
 							<Pane end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
-						<Pane.Row>
+						<Pane.Row gapi>
 							<Pane start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
 							<Pane end p24>333 3333 33333 333333</Pane>
 						</Pane.Row>
 
-						<Pane.Row  rounded denseTop gap1>
+						<Pane.Row rounded denseTop gapi>
 							<Pane start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
 							<Pane end p24>333 3333 33333 333333</Pane>

@@ -1,6 +1,7 @@
 import { GlobalProps } from "@emotion/react";
 import { GlobalStyles, styled } from "@mui/material";
 import clsx from "clsx";
+import { type } from "os";
 import * as React from "react";
 import { forwardRef, ReactNode } from "react";
 import { $log } from "./logging";
@@ -35,9 +36,12 @@ export interface PrimitiveProps<T extends Element = Element>
 export module PrimitiveProps
 {
 
+
+
 	const reGap = /gap(\d+)/;
 
-	export function getGap(props: PrimitiveClassesProps): "inherit" | number | undefined
+
+	export function getGap(props: Pick<PrimitiveClassesProps, "gap" | "gapi">): "inherit" | number | undefined
 	{
 
 		let { gap, gapi } = props;
@@ -61,8 +65,264 @@ export module PrimitiveProps
 
 	}
 
-}
 
+
+	//---
+
+
+
+	const reMargin = /^m(\d+)$/;
+	const reMarginX = /^mx(\d+)$/;
+	const reMarginY = /^my(\d+)$/;
+	const reMarginLeft = /^ml(\d+)$/;
+	const reMarginRight = /^mr(\d+)$/;
+	const reMarginTop = /^mt(\d+)$/;
+	const reMarginBottom = /^mb(\d+)$/;
+
+
+	export function getMargins(props: Pick<PrimitiveClassesProps, "m" | "mx" | "my" | "ml" | "mr" | "mt" | "mb">):
+		{
+			m: number | undefined;
+			mx: number | undefined;
+			my: number | undefined;
+			ml: number | undefined;
+			mr: number | undefined;
+			mt: number | undefined;
+			mb: number | undefined;
+		}
+	{
+
+		let { m, mx, my, ml, mr, mt, mb }: {
+			m: number | undefined;
+			mx: number | undefined;
+			my: number | undefined;
+			ml: number | undefined;
+			mr: number | undefined;
+			mt: number | undefined;
+			mb: number | undefined;
+		} = props as any;
+
+
+		for (let prop in props)
+		{
+
+			if (m === undefined)
+			{
+				let mm = reMargin.exec(prop);
+				if (mm?.[1])
+				{
+					m = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (mx === undefined)
+			{
+				let mm = reMarginX.exec(prop);
+				if (mm?.[1])
+				{
+					mx = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (my === undefined)
+			{
+				let mm = reMarginY.exec(prop);
+				if (mm?.[1])
+				{
+					my = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (ml === undefined)
+			{
+				let mm = reMarginLeft.exec(prop);
+				if (mm?.[1])
+				{
+					ml = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (mr === undefined)
+			{
+				let mm = reMarginRight.exec(prop);
+				if (mm?.[1])
+				{
+					mr = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (mt === undefined)
+			{
+				let mm = reMarginTop.exec(prop);
+				if (mm?.[1])
+				{
+					mt = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (mb === undefined)
+			{
+				let mm = reMarginBottom.exec(prop);
+				if (mm?.[1])
+				{
+					mb = parseInt(mm[1]);
+					break;
+				}
+			}
+
+		}
+
+
+		mx = mx !== undefined ? mx : m;
+		my = my !== undefined ? my : m;
+		ml = ml !== undefined ? ml : mx;
+		mr = mr !== undefined ? mr : mx;
+		mt = mt !== undefined ? mt : my;
+		mb = mb !== undefined ? mb : my;
+
+
+		return { m, mx, my, ml, mr, mt, mb };
+
+	}
+
+
+
+	//---
+
+
+
+	const rePadding = /^p(\d+)$/;
+	const rePaddingX = /^px(\d+)$/;
+	const rePaddingY = /^py(\d+)$/;
+	const rePaddingLeft = /^pl(\d+)$/;
+	const rePaddingRight = /^pr(\d+)$/;
+	const rePaddingTop = /^pt(\d+)$/;
+	const rePaddingBottom = /^pb(\d+)$/;
+
+
+	export function getPaddings(props: Pick<PrimitiveClassesProps, "p" | "px" | "py" | "pl" | "pr" | "pt" | "pb">):
+		{
+			p: number | undefined;
+			px: number | undefined;
+			py: number | undefined;
+			pl: number | undefined;
+			pr: number | undefined;
+			pt: number | undefined;
+			pb: number | undefined;
+		}
+	{
+
+		let { p, px, py, pl, pr, pt, pb }: {
+			p: number | undefined;
+			px: number | undefined;
+			py: number | undefined;
+			pl: number | undefined;
+			pr: number | undefined;
+			pt: number | undefined;
+			pb: number | undefined;
+		} = props as any;
+
+
+		for (let prop in props)
+		{
+
+			if (p === undefined)
+			{
+				let mm = rePadding.exec(prop);
+				if (mm?.[1])
+				{
+					p = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (px === undefined)
+			{
+				let mm = rePaddingX.exec(prop);
+				if (mm?.[1])
+				{
+					px = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (py === undefined)
+			{
+				let mm = rePaddingY.exec(prop);
+				if (mm?.[1])
+				{
+					py = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (pl === undefined)
+			{
+				let mm = rePaddingLeft.exec(prop);
+				if (mm?.[1])
+				{
+					pl = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (pr === undefined)
+			{
+				let mm = rePaddingRight.exec(prop);
+				if (mm?.[1])
+				{
+					pr = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (pt === undefined)
+			{
+				let mm = rePaddingTop.exec(prop);
+				if (mm?.[1])
+				{
+					pt = parseInt(mm[1]);
+					break;
+				}
+			}
+
+			if (pb === undefined)
+			{
+				let mm = rePaddingBottom.exec(prop);
+				if (mm?.[1])
+				{
+					pb = parseInt(mm[1]);
+					break;
+				}
+			}
+
+		}
+
+
+		px = px !== undefined ? px : p;
+		py = py !== undefined ? py : p;
+		pl = pl !== undefined ? pl : px;
+		pr = pr !== undefined ? pr : px;
+		pt = pt !== undefined ? pt : py;
+		pb = pb !== undefined ? pb : py;
+
+
+		return { p, px, py, pl, pr, pt, pb };
+
+	}
+
+
+
+	//---
+
+
+}
 
 
 
@@ -132,30 +392,40 @@ export module PrimitiveFontSize
 
 
 
-export const MarginOrPaddings = [1, 2, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100] as const;
-export type MarginOrPadding = typeof MarginOrPaddings[number];
+export const Margins = [
+	-1, -2, -4, -8, -10, -12, -16, -20, -24, -30, -32, -36, -40, -48, -50, -64, -80, -100,
+	1, 2, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100
+] as const;
+
+export type Margin = typeof Margins[number];
 
 
-type Ms = { [P in MarginOrPadding as `m${P}`]?: boolean; };
-type MXs = { [P in MarginOrPadding as `mx${P}`]?: boolean; };
-type MYs = { [P in MarginOrPadding as `my${P}`]?: boolean; };
-type MLs = { [P in MarginOrPadding as `ml${P}`]?: boolean; };
-type MRs = { [P in MarginOrPadding as `mr${P}`]?: boolean; };
-type MTs = { [P in MarginOrPadding as `mt${P}`]?: boolean; };
-type MBs = { [P in MarginOrPadding as `mb${P}`]?: boolean; };
-
-type Ps = { [P in MarginOrPadding as `p${P}`]?: boolean; };
-type PXs = { [P in MarginOrPadding as `px${P}`]?: boolean; };
-type PYs = { [P in MarginOrPadding as `py${P}`]?: boolean; };
-type PLs = { [P in MarginOrPadding as `pl${P}`]?: boolean; };
-type PRs = { [P in MarginOrPadding as `pr${P}`]?: boolean; };
-type PTs = { [P in MarginOrPadding as `pt${P}`]?: boolean; };
-type PBs = { [P in MarginOrPadding as `pb${P}`]?: boolean; };
+type Ms = { [P in Margin as `m${P}`]?: boolean; };
+type MXs = { [P in Margin as `mx${P}`]?: boolean; };
+type MYs = { [P in Margin as `my${P}`]?: boolean; };
+type MLs = { [P in Margin as `ml${P}`]?: boolean; };
+type MRs = { [P in Margin as `mr${P}`]?: boolean; };
+type MTs = { [P in Margin as `mt${P}`]?: boolean; };
+type MBs = { [P in Margin as `mb${P}`]?: boolean; };
 
 
-type Gaps = { [P in MarginOrPadding as `gap${P}`]?: boolean; };
-type GapXs = { [P in MarginOrPadding as `gapx${P}`]?: boolean; };
-type GapYs = { [P in MarginOrPadding as `gapy${P}`]?: boolean; };
+export const Paddings = [1, 2, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100] as const;
+
+export type Padding = typeof Paddings[number];
+
+
+type Ps = { [P in Padding as `p${P}`]?: boolean; };
+type PXs = { [P in Padding as `px${P}`]?: boolean; };
+type PYs = { [P in Padding as `py${P}`]?: boolean; };
+type PLs = { [P in Padding as `pl${P}`]?: boolean; };
+type PRs = { [P in Padding as `pr${P}`]?: boolean; };
+type PTs = { [P in Padding as `pt${P}`]?: boolean; };
+type PBs = { [P in Padding as `pb${P}`]?: boolean; };
+
+
+type Gaps = { [P in Padding as `gap${P}`]?: boolean; };
+type GapXs = { [P in Padding as `gapx${P}`]?: boolean; };
+type GapYs = { [P in Padding as `gapy${P}`]?: boolean; };
 
 
 
@@ -248,23 +518,23 @@ export interface PrimitiveClassesProps extends
 	//---
 
 
-	m?: MarginOrPadding;
-	mx?: MarginOrPadding;
-	my?: MarginOrPadding;
-	ml?: MarginOrPadding;
-	mr?: MarginOrPadding;
-	mt?: MarginOrPadding;
-	mb?: MarginOrPadding;
+	m?: Margin;
+	mx?: Margin;
+	my?: Margin;
+	ml?: Margin;
+	mr?: Margin;
+	mt?: Margin;
+	mb?: Margin;
 
-	p?: MarginOrPadding;
-	px?: MarginOrPadding;
-	py?: MarginOrPadding;
-	pl?: MarginOrPadding;
-	pr?: MarginOrPadding;
-	pt?: MarginOrPadding;
-	pb?: MarginOrPadding;
+	p?: Padding;
+	px?: Padding;
+	py?: Padding;
+	pl?: Padding;
+	pr?: Padding;
+	pt?: Padding;
+	pb?: Padding;
 
-	gap?: MarginOrPadding;
+	gap?: Padding;
 	gapi?: boolean;
 
 
@@ -405,26 +675,26 @@ export function GlobalStylesOfPrimitives(props: {
 
 
 
-		...rangeMP('m', i => ({ margin: `${i}px!important` })),
-		...rangeMP('mx', i => ({ marginLeft: `${i}px!important`, marginRight: `${i}px!important` })),
-		...rangeMP('my', i => ({ marginTop: `${i}px!important`, marginBottom: `${i}px!important` })),
-		...rangeMP('ml', i => ({ marginLeft: `${i}px!important` })),
-		...rangeMP('mr', i => ({ marginRight: `${i}px!important` })),
-		...rangeMP('mt', i => ({ marginTop: `${i}px!important` })),
-		...rangeMP('mb', i => ({ marginBottom: `${i}px!important` })),
+		...rangeMP('m', Margins, i => ({ margin: `${i}px!important` })),
+		...rangeMP('mx', Margins, i => ({ marginLeft: `${i}px!important`, marginRight: `${i}px!important` })),
+		...rangeMP('my', Margins, i => ({ marginTop: `${i}px!important`, marginBottom: `${i}px!important` })),
+		...rangeMP('ml', Margins, i => ({ marginLeft: `${i}px!important` })),
+		...rangeMP('mr', Margins, i => ({ marginRight: `${i}px!important` })),
+		...rangeMP('mt', Margins, i => ({ marginTop: `${i}px!important` })),
+		...rangeMP('mb', Margins, i => ({ marginBottom: `${i}px!important` })),
 
-		...rangeMP('p', i => ({ padding: `${i}px!important` })),
-		...rangeMP('px', i => ({ paddingLeft: `${i}px!important`, paddingRight: `${i}px!important` })),
-		...rangeMP('py', i => ({ paddingTop: `${i}px!important`, paddingBottom: `${i}px!important` })),
-		...rangeMP('pl', i => ({ paddingLeft: `${i}px!important` })),
-		...rangeMP('pr', i => ({ paddingRight: `${i}px!important` })),
-		...rangeMP('pt', i => ({ paddingTop: `${i}px!important` })),
-		...rangeMP('pb', i => ({ paddingBottom: `${i}px!important` })),
+		...rangeMP('p', Paddings, i => ({ padding: `${i}px!important` })),
+		...rangeMP('px', Paddings, i => ({ paddingLeft: `${i}px!important`, paddingRight: `${i}px!important` })),
+		...rangeMP('py', Paddings, i => ({ paddingTop: `${i}px!important`, paddingBottom: `${i}px!important` })),
+		...rangeMP('pl', Paddings, i => ({ paddingLeft: `${i}px!important` })),
+		...rangeMP('pr', Paddings, i => ({ paddingRight: `${i}px!important` })),
+		...rangeMP('pt', Paddings, i => ({ paddingTop: `${i}px!important` })),
+		...rangeMP('pb', Paddings, i => ({ paddingBottom: `${i}px!important` })),
 
 		gapi: { gap: 'inherit' },
-		...rangeMP('gap', i => ({ gap: `${i}px!important` })),
-		...rangeMP('gapx', i => ({ columnGap: `${i}px!important` })),
-		...rangeMP('gapy', i => ({ rowGap: `${i}px!important` })),
+		...rangeMP('gap', Paddings, i => ({ gap: `${i}px!important` })),
+		...rangeMP('gapx', Paddings, i => ({ columnGap: `${i}px!important` })),
+		...rangeMP('gapy', Paddings, i => ({ rowGap: `${i}px!important` })),
 
 		flex: {
 			display: 'flex',
@@ -672,17 +942,15 @@ export function GlobalStylesOfPrimitives(props: {
 
 
 
-	function rangeMP(cls: string, style: (i: number) => Object)
+	function rangeMP(cls: string, values: ReadonlyArray<number>, style: (i: number) => Object)
 	{
 
 		let styles: GlobalProps['styles'] = {};
 
-
-		for (let i of MarginOrPaddings)
+		for (let i of values)
 		{
 			(styles as any)[cls + i] = style(i);
 		}
-
 
 		return styles;
 

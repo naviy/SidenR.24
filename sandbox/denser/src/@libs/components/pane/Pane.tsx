@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $log, createPrimitive, _$log } from "../core";
+import { $log, createPrimitive, PrimitiveProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Bock";
 import { Container } from "./Container";
@@ -13,7 +13,7 @@ import { Container } from "./Container";
 
 
 
-export interface PaneProps extends Block.Props
+export interface PaneProps extends Block.Props, PrimitiveProps<HTMLDivElement>
 {
 
 }
@@ -40,7 +40,21 @@ export function Pane(props: PaneProps)
 	let inCol = cprops.dir === "col";
 
 
-	let sizes = Block.getBoxSizes(cprops.dir!, props);
+	let ml = cprops.ml || 0;
+	let mr = cprops.mr || 0;
+	let mt = cprops.mt || 0;
+	let mb = cprops.mb || 0;
+
+	let padding2Left = inRow && start && ml < 0 ? -ml - (cprops.pl || 0) : 0;
+	let padding2Right = inRow && end && mr < 0 ? -mr - (cprops.pr || 0) : 0;
+	let padding2Top = inCol && start && mt < 0 ? -mt - (cprops.pt || 0) : 0;
+	let padding2Bottom = inCol && end && mb < 0 ? -mb - (cprops.pb || 0) : 0;
+
+	let sizes = Block.getBoxSizes(
+		cprops.dir!,
+		props,
+		{ width: padding2Left + padding2Right, height: padding2Top + padding2Bottom }
+	);
 
 
 	let br = props.borderRadius !== undefined ? props.borderRadius : cprops.borderRadius;
@@ -73,6 +87,7 @@ export function Pane(props: PaneProps)
 			bgcolor: props.bgcolor,
 			borderRadius,
 			borderWidth,
+			padding2Left, padding2Right, padding2Top, padding2Bottom,
 			...sizes
 		},
 		props,
@@ -113,18 +128,18 @@ export module Pane
 
 
 
-	export const Root = styled(
-		"div",
-		{
-			shouldForwardProp: p =>
-				panePropNames.indexOf(p as any) < 0
-			,
-		}
-	)<{
+	interface RootProps
+	{
 
 		bgcolor?: Pane.BgColor;
 		borderRadius: string;
+
 		borderWidth: string;
+
+		padding2Left: string;
+		padding2Right: string;
+		padding2Top: string;
+		padding2Bottom: string;
 
 		flex?: number | string;
 
@@ -136,12 +151,39 @@ export module Pane
 		minHeight?: number | string;
 		maxHeight?: number | string;
 
-	}>((props) => ({
+	}
+
+
+	const rootPropNames: Array<keyof RootProps> = [
+		"bgcolor",
+		"borderRadius", "borderWidth",
+		"padding2Left", "padding2Right", "padding2Top", "padding2Bottom",
+		"flex",
+		"width", "minWidth", "maxWidth",
+		"height", "minHeight", "maxHeight",
+	];
+
+
+
+
+	export const Root = styled(
+		"div",
+		{
+			shouldForwardProp: p =>
+				rootPropNames.indexOf(p as any) < 0
+			,
+		}
+	)<RootProps>((props) => ({
 
 
 		background: Pane.BgColor(props.theme, props.bgcolor),
 		borderRadius: props.borderRadius,
-		borderWidth: props.borderWidth,
+		//borderWidth: props.borderWidth,
+
+		borderLeft: `transparent solid ${props.padding2Left || 0}px`,
+		borderRight: `transparent solid ${props.padding2Right || 0}px`,
+		borderTop: `transparent solid ${props.padding2Top || 0}px`,
+		borderBottom: `transparent solid ${props.padding2Bottom || 0}px`,
 
 		boxSizing: 'border-box',
 

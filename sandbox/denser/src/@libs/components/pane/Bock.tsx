@@ -1,5 +1,4 @@
 import { isValidElement, ReactElement } from "react";
-import { PrimitiveProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 
 
@@ -18,7 +17,7 @@ export module Block
 
 
 
-	export interface Props extends PrimitiveProps<HTMLDivElement>
+	export interface Props 
 	{
 
 		bgcolor?: PaneBgColor;
@@ -56,7 +55,7 @@ export module Block
 
 
 
-	export function getBoxSizes(dir: "col" | "row" | undefined, props: Props)
+	export function getBoxSizes(dir: "col" | "row" | undefined, props: Props, addSizes?: { width: number; height: number; })
 	{
 
 		let { l, min, max, width, minWidth, maxWidth, height, minHeight, maxHeight, } = props;
@@ -80,6 +79,20 @@ export module Block
 						height === undefined ? l :
 							height
 		);
+
+
+		if (addSizes)
+		{
+			if (typeof width === "number")
+				width += addSizes.width;
+			if (typeof maxWidth === "number")
+				maxWidth += addSizes.width;
+			if (typeof height === "number")
+				height += addSizes.height;
+			if (typeof maxHeight === "number")
+				maxHeight += addSizes.height;
+		}
+
 
 		let flex = (isRow
 			? min === true ? undefined : typeof width === "string" ? `0 0 ${width}` : !width ? 1 : width > 0 && width <= 24 ? width : `0 0 ${Math.abs(width)}px`
