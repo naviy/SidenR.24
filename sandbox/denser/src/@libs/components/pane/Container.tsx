@@ -70,6 +70,11 @@ export module Container
 		pt?: number;
 		pb?: number;
 
+		p2l?: number;
+		p2r?: number;
+		p2t?: number;
+		p2b?: number;
+
 		gap?: number;
 
 	}
@@ -80,6 +85,7 @@ export module Container
 		"rounded", "brtl", "brtr", "brbl", "brbr",
 		"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
+		"p2l", "p2r", "p2t", "p2b",
 		"gap",
 	];
 
@@ -155,7 +161,7 @@ export module Container
 	)
 	{
 
-		let parentProps = use();
+		let parentProps = use() || {};
 
 
 		let valueRef = useRef<ContainerInfo | null>();
@@ -168,21 +174,6 @@ export module Container
 
 		let v0 = valueRef.current!;
 		let v: ContainerInfo = {};
-
-		//function appendContainerProps(props: ContainerInfo)
-		//{
-		//	for (let prop of containerInfoPropNames)
-		//	{
-		//		if (props[prop] !== undefined)
-		//		{
-		//			(v as any)[prop] = props[prop];
-		//		}
-		//	}
-		//}
-
-
-		//parentProps && appendContainerProps(parentProps);
-		//appendContainerProps(props);
 
 		$log("dir:", dir);
 		_$log("props:", props)
@@ -205,33 +196,24 @@ export module Container
 
 		let gap = PrimitiveProps.getGap(props);
 
-		v.gap = gap === "inherit" ? parentProps?.gap || 0 : gap || 0;
+		v.gap = gap === "inherit" ? parentProps.gap || 0 : gap || 0;
 
 
 		let { rounded, start, end } = props;
-		let inRow = parentProps?.dir === "row";
-		let inCol = parentProps?.dir === "col";
-		_$log("inRow:", inRow);
-		_$log("inCol:", inCol);
-		v.brtl = !!(rounded || parentProps?.brtl && (inRow && start || inCol && start));
-		v.brtr = !!(rounded || parentProps?.brtr && (inRow && end || inCol && start));
-		v.brbr = !!(rounded || parentProps?.brbr && (inRow && end || inCol && end));
-		v.brbl = !!(rounded || parentProps?.brbl && (inRow && start || inCol && end));
+		let inRow = parentProps.dir === "row";
+		let inCol = parentProps.dir === "col";
+
+		v.brtl = !!(rounded || parentProps.brtl && (inRow && start || inCol && start));
+		v.brtr = !!(rounded || parentProps.brtr && (inRow && end || inCol && start));
+		v.brbr = !!(rounded || parentProps.brbr && (inRow && end || inCol && end));
+		v.brbl = !!(rounded || parentProps.brbl && (inRow && start || inCol && end));
+
+		v.p2l = (parentProps.p2l || 0) + (v.ml && v.ml < 0 ? -v.ml - (v.pl || 0) : 0);
+		v.p2r = (parentProps.p2r || 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);
+		v.p2t = (parentProps.p2t || 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
+		v.p2b = (parentProps.p2b || 0) + (v.mb && v.mb < 0 ? -v.mb - (v.pb || 0) : 0);
 
 		_$log("v", v)
-
-		//if (v.denseLeft === undefined && parentProps.dir === "row" && !v.start)
-		//	v.denseLeft = true;
-
-		//if (v.denseRight === undefined && parentProps.dir === "row" && !v.end)
-		//	v.denseRight = true;
-
-		//if (v.denseTop === undefined && parentProps.dir === "col" && !v.start)
-		//	v.denseTop = true;
-
-		//if (v.denseBottom === undefined && parentProps.dir === "col" && !v.end)
-		//	v.denseBottom = true;
-
 
 
 		for (let prop of containerInfoPropNames)

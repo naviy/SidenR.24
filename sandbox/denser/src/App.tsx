@@ -147,19 +147,19 @@ function App()
 						<Pane.Row gap1>
 							<Pane l={300} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane l={300} end p24>333 3333 33333 333333</Pane>
+							<Pane l={300} end p24 textRight>333 3333 33333 333333</Pane>
 						</Pane.Row>
 
 						<Pane.Row rounded gap1 my24 e={3} mx={-24} p4>
 							<Pane l={300} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane l={300} end p24>333 3333 33333 333333</Pane>
+							<Pane l={300} end p24 textRight>333 3333 33333 333333</Pane>
 						</Pane.Row>
 
 						<Pane.Row rounded gap1 my24 e={3} mx={-48} p12>
 							<Pane l={300} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane l={300} end p24>333 3333 33333 333333</Pane>
+							<Pane l={300} end p24 textRight>333 3333 33333 333333</Pane>
 						</Pane.Row>
 
 
@@ -171,13 +171,13 @@ function App()
 								<Pane.Row>
 									<Pane start p24>111 1111 11111 111111</Pane>
 									<Pane p24>222 2222 22222 222222</Pane>
-									<Pane end p24>333 3333 33333 333333</Pane>
+									<Pane end p24 textRight>333 3333 33333 333333</Pane>
 								</Pane.Row>
 
 								<Pane.Row gapi>
 									<Pane start p24>111 1111 11111 111111</Pane>
 									<Pane p24>222 2222 22222 222222</Pane>
-									<Pane end p24>333 3333 33333 333333</Pane>
+									<Pane end p24 textRight>333 3333 33333 333333</Pane>
 								</Pane.Row>
 
 							</Pane.Col>
@@ -188,8 +188,8 @@ function App()
 									<Pane p8 center vcenter>bbb bbb bbbb</Pane>
 									<Pane p8 center vcenter>ccc ccc cccc</Pane>
 								</Pane.Col>
-								<Pane p24 center vcenter>222 2222 22222 222222</Pane>
-								<Pane end p24 center vcenter>333 3333 33333 333333</Pane>
+								<Pane p24 vcenter>222 2222 22222 222222</Pane>
+								<Pane end p24 textRight vcenter>333 3333 33333 333333</Pane>
 							</Pane.Row>
 
 						</Pane.Row>
@@ -198,17 +198,17 @@ function App()
 						<Pane.Row gap1>
 							<Pane l={150} start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane l={150} end p24>333 3333 33333 333333</Pane>
+							<Pane l={150} end p24 textRight>333 3333 33333 333333</Pane>
 						</Pane.Row>
 						<Pane.Row l={100}>
 							<Pane start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane end p24>333 3333 33333 333333</Pane>
+							<Pane end p24 textRight>333 3333 33333 333333</Pane>
 						</Pane.Row>
 						<Pane.Row height={100}>
 							<Pane start p24>111 1111 11111 111111</Pane>
 							<Pane p24>222 2222 22222 222222</Pane>
-							<Pane end p24>333 3333 33333 333333</Pane>
+							<Pane end p24 textRight>333 3333 33333 333333</Pane>
 						</Pane.Row>
 
 					</Pane.Col>

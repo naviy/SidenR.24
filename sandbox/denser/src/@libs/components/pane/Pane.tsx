@@ -40,20 +40,15 @@ export function Pane(props: PaneProps)
 	let inCol = cprops.dir === "col";
 
 
-	let ml = cprops.ml || 0;
-	let mr = cprops.mr || 0;
-	let mt = cprops.mt || 0;
-	let mb = cprops.mb || 0;
-
-	let padding2Left = inRow && start && ml < 0 ? -ml - (cprops.pl || 0) : 0;
-	let padding2Right = inRow && end && mr < 0 ? -mr - (cprops.pr || 0) : 0;
-	let padding2Top = inCol && start && mt < 0 ? -mt - (cprops.pt || 0) : 0;
-	let padding2Bottom = inCol && end && mb < 0 ? -mb - (cprops.pb || 0) : 0;
+	let p2l = cprops.p2l && inRow && start ? cprops.p2l : 0;
+	let p2r = cprops.p2r && inRow && end ? cprops.p2r : 0;
+	let p2t = cprops.p2t && inCol && start ? cprops.p2t : 0;
+	let p2b = cprops.p2b && inCol && end ? cprops.p2b : 0;
 
 	let sizes = Block.getBoxSizes(
 		cprops.dir!,
 		props,
-		{ width: padding2Left + padding2Right, height: padding2Top + padding2Bottom }
+		{ width: p2l + p2r, height: p2t + p2b }
 	);
 
 
@@ -87,7 +82,7 @@ export function Pane(props: PaneProps)
 			bgcolor: props.bgcolor,
 			borderRadius,
 			//borderWidth,
-			padding2Left, padding2Right, padding2Top, padding2Bottom,
+			p2l, p2r, p2t, p2b,
 			...sizes
 		},
 		props,
@@ -136,10 +131,10 @@ export module Pane
 
 		//borderWidth: string;
 
-		padding2Left: string;
-		padding2Right: string;
-		padding2Top: string;
-		padding2Bottom: string;
+		p2l: string;
+		p2r: string;
+		p2t: string;
+		p2b: string;
 
 		flex?: number | string;
 
@@ -157,7 +152,7 @@ export module Pane
 	const rootPropNames: Array<keyof RootProps> = [
 		"bgcolor",
 		"borderRadius", //"borderWidth",
-		"padding2Left", "padding2Right", "padding2Top", "padding2Bottom",
+		"p2l", "p2r", "p2t", "p2b",
 		"flex",
 		"width", "minWidth", "maxWidth",
 		"height", "minHeight", "maxHeight",
@@ -180,10 +175,10 @@ export module Pane
 		borderRadius: props.borderRadius,
 		//borderWidth: props.borderWidth,
 
-		borderLeft: `transparent solid ${props.padding2Left || 0}px`,
-		borderRight: `transparent solid ${props.padding2Right || 0}px`,
-		borderTop: `transparent solid ${props.padding2Top || 0}px`,
-		borderBottom: `transparent solid ${props.padding2Bottom || 0}px`,
+		borderLeft: `transparent solid ${props.p2l || 0}px`,
+		borderRight: `transparent solid ${props.p2r || 0}px`,
+		borderTop: `transparent solid ${props.p2t || 0}px`,
+		borderBottom: `transparent solid ${props.p2b || 0}px`,
 
 		boxSizing: 'border-box',
 
