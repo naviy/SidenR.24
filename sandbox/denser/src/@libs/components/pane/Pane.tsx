@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $log, createPrimitive, PrimitiveProps } from "../core";
+import { $log, createPrimitive, PrimitiveProps, _$log } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Bock";
 import { Container } from "./Container";
@@ -31,9 +31,9 @@ export function Pane(props: PaneProps)
 
 
 	let cprops = Container.use() || {};
-
-	let { rounded, dense, denseLeft, denseRight, denseTop, denseBottom, gap, } = cprops;
-
+	$log("props:", props);
+	_$log("cprops:", cprops);
+	let { gap, } = cprops;
 	let { start, end, } = props;
 
 	let inRow = cprops.dir === "row";
@@ -57,28 +57,28 @@ export function Pane(props: PaneProps)
 	);
 
 
-	let br = props.borderRadius !== undefined ? props.borderRadius : cprops.borderRadius;
+	let br = props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
 	let br2 = br === true || br === undefined ? "12px" : br === false || br === null ? undefined : `${br}px`;
 
 	let br0 = "3px";
 
 	let borderRadius = br2 && ([
-		rounded && start && !denseLeft && !denseTop && !dense ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
-		rounded && (inRow && end || inCol && start) && !denseRight && !denseTop && !dense ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
-		rounded && end && !denseRight && !denseBottom && !dense ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
-		rounded && (inRow && start || inCol && end) && !denseLeft && !denseBottom && !dense ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
+		cprops.brtl && (inRow && start || inCol && start) ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
+		cprops.brtr && (inRow && end || inCol && start) ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
+		cprops.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
+		cprops.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
 	].join(" "));
 
 
-	let bw = props.borderWidth !== undefined ? props.borderWidth : cprops.borderWidth;
-	let bw2 = bw === true || bw === undefined ? "2px" : bw === false || bw === null ? undefined : `${bw}px`;
+	//let bw = props.borderWidth !== undefined ? props.borderWidth : cprops.borderWidth;
+	//let bw2 = bw === true || bw === undefined ? "2px" : bw === false || bw === null ? undefined : `${bw}px`;
 
-	let borderWidth = bw2 && ([
-		denseTop || dense ? "0" : bw2,
-		denseRight || dense ? "0" : bw2,
-		denseBottom || dense ? "0" : bw2,
-		denseLeft || dense ? "0" : bw2,
-	].join(" "));
+	//let borderWidth = bw2 && ([
+	//	denseTop || dense ? "0" : bw2,
+	//	denseRight || dense ? "0" : bw2,
+	//	denseBottom || dense ? "0" : bw2,
+	//	denseLeft || dense ? "0" : bw2,
+	//].join(" "));
 
 
 	let body = createPrimitive(
@@ -86,7 +86,7 @@ export function Pane(props: PaneProps)
 		{
 			bgcolor: props.bgcolor,
 			borderRadius,
-			borderWidth,
+			//borderWidth,
 			padding2Left, padding2Right, padding2Top, padding2Bottom,
 			...sizes
 		},
@@ -134,7 +134,7 @@ export module Pane
 		bgcolor?: Pane.BgColor;
 		borderRadius: string;
 
-		borderWidth: string;
+		//borderWidth: string;
 
 		padding2Left: string;
 		padding2Right: string;
@@ -156,7 +156,7 @@ export module Pane
 
 	const rootPropNames: Array<keyof RootProps> = [
 		"bgcolor",
-		"borderRadius", "borderWidth",
+		"borderRadius", //"borderWidth",
 		"padding2Left", "padding2Right", "padding2Top", "padding2Bottom",
 		"flex",
 		"width", "minWidth", "maxWidth",

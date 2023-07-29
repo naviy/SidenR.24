@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { VerticalAlignBottom } from "@mui/icons-material";
 import { styled } from "@mui/material";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
-import { $log, createPrimitive, PrimitiveClassesProps, PrimitiveProps } from "../core";
+import { $log, createPrimitive, PrimitiveClassesProps, PrimitiveProps, _$log } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block, isBlockElement } from "./Bock";
 
@@ -13,11 +14,11 @@ export interface ContainerProps extends Block.Props
 
 	rounded?: boolean;
 
-	dense?: boolean;
-	denseLeft?: boolean;
-	denseRight?: boolean;
-	denseTop?: boolean;
-	denseBottom?: boolean;
+	//dense?: boolean;
+	//denseLeft?: boolean;
+	//denseRight?: boolean;
+	//denseTop?: boolean;
+	//denseBottom?: boolean;
 
 	//bgcolor?: number | Property.BackgroundColor;
 	//boxShadow?: number | Property.BoxShadow;
@@ -30,7 +31,7 @@ export interface ContainerProps extends Block.Props
 
 const containerPropNames: Array<keyof ContainerProps> = [
 	"rounded",
-	"dense", "denseLeft", "denseRight", "denseTop", "denseBottom",
+	//"dense", "denseLeft", "denseRight", "denseTop", "denseBottom",
 	/*"bgcolor",*/ /*"boxShadow",*/
 	"e",
 	...Block.propNames
@@ -47,10 +48,17 @@ export module Container
 
 
 
-	export interface ContainerInfo extends ContainerProps
+	export interface ContainerInfo 
 	{
 		dir?: "col" | "row";
-		gap?: number;
+		//start?: boolean;
+		//end?: boolean;
+
+		rounded?: boolean;
+		brtl?: boolean;
+		brtr?: boolean;
+		brbl?: boolean;
+		brbr?: boolean;
 
 		ml?: number;
 		mr?: number;
@@ -62,15 +70,17 @@ export module Container
 		pt?: number;
 		pb?: number;
 
+		gap?: number;
+
 	}
 
 
 	const containerInfoPropNames: Array<keyof ContainerInfo> = [
-		"dir",
-		"gap",
+		"dir", //"start", "end",
+		"rounded", "brtl", "brtr", "brbl", "brbr",
 		"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
-		...containerPropNames
+		"gap",
 	];
 
 
@@ -159,24 +169,25 @@ export module Container
 		let v0 = valueRef.current!;
 		let v: ContainerInfo = {};
 
-		function appendContainerProps(props: ContainerInfo)
-		{
-			for (let prop of containerInfoPropNames)
-			{
-				if (props[prop] !== undefined)
-				{
-					(v as any)[prop] = props[prop];
-				}
-			}
-		}
+		//function appendContainerProps(props: ContainerInfo)
+		//{
+		//	for (let prop of containerInfoPropNames)
+		//	{
+		//		if (props[prop] !== undefined)
+		//		{
+		//			(v as any)[prop] = props[prop];
+		//		}
+		//	}
+		//}
 
 
-		parentProps && appendContainerProps(parentProps);
-		appendContainerProps(props);
+		//parentProps && appendContainerProps(parentProps);
+		//appendContainerProps(props);
+
+		$log("dir:", dir);
+		_$log("props:", props)
 
 		v.dir = dir;
-		v.start = props.start;
-		v.end = props.end;
 
 
 		let ms = PrimitiveProps.getMargins(props);
@@ -186,6 +197,7 @@ export module Container
 		v.mr = ms.mr;
 		v.mt = ms.mt;
 		v.mb = ms.mb;
+
 		v.pl = ps.pl;
 		v.pr = ps.pr;
 		v.pt = ps.pt;
@@ -196,22 +208,29 @@ export module Container
 		v.gap = gap === "inherit" ? parentProps?.gap || 0 : gap || 0;
 
 
-		if (parentProps?.rounded)
-		{
+		let { rounded, start, end } = props;
+		let inRow = parentProps?.dir === "row";
+		let inCol = parentProps?.dir === "col";
+		_$log("inRow:", inRow);
+		_$log("inCol:", inCol);
+		v.brtl = !!(rounded || parentProps?.brtl && (inRow && start || inCol && start));
+		v.brtr = !!(rounded || parentProps?.brtr && (inRow && end || inCol && start));
+		v.brbr = !!(rounded || parentProps?.brbr && (inRow && end || inCol && end));
+		v.brbl = !!(rounded || parentProps?.brbl && (inRow && start || inCol && end));
 
-			if (v.denseLeft === undefined && parentProps.dir === "row" && !v.start)
-				v.denseLeft = true;
+		_$log("v", v)
 
-			if (v.denseRight === undefined && parentProps.dir === "row" && !v.end)
-				v.denseRight = true;
+		//if (v.denseLeft === undefined && parentProps.dir === "row" && !v.start)
+		//	v.denseLeft = true;
 
-			if (v.denseTop === undefined && parentProps.dir === "col" && !v.start)
-				v.denseTop = true;
+		//if (v.denseRight === undefined && parentProps.dir === "row" && !v.end)
+		//	v.denseRight = true;
 
-			if (v.denseBottom === undefined && parentProps.dir === "col" && !v.end)
-				v.denseBottom = true;
+		//if (v.denseTop === undefined && parentProps.dir === "col" && !v.start)
+		//	v.denseTop = true;
 
-		}
+		//if (v.denseBottom === undefined && parentProps.dir === "col" && !v.end)
+		//	v.denseBottom = true;
 
 
 
