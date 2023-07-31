@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { VerticalAlignBottom } from "@mui/icons-material";
 import { styled } from "@mui/material";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
-import { $log, createPrimitive, PrimitiveClassesProps, PrimitiveProps, _$log } from "../core";
+import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, _$log } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block, isBlockElement } from "./Bock";
 
@@ -13,12 +12,6 @@ export interface ContainerProps extends Block.Props
 {
 
 	rounded?: boolean;
-
-	//dense?: boolean;
-	//denseLeft?: boolean;
-	//denseRight?: boolean;
-	//denseTop?: boolean;
-	//denseBottom?: boolean;
 
 	//bgcolor?: number | Property.BackgroundColor;
 	//boxShadow?: number | Property.BoxShadow;
@@ -31,7 +24,6 @@ export interface ContainerProps extends Block.Props
 
 const containerPropNames: Array<keyof ContainerProps> = [
 	"rounded",
-	//"dense", "denseLeft", "denseRight", "denseTop", "denseBottom",
 	/*"bgcolor",*/ /*"boxShadow",*/
 	"e",
 	...Block.propNames
@@ -51,8 +43,6 @@ export module Container
 	export interface ContainerInfo 
 	{
 		dir?: "col" | "row";
-		//start?: boolean;
-		//end?: boolean;
 
 		rounded?: boolean;
 		brtl?: boolean;
@@ -81,7 +71,7 @@ export module Container
 
 
 	const containerInfoPropNames: Array<keyof ContainerInfo> = [
-		"dir", //"start", "end",
+		"dir",
 		"rounded", "brtl", "brtr", "brbl", "brbr",
 		"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
@@ -123,7 +113,7 @@ export module Container
 		minHeight?: number | string;
 		maxHeight?: number | string;
 
-		borderRadius?: number;
+		borderRadius?: string;
 		e?: mui3.BoxShadow;
 
 	}>((props) => ({
@@ -135,8 +125,8 @@ export module Container
 
 		borderRadius: props.borderRadius || "0",
 
-		background: props.e == null ? "none" : mui3.Elevation[props.e].background,
-		boxShadow: props.e == null ? "none" : mui3.Elevation[props.e].boxShadow,
+		background: props.e == null ? "none" : mui3.Elevation.light[props.e].background,
+		boxShadow: props.e == null ? "none" : mui3.Elevation.light[props.e].boxShadow,
 
 		width: props.width,
 		minWidth: props.minWidth,
@@ -145,6 +135,8 @@ export module Container
 		height: props.height,
 		minHeight: props.minHeight,
 		maxHeight: props.maxHeight,
+
+		transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
 	}));
 
@@ -161,7 +153,7 @@ export module Container
 	)
 	{
 
-		let parentProps = use() || {};
+		let cprops = use() || {};
 
 
 		let valueRef = useRef<ContainerInfo | null>();
@@ -196,22 +188,22 @@ export module Container
 
 		let gap = PrimitiveProps.getGap(props);
 
-		v.gap = gap === "inherit" ? parentProps.gap || 0 : gap || 0;
+		v.gap = gap === "inherit" ? cprops.gap || 0 : gap || 0;
 
 
 		let { rounded, start, end } = props;
-		let inRow = parentProps.dir === "row";
-		let inCol = parentProps.dir === "col";
+		let inRow = cprops.dir === "row";
+		let inCol = cprops.dir === "col";
 
-		v.brtl = !!(rounded || parentProps.brtl && (inRow && start || inCol && start));
-		v.brtr = !!(rounded || parentProps.brtr && (inRow && end || inCol && start));
-		v.brbr = !!(rounded || parentProps.brbr && (inRow && end || inCol && end));
-		v.brbl = !!(rounded || parentProps.brbl && (inRow && start || inCol && end));
+		v.brtl = !!(rounded || cprops.brtl && (inRow && start || inCol && start));
+		v.brtr = !!(rounded || cprops.brtr && (inRow && end || inCol && start));
+		v.brbr = !!(rounded || cprops.brbr && (inRow && end || inCol && end));
+		v.brbl = !!(rounded || cprops.brbl && (inRow && start || inCol && end));
 
-		v.p2l = (parentProps.p2l || 0) + (v.ml && v.ml < 0 ? -v.ml - (v.pl || 0) : 0);
-		v.p2r = (parentProps.p2r || 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);
-		v.p2t = (parentProps.p2t || 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
-		v.p2b = (parentProps.p2b || 0) + (v.mb && v.mb < 0 ? -v.mb - (v.pb || 0) : 0);
+		v.p2l = (inCol || start ? cprops.p2l || 0 : 0) + (v.ml && v.ml < 0 ? -v.ml - (v.pl || 0) : 0);
+		v.p2r = (inCol || end ? cprops.p2r || 0 : 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);
+		v.p2t = (inRow || start ? cprops.p2t || 0 : 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
+		v.p2b = (inRow || end ? cprops.p2b || 0 : 0) + (v.mb && v.mb < 0 ? -v.mb - (v.pb || 0) : 0);
 
 		_$log("v", v)
 
@@ -251,9 +243,16 @@ export module Container
 		});
 
 
-		let p = ps.p || 0;
-		let borderRadius = props.rounded ? 12 + p : 3 + p;
+		let br2 = 12;
+		let br0 = 3;
 
+		let borderRadius = [
+			v.brtl ? `${br2 + (v.pl || 0)}px` : !cprops.gap && (inRow && !start || inCol && !start) ? "0" : `${br0 + (v.pl || 0)}px`,
+			v.brtr ? `${br2 + (v.pr || 0)}px` : !cprops.gap && (inRow && !end || inCol && !start) ? "0" : `${br0 + (v.pr || 0)}px`,
+			v.brbr ? `${br2 + (v.pl || 0)}px` : !cprops.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + (v.pl || 0)}px`,
+			v.brbl ? `${br2 + (v.pr || 0)}px` : !cprops.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + (v.pr || 0)}px`,
+		].join(" ");
+		_$log('borderRadius:', borderRadius);
 
 		let body: ReactNode = createPrimitive(
 			Root,
@@ -262,7 +261,7 @@ export module Container
 				borderRadius,
 				e: props.e,
 				children,
-				...Block.getBoxSizes(parentProps?.dir, props)
+				...Block.getBoxSizes(cprops?.dir, props)
 			},
 			props,
 			containerPropNames

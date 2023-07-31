@@ -393,8 +393,8 @@ export module PrimitiveFontSize
 
 
 export const Margins = [
-	-1, -2, -4, -8, -10, -12, -16, -20, -24, -30, -32, -36, -40, -48, -50, -64, -80, -100,
-	1, 2, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100
+	-1, -2, -3, -4, -8, -10, -12, -16, -20, -24, -30, -32, -36, -40, -48, -50, -64, -80, -100,
+	0, 1, 2, 3, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100
 ] as const;
 
 export type Margin = typeof Margins[number];
@@ -409,7 +409,7 @@ type MTs = { [P in Margin as `mt${P}`]?: boolean; };
 type MBs = { [P in Margin as `mb${P}`]?: boolean; };
 
 
-export const Paddings = [1, 2, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100] as const;
+export const Paddings = [0, 1, 2, 3, 4, 8, 10, 12, 16, 20, 24, 30, 32, 36, 40, 48, 50, 64, 80, 100] as const;
 
 export type Padding = typeof Paddings[number];
 

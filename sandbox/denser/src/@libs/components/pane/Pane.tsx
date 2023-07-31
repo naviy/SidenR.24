@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $log, createPrimitive, PrimitiveProps, _$log } from "../core";
+import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, _$log } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Bock";
 import { Container } from "./Container";
@@ -40,10 +40,10 @@ export function Pane(props: PaneProps)
 	let inCol = cprops.dir === "col";
 
 
-	let p2l = cprops.p2l && inRow && start ? cprops.p2l : 0;
-	let p2r = cprops.p2r && inRow && end ? cprops.p2r : 0;
-	let p2t = cprops.p2t && inCol && start ? cprops.p2t : 0;
-	let p2b = cprops.p2b && inCol && end ? cprops.p2b : 0;
+	let p2l = cprops.p2l && (inCol || start) ? cprops.p2l : 0;
+	let p2r = cprops.p2r && (inCol || end) ? cprops.p2r : 0;
+	let p2t = cprops.p2t && (inRow || start) ? cprops.p2t : 0;
+	let p2b = cprops.p2b && (inRow || end) ? cprops.p2b : 0;
 
 	let sizes = Block.getBoxSizes(
 		cprops.dir!,
@@ -175,10 +175,10 @@ export module Pane
 		borderRadius: props.borderRadius,
 		//borderWidth: props.borderWidth,
 
-		borderLeft: `transparent solid ${props.p2l || 0}px`,
-		borderRight: `transparent solid ${props.p2r || 0}px`,
-		borderTop: `transparent solid ${props.p2t || 0}px`,
-		borderBottom: `transparent solid ${props.p2b || 0}px`,
+		borderLeft: `green solid ${props.p2l || 0}px`,
+		borderRight: `green solid ${props.p2r || 0}px`,
+		borderTop: `green solid ${props.p2t || 0}px`,
+		borderBottom: `green solid ${props.p2b || 0}px`,
 
 		boxSizing: 'border-box',
 
@@ -191,6 +191,8 @@ export module Pane
 		height: props.height,
 		minHeight: props.minHeight,
 		maxHeight: props.maxHeight,
+
+		transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
 	}));
 
