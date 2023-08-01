@@ -253,36 +253,3 @@ function Row04()
 	</>;
 
 }
-
-
-function Row041()
-{
-
-	let [expanded, toggleExpanded] = useReducer(a => !a, false);
-
-
-	return <>
-
-		<Pane.Col e={0} gap1 p8 rounded>
-
-			<Pane.Row gap1 {...expanded && { rounded: true, p: 2, e: 3, my: 24, mx: -24 }} onClick={toggleExpanded} cursorPointer>
-				<Pane.Col gapi>
-					<Pane.Row>
-						<Pane p24>111 1111 11111 111111</Pane>
-					</Pane.Row>
-				</Pane.Col>
-				<Pane p8 center vcenter>aaa aaa aaaa</Pane>
-			</Pane.Row>
-
-			<Pane.Row gap1 {...expanded && { rounded: true, p: 2, e: 3, my: 24, mx: -24 }} onClick={toggleExpanded} cursorPointer>
-				<Pane.Col gapi>
-					<Pane p24>111 1111 11111 111111</Pane>
-				</Pane.Col>
-				<Pane p8 center vcenter>aaa aaa aaaa</Pane>
-			</Pane.Row>
-
-		</Pane.Col>
-
-	</>;
-
-}

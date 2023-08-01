@@ -169,6 +169,7 @@ export module Pane
 		}
 	)<RootProps>((props) => ({
 
+		position: "relative",
 
 		background: Pane.BgColor(props.theme, props.bgcolor),
 		borderRadius: props.borderRadius,

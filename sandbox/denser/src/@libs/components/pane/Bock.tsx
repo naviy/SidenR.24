@@ -129,7 +129,7 @@ export module Block
 
 
 
-export function isBlockElement<P>(obj: {} | null | undefined): obj is ReactElement<P>
+export function isBlockElement<P>(obj: {} | null | undefined): obj is ReactElement<P & Block.Props>
 {
 	return (
 		isValidElement<P>(obj) && typeof obj.type === "function" &&

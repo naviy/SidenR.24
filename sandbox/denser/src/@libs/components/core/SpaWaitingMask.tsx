@@ -1,6 +1,5 @@
 import { CircularProgress, styled } from "@mui/material";
-import { get } from "https";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 
@@ -36,7 +35,7 @@ export module SpaWaitingMask
 
 
 
-	export let waitingTimeoutMs = 300;
+	export const waitingTimeoutMs = 300;
 
 
 	export function isWaiting() { return _isWaiting; }

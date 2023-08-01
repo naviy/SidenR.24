@@ -1,5 +1,5 @@
 import React from "react";
-import { $log, $logb, adelay, IObserveListener, IObserveModel, _$log, __$log } from "../..";
+import { $log, $logb, adelay, _$log, __$log } from "../..";
 import { Focuser, FocusActionProps } from ".";
 
 
@@ -596,31 +596,31 @@ export const unfocusEvent = (function unfocusEvent(e: Event)
 
 
 
-export function $focus(
-	model: IObserveModel,
-	//focusProps?: FocusActionProps | null,
-	listenerFilter?: (listener: IObserveListener) => boolean
-)
-{
+//export function $focus(
+//	model: IObserveModel,
+//	//focusProps?: FocusActionProps | null,
+//	listenerFilter?: (listener: IObserveListener) => boolean
+//)
+//{
 
-	//$log("model:", model);
-	//$log("listeners:", model?.$observer?.listeners);
-	//$log("listeners.dom:", model?.$observer?.listeners.map(a => ReactDOM.findDOMNode(a.listener)));
-
-
-	let listener = model?.$observer?.listeners?.find(ls =>
-		ls?.listener?.focus && (!listenerFilter || listenerFilter(ls.listener))
-	);
+//	//$log("model:", model);
+//	//$log("listeners:", model?.$observer?.listeners);
+//	//$log("listeners.dom:", model?.$observer?.listeners.map(a => ReactDOM.findDOMNode(a.listener)));
 
 
-	//$log("listener:", listener);
+//	let listener = model?.$observer?.listeners?.find(ls =>
+//		ls?.listener?.focus && (!listenerFilter || listenerFilter(ls.listener))
+//	);
 
-	//$log("ls.listener:", ReactDOM.findDOMNode(ls.listener));
+
+//	//$log("listener:", listener);
+
+//	//$log("ls.listener:", ReactDOM.findDOMNode(ls.listener));
 
 
-	return listener?.listener?.focus!(/*focusProps*/);
+//	return listener?.listener?.focus!(/*focusProps*/);
 
-}
+//}
 
 
 

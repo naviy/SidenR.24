@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { styled } from "@mui/material";
+import _ from "lodash";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
 import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps } from "../core";
 import { mui3 } from "../core/mui3";
@@ -120,6 +121,7 @@ export module Container
 	}>((props) => ({
 
 
+		position: "relative",
 		boxSizing: "border-box",
 
 		flex: props.flex,
@@ -216,27 +218,25 @@ export module Container
 
 		let { children } = props;
 
-		let childrenCount = React.Children.count(children);
+		let childrenArr = React.Children.toArray(children);
 
-		children = React.Children.map(children, (child, index) =>
-		{
-			if (isBlockElement(child) && (
-				index === 0 && child.props.start === undefined ||
-				index === childrenCount - 1 && child.props.end === undefined
-			))
-			{
-				//$log('child:', child.props.children);
-				return React.cloneElement(
-					child,
-					{
-						...index === 0 && { start: true },
-						...index === childrenCount - 1 && { end: true },
-					}
-				);
-			}
+		let startChild = _.find(childrenArr, isBlockElement);
+		let endChild = _.findLast(childrenArr, isBlockElement);
 
-			return child;
-		});
+
+		childrenArr = childrenArr.map(child =>
+			(
+				child === startChild && startChild.props.start === undefined ||
+				child === endChild && endChild.props.end === undefined
+			)
+				? React.cloneElement(child, {
+					start: child === startChild,
+					end: child === endChild,
+				})
+				: child
+		);
+
+
 
 
 		let br2 = 12;
@@ -256,7 +256,7 @@ export module Container
 				className,
 				borderRadius,
 				e: props.e,
-				children,
+				children: childrenArr,
 				...Block.getBoxSizes(cprops?.dir, props)
 			},
 			props,

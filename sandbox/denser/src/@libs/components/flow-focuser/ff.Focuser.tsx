@@ -3,26 +3,23 @@
 
 
 
-import { Component, Fragment as F, ReactNode, RefObject, useContext, useRef } from "react";
+import { Component, ReactNode, RefObject, useContext } from "react";
 import ReactDOM from "react-dom";
 
-import { Div, SpaWaitingMask, MuiColor } from "../core";
+import { Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, adelay, arequestAnimationFrame, Key, TaskQueue, Values, _$error, _$log, __$error, ___$error } from "../core";
 
 import { Anchor, AnchorPart, AnchorProps, anchorPropsToString } from ".";
 
-import { Borderer } from ".";
-
-import
-	{
-		$animationDurationMs,
-		$min_priority,
-		coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
-		focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers,
-		runCore,
-		unfocus
-	} from ".";
+import {
+	$animationDurationMs,
+	$min_priority,
+	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
+	focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers,
+	runCore,
+	unfocus
+} from ".";
 
 
 import { Caret, findInDirection } from ".";
@@ -429,12 +426,12 @@ export class Focuser extends Component<FocuserProps>
 	static Caret = Caret;
 
 
-	static Borderer = Borderer;
+	//static Borderer = Borderer;
 
-	static useBorderer()
-	{
-		return useRef<Borderer>(null);
-	}
+	//static useBorderer()
+	//{
+	//	return useRef<Borderer>(null);
+	//}
 
 
 
@@ -1326,10 +1323,10 @@ export class Focuser extends Component<FocuserProps>
 			}
 
 
-			body = <F>
+			body = <>
 				{body}
 				<Div ref={this.setCursorEl} display="none" />
-			</F>;
+			</>;
 		}
 
 
@@ -2432,7 +2429,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		let control = el?.querySelector(
-			"button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])"
+			`button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])`
 		) as HTMLElement;
 
 
@@ -4640,9 +4637,8 @@ export module Focuser
 
 	export type BorderRadius = (
 		null /* 0 */ |
-		undefined /* default */ |
-		"inherit" |
-		"top12" |
+		undefined  |
+		"inherit" /* default */ |
 		Values.Many<number | boolean>
 	);
 

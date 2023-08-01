@@ -27,7 +27,7 @@ export const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 export const bordererMask = "";
 
 const defaultBorderWidth = 2;
-const defaultBorderRadius = 4;
+const defaultBorderRadius = "inherit";
 
 
 
@@ -77,14 +77,14 @@ const CaretBody = styled(
 		let color = MuiColor(props.theme, props.color || props.theme.palette.primary.main)!;
 
 
-		let borderRadius_ = props.borderRadius === "top12" ? [12, 12, undefined, undefined] : props.borderRadius;
+		let borderRadius_ = props.borderRadius;
 
 		let borderRadius = (
-			borderRadius_ === undefined ? `${defaultBorderRadius}px` :
+			borderRadius_ === undefined ? defaultBorderRadius :
 				borderRadius_ === null ? `0` :
 					borderRadius_ === "inherit" ? "inherit" :
 						(Values
-							.manyn(borderRadius_, a => a === undefined ? `${defaultBorderRadius}px` : a === null ? "0" : `${a}px`)
+							.manyn(borderRadius_, a => a === undefined ? defaultBorderRadius : a === null ? "0" : `${a}px`)
 							.join(" ")
 						)
 		);
@@ -96,10 +96,11 @@ const CaretBody = styled(
 		);
 
 
-		let margin = (Values
-			.manyn(props.borderWidth, a => a === undefined ? `-${defaultBorderWidth}px` : a === null ? "0" : `-${a}px`)
-			.join(" ")
-		);
+		//let margin = (Values
+		//	.manyn(props.borderWidth, a => a === undefined ? `-${defaultBorderWidth}px` : a === null ? "0" : `-${a}px`)
+		//	.join(" ")
+		//);
+		let margin = " ";
 
 
 		return {
