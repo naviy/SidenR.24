@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { styled } from "@mui/material";
 import React, { createContext, ReactNode, useContext, useRef } from "react";
-import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, _$log } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block, isBlockElement } from "./Bock";
 
@@ -22,10 +22,11 @@ export interface ContainerProps extends Block.Props
 }
 
 
-const containerPropNames: Array<keyof ContainerProps> = [
+const containerPropNames: Array<keyof (ContainerProps & PrimitiveProps)> = [
 	"rounded",
 	/*"bgcolor",*/ /*"boxShadow",*/
 	"e",
+	"flex", "width", "minWidth", "maxWidth", "height", "minHeight", "maxHeight",
 	...Block.propNames
 ];
 
@@ -167,9 +168,6 @@ export module Container
 		let v0 = valueRef.current!;
 		let v: ContainerInfo = {};
 
-		$log("dir:", dir);
-		_$log("props:", props)
-
 		v.dir = dir;
 
 
@@ -204,8 +202,6 @@ export module Container
 		v.p2r = (inCol || end ? cprops.p2r || 0 : 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);
 		v.p2t = (inRow || start ? cprops.p2t || 0 : 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
 		v.p2b = (inRow || end ? cprops.p2b || 0 : 0) + (v.mb && v.mb < 0 ? -v.mb - (v.pb || 0) : 0);
-
-		_$log("v", v)
 
 
 		for (let prop of containerInfoPropNames)
@@ -252,7 +248,7 @@ export module Container
 			v.brbr ? `${br2 + (v.pl || 0)}px` : !cprops.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + (v.pl || 0)}px`,
 			v.brbl ? `${br2 + (v.pr || 0)}px` : !cprops.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + (v.pr || 0)}px`,
 		].join(" ");
-		_$log('borderRadius:', borderRadius);
+
 
 		let body: ReactNode = createPrimitive(
 			Root,

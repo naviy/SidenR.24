@@ -46,7 +46,8 @@
 		],
 		"rules": {
 			"no-mixed-operators": "off",
-			"react-hooks/rules-of-hooks":  "off"
+			"react-hooks/rules-of-hooks": "off",
+			"@typescript-eslint/no-redeclare":  "off"
 		}
 	},
 

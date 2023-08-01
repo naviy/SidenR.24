@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, _$log } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Bock";
 import { Container } from "./Container";
@@ -31,8 +31,7 @@ export function Pane(props: PaneProps)
 
 
 	let cprops = Container.use() || {};
-	$log("props:", props);
-	_$log("cprops:", cprops);
+
 	let { gap, } = cprops;
 	let { start, end, } = props;
 
@@ -175,10 +174,10 @@ export module Pane
 		borderRadius: props.borderRadius,
 		//borderWidth: props.borderWidth,
 
-		borderLeft: `green solid ${props.p2l || 0}px`,
-		borderRight: `green solid ${props.p2r || 0}px`,
-		borderTop: `green solid ${props.p2t || 0}px`,
-		borderBottom: `green solid ${props.p2b || 0}px`,
+		borderLeft: `transparent solid ${props.p2l || 0}px`,
+		borderRight: `transparent solid ${props.p2r || 0}px`,
+		borderTop: `transparent solid ${props.p2t || 0}px`,
+		borderBottom: `transparent solid ${props.p2b || 0}px`,
 
 		boxSizing: 'border-box',
 

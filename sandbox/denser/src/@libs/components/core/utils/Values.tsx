@@ -1,4 +1,4 @@
-﻿export module Values
+export module Values
 {
 
 
@@ -215,16 +215,20 @@
 
 
 
-	export type Name<T = any> = One<keyof T | symbol | { $name?: string; }>;
-
-	export type Names<T = any> = Many<keyof T | symbol | { $name?: string; }>;
+	export type Name<T = any> = One<keyof T | symbol | { $name: string; }>;
 
 
+	export type Prop<T = any> = One<keyof T | symbol | { $name: string; }>;
+
+
+	export type Names<T = any> = Many<keyof T | symbol | { $name: string; }>;
 
 
 
 
-	export function name<T>(name: Name<T>): keyof T | symbol | null
+
+
+	export function name<T>(name: Name<T> | Prop<T>): keyof T | symbol | null
 	{
 		return one(name, nameToString);
 	}
@@ -238,20 +242,22 @@
 
 
 
-	function nameToString<T>(name: keyof T | symbol | { $name?: string; } | null | undefined): keyof T | symbol | null
+	function nameToString<T>(name: keyof T | symbol | { $name: string; } | null | undefined): keyof T | symbol | null
 	{
 
 		if (!name)
 			return null;
 
 
-		if ((name as any)['$name'])
+		let { $name } = name as any;
+
+		if ($name !== undefined)
 		{
-			return (name as any).$name as keyof T;
+			return $name as keyof T;
 		}
 
 
-		return name as any;
+		return name as keyof T | symbol;
 
 	}
 
