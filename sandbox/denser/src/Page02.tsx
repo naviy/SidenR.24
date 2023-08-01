@@ -1,5 +1,6 @@
 import { Div, Focuser, Pane } from '@libs';
 import { useReducer } from 'react';
+import { Block } from './@libs/components/pane/Bock';
 
 
 
@@ -10,6 +11,8 @@ export function Page02()
 
 		<Pane.Col m48 rounded e={0} p1 gap1>
 
+			<Row03 start />
+			<Row03 />
 			<Row03 />
 
 			<Row04 />
@@ -25,7 +28,7 @@ export function Page02()
 
 
 
-function Row03()
+function Row03(props: Block.Props)
 {
 
 	let [expanded, toggleExpanded] = useReducer(a => !a, false);
@@ -33,8 +36,10 @@ function Row03()
 
 	return <>
 
-		<Focuser click>
-			<Pane.Row gap1 {...expanded && { rounded: true, p: 2, e: 3, my: 24, mx: -24 }} onClick={toggleExpanded} cursorPointer>
+		<Focuser
+			onClick={async (ff) => { !ff.isFocused ? await ff.focus() : toggleExpanded() }}
+		>
+			<Pane.Row {...props} gap1 {...expanded && { rounded: true, p: 2, e: 3, my: 24, mx: -24 }} cursorPointer>
 
 				<Focuser.Caret />
 
@@ -50,7 +55,7 @@ function Row03()
 }
 
 
-function Row04(props: { start?: boolean; end?: boolean; })
+function Row04(props: Block.Props)
 {
 
 	let [expanded, toggleExpanded] = useReducer(a => !a, false);
@@ -58,13 +63,14 @@ function Row04(props: { start?: boolean; end?: boolean; })
 
 	return <>
 
-		<Focuser click>
+		<Focuser
+			onClick={async (ff) => { !ff.isFocused ? await ff.focus() : toggleExpanded() }}
+		>
 
 			<Pane.Row
-				start={props.start}
-				end={props.end}
+				{...props}
 				gap1
-				{...expanded && { rounded: true, p: 2, e: 3, mx: -24, my: 24 }} onClick={toggleExpanded}
+				{...expanded && { rounded: true, p: 2, e: 3, mx: -24, my: 24 }}
 				cursorPointer
 			>
 

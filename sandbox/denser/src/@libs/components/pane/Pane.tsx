@@ -51,7 +51,7 @@ export function Pane(props: PaneProps)
 	);
 
 
-	let br = props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
+	let br = cprops.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
 	let br2 = br === true || br === undefined ? "12px" : br === false || br === null ? undefined : `${br}px`;
 
 	let br0 = "3px";

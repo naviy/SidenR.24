@@ -21,8 +21,8 @@ export module Block
 	{
 
 		bgcolor?: PaneBgColor;
-		borderRadius?: number | boolean;
-		borderWidth?: number | boolean;
+		//borderRadius?: number | boolean;
+		//borderWidth?: number | boolean;
 
 		start?: boolean;
 		end?: boolean;
@@ -48,7 +48,7 @@ export module Block
 
 
 	export const propNames: Array<keyof Props> = [
-		"bgcolor", "borderRadius", "borderWidth",
+		"bgcolor", //"borderRadius", "borderWidth",
 		"start", "end",
 		"l", "min", "max", "width", "minWidth", "maxWidth", "height", "minHeight", "maxHeight",
 	];
