@@ -6,13 +6,14 @@
 import { Component, ReactNode, RefObject, useContext } from "react";
 import ReactDOM from "react-dom";
 
-import { Div, MuiColor, SpaWaitingMask } from "../core";
+import { $log, $logm, Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, adelay, arequestAnimationFrame, Key, TaskQueue, Values, _$error, _$log, __$error, ___$error } from "../core";
 
 import { Anchor, AnchorPart, AnchorProps, anchorPropsToString } from ".";
 
-import {
+import
+{
 	$animationDurationMs,
 	$min_priority,
 	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
@@ -2521,7 +2522,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		let container = this.cursorEl.parentElement;
-
+		//$log("container:", container);
 		if (!container)
 			return false;
 
@@ -2540,7 +2541,6 @@ export class Focuser extends Component<FocuserProps>
 		//$log("pos.top:", pos.top);
 		//$log("topOffset:", topOffset);
 		//$log("cpos.top:", cpos.top);
-		//if (pos.top - scrollIntoViewYOffset < cpos.top)
 
 		if (-cpos.top + pos.top - topOffset < 0)
 		{
@@ -2588,21 +2588,28 @@ export class Focuser extends Component<FocuserProps>
 		let el = this._el!;
 
 
-		let container = this.cursorEl;
-
+		let container = this.cursorEl?.parentElement;
+		//$log("container:", container);
 		if (!container)
 			return false;
 
 
-		let pos = el.getBoundingClientRect();
-
 		let topOffset = cfg?.topOffset ?? scrollIntoViewTopOffset;
-		let top = container.scrollTop - container.getBoundingClientRect().top + pos.top - topOffset;
 
+		let pos = el.getBoundingClientRect();
+		let cpos = container.getBoundingClientRect();
+
+		let top = container.scrollTop - cpos.top + pos.top - topOffset;
+		//$log("top:", top);
+		//$log("scrollTop:", container.scrollTop)
 
 		if (Math.abs(top - container.scrollTop) <= 1)
 			return false;
 
+		//$log("container.scrollHeight:", container.scrollHeight);
+		//$log("el.clientHeight:", el.clientHeight);
+		top = Math.min(top, container.scrollHeight - el.clientHeight);
+		//$log("top:", top);
 
 		container.scrollTo({ top, behavior: "smooth" });
 
@@ -4637,7 +4644,7 @@ export module Focuser
 
 	export type BorderRadius = (
 		null /* 0 */ |
-		undefined  |
+		undefined |
 		"inherit" /* default */ |
 		Values.Many<number | boolean>
 	);

@@ -35,8 +35,8 @@ export function Pane(props: PaneProps)
 	let { gap, } = cprops;
 	let { start, end, } = props;
 
-	let inRow = cprops.dir === "row";
-	let inCol = cprops.dir === "col";
+	let inRow = cprops.type === "row";
+	let inCol = cprops.type === "col";
 
 
 	let p2l = cprops.p2l && (inCol || start) ? cprops.p2l : 0;
@@ -45,7 +45,7 @@ export function Pane(props: PaneProps)
 	let p2b = cprops.p2b && (inRow || end) ? cprops.p2b : 0;
 
 	let sizes = Block.getBoxSizes(
-		cprops.dir!,
+		cprops.type,
 		props,
 		{ width: p2l + p2r, height: p2t + p2b }
 	);
@@ -64,23 +64,11 @@ export function Pane(props: PaneProps)
 	].join(" "));
 
 
-	//let bw = props.borderWidth !== undefined ? props.borderWidth : cprops.borderWidth;
-	//let bw2 = bw === true || bw === undefined ? "2px" : bw === false || bw === null ? undefined : `${bw}px`;
-
-	//let borderWidth = bw2 && ([
-	//	denseTop || dense ? "0" : bw2,
-	//	denseRight || dense ? "0" : bw2,
-	//	denseBottom || dense ? "0" : bw2,
-	//	denseLeft || dense ? "0" : bw2,
-	//].join(" "));
-
-
 	let body = createPrimitive(
 		Pane.Root as any,
 		{
 			bgcolor: props.bgcolor,
 			borderRadius,
-			//borderWidth,
 			p2l, p2r, p2t, p2b,
 			...sizes
 		},
@@ -113,7 +101,12 @@ export module Pane
 	export type BgColor = PaneBgColor;
 	export const BgColor = PaneBgColor;
 
+	export type ColProps = Container.ColProps;
+	export type DivProps = Container.DivProps;
+	export type RowProps = Container.RowProps;
+
 	export const Col = Container.Col;
+	export const Div = Container.Div;
 	export const Row = Container.Row;
 
 
@@ -127,8 +120,6 @@ export module Pane
 
 		bgcolor?: Pane.BgColor;
 		borderRadius: string;
-
-		//borderWidth: string;
 
 		p2l: string;
 		p2r: string;
