@@ -6,4 +6,5 @@ export * from "./logging";
 export * from "./mixins";
 export * from "./object";
 export * from "./TaskQueue";
+export * from "./PropsByContext";
 export * from "./Values";

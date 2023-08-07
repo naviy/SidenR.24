@@ -1,7 +1,7 @@
-import { Repaintable } from '@libs';
-import { TentaFocusable } from './TentaFocusable';
-import { TentaPhaser } from './TentaPhaser';
-import { TentaStatuser } from './TentaStatuser';
+import { Repaintable } from "@libs";
+import { TentaFocusable } from "./TentaFocusable";
+import { TentaPhaser } from "./TentaPhaser";
+import { TentaStatuser } from "./TentaStatuser";
 
 
 

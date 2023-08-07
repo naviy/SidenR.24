@@ -73,7 +73,7 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 
 
 
-		async setPhase(value: number/*, manual = true*/): Promise<boolean>
+		async setPhase(value: number): Promise<boolean>
 		{
 
 			let { phase } = this;
@@ -87,8 +87,6 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 
 
 			this.phase = value;
-			//this.phaseWasManualChanged = manual;
-
 
 			await this.phaseChanged();
 

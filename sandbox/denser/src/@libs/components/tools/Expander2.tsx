@@ -1,8 +1,7 @@
-import { Box, styled, SxProps, Theme } from "@mui/material";
-import clsx from "clsx";
-import { Component, ReactNode, useEffect, useRef, useState } from "react";
+import { Box, SxProps, Theme } from "@mui/material";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
-import { $defaultAnimationDurationMs, $log, adelay, arequestAnimationFrame, Values, _$log, __$log, ___$log } from "../core";
+import { $defaultAnimationDurationMs, PropsByContext, Values } from "../core";
 
 
 
@@ -30,7 +29,7 @@ const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 
 
 
-export interface Expander2Props
+export interface ExpanderProps extends PropsByContext<ExpanderProps> 
 {
 
 	id?: string;
@@ -45,7 +44,7 @@ export interface Expander2Props
 	animated?: boolean;
 
 	/** default = true */
-	animatedReexpand?: boolean;
+	noreexpand?: boolean;
 
 	forceRender?: boolean;
 
@@ -77,13 +76,15 @@ export interface Expander2Props
 
 
 
-export function Expander2(props: Expander2Props)
+export function Expander(props: ExpanderProps)
 {
+
+	props = PropsByContext.use(props);
 
 	//alert(`Expander #${props.id}`)
 	//$log(`Expander #${props.id}`)
 
-	let animatedReexpand = props.animatedReexpand !== false;
+	let noreexpand = !!props.noreexpand;
 	let propExpanded = props.expanded !== false
 
 
@@ -119,7 +120,7 @@ export function Expander2(props: Expander2Props)
 				setTransitionStep(transitionStep + 1);
 				//_$log("transitionStep = 1")
 			}
-			else if (transitionStep === 1 && !animatedReexpand)
+			else if (transitionStep === 1 && noreexpand)
 			{
 				setTransitionStep(2);
 				//_$log("transitionStep = 2")
@@ -143,7 +144,7 @@ export function Expander2(props: Expander2Props)
 			let childrenHeight = childrenRef.current?.scrollHeight || 0;
 			//_$log("childrenHeight:", childrenHeight);
 			if (
-				animatedReexpand &&
+				!noreexpand &&
 				(expanded || propExpanded) &&
 				(state.childrenHeight !== childrenHeight)
 			)
@@ -164,7 +165,7 @@ export function Expander2(props: Expander2Props)
 
 
 	let height = (
-		animatedReexpand
+		!noreexpand
 			? expanded ? childrenHeight : 0
 			: expanded
 				? transitionStep
@@ -177,7 +178,7 @@ export function Expander2(props: Expander2Props)
 	//_$log("height:", height);
 
 
-	let overflow = (animatedReexpand
+	let overflow = (!noreexpand
 		? "hidden"
 		: expanded !== propExpanded || transitionStep || state.childrenHeight !== childrenRef.current?.scrollHeight ? "hidden" : "visible"
 	);

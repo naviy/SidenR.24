@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import { createContext, ReactNode, useContext, useRef } from "react";
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, PropsByContext } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block } from "./Bock";
 
@@ -23,7 +23,7 @@ export module Container
 
 
 
-	export interface Props extends Block.Props
+	export interface Props extends Block.Props, PropsByContext<Props>
 	{
 
 		rounded?: boolean;
@@ -35,10 +35,11 @@ export module Container
 	}
 
 
-	const containerPropNames: Array<keyof (Props & PrimitiveProps)> = [
+	const containerPropNames: Array<keyof (Props & PrimitiveProps)> = [		
 		"rounded",
 		"e",
-		...Block.propNames
+		...Block.propNames,
+		...PropsByContext.propNames,
 	];
 
 
@@ -141,6 +142,8 @@ export module Container
 		className?: string
 	)
 	{
+
+		props = PropsByContext.use(props);
 
 		let cprops = use() || {};
 
