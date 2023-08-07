@@ -151,11 +151,11 @@ export function Expander2(props: Expander2Props)
 		{
 			$log(`Expander #${props.id}.useEffect 2`)
 
-			let childrenHeight = childrenRef.current?.clientHeight || 0;
+			let childrenHeight = childrenRef.current?.scrollHeight || 0;
 			_$log("childrenHeight:", childrenHeight);
 			if (
 				animatedReexpand &&
-				expanded && propExpanded && !transitionStep &&
+				(expanded || propExpanded) && 
 				(state.childrenHeight !== childrenHeight)
 			)
 			{
@@ -186,6 +186,13 @@ export function Expander2(props: Expander2Props)
 	_$log("height:", height);
 
 
+	let overflow = (animatedReexpand
+		? "hidden"
+		: expanded !== propExpanded || transitionStep || state.childrenHeight !== childrenRef.current?.scrollHeight ? "hidden" : "visible"
+	);
+	_$log("overflow:", overflow);
+
+
 	let body: ReactNode = (expanded || propExpanded || !!transitionStep) && Values.one(props.children);
 
 
@@ -197,8 +204,8 @@ export function Expander2(props: Expander2Props)
 		ref={elRef}
 
 		sx={{
-			height,
-			overflow: "hidden",
+			height, overflow,
+			//overflow: "hidden",
 			//overflow: !expanded || !propExpanded || animatedReexpand && transitionStep /*state.childrenHeight !== childrenRef.current?.clientHeight*/
 			//	? "hidden"
 			//	: "visible"

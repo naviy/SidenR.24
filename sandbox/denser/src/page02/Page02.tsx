@@ -96,6 +96,7 @@ function Row05(props: Pane.RowProps)
 {
 
 	let [expanded, toggleExpanded] = useReducer(a => !a, false);
+	let [expanded2, toggleExpanded2] = useReducer(a => !a, false);
 
 	return <PileRow {...props}>
 
@@ -116,6 +117,8 @@ function Row05(props: Pane.RowProps)
 						<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
 						<Expander2 id="2" expanded={expanded}>
 							<div>4444 4 4444 44 4 444444 4 44444 4444</div>
+							<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>
+							{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}
 						</Expander2>
 					</Pane>
 				</Pane.Row>
