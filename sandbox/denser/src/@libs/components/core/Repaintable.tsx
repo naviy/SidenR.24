@@ -3,13 +3,20 @@ import { Constructor, useForceUpdate, useForceUpdateAsync } from '@libs';
 
 
 
+
+
+//===
+
+
+
+
+
+
 export interface Repaintable
 {
-
 	forceUpdate?: (() => void) | (() => Promise<void>);
-
 	useForceUpdate?(): void;
-
+	repaint(): Promise<void>;
 }
 
 
@@ -17,7 +24,7 @@ export interface Repaintable
 
 export function Repaintable<TBase extends Constructor>(Base?: TBase)
 {
-	return class Repaintable
+	return class RepaintableClass
 		extends (Base || Object)
 		implements Repaintable
 	{
@@ -40,26 +47,29 @@ export function Repaintable<TBase extends Constructor>(Base?: TBase)
 
 
 
-export function RepaintableAsync<TBase extends Constructor>(Base?: TBase)
+export module Repaintable
 {
-	return class RepaintableAsync
-		extends Repaintable(Base || Object)
-	{
 
-		useForceUpdate(): void
+	//---
+
+
+
+	export function Async<TBase extends Constructor>(Base?: TBase)
+	{
+		return class RepaintableAsync
+			extends Repaintable(Base || Object)
 		{
-			this.forceUpdate = useForceUpdateAsync();
+
+			useForceUpdate(): void
+			{
+				this.forceUpdate = useForceUpdateAsync();
+			}
+
 		}
 
 	}
 
-}
 
-
-
-
-export module Repaintable
-{
 
 	//---
 

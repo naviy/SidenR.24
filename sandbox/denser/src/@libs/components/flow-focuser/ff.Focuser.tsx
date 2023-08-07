@@ -24,6 +24,7 @@ import
 
 
 import { Caret, findInDirection } from ".";
+import { type } from "os";
 //import { IBindingModel } from "../../bindera";
 //import { IMethodSemantic, isMethodSemantic } from "../../semantics";
 
@@ -4654,7 +4655,11 @@ export module Focuser
 
 
 
+	export type Props = FocuserProps;
+	export type Listener = IFocuserListener;
+
 	export const Tasks = Task;
+
 
 
 }

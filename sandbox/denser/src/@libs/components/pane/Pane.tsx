@@ -8,7 +8,11 @@ import { Container } from "./Container";
 
 
 
+
+
 //===
+
+
 
 
 
@@ -19,9 +23,12 @@ export interface PaneProps extends Block.Props, PrimitiveProps<HTMLDivElement>
 }
 
 
+
 const panePropNames: Array<keyof PaneProps> = [
 	...Block.propNames
 ];
+
+
 
 
 
@@ -90,9 +97,10 @@ export function Pane(props: PaneProps)
 
 
 
+
+
 export module Pane
 {
-
 
 	//---
 
@@ -190,6 +198,5 @@ export module Pane
 
 
 	//---
-
 
 }

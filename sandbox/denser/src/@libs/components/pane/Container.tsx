@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { styled } from "@mui/material";
 import { createContext, ReactNode, useContext, useRef } from "react";
 import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps } from "../core";
@@ -16,9 +15,9 @@ import { Block } from "./Bock";
 
 
 
+
 export module Container
 {
-
 
 	//---
 
@@ -187,6 +186,11 @@ export module Container
 		v.p2t = (inRow || start ? cprops.p2t || 0 : 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
 		v.p2b = (inRow || end ? cprops.p2b || 0 : 0) + (v.mb && v.mb < 0 ? -v.mb - (v.pb || 0) : 0);
 
+		let sizes = Block.getBoxSizes(
+			cprops.type,
+			props,
+			{ width: v.p2l + v.p2r, height: v.p2t + v.p2b }
+		);
 
 
 		v.brtl = !!(rounded || cprops.brtl && (inRow && start || inCol && start));
@@ -224,7 +228,7 @@ export module Container
 			Root,
 			{
 				className,
-				...Block.getBoxSizes(cprops.type, props),
+				...sizes,
 				borderRadius: v.cssBorderRadius,
 				e: props.e,
 				children: Block.withAutoProps(body),
@@ -309,6 +313,5 @@ export module Container
 
 
 	//---
-
 
 }

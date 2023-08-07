@@ -131,18 +131,18 @@ export module Block
 
 		let childrenArr = React.Children.toArray(children);
 
-		let startChild = _.find(childrenArr, isBlockElement);
-		let endChild = _.findLast(childrenArr, isBlockElement);
+		let startChild = _.find(childrenArr, isBlockElement) as ReactElement<Block.Props>;
+		let endChild = _.findLast(childrenArr, isBlockElement) as ReactElement<Block.Props>;
 
 
 		childrenArr = childrenArr.map(child =>
 			(
-				child === startChild && startChild.props.start === undefined ||
-				child === endChild && endChild.props.end === undefined
+				elementEqualBlockElements(child, startChild) && child.props.start === undefined ||
+				elementEqualBlockElements(child, endChild) && child.props.end === undefined
 			)
 				? React.cloneElement(child, {
-					start: child === startChild,
-					end: child === endChild,
+					...elementEqualBlockElements(child, startChild) && child.props.start === undefined && { start: true },
+					...elementEqualBlockElements(child, endChild) && child.props.end === undefined && { end: true },
 				})
 				: child
 		);
@@ -171,4 +171,14 @@ export function isBlockElement<P>(obj: {} | null | undefined): obj is ReactEleme
 		isValidElement<P>(obj) && typeof obj.type === "function" &&
 		(obj.type.name === "Col" || obj.type.name === "Row" || obj.type.name === "Pane")
 	);
+}
+
+
+
+export function elementEqualBlockElements(
+	el: {} | null | undefined,
+	block: ReactElement<Block.Props>
+): el is ReactElement<Block.Props>
+{
+	return el === block;
 }
