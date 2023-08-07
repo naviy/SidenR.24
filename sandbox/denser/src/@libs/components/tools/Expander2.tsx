@@ -84,6 +84,7 @@ export function Expander2(props: Expander2Props)
 	$log(`Expander #${props.id}`)
 
 	let elRef = useRef<HTMLDivElement>(null);
+	let childrenRef = useRef<HTMLDivElement>(null);
 
 	let propExpanded = props.expanded !== false
 
@@ -91,9 +92,9 @@ export function Expander2(props: Expander2Props)
 
 
 	let [expanded, setExpanded] = useState(propExpanded);
-	let [transitionStep, setTransitionStep] = useState<0 | 1 | 2 | 3>(0);
+	let [transitionStep, setTransitionStep] = useState<0 | 1 | 2>(0);
 
-	let stateRef = useRef<{ wasRendered?: boolean; priorHeight?: number; targetHeight?: number; }>({});
+	let stateRef = useRef<{ childrenHeight?: number; }>({});
 	let state = stateRef.current;
 
 
@@ -114,73 +115,74 @@ export function Expander2(props: Expander2Props)
 				setTransitionStep(1);
 				__$log("transitionStep = 1")
 			}
-			else if (transitionStep === 1 || transitionStep === 2)
+			else if (transitionStep === 1)
 			{
-				setTransitionStep(3);
-				__$log("transitionStep = 3")
+				setTransitionStep(2);
+				__$log("transitionStep = 2")
 			}
-			else if (!transitionStep)
-			{
-				state.priorHeight = scrollHeight;
-				state.targetHeight = undefined;
-				__$log(`priorHeight = ${state.priorHeight}`)
-			}
+			//	else if (!transitionStep)
+			//	{
+			//		state.priorHeight = scrollHeight;
+			//		state.targetHeight = undefined;
+			//		__$log(`priorHeight = ${state.priorHeight}`)
+			//	}
 		},
 		[expanded, propExpanded, transitionStep]
 	);
 
 
 
-	let clientHeight = elRef.current?.clientHeight || 0;
-	let scrollHeight = elRef.current?.scrollHeight || 0;
+	//let clientHeight = elRef.current?.clientHeight || 0;
+	//let childrenHeight = childrenRef.current?.clientHeight;
 
 
-	_$log("priorHeight:", state.priorHeight);
-	_$log("targetHeight:", state.targetHeight);
-	_$log("clientHeight:", clientHeight);
-	_$log("scrollHeight:", scrollHeight);
+	//_$log("priorHeight:", state.priorHeight);
+	//_$log("targetHeight:", state.targetHeight);
+	_$log("childrenHeight:", state.childrenHeight);
+	//_$log("scrollHeight:", scrollHeight);
 
 
 	useEffect(
 		() =>
 		{
-			let scrollHeight = elRef.current?.scrollHeight || 0;
-			__$log("scrollHeight:", scrollHeight);
+			let childrenHeight = childrenRef.current?.clientHeight || 0;
+			__$log("childrenHeight:", childrenHeight);
 			if (
 				expanded && propExpanded && !transitionStep &&
-				(state.priorHeight !== scrollHeight || state.targetHeight !== undefined && state.targetHeight !== scrollHeight)
+				(state.childrenHeight !== childrenHeight)
 			)
 			{
-				setTransitionStep(2);
-				__$log("transitionStep = 2")
-				state.targetHeight = scrollHeight;
+				setTransitionStep(1);
+				__$log("transitionStep = 1")
+				//state.targetHeight = scrollHeight;
 			}
+			state.childrenHeight = childrenHeight;
+			__$log(`childrenHeight = ${state.childrenHeight}`)
+
 			//state.lastHeight = scrollHeight;
 			//__$log("lastHeight = ", state.lastHeight);
 		}
 	);
 
 
-	let height = (
-		expanded
-			? transitionStep === 2
-				? state.priorHeight
-				: transitionStep
-					? state.targetHeight ?? scrollHeight
-					: "auto"
-			: transitionStep === 1
-				? scrollHeight
-				: 0
-	);
+	let height = expanded ? state.childrenHeight || 0 : 0;
 	_$log("height:", height);
 
-	return <Box
+
+	let body: ReactNode = (expanded || propExpanded || !!transitionStep) && Values.one(props.children);
+
+
+	body = <div ref={childrenRef}>{body}</div>
+
+
+	body = <Box
 
 		ref={elRef}
 
 		sx={{
 			height,
-			overflow: expanded !== propExpanded || transitionStep ? "hidden" : "visible",
+			overflow: "hidden",
+			//overflow: !expanded || !propExpanded || transitionStep ? "hidden" : "visible",
 			transition: `all ease-in-out ${timeout}, mask-image 0s, background ${timeout} linear, opacity ${timeout} linear, height ${timeout} ease, max-height ${timeout} ease !important`,
 		}}
 
@@ -192,14 +194,14 @@ export function Expander2(props: Expander2Props)
 			$log("onTransitionEnd");
 			_$log("transitionStep = 0")
 			setTransitionStep(0);
-			state.targetHeight = undefined;
-			$log("targetHeight = undefined")
 
 		}}
 
-		children={(expanded || propExpanded || !!transitionStep) && Values.one(props.children)}
+		children={body}
 
 	/>;
 
+
+	return body;
 
 }
