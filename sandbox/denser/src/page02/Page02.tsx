@@ -107,20 +107,18 @@ function Row05(props: Pane.RowProps)
 				<Pane p24 textRight>333 3333 33333 333333</Pane>
 			</Pane.Row>
 
-			<TentaExpander id="1" phase={1}>
+			<TentaExpander id="1" phase={1} animatedReexpand={false}>
 				<Pane.Row gap1>
 					<Pane p24>111 1111 11111 111111</Pane>
 					<Pane p24>222 2222 22222 222222</Pane>
 					<Pane p24 textRight>
 						333 3333 33333 333333
 						<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
+						<Expander2 id="2" expanded={expanded}>
+							<div>4444 4 4444 44 4 444444 4 44444 4444</div>
+						</Expander2>
 					</Pane>
 				</Pane.Row>
-				{expanded && <Pane.Row gap1>
-					<Pane p24>111 1111 11111 111111</Pane>
-					<Pane p24>222 2222 22222 222222</Pane>
-					<Pane p24 textRight>333 3333 33333 333333</Pane>
-				</Pane.Row>}
 			</TentaExpander>
 
 		</Pane.Col>

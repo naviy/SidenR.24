@@ -83,10 +83,13 @@ export function Expander2(props: Expander2Props)
 	//alert(`Expander #${props.id}`)
 	$log(`Expander #${props.id}`)
 
+	let animatedReexpand = props.animatedReexpand !== false;
+	let propExpanded = props.expanded !== false
+
+
 	let elRef = useRef<HTMLDivElement>(null);
 	let childrenRef = useRef<HTMLDivElement>(null);
 
-	let propExpanded = props.expanded !== false
 
 	let timeout = `${props.timeout ?? $animationDurationMs}ms`;
 
@@ -106,19 +109,20 @@ export function Expander2(props: Expander2Props)
 	useEffect(
 		() =>
 		{
+			$log(`Expander #${props.id}.useEffect 1`)
 
 			if (propExpanded !== expanded)
 			{
 				setExpanded(propExpanded);
-				__$log(`expanded = ${propExpanded}`)
+				_$log(`expanded = ${propExpanded}`)
 
 				setTransitionStep(1);
-				__$log("transitionStep = 1")
+				_$log("transitionStep = 1")
 			}
-			else if (transitionStep === 1)
+			else if (transitionStep === 1 && !animatedReexpand)
 			{
 				setTransitionStep(2);
-				__$log("transitionStep = 2")
+				_$log("transitionStep = 2")
 			}
 			//	else if (!transitionStep)
 			//	{
@@ -145,19 +149,22 @@ export function Expander2(props: Expander2Props)
 	useEffect(
 		() =>
 		{
+			$log(`Expander #${props.id}.useEffect 2`)
+
 			let childrenHeight = childrenRef.current?.clientHeight || 0;
-			__$log("childrenHeight:", childrenHeight);
+			_$log("childrenHeight:", childrenHeight);
 			if (
+				animatedReexpand &&
 				expanded && propExpanded && !transitionStep &&
 				(state.childrenHeight !== childrenHeight)
 			)
 			{
 				setTransitionStep(1);
-				__$log("transitionStep = 1")
+				_$log("transitionStep = 1")
 				//state.targetHeight = scrollHeight;
 			}
 			state.childrenHeight = childrenHeight;
-			__$log(`childrenHeight = ${state.childrenHeight}`)
+			_$log(`childrenHeight = ${state.childrenHeight}`)
 
 			//state.lastHeight = scrollHeight;
 			//__$log("lastHeight = ", state.lastHeight);
@@ -165,7 +172,17 @@ export function Expander2(props: Expander2Props)
 	);
 
 
-	let height = expanded ? state.childrenHeight || 0 : 0;
+	let height = (
+		animatedReexpand
+			? expanded ? state.childrenHeight || 0 : 0
+			: expanded
+				? transitionStep
+					? state.childrenHeight
+					: "auto"
+				: transitionStep === 1
+					? state.childrenHeight
+					: 0
+	);
 	_$log("height:", height);
 
 
@@ -182,7 +199,10 @@ export function Expander2(props: Expander2Props)
 		sx={{
 			height,
 			overflow: "hidden",
-			//overflow: !expanded || !propExpanded || transitionStep ? "hidden" : "visible",
+			//overflow: !expanded || !propExpanded || animatedReexpand && transitionStep /*state.childrenHeight !== childrenRef.current?.clientHeight*/
+			//	? "hidden"
+			//	: "visible"
+			//,
 			transition: `all ease-in-out ${timeout}, mask-image 0s, background ${timeout} linear, opacity ${timeout} linear, height ${timeout} ease, max-height ${timeout} ease !important`,
 		}}
 
@@ -191,7 +211,7 @@ export function Expander2(props: Expander2Props)
 			if (e.target !== elRef.current || e.propertyName !== "height")
 				return;
 
-			$log("onTransitionEnd");
+			$log(`Expander #${props.id}.onTransitionEnd`)
 			_$log("transitionStep = 0")
 			setTransitionStep(0);
 
