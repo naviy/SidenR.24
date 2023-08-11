@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 import { createContext, ReactNode, useContext, useRef } from "react";
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, Values } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block } from "./Bock";
 
@@ -223,8 +223,7 @@ export module Container
 		}
 
 
-		let body = props.children;
-
+		let body = Values.one<ReactNode>(props.children);
 
 
 		body = createPrimitive(
@@ -239,7 +238,6 @@ export module Container
 			props,
 			containerPropNames
 		);
-
 
 
 		body = <Context.Provider

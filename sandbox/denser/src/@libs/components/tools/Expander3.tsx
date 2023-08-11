@@ -1,8 +1,7 @@
-import { Box, styled } from "@mui/material";
+import { styled } from "@mui/material";
 import { ReactNode, RefObject, useLayoutEffect, useRef } from "react";
 
-import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable, UseHookProps, useNew, Values } from "../core";
-import { ExpanderProps } from "./Expander2";
+import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, createPrimitive, Div, DivProps, Repaintable, UseHookProps, useNew, Values } from "../core";
 
 
 
@@ -30,17 +29,23 @@ const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 
 
 
-export function Expander(props: ExpanderProps)
+export function Expander(props: Expander.Props)
 {
 
-	let bhv = useNew(Expander.Behavior).use(null, null, props);
+	let bhv = useNew(Expander.Behavior).use(null, props.wrapperRef, props);
 
 
-	return bhv.renderRoot(
-		bhv.renderWrapper(
-			bhv.renderChildren()
-		)
-	);
+	let body = bhv.renderChildren();
+
+	if (!props.wrapperRef)
+	{
+		body = bhv.renderWrapper(body);
+	}
+
+	body = bhv.renderRoot(body);
+
+
+	return body;
 
 }
 
@@ -57,8 +62,10 @@ export module Expander
 
 
 
-	export interface Props extends UseHookProps<ExpanderProps> 
+	export interface Props extends DivProps, UseHookProps<Props> 
 	{
+
+		wrapperRef?: RefObject<HTMLDivElement>;
 
 		/** default = true */
 		expanded?: boolean;
@@ -80,9 +87,15 @@ export module Expander
 		onExpanding?: () => void;
 		onExpanded?: () => void;
 
-		children?: React.ReactNode | (() => React.ReactNode);
-
 	}
+
+
+	export const propNames: Array<keyof Props> = [
+		"expanded", "animated",
+		"noreexpand", "forceRender", "maxHeight", "timeout",
+		"onChange", "onCollapsed", "onExpanding", "onExpanded",
+
+	];
 
 
 
@@ -96,7 +109,7 @@ export module Expander
 		//---
 
 
-		props!: Readonly<ExpanderProps>;
+		props!: Readonly<Props>;
 
 		ref!: RefObject<HTMLDivElement>;
 		wrapperRef!: RefObject<HTMLDivElement>;
@@ -121,9 +134,9 @@ export module Expander
 
 		//@$logm
 		use(
-			ref: RefObject<HTMLDivElement> | null,
-			wrapperRef: RefObject<HTMLDivElement> | null,
-			props: ExpanderProps,
+			ref: RefObject<HTMLDivElement> | null | undefined,
+			wrapperRef: RefObject<HTMLDivElement> | null | undefined,
+			props: Props,
 			cfg?: Repaintable.UseConfig
 		)
 		{
@@ -372,7 +385,7 @@ export module Expander
 
 
 
-		/*private*/ onTransitionEnd = (e: React.TransitionEvent) =>
+		private onTransitionEnd = (e: React.TransitionEvent) =>
 		{
 
 			if (e.target !== this.el)
@@ -464,28 +477,48 @@ export module Expander
 
 			let { props } = this;
 
-			return (
-				<Expander.Root
+			//return (
+			//	<Expander.Root
 
-					ref={this.ref}
+			//		ref={this.ref}
+			//		animated={props.animated !== false}
+			//		hlimited={!!props.maxHeight}
+			//		timeout={props.timeout}
 
-					animated={props.animated !== false}
-					hlimited={!!props.maxHeight}
-					timeout={props.timeout}
-					onTransitionEnd={this.onTransitionEnd}
+			//		onTransitionEnd={this.onTransitionEnd}
 
-					children={wrapper}
+			//		children={wrapper}
 
-				/>
+			//	/>
+			//);
+
+
+			let body = createPrimitive(
+				Expander.Root,
+				{
+					ref: this.ref,
+					animated: props.animated !== false,
+					hlimited: !!props.maxHeight,
+					timeout: props.timeout,
+					onTransitionEnd: this.onTransitionEnd,
+					children: wrapper,
+				},
+				this.props,
+				propNames
 			);
+
+
+			return body;
+
 		}
 
 
 		renderWrapper(children: ReactNode)
 		{
-			return (
-				<div ref={this.wrapperRef} children={children} />
-			);
+			return <div
+				ref={this.wrapperRef}
+				children={children}
+			/>;
 		}
 
 
@@ -515,7 +548,7 @@ export module Expander
 
 
 	export const Root = styled(
-		Box,
+		Div,
 		{
 			shouldForwardProp: p => p !== "animated" && p !== "hlimited" && p !== "timeout",
 		}

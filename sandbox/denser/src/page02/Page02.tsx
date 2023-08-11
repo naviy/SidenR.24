@@ -105,6 +105,7 @@ function Row05(props: Pane.RowProps)
 		return Tenta.Phase.useProps(phase => ({ expanded: phase === 1 }));
 	}
 
+
 	return <PileRow {...props}>
 
 		<Pane.Col gapi>
@@ -180,10 +181,8 @@ function PileRow(props: Pane.RowProps)
 					{...bhv.opened && { rounded: true, p: 2, e: 3, mx: -24, my: 36 }}
 					cursorPointer
 				>
-
 					<Focuser.Caret />
 					{props.children}
-
 				</Pane.Row>
 
 			</Focuser>

@@ -86,6 +86,12 @@ export function TentaFocusable<TBase extends Constructor<TentaStatuser & TentaPh
 		//}
 
 
+		async shake()
+		{
+			await this.ff?.caret?.shake();
+		}
+
+
 
 		//---
 

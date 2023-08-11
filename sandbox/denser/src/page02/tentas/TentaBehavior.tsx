@@ -63,6 +63,10 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 		{
 			await this.scrollIntoView();
 		}
+		else
+		{
+			await this.shake();
+		}
 
 	}
 
@@ -96,6 +100,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 		}
 		else
 		{
+			await this.shake();
 			//	await this.focusItems();
 		}
 
@@ -123,7 +128,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 
 		if (await this.collapse())
 		{
-			await this.scrollIntoView();
+			/*await*/ this.scrollIntoView();
 		}
 		else
 		{
@@ -140,10 +145,12 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 		this.expand();
 
 
-		if (this.opened /*&& await this.focusItems()*/)
-		{
-			await this.scrollIntoView();
-		}
+		//if (this.opened /*&& await this.focusItems()*/)
+		//{
+		//await
+		this.scrollIntoView();
+		await this.shake();
+		//}
 
 	}
 

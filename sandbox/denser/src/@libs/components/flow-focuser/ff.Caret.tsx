@@ -2,7 +2,7 @@ import { Component, ReactNode } from "react";
 
 import { alpha, styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, MuiColor } from "../core";
+import { $defaultAnimationDurationMs, $logm, MuiColor } from "../core";
 //**import { bordererMask } from ".";
 import { currentFocuser, Focuser, FocuserContext } from ".";
 import { $error, Values } from "../..";
@@ -135,6 +135,39 @@ const CaretBody = styled(
 				//opacity: props.opacity,
 				transition: `opacity ${$animationDurationMs}ms linear`,
 			},
+
+			"&.shake": {
+				animationDuration: ".5s",
+				animationTimingFunction: "ease-in-out",
+				animationName: "ff-shake",
+			},
+
+
+			"@keyframes ff-shake": {
+				"0%": {
+					transform: "translateX(0)"
+				},
+
+				"6.5%": {
+					transform: "translateX(-6px) rotateY(-9deg)"
+				},
+
+				"18.5%": {
+					transform: "translateX(5px) rotateY(7deg)"
+				},
+
+				"31.5%": {
+					transform: "translateX(-3px) rotateY(-5deg)"
+				},
+
+				"43.5%": {
+					transform: "translateX(2px) rotateY(3deg)"
+				},
+
+				"50%": {
+					transform: "translateX(0)"
+				}
+			}
 
 		};
 
@@ -355,6 +388,24 @@ export class Caret extends Component<{ children?: ReactNode }>
 			this.forceUpdate();
 
 		}
+
+	}
+
+
+
+	//---
+
+
+
+	async shake()
+	{
+
+		let el = this.el!;
+		if (!el) return;
+
+		el.classList.remove('shake'); // reset animation
+		void el.offsetWidth; // trigger reflow
+		el.classList.add('shake'); // start animation
 
 	}
 
