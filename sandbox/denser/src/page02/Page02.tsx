@@ -62,21 +62,21 @@ function Row04(props: Pane.RowProps)
 				<Pane p24 textRight>333 3333 33333 333333</Pane>
 			</Pane.Row>
 
-				<Pane.Row gap1>
-					<Pane p24>111 1111 11111 111111</Pane>
-					<Pane p24>222 2222 22222 222222</Pane>
-					<Pane p24 textRight>333 3333 33333 333333</Pane>
-				</Pane.Row>
+			<Pane.Row gap1>
+				<Pane p24>111 1111 11111 111111</Pane>
+				<Pane p24>222 2222 22222 222222</Pane>
+				<Pane p24 textRight>333 3333 33333 333333</Pane>
+			</Pane.Row>
 
 		</Pane.Col>
 
 		<Pane.Row gapi l={2}>
 			<Pane.Col gapi l={150}>
 				<Pane end={false} p8 center vcenter>aaa aaa aaaa</Pane>
-					<Pane.Col gap1>
-						<Pane p8 center vcenter>bbb bbb bbbb</Pane>
-						<Pane p8 center vcenter>ccc ccc cccc</Pane>
-					</Pane.Col>
+				<Pane.Col gap1>
+					<Pane p8 center vcenter>bbb bbb bbbb</Pane>
+					<Pane p8 center vcenter>ccc ccc cccc</Pane>
+				</Pane.Col>
 			</Pane.Col>
 			<Pane p24 vcenter>222 2222 22222 222222</Pane>
 			<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>
@@ -95,28 +95,38 @@ function Row05(props: Pane.RowProps)
 	let [expanded2, toggleExpanded2] = useReducer(a => !a, false);
 
 
+	function use1()
+	{
+		return Tenta.Phase.useProps(phase => ({ end: phase !== 1 }));
+	}
+
+	function use2()
+	{
+		return Tenta.Phase.useProps(phase => ({ expanded: phase === 1 }));
+	}
+
 	return <PileRow {...props}>
 
 		<Pane.Col gapi>
 
-			<Pane.Row context={Tenta.Phase} propsByContext={phase => ({ end: phase !== 1 })}>
+			<Pane.Row use={use1}>
 				<Pane p24>111 1111 11111 111111</Pane>
 				<Pane p24>222 2222 22222 222222</Pane>
 				<Pane p24 textRight>333 3333 33333 333333</Pane>
 			</Pane.Row>
 
-			<Expander id="1" context={Tenta.Phase} propsByContext={phase => ({ expanded: phase === 1 })} noreexpand>
+			<Expander id="1" use={use2} noreexpand>
 				<Pane.Row gap1>
 					<Pane p24>111 1111 11111 111111</Pane>
 					<Pane p24>222 2222 22222 222222</Pane>
 					<Pane p24 textRight>
 						333 3333 33333 333333
-						<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
-						<Expander id="2" expanded={expanded}>
-							<div>4444 4 4444 44 4 444444 4 44444 4444</div>
-							<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>
-							{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}
-						</Expander>
+						{/*<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>*/}
+						{/*<Expander id="2" expanded={expanded}>*/}
+						{/*	<div>4444 4 4444 44 4 444444 4 44444 4444</div>*/}
+						{/*	<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>*/}
+						{/*	{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}*/}
+						{/*</Expander>*/}
 					</Pane>
 				</Pane.Row>
 			</Expander>

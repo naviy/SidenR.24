@@ -1,7 +1,7 @@
 import { Box, SxProps, Theme } from "@mui/material";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-import { $defaultAnimationDurationMs, PropsByContext, Values } from "../core";
+import { $defaultAnimationDurationMs, UseHookProps, Values } from "../core";
 
 
 
@@ -29,7 +29,7 @@ const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 
 
 
-export interface ExpanderProps extends PropsByContext<ExpanderProps> 
+export interface ExpanderProps extends UseHookProps<ExpanderProps> 
 {
 
 	id?: string;
@@ -79,7 +79,7 @@ export interface ExpanderProps extends PropsByContext<ExpanderProps>
 export function Expander(props: ExpanderProps)
 {
 
-	props = PropsByContext.use(props);
+	props = UseHookProps.use(props);
 
 	//alert(`Expander #${props.id}`)
 	//$log(`Expander #${props.id}`)
@@ -158,22 +158,36 @@ export function Expander(props: ExpanderProps)
 	);
 
 
-	let childrenHeight = (
-		childrenRef.current?.scrollHeight ??
-		(expanded && propExpanded && !transitionStep ? "auto" : 0)
-	);
+	//let childrenHeight = (
+	//	childrenRef.current?.scrollHeight ??
+	//	(expanded && propExpanded && !transitionStep ? "auto" : 0)
+	//);
+
+
+	let childrenHeight = childrenRef.current?.scrollHeight;
+
+
+	//let height = (
+	//	!noreexpand
+	//		? expanded ? childrenHeight : 0
+	//		: expanded
+	//			? transitionStep
+	//				? childrenHeight
+	//				: "auto"
+	//			: transitionStep === 1
+	//				? childrenHeight
+	//				: 0
+	//);
 
 
 	let height = (
-		!noreexpand
-			? expanded ? childrenHeight : 0
-			: expanded
-				? transitionStep
-					? childrenHeight
-					: "auto"
-				: transitionStep === 1
-					? childrenHeight
-					: 0
+		expanded
+			? transitionStep
+				? childrenHeight ?? 0
+				: "auto"
+			: transitionStep === 1
+				? childrenHeight ?? "auto"
+				: 0
 	);
 	//_$log("height:", height);
 
@@ -195,9 +209,12 @@ export function Expander(props: ExpanderProps)
 
 		ref={elRef}
 
-		sx={{
+		style={{
 			height,
 			overflow,
+		}}
+
+		sx={{
 			transition: `all ease-in-out ${timeout}, mask-image 0s, background ${timeout} linear, opacity ${timeout} linear, height ${timeout} ease, max-height ${timeout} ease !important`,
 		}}
 

@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, PropsByContext } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Bock";
 import { Container } from "./Container";
@@ -20,7 +20,7 @@ import { Container } from "./Container";
 export function Pane(props: Pane.Props)
 {
 
-	props = PropsByContext.use(props);
+	props = UseHookProps.use(props);
 
 	let cprops = Container.use() || {};
 
@@ -108,7 +108,7 @@ export module Pane
 
 
 
-	export interface Props extends Block.Props, PrimitiveProps<HTMLDivElement>, PropsByContext<Props>
+	export interface Props extends Block.Props, PrimitiveProps<HTMLDivElement>, UseHookProps<Props>
 	{
 
 	}
@@ -117,7 +117,7 @@ export module Pane
 
 	export const propNames: Array<keyof Props> = [
 		...Block.propNames,
-		...PropsByContext.propNames,
+		...UseHookProps.propNames,
 	];
 
 
