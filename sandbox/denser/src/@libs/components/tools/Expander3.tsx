@@ -35,7 +35,7 @@ export function Expander(props: ExpanderProps)
 
 	let bhv = useNew(Expander.Behavior).use(props);
 
-	$log("bhv.collapsed:", bhv.collapsed);
+	//$log("bhv.collapsed:", bhv.collapsed);
 
 	let children: ReactNode = (
 		props.children && (props.forceRender || bhv.expanded || !bhv.collapsed)
@@ -57,7 +57,6 @@ export function Expander(props: ExpanderProps)
 		ref={bhv.setEl}
 
 		animated={props.animated !== false}
-		collapsed={!bhv.expanded}
 		hlimited={!!props.maxHeight}
 		timeout={props.timeout}
 
@@ -191,11 +190,7 @@ export module Expander
 		componentDidMount()
 		{
 
-			if (this.expanded)
-				this.setExpanded();
-			else
-				this.setCollapsed();
-
+			this.expanded ? this.setExpanded() : this.setCollapsed();
 
 			this._priorMaxHeight = this.props.maxHeight;
 
@@ -317,7 +312,7 @@ export module Expander
 
 
 
-		@$logm
+		//@$logm
 		private async setExpanded()
 		{
 
@@ -342,7 +337,7 @@ export module Expander
 
 
 
-		@$logm
+		//@$logm
 		private async collapse()
 		{
 
@@ -379,7 +374,7 @@ export module Expander
 
 			this._startHeight = null;
 
-			$log("collapsed = true");
+			//$log("collapsed = true");
 			this.collapsed = true;
 
 
@@ -419,9 +414,10 @@ export module Expander
 			if (e.propertyName !== "height")
 				return;
 
+
 			let expanded = this.expanded;
 
-			expanded && this.setExpanded();
+			expanded ? this.setExpanded() : this.setCollapsed();
 
 
 			props.onChange?.();
@@ -510,15 +506,14 @@ export module Expander
 	export const Root = styled(
 		Box,
 		{
-			shouldForwardProp: p => p !== "animated" && p !== "collapsed" && p !== "hlimited" && p !== "timeout",
+			shouldForwardProp: p => p !== "animated" && p !== "hlimited" && p !== "timeout",
 		}
 	)<{
 		animated: boolean;
-		collapsed: boolean;
 		hlimited: boolean;
 		timeout?: number;
 	}>(
-		({ animated, collapsed, hlimited, timeout }) =>
+		({ animated, hlimited, timeout }) =>
 		{
 
 			let timeout2 = `${timeout ?? $animationDurationMs}ms`;
@@ -529,24 +524,10 @@ export module Expander
 				position: "relative",
 
 				willChange: "height",
-				height: "0px",
-
-
-				"& > div": {
-					display: "flex",
-					gap: "inherit",
-				},
-
 
 				...animated && {
 					transition: `all ease-in-out ${timeout2}, mask-image 0s, background ${timeout2} linear, opacity ${timeout2} linear, height ${timeout2} ease, max-height ${timeout2} ease !important`,
 				},
-
-
-				...animated && collapsed && {
-					height: 0,
-				},
-
 
 				...animated && hlimited && {
 					maskImage: "linear-gradient(to top, rgba(0, 0, 0, .2), rgba(0, 0, 0, 1)  75%)",
