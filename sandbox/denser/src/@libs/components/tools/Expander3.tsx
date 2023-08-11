@@ -1,7 +1,7 @@
 import { Box, styled } from "@mui/material";
-import { Component, ReactNode, useLayoutEffect } from "react";
+import { ReactNode, RefObject, useLayoutEffect, useRef } from "react";
 
-import { $defaultAnimationDurationMs, $log, $logm, adelay, arequestAnimationFrame, Repaintable, UseHookProps, useNew, Values } from "../core";
+import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable, UseHookProps, useNew, Values } from "../core";
 import { ExpanderProps } from "./Expander2";
 
 
@@ -33,38 +33,14 @@ const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 export function Expander(props: ExpanderProps)
 {
 
-	let bhv = useNew(Expander.Behavior).use(props);
+	let bhv = useNew(Expander.Behavior).use(null, null, props);
 
-	//$log("bhv.collapsed:", bhv.collapsed);
 
-	let children: ReactNode = (
-		props.children && (props.forceRender || bhv.expanded || !bhv.collapsed)
-			? Values.one(props.children)
-			: null
+	return bhv.renderRoot(
+		bhv.renderWrapper(
+			bhv.renderChildren()
+		)
 	);
-
-
-	if (bhv._el)
-	{
-		bhv._startHeight = bhv.currentHeight;
-		//$log("set startHeight = currentHeight:", this._startHeight);
-	}
-
-
-
-	return <Expander.Root
-
-		ref={bhv.setEl}
-
-		animated={props.animated !== false}
-		hlimited={!!props.maxHeight}
-		timeout={props.timeout}
-
-		onTransitionEnd={bhv.onTransitionEnd}
-
-		children={<div ref={bhv.setEl2} children={children} />}
-
-	/>;
 
 }
 
@@ -120,32 +96,22 @@ export module Expander
 		//---
 
 
-		props!: ExpanderProps;
+		props!: Readonly<ExpanderProps>;
+
+		ref!: RefObject<HTMLDivElement>;
+		wrapperRef!: RefObject<HTMLDivElement>;
 
 
-		/*private*/ _el?: HTMLElement | null;
-		/*private*/ setEl = (a: HTMLElement | null) => this._el = a;
+		get el() { return this.ref.current; }
+		get childrenEl() { return this.wrapperRef.current; }
+		get currentHeight() { return (this.childrenEl || this.el)?.clientHeight; }
 
-		/*private*/ _el2?: HTMLElement | null;
-		/*private*/ setEl2 = (a: HTMLElement | null) => this._el2 = a;
-
-		/*private*/ collapsed!: boolean;
 
 		get expanded() { return this.props.expanded !== false; }
-
-
-		_startHeight?: number | null;
-
-
-		get currentHeight() { return (this._el2 || this._el)?.clientHeight; }
-
-
-
-		//---
-
-
-
 		get timeout() { return this.props.timeout ?? $animationDurationMs; }
+
+		private collapsed!: boolean;
+		private _startHeight?: number | null;
 
 
 
@@ -154,13 +120,21 @@ export module Expander
 
 
 		//@$logm
-		use(props: ExpanderProps, cfg?: Repaintable.UseConfig)
+		use(
+			ref: RefObject<HTMLDivElement> | null,
+			wrapperRef: RefObject<HTMLDivElement> | null,
+			props: ExpanderProps,
+			cfg?: Repaintable.UseConfig
+		)
 		{
 
 			props = UseHookProps.use(props);
 
 			Repaintable.use(this, cfg);
 
+
+			this.ref = ref || useRef<HTMLDivElement>(null);
+			this.wrapperRef = wrapperRef || useRef<HTMLDivElement>(null);
 
 			let prevProps = this.props;
 			this.props = props;
@@ -169,6 +143,13 @@ export module Expander
 			if (!prevProps)
 			{
 				this.collapsed = !this.expanded;
+			}
+
+
+			if (this.el)
+			{
+				this._startHeight = this.currentHeight;
+				//$log("set startHeight = currentHeight:", this._startHeight);
 			}
 
 
@@ -202,9 +183,8 @@ export module Expander
 		async componentDidUpdate(prevProps: Props)
 		{
 
-			let el = this._el;
-			if (!el)
-				return;
+			let el = this.el;
+			if (!el) return;
 
 
 			let props = this.props;
@@ -277,10 +257,8 @@ export module Expander
 		private async expand()
 		{
 
-			let el = this._el!;
-
-			if (!el)
-				return;
+			let el = this.el!;
+			if (!el) return;
 
 
 			this.collapsed = false;
@@ -316,11 +294,8 @@ export module Expander
 		private async setExpanded()
 		{
 
-			let el = this._el;
-			let el2 = this._el2;
-
-			if (!el || !el2)
-				return;
+			let { el, childrenEl } = this;
+			if (!el || !childrenEl) return;
 
 
 			//await arequestAnimationFrame(() =>
@@ -341,10 +316,8 @@ export module Expander
 		private async collapse()
 		{
 
-			let el = this._el!;
-
-			if (!el)
-				return;
+			let el = this.el!;
+			if (!el) return;
 
 
 			let ri = ++this._reexpandIndex;
@@ -387,10 +360,8 @@ export module Expander
 		private setCollapsed = () =>
 		{
 
-			let el = this._el;
-
-			if (!el)
-				return;
+			let el = this.el;
+			if (!el) return;
 
 
 			el.style.height = "0";
@@ -404,7 +375,7 @@ export module Expander
 		/*private*/ onTransitionEnd = (e: React.TransitionEvent) =>
 		{
 
-			if (e.target !== this._el)
+			if (e.target !== this.el)
 				return;
 
 
@@ -440,15 +411,11 @@ export module Expander
 		private async reexpand(startHeight: number)
 		{
 
-			let el = this._el!;
-
-			if (!el)
-				return false;
-
+			let el = this.el!;
+			if (!el) return false;
 
 
 			let ri = ++this._reexpandIndex;
-
 
 
 			await arequestAnimationFrame(() =>
@@ -460,10 +427,8 @@ export module Expander
 			});
 
 
-
 			if (ri !== this._reexpandIndex)
 				return false;
-
 
 
 			await arequestAnimationFrame(() =>
@@ -482,9 +447,7 @@ export module Expander
 				return false;
 
 
-
 			await this.setExpanded();
-
 
 			return true;
 
@@ -494,8 +457,56 @@ export module Expander
 
 		//---
 
-	}
 
+
+		renderRoot(wrapper: ReactNode)
+		{
+
+			let { props } = this;
+
+			return (
+				<Expander.Root
+
+					ref={this.ref}
+
+					animated={props.animated !== false}
+					hlimited={!!props.maxHeight}
+					timeout={props.timeout}
+					onTransitionEnd={this.onTransitionEnd}
+
+					children={wrapper}
+
+				/>
+			);
+		}
+
+
+		renderWrapper(children: ReactNode)
+		{
+			return (
+				<div ref={this.wrapperRef} children={children} />
+			);
+		}
+
+
+		renderChildren(): ReactNode
+		{
+
+			let { props } = this;
+
+			return (
+				props.children && (props.forceRender || !this.collapsed || this.expanded)
+					? Values.one(props.children)
+					: null
+			);
+
+		}
+
+
+
+		//---
+
+	}
 
 
 
