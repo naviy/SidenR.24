@@ -95,12 +95,12 @@ function Row05(props: Pane.RowProps)
 	let [expanded2, toggleExpanded2] = useReducer(a => !a, false);
 
 
-	function use1()
+	function endOnPhaseNot1()
 	{
 		return Tenta.Phase.useProps(phase => ({ end: phase !== 1 }));
 	}
 
-	function use2()
+	function expandedOnPhase1()
 	{
 		return Tenta.Phase.useProps(phase => ({ expanded: phase === 1 }));
 	}
@@ -110,13 +110,13 @@ function Row05(props: Pane.RowProps)
 
 		<Pane.Col gapi>
 
-			<Pane.Row use={use1}>
+			<Pane.Row use={endOnPhaseNot1}>
 				<Pane p24>111 1111 11111 111111</Pane>
 				<Pane p24>222 2222 22222 222222</Pane>
 				<Pane p24 textRight>333 3333 33333 333333</Pane>
 			</Pane.Row>
 
-			<Expander id="1" use={use2} noreexpand>
+			<Expander use={expandedOnPhase1} noreexpand>
 				<Pane.Row gap1>
 					<Pane p24>111 1111 11111 111111</Pane>
 					<Pane p24>222 2222 22222 222222</Pane>
@@ -134,19 +134,19 @@ function Row05(props: Pane.RowProps)
 
 		</Pane.Col>
 
-		{/*<Pane.Row gapi l={2}>*/}
-		{/*	<Pane.Col gapi l={150}>*/}
-		{/*		<Pane end={false} p8 center vcenter>aaa aaa aaaa</Pane>*/}
-		{/*		<TentaExpander phase={1}>*/}
-		{/*			<Pane.Col gap1>*/}
-		{/*				<Pane p8 center vcenter>bbb bbb bbbb</Pane>*/}
-		{/*				<Pane p8 center vcenter>ccc ccc cccc</Pane>*/}
-		{/*			</Pane.Col>*/}
-		{/*		</TentaExpander>*/}
-		{/*	</Pane.Col>*/}
-		{/*	<Pane p24 vcenter>222 2222 22222 222222</Pane>*/}
-		{/*	<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>*/}
-		{/*</Pane.Row>*/}
+		<Pane.Row gapi>
+			<Pane.Col gapi l={150}>
+				<Pane end={false} l={1} p8 center vcenter>aaa aaa aaaa</Pane>
+				<Expander use={expandedOnPhase1} flex2 wrapperCls="flex1 vflex">
+					<Pane.Col gap1 flex1>
+						<Pane p8 center vcenter>bbb bbb bbbb</Pane>
+						<Pane p8 center vcenter>ccc ccc cccc</Pane>
+					</Pane.Col>
+				</Expander>
+			</Pane.Col>
+			<Pane p24 vcenter>222 2222 22222 222222</Pane>
+			<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>
+		</Pane.Row>
 
 	</PileRow>;
 

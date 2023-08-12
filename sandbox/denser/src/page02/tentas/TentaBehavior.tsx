@@ -132,6 +132,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 		}
 		else
 		{
+			await this.shake(3);
 			//await this.backToParent();
 		}
 
@@ -142,15 +143,18 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 	protected async onRightKey()
 	{
 
-		this.expand();
-
-
-		//if (this.opened /*&& await this.focusItems()*/)
-		//{
-		//await
-		this.scrollIntoView();
-		await this.shake();
-		//}
+		if (await this.expand())
+		{
+			//if (this.opened /*&& await this.focusItems()*/)
+			//{
+			//await
+			this.scrollIntoView();
+			//}
+		}
+		else
+		{
+			await this.shake();
+		}
 
 	}
 

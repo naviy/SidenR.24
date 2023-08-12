@@ -2,7 +2,7 @@ import { Component, ReactNode } from "react";
 
 import { alpha, styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, $logm, MuiColor } from "../core";
+import { $defaultAnimationDurationMs, MuiColor } from "../core";
 //**import { bordererMask } from ".";
 import { currentFocuser, Focuser, FocuserContext } from ".";
 import { $error, Values } from "../..";
@@ -136,38 +136,49 @@ const CaretBody = styled(
 				transition: `opacity ${$animationDurationMs}ms linear`,
 			},
 
-			"&.shake": {
+			"&.shake-1": {
 				animationDuration: ".5s",
 				animationTimingFunction: "ease-in-out",
-				animationName: "ff-shake",
+				animationName: "ff-shake-1",
+			},
+			"&.shake-2": {
+				animationDuration: ".5s",
+				animationTimingFunction: "ease-in-out",
+				animationName: "ff-shake-2",
+			},
+			"&.shake-3": {
+				animationDuration: ".5s",
+				animationTimingFunction: "ease-in-out",
+				animationName: "ff-shake-3",
 			},
 
 
-			"@keyframes ff-shake": {
-				"0%": {
-					transform: "translateX(0)"
-				},
+			"@keyframes ff-shake-1": {
+				"0%": { transform: "translateY(0)" },
+				"6.5%": { transform: "translateY(-2px) rotateY(-9deg)" },
+				"18.5%": { transform: "translateY(2px) rotateY(7deg)" },
+				"31.5%": { transform: "translateY(-1px) rotateY(-5deg)" },
+				"43.5%": { transform: "translateY(1px) rotateY(3deg)" },
+				"50%": { transform: "translateY(0)" },
+			},
 
-				"6.5%": {
-					transform: "translateX(-6px) rotateY(-9deg)"
-				},
+			"@keyframes ff-shake-2": {
+				"0%": { transform: "translateX(0)" },
+				"6.5%": { transform: "translateX(-6px) rotateY(-9deg)" },
+				"18.5%": { transform: "translateX(5px) rotateY(7deg)" },
+				"31.5%": { transform: "translateX(-3px) rotateY(-5deg)" },
+				"43.5%": { transform: "translateX(2px) rotateY(3deg)" },
+				"50%": { transform: "translateX(0)" },
+			},
 
-				"18.5%": {
-					transform: "translateX(5px) rotateY(7deg)"
-				},
-
-				"31.5%": {
-					transform: "translateX(-3px) rotateY(-5deg)"
-				},
-
-				"43.5%": {
-					transform: "translateX(2px) rotateY(3deg)"
-				},
-
-				"50%": {
-					transform: "translateX(0)"
-				}
-			}
+			"@keyframes ff-shake-3": {
+				"0%": { transform: "skew(-10deg)" },
+				"5%": { transform: "skewX(10deg)" },
+				"10%": { transform: "skewX(-10deg)" },
+				"15%": { transform: "skewX(10deg)" },
+				"20%": { transform: "skewX(0deg)" },
+				"100%": { transform: "skewX(0deg)" },
+			},
 
 		};
 
@@ -397,15 +408,15 @@ export class Caret extends Component<{ children?: ReactNode }>
 
 
 
-	async shake()
+	async shake(mode?: 1 | 2 | 3)
 	{
 
 		let el = this.el!;
 		if (!el) return;
 
-		el.classList.remove('shake'); // reset animation
+		el.classList.remove('shake-1','shake-2','shake-3');
 		void el.offsetWidth; // trigger reflow
-		el.classList.add('shake'); // start animation
+		el.classList.add(`shake-${mode || 1}`);
 
 	}
 

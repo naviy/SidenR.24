@@ -66,6 +66,7 @@ export module Expander
 	{
 
 		wrapperRef?: RefObject<HTMLDivElement>;
+		wrapperCls?: string;
 
 		/** default = true */
 		expanded?: boolean;
@@ -517,6 +518,7 @@ export module Expander
 		{
 			return <div
 				ref={this.wrapperRef}
+				className={this.props.wrapperCls}
 				children={children}
 			/>;
 		}
