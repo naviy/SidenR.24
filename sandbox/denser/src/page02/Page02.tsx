@@ -15,13 +15,13 @@ export function Page02()
 
 		<Pane.Col mx48 m100 rounded e={0} p2 gap1>
 
-			<Row05 start end />
+			{/*<Row05 start end />*/}
 
-			{/*<Row05 start />*/}
-			{/*<Row05 />*/}
-			{/*<Row05 />*/}
-			{/*<Row05 />*/}
-			{/*<Row05 end />*/}
+			<Row05 start />
+			<Row05 />
+			<Row05 />
+			<Row05 />
+			<Row05 end />
 
 			{/*<Row03 start />*/}
 			{/*<Row03 />*/}
@@ -183,9 +183,10 @@ function PileRow(props: Pane.RowProps)
 				<Pane.Row
 					{...props}
 					gap1
-					{...bhv.expanded && { rounded: true, p: 2, e: 1, mx: -12, my: 12 }}
+					{...bhv.expanded && { rounded: true, p: 2, e: 1, mx: -12, my: 4 }}
 					{...bhv.opened && { rounded: true, p: 2, e: 3, mx: -24, my: 36 }}
 					cursorPointer
+					zIndex1={bhv.expanded}
 				>
 					<Focuser.Caret />
 					{props.children}

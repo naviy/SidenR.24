@@ -1,4 +1,4 @@
-import { Repaintable } from "@libs";
+import { $log, Focuser, Repaintable } from "@libs";
 import { TentaFocusable } from "./TentaFocusable";
 import { TentaPhaser } from "./TentaPhaser";
 import { TentaStatuser } from "./TentaStatuser";
@@ -162,6 +162,24 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 
 	//---
 
+
+
+	//ff_onUnfocus(ff: Focuser, prior: Focuser, next: Focuser)
+	//{
+
+	//	if (this.expanded)
+	//	{
+
+	//		this.collapse();
+
+	//		if (next?.listener instanceof TentaBehavior)
+	//		{
+	//			next.listener.expand();
+	//		}
+
+	//	}
+
+	//}
 
 
 	//---

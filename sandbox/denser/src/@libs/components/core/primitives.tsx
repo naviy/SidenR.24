@@ -563,6 +563,16 @@ export interface PrimitiveClassesProps extends
 	//---
 
 
+	zIndex0?: boolean;
+	zIndex1?: boolean;
+	zIndex2?: boolean;
+	zIndex3?: boolean;
+	zIndex4?: boolean;
+
+
+	//---
+
+
 	border?: "blue" | "green" | "red";
 	borderBlue?: boolean;
 	borderGreen?: boolean;
@@ -790,6 +800,8 @@ export function GlobalStylesOfPrimitives(props: {
 		...range("opacity", 0, 10, 1, i => ({ opacity: i / 10.0 })),
 		...range("opacity0_", 1, 9, 1, i => ({ opacity: i / 10.0 })),
 
+		...range("zIndex", 0, 4, 1, i => ({ zIndex: i })),
+		
 
 		borderBlue: { border: "1px solid blue" },
 		borderGreen: { border: "1px solid green" },

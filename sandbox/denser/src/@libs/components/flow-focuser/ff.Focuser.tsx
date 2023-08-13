@@ -6,14 +6,13 @@
 import { Component, ReactNode, RefObject, useContext } from "react";
 import ReactDOM from "react-dom";
 
-import { $log, $logm, Div, MuiColor, SpaWaitingMask } from "../core";
+import { Div, MuiColor, SpaWaitingMask } from "../core";
 
-import { $error, $logb, adelay, arequestAnimationFrame, Key, TaskQueue, Values, _$error, _$log, __$error, ___$error } from "../core";
+import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
 import { Anchor, AnchorPart, AnchorProps, anchorPropsToString } from ".";
 
-import
-{
+import {
 	$animationDurationMs,
 	$min_priority,
 	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
@@ -24,7 +23,6 @@ import
 
 
 import { Caret, findInDirection } from ".";
-import { type } from "os";
 //import { IBindingModel } from "../../bindera";
 //import { IMethodSemantic, isMethodSemantic } from "../../semantics";
 
@@ -101,28 +99,28 @@ export interface FocuserScopeOptions
 
 
 
-export interface InspectArgs extends FrameOptions
-{
-}
+//export interface InspectArgs extends FrameOptions
+//{
+//}
 
 
-export type FrameCode = "view" | "edit" | string;
+//export type FrameCode = "view" | "edit" | string;
 
-export interface FrameOptions
-{
+//export interface FrameOptions
+//{
 
-	frameCode?: FrameCode;
+//	frameCode?: FrameCode;
 
-	panelIndex?: number;
-	float?: boolean;
-	pinned?: boolean;
+//	panelIndex?: number;
+//	float?: boolean;
+//	pinned?: boolean;
 
-	anchor?: string[];
-	backAnchor?: string[];
+//	anchor?: string[];
+//	backAnchor?: string[];
 
-	prms?: { [key: string]: any; }
+//	prms?: { [key: string]: any; }
 
-}
+//}
 
 
 
@@ -148,6 +146,8 @@ export interface FocuserProps
 
 	cls?: string;
 	name?: string;
+
+	data?: any;
 
 	initAnchorProps?: () => AnchorProps;
 	applyAnchorProps?: (props: AnchorProps | null) => any;
@@ -253,7 +253,7 @@ export interface FocuserProps
 	onExit?: ExitEvent/* | IMethodSemantic*/;
 
 	onInsert?: InsertEvent/* | IMethodSemantic*/;
-	onInspect?: InspectEvent/* | IMethodSemantic*/;
+	//onInspect?: InspectEvent/* | IMethodSemantic*/;
 	onDelete?: DeleteEvent/* | IMethodSemantic*/;
 	onActivate?: ActivateEvent/* | IMethodSemantic*/;
 	onSelect?: SelectEvent/* | IMethodSemantic*/;
@@ -290,7 +290,6 @@ export interface FocuserProps
 
 	//// запрет перехода фокуса на ближайший focuser в случае unmount текущего
 	//disabledFocusOnUnmount?: boolean;
-
 
 
 	//---
@@ -335,7 +334,7 @@ export interface IFocuserListener
 	ff_onExit?(ff: Focuser): void | boolean | Promise<void | boolean | Focuser>;
 
 	ff_onInsert?(ff: Focuser): void | boolean | Promise<any>;
-	ff_onInspect?(ff: Focuser, e: InspectArgs): void | boolean | Promise<any>;
+	//ff_onInspect?(ff: Focuser, e: InspectArgs): void | boolean | Promise<any>;
 	ff_onDelete?(ff: Focuser): void | boolean | Promise<any>;
 	ff_onActivate?(ff: Focuser, activated: boolean): void | boolean | Promise<any>;
 	ff_onSelect?(ff: Focuser): void | boolean | Promise<any>;
@@ -369,7 +368,7 @@ export type ExitEvent = (ff: Focuser) => void | boolean | Promise<void | boolean
 
 export type InsertEvent = (ff: Focuser) => void | boolean | Promise<any>;
 export type EditEvent = (ff: Focuser) => void | boolean | Promise<any>;
-export type InspectEvent = (ff: Focuser, e: InspectArgs) => void | boolean | Promise<any>;
+//export type InspectEvent = (ff: Focuser, e: InspectArgs) => void | boolean | Promise<any>;
 export type DeleteEvent = (ff: Focuser) => void | boolean | Promise<any>;
 export type ActivateEvent = (ff: Focuser, activated: boolean) => void | boolean | Promise<any>;
 export type SelectEvent = (ff: Focuser) => void | boolean | Promise<any>;
@@ -487,6 +486,8 @@ export class Focuser extends Component<FocuserProps>
 	}
 
 
+	get data() { return this.props.data; }
+	get listener() { return this.props.listener; }
 	//get model() { return this.props.model; }
 
 
@@ -3543,64 +3544,64 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	async inspect(e?: InspectArgs, applyToParents: boolean = true): Promise<boolean>
-	{
+	//async inspect(e?: InspectArgs, applyToParents: boolean = true): Promise<boolean>
+	//{
 
-		if (this._inspectIsStarted)
-			return false;
-
-
-		this._inspectIsStarted = true;
+	//	if (this._inspectIsStarted)
+	//		return false;
 
 
-
-		try
-		{
-			e = e || {};
-
-			let props = this.props;
+	//	this._inspectIsStarted = true;
 
 
 
-			if (props.onInspect)
-			{
-				//if (isMethodSemantic(props.onInspect))
-				//{
-				//	await props.onInspect.call(this.model, null);
-				//	return true;
-				//}
-				//else
-				if (await props.onInspect(this, e) !== false)
-				{
-					return true;
-				}
-			}
+	//	try
+	//	{
+	//		e = e || {};
+
+	//		let props = this.props;
 
 
 
-			if (props.listener?.ff_onInspect && await props.listener.ff_onInspect(this, e) !== false)
-			{
-				return true;
-			}
+	//		if (props.onInspect)
+	//		{
+	//			//if (isMethodSemantic(props.onInspect))
+	//			//{
+	//			//	await props.onInspect.call(this.model, null);
+	//			//	return true;
+	//			//}
+	//			//else
+	//			if (await props.onInspect(this, e) !== false)
+	//			{
+	//				return true;
+	//			}
+	//		}
 
 
 
-			if (applyToParents && !props.scope && this.parent && await this.parent.inspect(e))
-			{
-				return true;
-			}
+	//		if (props.listener?.ff_onInspect && await props.listener.ff_onInspect(this, e) !== false)
+	//		{
+	//			return true;
+	//		}
 
 
 
-			return false;
+	//		if (applyToParents && !props.scope && this.parent && await this.parent.inspect(e))
+	//		{
+	//			return true;
+	//		}
 
-		}
-		finally
-		{
-			this._inspectIsStarted = false;
-		}
 
-	}
+
+	//		return false;
+
+	//	}
+	//	finally
+	//	{
+	//		this._inspectIsStarted = false;
+	//	}
+
+	//}
 
 
 
@@ -4254,27 +4255,27 @@ export class Focuser extends Component<FocuserProps>
 				}
 
 
-				else if (key === Key.Tab)
-				{
-					e.preventDefault();
-					e.stopPropagation();
-					await Task.run(() => this.inspect({ frameCode: "next", float: false, }));
-				}
+				//else if (key === Key.Tab)
+				//{
+				//	e.preventDefault();
+				//	e.stopPropagation();
+				//	await Task.run(() => this.inspect({ frameCode: "next", float: false, }));
+				//}
 
 
-				else if (key === Key.F2)
-				{
-					e.preventDefault();
-					await Task.run(() => this.inspect({ frameCode: "view", float: true, }));
-				}
+				//else if (key === Key.F2)
+				//{
+				//	e.preventDefault();
+				//	await Task.run(() => this.inspect({ frameCode: "view", float: true, }));
+				//}
 
 
-				else if (key === Key.F4)
-				{
-					e.preventDefault();
-					await Task.run(() => this.inspect({ frameCode: "view", float: false }));
-					//await this.pin();
-				}
+				//else if (key === Key.F4)
+				//{
+				//	e.preventDefault();
+				//	await Task.run(() => this.inspect({ frameCode: "view", float: false }));
+				//	//await this.pin();
+				//}
 
 
 				else if (key === Key.Delete)
