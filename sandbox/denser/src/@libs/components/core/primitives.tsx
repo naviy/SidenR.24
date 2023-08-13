@@ -464,6 +464,7 @@ export interface PrimitiveClassesProps extends
 
 	flex?: boolean;
 	vflex?: boolean;
+	flexi?: boolean;
 
 	flex1?: boolean;
 	flex2?: boolean;
@@ -707,6 +708,13 @@ export function GlobalStylesOfPrimitives(props: {
 		vflex: {
 			display: "flex",
 			flexDirection: "column",
+		},
+
+		flexi: {
+			//flex: 1,
+			display: "flex",
+			flexDirection: "inherit",
+			gap: "inherit",
 		},
 
 		...range("flex", 1, 24, 1, i => ({

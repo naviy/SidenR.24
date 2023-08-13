@@ -17,6 +17,12 @@ export function Page02()
 
 			<Row05 start end />
 
+			{/*<Row05 start />*/}
+			{/*<Row05 />*/}
+			{/*<Row05 />*/}
+			{/*<Row05 />*/}
+			{/*<Row05 end />*/}
+
 			{/*<Row03 start />*/}
 			{/*<Row03 />*/}
 			{/*<Row03 />*/}
@@ -116,8 +122,8 @@ function Row05(props: Pane.RowProps)
 				<Pane p24 textRight>333 3333 33333 333333</Pane>
 			</Pane.Row>
 
-			<Expander use={expandedOnPhase1} noreexpand>
-				<Pane.Row gap1>
+			{/*<Expander use={expandedOnPhase1} noreexpand maxHeight={130}>*/}
+				<Pane.Row gap1 use={expandedOnPhase1} noreexpand>
 					<Pane p24>111 1111 11111 111111</Pane>
 					<Pane p24>222 2222 22222 222222</Pane>
 					<Pane p24 textRight>
@@ -130,23 +136,23 @@ function Row05(props: Pane.RowProps)
 						</Expander>
 					</Pane>
 				</Pane.Row>
-			</Expander>
+			{/*</Expander>*/}
 
 		</Pane.Col>
 
-		<Pane.Row gapi>
-			<Pane.Col gapi l={150}>
-				<Pane end={false} l={1} p8 center vcenter>aaa aaa aaaa</Pane>
-				<Expander use={expandedOnPhase1} flex2 wrapperCls="flex1 vflex">
-					<Pane.Col gap1 flex1>
-						<Pane p8 center vcenter>bbb bbb bbbb</Pane>
-						<Pane p8 center vcenter>ccc ccc cccc</Pane>
-					</Pane.Col>
-				</Expander>
-			</Pane.Col>
-			<Pane p24 vcenter>222 2222 22222 222222</Pane>
-			<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>
-		</Pane.Row>
+		{/*<Pane.Row gapi>*/}
+		{/*	<Pane.Col gapi l={150}>*/}
+		{/*		<Pane end={false} l={1} p8 center vcenter>aaa aaa aaaa</Pane>*/}
+		{/*		<Expander use={expandedOnPhase1} flex2 wrapperCls="flex1 vflex">*/}
+		{/*			<Pane.Col gap1 flex1>*/}
+		{/*				<Pane p8 center vcenter>bbb bbb bbbb</Pane>*/}
+		{/*				<Pane p8 center vcenter>ccc ccc cccc</Pane>*/}
+		{/*			</Pane.Col>*/}
+		{/*		</Expander>*/}
+		{/*	</Pane.Col>*/}
+		{/*	<Pane p24 vcenter>222 2222 22222 222222</Pane>*/}
+		{/*	<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>*/}
+		{/*</Pane.Row>*/}
 
 	</PileRow>;
 

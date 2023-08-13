@@ -2,7 +2,7 @@ import { styled } from "@mui/material";
 
 import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
-import { Block } from "./Bock";
+import { Block } from "./Block";
 import { Container } from "./Container";
 
 

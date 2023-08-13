@@ -32,17 +32,41 @@ const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 export function Expander(props: Expander.Props)
 {
 
+	props = UseHookProps.use(props);
+
 	let bhv = useNew(Expander.Behavior).use(null, props.wrapperRef, props);
 
 
-	let body = bhv.renderChildren();
+	let body = bhv.childrenShouldBeRendered && Values.one(props.children);
+
 
 	if (!props.wrapperRef)
 	{
-		body = bhv.renderWrapper(body);
+		body = <div
+			ref={bhv.wrapperRef}
+			className={props.wrapperCls}
+			children={body}
+		/>;
 	}
 
-	body = bhv.renderRoot(body);
+
+	body = createPrimitive(
+		Expander.Root,
+		{
+			ref: bhv.ref,
+
+			animated: bhv.animated,
+			hlimited: !!props.maxHeight,
+			timeout: bhv.timeout,
+
+			onTransitionEnd: bhv.onTransitionEnd,
+
+			children: body,
+		},
+		props,
+		Expander.propNames
+	);
+
 
 
 	return body;
@@ -83,7 +107,7 @@ export module Expander
 
 		timeout?: number;
 
-		onChange?: () => void;
+		onExpanedChange?: () => void;
 		onCollapsed?: () => void;
 		onExpanding?: () => void;
 		onExpanded?: () => void;
@@ -94,7 +118,7 @@ export module Expander
 	export const propNames: Array<keyof Props> = [
 		"expanded", "animated",
 		"noreexpand", "forceRender", "maxHeight", "timeout",
-		"onChange", "onCollapsed", "onExpanding", "onExpanded",
+		"onExpanedChange", "onCollapsed", "onExpanding", "onExpanded",
 
 	];
 
@@ -124,8 +148,18 @@ export module Expander
 		get expanded() { return this.props.expanded !== false; }
 		get timeout() { return this.props.timeout ?? $animationDurationMs; }
 
+		get animated() { return this.props.animated !== false; }
+
 		private collapsed!: boolean;
 		private _startHeight?: number | null;
+
+
+		get childrenShouldBeRendered()
+		{
+			return this.props.forceRender || !this.collapsed || this.expanded;
+		}
+
+
 
 
 
@@ -142,10 +176,7 @@ export module Expander
 		)
 		{
 
-			props = UseHookProps.use(props);
-
 			Repaintable.use(this, cfg);
-
 
 			this.ref = ref || useRef<HTMLDivElement>(null);
 			this.wrapperRef = wrapperRef || useRef<HTMLDivElement>(null);
@@ -386,7 +417,7 @@ export module Expander
 
 
 
-		private onTransitionEnd = (e: React.TransitionEvent) =>
+		/*private*/ onTransitionEnd = (e: React.TransitionEvent) =>
 		{
 
 			if (e.target !== this.el)
@@ -405,7 +436,7 @@ export module Expander
 			expanded ? this.setExpanded() : this.setCollapsed();
 
 
-			props.onChange?.();
+			props.onExpanedChange?.();
 
 
 			if (expanded)
@@ -473,69 +504,54 @@ export module Expander
 
 
 
-		renderRoot(wrapper: ReactNode)
-		{
+		//renderRoot(wrapper: ReactNode)
+		//{
 
-			let { props } = this;
-
-			//return (
-			//	<Expander.Root
-
-			//		ref={this.ref}
-			//		animated={props.animated !== false}
-			//		hlimited={!!props.maxHeight}
-			//		timeout={props.timeout}
-
-			//		onTransitionEnd={this.onTransitionEnd}
-
-			//		children={wrapper}
-
-			//	/>
-			//);
+		//	let { props } = this;
 
 
-			let body = createPrimitive(
-				Expander.Root,
-				{
-					ref: this.ref,
-					animated: props.animated !== false,
-					hlimited: !!props.maxHeight,
-					timeout: props.timeout,
-					onTransitionEnd: this.onTransitionEnd,
-					children: wrapper,
-				},
-				this.props,
-				propNames
-			);
+		//	let body = createPrimitive(
+		//		Expander.Root,
+		//		{
+		//			ref: this.ref,
+		//			animated: props.animated !== false,
+		//			hlimited: !!props.maxHeight,
+		//			timeout: props.timeout,
+		//			onTransitionEnd: this.onTransitionEnd,
+		//			children: wrapper,
+		//		},
+		//		this.props,
+		//		propNames
+		//	);
 
 
-			return body;
+		//	return body;
 
-		}
-
-
-		renderWrapper(children: ReactNode)
-		{
-			return <div
-				ref={this.wrapperRef}
-				className={this.props.wrapperCls}
-				children={children}
-			/>;
-		}
+		//}
 
 
-		renderChildren(): ReactNode
-		{
+		//renderWrapper(children: ReactNode)
+		//{
+		//	return <div
+		//		ref={this.wrapperRef}
+		//		className={this.props.wrapperCls}
+		//		children={children}
+		//	/>;
+		//}
 
-			let { props } = this;
 
-			return (
-				props.children && (props.forceRender || !this.collapsed || this.expanded)
-					? Values.one(props.children)
-					: null
-			);
+		//renderChildren(): ReactNode
+		//{
 
-		}
+		//	let { props } = this;
+
+		//	return (
+		//		props.children && (props.forceRender || !this.collapsed || this.expanded)
+		//			? Values.one(props.children)
+		//			: null
+		//	);
+
+		//}
 
 
 
@@ -557,13 +573,10 @@ export module Expander
 	)<{
 		animated: boolean;
 		hlimited: boolean;
-		timeout?: number;
+		timeout: number;
 	}>(
 		({ animated, hlimited, timeout }) =>
 		{
-
-			let timeout2 = `${timeout ?? $animationDurationMs}ms`;
-
 
 			return ({
 
@@ -572,7 +585,7 @@ export module Expander
 				willChange: "height",
 
 				...animated && {
-					transition: `all ease-in-out ${timeout2}, mask-image 0s, background ${timeout2} linear, opacity ${timeout2} linear, height ${timeout2} ease, max-height ${timeout2} ease !important`,
+					transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear, height ${timeout}ms ease, max-height ${timeout}ms ease !important`,
 				},
 
 				...animated && hlimited && {

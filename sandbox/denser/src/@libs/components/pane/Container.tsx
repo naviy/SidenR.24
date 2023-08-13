@@ -1,8 +1,9 @@
 import { styled } from "@mui/material";
 import { createContext, ReactNode, useContext, useRef } from "react";
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, Values } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
 import { mui3 } from "../core/mui3";
-import { Block } from "./Bock";
+import { Block } from "./Block";
+import { Expander } from "../tools";
 
 
 
@@ -23,7 +24,7 @@ export module Container
 
 
 
-	export interface Props extends Block.Props, UseHookProps<Props>
+	export interface Props extends Block.Props, Expander.BaseProps, UseHookProps<Props>
 	{
 
 		rounded?: boolean;
@@ -35,10 +36,11 @@ export module Container
 	}
 
 
-	const containerPropNames: Array<keyof (Props & PrimitiveProps)> = [		
+	const containerPropNames: Array<keyof (Props & PrimitiveProps)> = [
 		"rounded",
 		"e",
 		...Block.propNames,
+		...Expander.BaseProps.propNames,
 		...UseHookProps.propNames,
 	];
 
@@ -115,14 +117,14 @@ export module Container
 	export interface RowProps extends Props, PrimitiveProps<HTMLDivElement> { }
 
 
-	export function Col(props: ColProps)
-	{
-		return renderProvider("col", props, "vflex");
-	}
-
 	export function Div(props: DivProps)
 	{
 		return renderProvider("col", props);
+	}
+
+	export function Col(props: ColProps)
+	{
+		return renderProvider("col", props, "vflex");
 	}
 
 	export function Row(props: RowProps)
@@ -223,27 +225,67 @@ export module Container
 		}
 
 
-		let body = Values.one<ReactNode>(props.children);
+
+		let body = props.children;
+
+
+
+		let elRef = useRef<HTMLDivElement>(null);
+
+		let expanderProps = {};
+
+
+		if (props.expanded !== undefined)
+		{
+
+			let bhv = useNew(Expander.Behavior).use(elRef, null, props);
+
+			body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+
+			body = <div ref={bhv.wrapperRef} className="flexi" children={body} />;
+
+			expanderProps = {
+				expandable: true,
+				onTransitionEnd: bhv.onTransitionEnd,
+			};
+
+		}
+		else
+		{
+			body = Block.withAutoProps(Values.one(body));
+		}
+
 
 
 		body = createPrimitive(
 			Root,
 			{
+
+				ref: elRef,
 				className,
+
 				...sizes,
+
 				borderRadius: v.cssBorderRadius,
 				e: props.e,
+				timeout: props.timeout,
+
+				...expanderProps,
+
 				children: Block.withAutoProps(body),
+
 			},
 			props,
 			containerPropNames
 		);
 
 
+
 		body = <Context.Provider
 			value={valueRef.current!}
 			children={body}
 		/>;
+
 
 
 		return body;
@@ -260,6 +302,7 @@ export module Container
 		"div",
 		{
 			shouldForwardProp: p =>
+				p !== "expandable" &&
 				p !== "flex" &&
 				p !== "width" &&
 				p !== "minWidth" &&
@@ -268,10 +311,13 @@ export module Container
 				p !== "minHeight" &&
 				p !== "maxHeight" &&
 				p !== "borderRadius" &&
-				p !== "e"
+				p !== "e" &&
+				p !== "timeout"
 			,
 		}
 	)<{
+
+		expandable?: boolean;
 
 		flex?: number | string;
 
@@ -286,30 +332,43 @@ export module Container
 		borderRadius?: string;
 		e?: mui3.BoxShadow;
 
-	}>((props) => ({
+		timeout?: number;
+
+	}>((props) =>
+	{
+
+		let timeout = props.timeout || $defaultAnimationDurationMs;
 
 
-		position: "relative",
-		boxSizing: "border-box",
+		return {
 
-		flex: props.flex,
+			position: "relative",
+			boxSizing: "border-box",
 
-		borderRadius: props.borderRadius || "0",
+			flex: props.flex,
 
-		background: props.e == null ? "none" : mui3.Elevation.light[props.e].background,
-		boxShadow: props.e == null ? "none" : mui3.Elevation.light[props.e].boxShadow,
+			borderRadius: props.borderRadius || "0",
 
-		width: props.width,
-		minWidth: props.minWidth,
-		maxWidth: props.maxWidth,
+			background: props.e == null ? "none" : mui3.Elevation.light[props.e].background,
+			boxShadow: props.e == null ? "none" : mui3.Elevation.light[props.e].boxShadow,
 
-		height: props.height,
-		minHeight: props.minHeight,
-		maxHeight: props.maxHeight,
+			width: props.width,
+			minWidth: props.minWidth,
+			maxWidth: props.maxWidth,
 
-		transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+			height: props.height,
+			minHeight: props.minHeight,
+			maxHeight: props.maxHeight,
 
-	}));
+			...props.expandable && {
+				flex: undefined,
+				display: "block", 
+				willChange: "height",
+			},
+			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear, height ${timeout}ms ease, max-height ${timeout}ms ease !important`,
+
+		};
+	});
 
 
 
