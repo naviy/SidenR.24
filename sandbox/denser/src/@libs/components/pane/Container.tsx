@@ -4,6 +4,7 @@ import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookPr
 import { mui3 } from "../core/mui3";
 import { Block } from "./Block";
 import { Expander } from "../tools";
+import clsx from "clsx";
 
 
 
@@ -30,6 +31,8 @@ export module Container
 		rounded?: boolean;
 
 		e?: mui3.BoxShadow;
+
+		wrapperCls?: string | null;
 
 		children?: ReactNode;
 
@@ -242,7 +245,7 @@ export module Container
 
 			body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 
-			body = <div ref={bhv.wrapperRef} className="flexi" children={body} />;
+			body = <div ref={bhv.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
 
 			expanderProps = {
 				expandable: true,

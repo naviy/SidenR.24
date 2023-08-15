@@ -2,6 +2,7 @@ import _ from "lodash";
 import React, { ReactNode } from "react";
 import { isValidElement, ReactElement } from "react";
 import { BgColor as PaneBgColor } from "./BgColor";
+import ReactIs from "react-is";
 
 
 
@@ -130,6 +131,13 @@ export module Block
 	{
 
 		let childrenArr = React.Children.toArray(children);
+
+
+		if (childrenArr.length === 1 && ReactIs.isFragment(childrenArr[0]))
+		{
+			childrenArr = React.Children.toArray(childrenArr[0].props.children);
+		}
+
 
 		let startChild = _.find(childrenArr, isBlockElement) as ReactElement<Block.Props>;
 		let endChild = _.findLast(childrenArr, isBlockElement) as ReactElement<Block.Props>;
