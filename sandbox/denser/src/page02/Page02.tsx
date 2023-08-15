@@ -142,32 +142,33 @@ function Row05(props: Pane.RowProps)
 		</Row05Cover>
 	</PileRow>;
 
-}
 
 
+	function Row05Cover(props: { children: ReactNode })
+	{
 
-function Row05Cover(props: { children: ReactNode })
-{
+		let fs = React.Children.toArray(props.children);
 
-	let fs = React.Children.toArray(props.children);
+		let phase = Tenta.Phase.use();
 
-	let phase = Tenta.Phase.use();
+		return (
 
-	return (
+			<Pane.Col start end>
 
-		<Pane.Col start end>
+				<Pane.Row end={phase !== 1}>
+					{fs[0]}
+				</Pane.Row>
 
-			<Pane.Row end={phase !== 1}>
-				{fs[0]}
-			</Pane.Row>
+				<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
+					{fs[1]}
+				</Pane.Row>
 
-			<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
-				{fs[1]}
-			</Pane.Row>
+			</Pane.Col>
 
-		</Pane.Col>
+		);
 
-	);
+	}
+
 
 }
 
