@@ -801,7 +801,7 @@ export function GlobalStylesOfPrimitives(props: {
 		...range("opacity0_", 1, 9, 1, i => ({ opacity: i / 10.0 })),
 
 		...range("zIndex", 0, 4, 1, i => ({ zIndex: i })),
-		
+
 
 		borderBlue: { border: "1px solid blue" },
 		borderGreen: { border: "1px solid green" },
@@ -1027,8 +1027,8 @@ export function createPrimitive<TElement extends Element>(
 	elementProps: any,
 	primitiveProps: Readonly<PrimitiveProps<TElement>>,
 
-	ignoreClassProps?: string[],
-	ignoreClassProps2?: string[],
+	ignoreClassProps?: (string | number)[],
+	ignoreClassProps2?: (string | number)[],
 )
 {
 
@@ -1114,8 +1114,8 @@ export function createPrimitive<TElement extends Element>(
 
 export function primitivePropsToClassName(
 	props: PrimitiveClassesProps,
-	ignoreClassProps: string[] | undefined,
-	ignoreClassProps2?: string[],
+	ignoreClassProps: (string | number)[] | undefined,
+	ignoreClassProps2?: (string | number)[],
 )
 {
 

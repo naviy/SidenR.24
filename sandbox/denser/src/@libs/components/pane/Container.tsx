@@ -42,6 +42,7 @@ export module Container
 	const containerPropNames: Array<keyof (Props & PrimitiveProps)> = [
 		"rounded",
 		"e",
+		"wrapperCls",
 		...Block.propNames,
 		...Expander.BaseProps.propNames,
 		...UseHookProps.propNames,
@@ -368,7 +369,7 @@ export module Container
 				display: "block", 
 				willChange: "height",
 			},
-			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear, height ${timeout}ms ease, max-height ${timeout}ms ease !important`,
+			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
 
 		};
 	});

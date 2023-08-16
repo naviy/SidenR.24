@@ -1,8 +1,9 @@
-import { Div, Expander, Focuser, Pane, useNew } from '@libs';
+import { Div, Expander, FillFade, Focuser, Pane, TransitionGroup, useNew } from '@libs';
 import { Button } from "@mui/material";
 import { ReactNode, useReducer } from "react";
 import { Tenta } from './tentas';
 import React from "react";
+
 
 
 
@@ -103,7 +104,7 @@ function Row05(props: Pane.RowProps)
 
 
 	return <PileRow {...props}>
-		<Row05Cover>
+		<RowRim>
 
 			<>
 				<Pane p12>111 1111 11111 111111</Pane>
@@ -112,60 +113,76 @@ function Row05(props: Pane.RowProps)
 			</>
 
 			<>
-				<Pane p12>111 1111 11111 111111</Pane>
-				<Pane p12>222 2222 22222 222222</Pane>
-				<Pane p12 textRight>
-					333 3333 33333 333333
-					<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
-					<Expander id="2" expanded={expanded}>
-						<div>4444 4 4444 44 4 444444 4 44444 4444</div>
-						<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>
-						{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}
-					</Expander>
+				<Pane p12 vcenter>111 1111 11111 111111</Pane>
+				<Pane p12 vcenter>222 2222 22222 222222</Pane>
+				<Pane p12 vcenter textRight>
+					<div>
+						333 3333 33333 333333
+						<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
+						<Expander id="2" expanded={expanded}>
+							<div>4444 4 4444 44 4 444444 4 44444 4444</div>
+							<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>
+							{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}
+						</Expander>
+					</div>
 				</Pane>
 			</>
 
-			{/*<Pane.Row gapi>*/}
-			{/*	<Pane.Col gapi l={150}>*/}
-			{/*		<Pane end={false} l={1} p8 center vcenter>aaa aaa aaaa</Pane>*/}
-			{/*		<Expander use={expandedOnPhase1} flex2 wrapperCls="flex1 vflex">*/}
-			{/*			<Pane.Col gap1 flex1>*/}
-			{/*				<Pane p8 center vcenter>bbb bbb bbbb</Pane>*/}
-			{/*				<Pane p8 center vcenter>ccc ccc cccc</Pane>*/}
-			{/*			</Pane.Col>*/}
-			{/*		</Expander>*/}
-			{/*	</Pane.Col>*/}
-			{/*	<Pane p24 vcenter>222 2222 22222 222222</Pane>*/}
-			{/*	<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>*/}
-			{/*</Pane.Row>*/}
 
-		</Row05Cover>
+			<>
+				<Pane l={1} p8 center vcenter>aaa aaa aaaa</Pane>
+			</>
+
+			<Pane.Col gap1>
+				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
+				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
+				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
+			</Pane.Col>
+
+			<>
+				<Pane p12 vcenter>222 2222 22222 222222</Pane>
+				<Pane p12 textRight vcenter>333 3333 33333 333333</Pane>
+			</>
+
+		</RowRim>
+
 	</PileRow>;
 
 
 
-	function Row05Cover(props: { children: ReactNode })
+	function RowRim(props: { children: ReactNode })
 	{
-
-		let fs = React.Children.toArray(props.children);
 
 		let phase = Tenta.Phase.use();
 
-		return (
+		let fs = React.Children.toArray(props.children);
 
-			<Pane.Col start end>
+		return <>
+
+			<Pane.Col start>
 
 				<Pane.Row end={phase !== 1}>
 					{fs[0]}
 				</Pane.Row>
 
-				<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
+				<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand forceRender>
 					{fs[1]}
 				</Pane.Row>
 
 			</Pane.Col>
 
-		);
+			<Pane.Row gapi end>
+
+				<Pane.Col l={150} end={false}>
+					<TransitionGroup>
+						{phase !== 1 && <FillFade>{fs[2]}</FillFade>}
+						{phase === 1 && <FillFade>{fs[3]}</FillFade>}
+					</TransitionGroup>
+				</Pane.Col>
+				{fs[4]}
+			</Pane.Row >
+
+		</>;
 
 	}
 
