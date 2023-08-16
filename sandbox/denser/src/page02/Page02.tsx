@@ -1,4 +1,4 @@
-import { Div, Expander, FillFade, Focuser, Pane, TransitionGroup, useNew } from '@libs';
+import { Div, Expander, FillFade, FlexExpander, Focuser, Pane, TransitionGroup, useNew } from '@libs';
 import { Button } from "@mui/material";
 import { ReactNode, useReducer } from "react";
 import { Tenta } from './tentas';
@@ -99,10 +99,6 @@ function Row04(props: Pane.RowProps)
 function Row05(props: Pane.RowProps)
 {
 
-	let [expanded, toggleExpanded] = useReducer(a => !a, false);
-	let [expanded2, toggleExpanded2] = useReducer(a => !a, false);
-
-
 	return <PileRow {...props}>
 		<RowRim>
 
@@ -118,36 +114,54 @@ function Row05(props: Pane.RowProps)
 				<Pane p12 vcenter textRight>
 					<div>
 						333 3333 33333 333333
-						<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
-						<Expander id="2" expanded={expanded}>
-							<div>4444 4 4444 44 4 444444 4 44444 4444</div>
-							<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>
-							{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}
-						</Expander>
+						<Cell3 />
 					</div>
 				</Pane>
 			</>
 
 
 			<>
-				<Pane l={1} p8 center vcenter>aaa aaa aaaa</Pane>
+				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
 			</>
 
-			<Pane.Col gap1>
+			<Pane.Col gap1 flex1>
 				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
 				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
 				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
 			</Pane.Col>
 
+			<Pane.Col gap1 flex1>
+				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
+				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
+			</Pane.Col>
+
 			<>
 				<Pane p12 vcenter>222 2222 22222 222222</Pane>
-				<Pane p12 textRight vcenter>333 3333 33333 333333</Pane>
+				<Pane end p12 textRight vcenter>333 3333 33333 333333</Pane>
 			</>
 
 		</RowRim>
 
 	</PileRow>;
 
+
+
+	function Cell3()
+	{
+
+		let [expanded, toggleExpanded] = useReducer(a => !a, false);
+		let [expanded2, toggleExpanded2] = useReducer(a => !a, false);
+
+		return <>
+			<Button onClick={e => { e.stopPropagation(); toggleExpanded(); }}>TOGGLE</Button>
+			<Expander id="2" expanded={expanded}>
+				<div>4444 4 4444 44 4 444444 4 44444 4444</div>
+				<Button onClick={e => { e.stopPropagation(); toggleExpanded2(); }}>TOGGLE2</Button>
+				{expanded2 && <div>5555 5 5555 55 5 555555 5 55555 5555</div>}
+			</Expander>
+		</>;
+
+	}
 
 
 	function RowRim(props: { children: ReactNode })
@@ -165,7 +179,7 @@ function Row05(props: Pane.RowProps)
 					{fs[0]}
 				</Pane.Row>
 
-				<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand forceRender>
+				<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
 					{fs[1]}
 				</Pane.Row>
 
@@ -173,13 +187,22 @@ function Row05(props: Pane.RowProps)
 
 			<Pane.Row gapi end>
 
-				<Pane.Col l={150} end={false}>
+				<Pane.Col l={120}>
 					<TransitionGroup>
 						{phase !== 1 && <FillFade>{fs[2]}</FillFade>}
 						{phase === 1 && <FillFade>{fs[3]}</FillFade>}
 					</TransitionGroup>
 				</Pane.Col>
-				{fs[4]}
+
+				<Pane.Col l={120} end={false}>
+					{fs[2]}
+					<FlexExpander l={2} expanded={phase === 1} pt1={phase === 1}>
+						{fs[4]}
+					</FlexExpander>
+				</Pane.Col>
+
+				{fs[5]}
+
 			</Pane.Row >
 
 		</>;

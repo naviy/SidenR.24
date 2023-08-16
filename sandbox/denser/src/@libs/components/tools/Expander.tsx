@@ -112,10 +112,21 @@ export module Expander
 			return ({
 
 				position: "relative",
+				display: "inherit",
+				flexDirection: "inherit",
+				gap: "inherit",
 
 				willChange: "height",
 
 				transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear, height ${timeout}ms ease, max-height ${timeout}ms ease !important`,
+
+				">div": {
+					flex: 1,
+					display: "inherit",
+					flexDirection: "inherit",
+					gap: "inherit",
+
+				}
 
 			});
 		}
