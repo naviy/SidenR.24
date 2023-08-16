@@ -1,2 +1,2 @@
 export * from "./Expander";
-export * from "./FlexExpander";
+export * from "./FlexExpander2";

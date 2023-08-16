@@ -1,6 +1,6 @@
-import { createRef, ReactNode, RefObject, useLayoutEffect, useRef } from "react";
+import { createRef, ReactNode, RefObject, useLayoutEffect } from "react";
 
-import { $defaultAnimationDurationMs, $log, adelay, arequestAnimationFrame, Repaintable } from "../core";
+import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
 
 
 
@@ -13,7 +13,7 @@ import { $defaultAnimationDurationMs, $log, adelay, arequestAnimationFrame, Repa
 
 
 
-export interface ExpanderBaseProps
+export interface FlexExpanderBaseProps
 {
 
 	/** default = true */
@@ -24,7 +24,7 @@ export interface ExpanderBaseProps
 
 	forceRender?: boolean;
 
-	maxHeight?: number | string;
+	maxSize?: number | string;
 
 	timeout?: number;
 
@@ -43,9 +43,9 @@ export interface ExpanderBaseProps
 export module ExpanderBaseProps
 {
 
-	export const propNames: Array<keyof ExpanderBaseProps> = [
+	export const propNames: Array<keyof FlexExpanderBaseProps> = [
 		"expanded",
-		"noreexpand", "forceRender", "maxHeight", "timeout",
+		"noreexpand", "forceRender", "maxSize", "timeout",
 		"onExpanedChange", "onCollapsed", "onExpanding", "onExpanded",
 	];
 
@@ -56,7 +56,7 @@ export module ExpanderBaseProps
 
 
 
-export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProps> extends Repaintable.Async()
+export class FlexExpanderBehavior<Props extends FlexExpanderBaseProps = FlexExpanderBaseProps> extends Repaintable.Async()
 {
 
 	//---
@@ -65,19 +65,17 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 	props!: Readonly<Props>;
 
 	ref!: RefObject<HTMLDivElement>;
-	wrapperRef!: RefObject<HTMLDivElement>;
 
 
 	get el() { return this.ref.current; }
-	get wrapperEl() { return this.wrapperRef.current; }
-	get currentHeight() { return (this.wrapperEl || this.el)?.clientHeight; }
+	get currentSize() { return (this.el)?.style.flex; }
 
 
 	get expanded() { return this.props.expanded !== false; }
 	get timeout() { return this.props.timeout ?? $defaultAnimationDurationMs; }
 
 	private collapsed!: boolean;
-	private _startHeight?: number | null;
+	private _startSize?: number | string | null;
 
 
 	get childrenShouldBeRendered()
@@ -93,7 +91,6 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 	use(
 		ref: RefObject<HTMLDivElement> | null | undefined,
-		wrapperRef: RefObject<HTMLDivElement> | null | undefined,
 		props: Props,
 		cfg?: Repaintable.UseConfig
 	)
@@ -102,7 +99,6 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 		Repaintable.use(this, cfg);
 
 		this.ref = this.ref || ref || createRef<HTMLDivElement>();
-		this.wrapperRef = this.wrapperRef || wrapperRef || createRef<HTMLDivElement>();
 
 		let prevProps = this.props;
 		this.props = props;
@@ -116,7 +112,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 		if (this.el)
 		{
-			this._startHeight = this.currentHeight;
+			this._startSize = this.currentSize;
 		}
 
 
@@ -140,7 +136,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 		this.expanded ? this.setExpanded() : this.setCollapsed();
 
-		this._priorMaxHeight = this.props.maxHeight;
+		this._priorMaxSize = this.props.maxSize;
 
 	}
 
@@ -167,17 +163,17 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 		{
 			await this.collapse();
 		}
-		else if (expanded && this._startHeight != null)
+		else if (expanded && this._startSize != null)
 		{
 
 			if (!props.noreexpand)
 			{
-				await this.reexpand(this._startHeight!);
+				await this.reexpand(this._startSize!);
 			}
 
-			else if (this._priorMaxHeight !== props.maxHeight)
+			else if (this._priorMaxSize !== props.maxSize)
 			{
-				let maxHeight = props.maxHeight;
+				let maxHeight = props.maxSize;
 				el.style.maxHeight = maxHeight ? maxHeight + "px" : "9999px";
 				el.style.overflow = maxHeight ? "hidden" : "visible";
 			}
@@ -185,7 +181,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 		}
 
 
-		this._priorMaxHeight = props.maxHeight;
+		this._priorMaxSize = props.maxSize;
 
 	}
 
@@ -196,26 +192,30 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 
 	private _reexpandIndex = 0;
-	private _priorMaxHeight?: number | string;
+	private _priorMaxSize?: number | string;
 
 
 
-	private getExpandedHeight(height: number, useNewMaxHeight: boolean): string
+	private getExpandedSize(size: number | string, useNewMaxHeight: boolean): string
 	{
 
-		let maxHeight = useNewMaxHeight ? this.props.maxHeight : this._priorMaxHeight;
+		let maxSize = useNewMaxHeight ? this.props.maxSize : this._priorMaxSize;
 
 		if (useNewMaxHeight)
 		{
-			this._priorMaxHeight = this.props.maxHeight;
+			this._priorMaxSize = this.props.maxSize;
 		}
 
-		if (maxHeight)
+		if (maxSize)
 		{
-			return typeof maxHeight === "number" ? Math.min(height, maxHeight) + "px" : maxHeight;
+			return (
+				typeof size === "number" && typeof maxSize === "number"
+					? Math.min(size, maxSize) + "px"
+					: typeof maxSize === "number" ? maxSize + "px" : maxSize
+			);
 		}
 
-		return height + "px";
+		return typeof size === "number" ? size + "px" : size;
 
 	}
 
@@ -239,7 +239,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 		await arequestAnimationFrame(() =>
 		{
-			el.style.height = this.getExpandedHeight(this.currentHeight!, true);
+			el.style.height = this.getExpandedSize(this.currentSize!, true);
 			el.style.maxHeight = null!;
 		});
 
@@ -266,11 +266,11 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 		//await arequestAnimationFrame(() =>
 		//{
-		let maxHeight = this.props.maxHeight;
+		let maxSize = this.props.maxSize;
 
 		el.style.height = "auto";
-		el.style.maxHeight = maxHeight ? maxHeight + "px" : "9999px";
-		el.style.overflow = maxHeight ? "hidden" : "visible";
+		el.style.maxHeight = maxSize ? maxSize + "px" : "9999px";
+		el.style.overflow = maxSize ? "hidden" : "visible";
 		//});
 
 	}
@@ -289,7 +289,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 		await arequestAnimationFrame(() =>
 		{
-			el.style.height = this.getExpandedHeight(this._startHeight ?? this.currentHeight!, false);
+			el.style.height = this.getExpandedSize(this._startSize ?? this.currentSize!, false);
 			el.style.maxHeight = null!;
 		});
 
@@ -308,7 +308,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 			return;
 
 
-		this._startHeight = null;
+		this._startSize = null;
 
 		this.collapsed = true;
 
@@ -370,7 +370,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 
 	//@$logm
-	private async reexpand(startHeight: number)
+	private async reexpand(startHeight: number | string)
 	{
 
 		let el = this.el!;
@@ -383,7 +383,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 		await arequestAnimationFrame(() =>
 		{
 			el.style.overflow = "hidden";
-			el.style.height = this.getExpandedHeight(startHeight, false);
+			el.style.height = this.getExpandedSize(startHeight, false);
 			el.style.maxHeight = null!;
 		});
 
@@ -394,8 +394,8 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 		await arequestAnimationFrame(() =>
 		{
-			this._startHeight = null;
-			el.style.height = this.getExpandedHeight(this.currentHeight!, true);
+			this._startSize = null;
+			el.style.height = this.getExpandedSize(this.currentSize!, true);
 			el.style.maxHeight = null!;
 		});
 
@@ -408,6 +408,7 @@ export class ExpanderBehavior<Props extends ExpanderBaseProps = ExpanderBaseProp
 
 
 		await this.setExpanded();
+
 
 		return true;
 
