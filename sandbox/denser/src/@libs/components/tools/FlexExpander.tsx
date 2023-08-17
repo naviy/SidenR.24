@@ -1,9 +1,8 @@
 import { styled } from "@mui/material";
 
 import { createPrimitive, Div, DivProps, UseHookProps, useNew, Values } from "../core";
-import { ExpanderProps, ExpanderBehavior } from "./ExpanderBehavior";
-import { type } from "os";
-import { RefObject } from "react";
+import { ExpanderBehavior, ExpanderProps } from "./ExpanderBehavior";
+import { FlexExpanderBehavior } from "./FlexExpanderBehavior";
 
 
 
@@ -17,29 +16,19 @@ import { RefObject } from "react";
 
 
 
-export function Expander(props: Expander.Props)
+export function FlexExpander(props: FlexExpander.Props)
 {
 
 	props = UseHookProps.use(props);
 
-	let bhv = useNew(ExpanderBehavior).use(null, props.wrapperRef, props);
+	let bhv = useNew(FlexExpanderBehavior).use(null, props.l || 1, props);
 
 
 	let body = bhv.childrenShouldBeRendered && Values.one(props.children);
 
 
-	if (!props.wrapperRef)
-	{
-		body = <div
-			ref={bhv.wrapperRef}
-			className={props.wrapperCls}
-			children={body}
-		/>;
-	}
-
-
 	body = createPrimitive(
-		Expander.Root,
+		FlexExpander.Root,
 		{
 			ref: bhv.ref,
 
@@ -49,7 +38,7 @@ export function Expander(props: Expander.Props)
 			children: body,
 		},
 		props,
-		Expander.propNames
+		FlexExpander.propNames
 	);
 
 
@@ -63,7 +52,7 @@ export function Expander(props: Expander.Props)
 
 
 
-export module Expander
+export module FlexExpander
 {
 
 
@@ -76,13 +65,12 @@ export module Expander
 
 	export interface Props extends ExpanderProps, DivProps, UseHookProps<Props> 
 	{
-		wrapperRef?: RefObject<HTMLDivElement>;
-		wrapperCls?: string;
+		l?: number;
 	}
 
 
 	export const propNames: Array<keyof Props> = [
-		"wrapperRef", "wrapperCls",
+		"l",
 		...ExpanderProps.propNames,
 	];
 
@@ -94,9 +82,7 @@ export module Expander
 
 	export const Root = styled(
 		Div,
-		{
-			shouldForwardProp: p => p !== "timeout",
-		}
+		{ shouldForwardProp: p => p !== "timeout", }
 	)<{
 		timeout: number;
 	}>(
@@ -110,17 +96,9 @@ export module Expander
 				flexDirection: "inherit",
 				gap: "inherit",
 
-				willChange: "height",
+				willChange: "flex",
 
 				transition: `all ease-in-out ${timeout}ms, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
-
-				">div": {
-					flex: 1,
-					display: "inherit",
-					flexDirection: "inherit",
-					gap: "inherit",
-
-				}
 
 			});
 		}

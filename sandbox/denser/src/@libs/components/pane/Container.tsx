@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useRef } from "react";
 import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block } from "./Block";
-import { Expander } from "../tools";
+import { Expander, ExpanderBaseProps } from "../tools";
 import clsx from "clsx";
 
 
@@ -25,7 +25,7 @@ export module Container
 
 
 
-	export interface Props extends Block.Props, Expander.BaseProps, UseHookProps<Props>
+	export interface Props extends Block.Props, ExpanderBaseProps, UseHookProps<Props>
 	{
 
 		rounded?: boolean;
@@ -44,7 +44,7 @@ export module Container
 		"e",
 		"wrapperCls",
 		...Block.propNames,
-		...Expander.BaseProps.propNames,
+		...ExpanderBaseProps.propNames,
 		...UseHookProps.propNames,
 	];
 

@@ -1,2 +1,3 @@
+export * from "./ExpanderBaseBehavior";
 export * from "./Expander";
-export * from "./FlexExpander2";
+export * from "./FlexExpander";

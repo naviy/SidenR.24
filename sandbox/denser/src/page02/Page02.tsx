@@ -125,9 +125,9 @@ function Row05(props: Pane.RowProps)
 			</>
 
 			<Pane.Col gap1 flex1>
-				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
-				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
-				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
+				<Pane l={1} center vcenter>xxx xxx xxxx</Pane>
+				<Pane l={1} center vcenter>yyy yyy yyyy</Pane>
+				<Pane l={1} center vcenter>zzz zzz zzzz</Pane>
 			</Pane.Col>
 
 			<Pane.Col gap1 flex1>
