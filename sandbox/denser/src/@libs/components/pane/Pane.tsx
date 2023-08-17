@@ -166,7 +166,7 @@ export module Pane
 		"div",
 		{
 			shouldForwardProp: p =>
-				rootPropNames.indexOf(p as any) < 0
+				p !== "isFlex" && rootPropNames.indexOf(p as any) < 0
 			,
 		}
 	)<RootProps>((props) => ({

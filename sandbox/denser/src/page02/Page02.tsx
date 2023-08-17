@@ -124,11 +124,11 @@ function Row05(props: Pane.RowProps)
 				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
 			</>
 
-			<Pane.Col gap1 flex1>
+			<>
 				<Pane l={1} center vcenter>xxx xxx xxxx</Pane>
 				<Pane l={1} center vcenter>yyy yyy yyyy</Pane>
 				<Pane l={1} center vcenter>zzz zzz zzzz</Pane>
-			</Pane.Col>
+			</>
 
 			<Pane.Col gap1 flex1>
 				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
@@ -171,6 +171,7 @@ function Row05(props: Pane.RowProps)
 
 		let fs = React.Children.toArray(props.children);
 
+
 		return <>
 
 			<Pane.Col start>
@@ -187,7 +188,7 @@ function Row05(props: Pane.RowProps)
 
 			<Pane.Row gapi end>
 
-				<Pane.Col l={120}>
+				<Pane.Col gapi l={120}>
 					<TransitionGroup>
 						{phase !== 1 && <FillFade>{fs[2]}</FillFade>}
 						{phase === 1 && <FillFade>{fs[3]}</FillFade>}
@@ -196,9 +197,9 @@ function Row05(props: Pane.RowProps)
 
 				<Pane.Col l={120} end={false}>
 					{fs[2]}
-					<FlexExpander l={2} expanded={phase === 1} pt1={phase === 1}>
+					<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>
 						{fs[4]}
-					</FlexExpander>
+					</Pane.Col>
 				</Pane.Col>
 
 				{fs[5]}

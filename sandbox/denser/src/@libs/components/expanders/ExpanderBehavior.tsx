@@ -1,8 +1,6 @@
 import { createRef, RefObject } from "react";
 
-import { Repaintable } from "../core";
 import { ExpanderBaseBehavior, ExpanderBaseProps } from "./ExpanderBaseBehavior";
-import { type } from "os";
 
 
 

@@ -1,7 +1,6 @@
 import { ReactNode, useLayoutEffect } from "react";
 
 import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
-import { type } from "os";
 
 
 

@@ -104,6 +104,11 @@ export module Block
 			: min === true ? undefined : typeof height === "string" ? `0 0 ${height}` : !height ? 1 : height > 0 && height <= 24 ? height : `0 0 ${Math.abs(height)}px`
 		);
 
+		let isFlex = (inRow
+			? typeof width === "number" && width > 0 && width <= 24
+			: typeof height === "number" && height > 0 && height <= 24
+		);
+
 		width = typeof width === "string" || !width || width > 24 ? width : width < 0 ? -width : undefined;
 		height = typeof height === "string" || !height || height > 24 ? height : height < 0 ? -height : undefined;
 
@@ -114,9 +119,14 @@ export module Block
 
 
 		return {
+
 			flex,
+
 			width, minWidth, maxWidth,
 			height, minHeight, maxHeight,
+
+			isFlex,
+
 		};
 
 	}

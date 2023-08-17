@@ -1,6 +1,6 @@
 import { createRef, RefObject } from "react";
 
-import { $logm, Repaintable } from "../core";
+import { Repaintable } from "../core";
 import { ExpanderBaseBehavior, ExpanderBaseProps } from "./ExpanderBaseBehavior";
 
 

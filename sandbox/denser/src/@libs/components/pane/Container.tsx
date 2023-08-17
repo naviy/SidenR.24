@@ -1,9 +1,9 @@
 import { styled } from "@mui/material";
-import { createContext, ReactNode, useContext, useRef } from "react";
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
+import React, { createContext, ReactNode, useContext, useRef } from "react";
+import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
 import { mui3 } from "../core/mui3";
 import { Block } from "./Block";
-import { Expander, ExpanderBaseProps } from "../tools";
+import { Expander, ExpanderBaseProps, FlexExpanderBehavior } from "../expanders";
 import clsx from "clsx";
 
 
@@ -236,22 +236,40 @@ export module Container
 
 		let elRef = useRef<HTMLDivElement>(null);
 
-		let expanderProps = {};
+		let expanderProps: Partial<RootProps> = {};
 
 
 		if (props.expanded !== undefined)
 		{
 
-			let bhv = useNew(Expander.Behavior).use(elRef, null, props);
+			if (sizes.isFlex)
+			{
 
-			body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+				let bhv = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
 
-			body = <div ref={bhv.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
+				body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 
-			expanderProps = {
-				expandable: true,
-				onTransitionEnd: bhv.onTransitionEnd,
-			};
+				expanderProps = {
+					expandMode: "flex",
+					onTransitionEnd: bhv.onTransitionEnd,
+				};
+
+			}
+			else
+			{
+
+				let bhv = useNew(Expander.Behavior).use(elRef, null, props);
+
+				body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+
+				body = <div ref={bhv.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
+
+				expanderProps = {
+					expandMode: "height",
+					onTransitionEnd: bhv.onTransitionEnd,
+				};
+
+			}
 
 		}
 		else
@@ -302,26 +320,10 @@ export module Container
 
 
 
-	export const Root = styled(
-		"div",
-		{
-			shouldForwardProp: p =>
-				p !== "expandable" &&
-				p !== "flex" &&
-				p !== "width" &&
-				p !== "minWidth" &&
-				p !== "maxWidth" &&
-				p !== "height" &&
-				p !== "minHeight" &&
-				p !== "maxHeight" &&
-				p !== "borderRadius" &&
-				p !== "e" &&
-				p !== "timeout"
-			,
-		}
-	)<{
+	export interface RootProps extends React.HTMLProps<HTMLDivElement>
+	{
 
-		expandable?: boolean;
+		expandMode?: "height" | "flex";
 
 		flex?: number | string;
 
@@ -338,7 +340,29 @@ export module Container
 
 		timeout?: number;
 
-	}>((props) =>
+	}
+
+
+
+	export const Root = styled(
+		"div",
+		{
+			shouldForwardProp: p =>
+				p !== "expandMode" &&
+				p !== "isFlex" &&
+				p !== "flex" &&
+				p !== "width" &&
+				p !== "minWidth" &&
+				p !== "maxWidth" &&
+				p !== "height" &&
+				p !== "minHeight" &&
+				p !== "maxHeight" &&
+				p !== "borderRadius" &&
+				p !== "e" &&
+				p !== "timeout"
+			,
+		}
+	)<RootProps>((props) =>
 	{
 
 		let timeout = props.timeout || $defaultAnimationDurationMs;
@@ -364,10 +388,14 @@ export module Container
 			minHeight: props.minHeight,
 			maxHeight: props.maxHeight,
 
-			...props.expandable && {
+			...props.expandMode === "height" && {
 				flex: undefined,
-				display: "block", 
+				display: "block",
 				willChange: "height",
+			},
+			...props.expandMode === "flex" && {
+				gap: "inherit",
+				willChange: "flex",
 			},
 			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
 
