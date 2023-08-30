@@ -1,6 +1,6 @@
 import React from "react";
-import { $log, $logb, adelay, _$log, __$log } from "../..";
-import { Focuser, FocusActionProps } from ".";
+import { FocusActionProps, Focuser } from ".";
+import { $log, _$log, adelay } from "../..";
 
 
 
@@ -18,7 +18,7 @@ export const FocuserContext = React.createContext<Focuser | null>(null);
 
 
 
-let _animationFrameHandle: number | null;
+//let _animationFrameHandle: number | null;
 
 
 let _focusers: Focuser[] = [];

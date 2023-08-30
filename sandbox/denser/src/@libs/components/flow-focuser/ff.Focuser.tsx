@@ -10,10 +10,9 @@ import { Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
-import { Anchor, AnchorPart, AnchorProps, anchorPropsToString, CaretBehavior } from ".";
+import { $animationDurationMs, Anchor, AnchorPart, AnchorProps, anchorPropsToString } from ".";
 
 import {
-	$animationDurationMs,
 	$min_priority,
 	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
 	focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers,
@@ -23,8 +22,7 @@ import {
 
 
 import { Caret, findInDirection } from ".";
-//import { IBindingModel } from "../../bindera";
-//import { IMethodSemantic, isMethodSemantic } from "../../semantics";
+import { CaretBehavior } from "./ff.CaretBehavior";
 
 
 

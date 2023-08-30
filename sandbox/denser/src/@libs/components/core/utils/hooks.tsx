@@ -76,6 +76,7 @@ export function useForceUpdate(customForceUpdate?: () => void): () => void
 
 
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [_, update] = useReducer(a => a + 1, 0);
 	
 	function forceUpdate() { update(); }

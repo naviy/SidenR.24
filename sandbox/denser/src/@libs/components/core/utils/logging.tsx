@@ -1,4 +1,4 @@
-﻿export var $log_printStack = false;
+export var $log_printStack = false;
 $log_printStack = true;
 let $forcePrintStack = false;
 let $disablePrintStack = false;
@@ -529,7 +529,7 @@ export function $loge(...msgs: any[])
 
 
 
-var reStackClassMethod = /\<\/([\w\d_]+)\.prototype\.([\w\d_]+)\@/;
+//var reStackClassMethod = /\<\/([\w\d_]+)\.prototype\.([\w\d_]+)\@/;
 
 
 export function $printStack(msg: any[])
