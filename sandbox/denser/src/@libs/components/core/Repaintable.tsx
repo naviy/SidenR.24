@@ -88,6 +88,7 @@ export module Repaintable
 		_useForceUpdate?: () => (() => void) | (() => Promise<void>)
 	): void
 	{
+
 		if (cfg && cfg.forceUpdate !== undefined)
 		{
 			me.forceUpdate = cfg.forceUpdate;
@@ -100,6 +101,7 @@ export module Repaintable
 		{
 			me.forceUpdate = (_useForceUpdate || useForceUpdate)();
 		}
+
 	}
 
 

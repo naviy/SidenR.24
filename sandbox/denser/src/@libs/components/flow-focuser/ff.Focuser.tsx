@@ -10,7 +10,7 @@ import { Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
-import { Anchor, AnchorPart, AnchorProps, anchorPropsToString } from ".";
+import { Anchor, AnchorPart, AnchorProps, anchorPropsToString, CaretBehavior } from ".";
 
 import {
 	$animationDurationMs,
@@ -594,7 +594,7 @@ export class Focuser extends Component<FocuserProps>
 	get local()
 	{
 		let local = this.props.local;
-		return local || local == undefined;
+		return local || local === undefined;
 	}
 
 
@@ -605,7 +605,9 @@ export class Focuser extends Component<FocuserProps>
 	}
 
 
-	get color(): MuiColor { return this.props.color || Focuser.defaultColor; }
+	get color() { return this.caret?.props.color ?? this.props.color ?? Focuser.defaultColor; }
+	get borderRadius() { return this.caret?.props.borderRadius ?? this.props.borderRadius; }
+	get borderWidth() { return this.caret?.props.borderWidth ?? this.props.borderWidth; }
 
 
 
@@ -836,7 +838,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	carets: Caret[] = [];
+	carets: CaretBehavior[] = [];
 
 
 
@@ -1168,14 +1170,14 @@ export class Focuser extends Component<FocuserProps>
 	get caret() { return this.carets[0] || null; }
 
 
-	registerCaret(caret: Caret)
+	registerCaret(caret: CaretBehavior)
 	{
 		this.carets.register(caret);
 	}
 
 
 
-	removeCaret(caret: Caret)
+	removeCaret(caret: CaretBehavior)
 	{
 		this.carets.remove(caret);
 	}

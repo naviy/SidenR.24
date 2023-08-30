@@ -1,11 +1,10 @@
-import { Component, ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 import { alpha, styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, MuiColor } from "../core";
-//**import { bordererMask } from ".";
-import { currentFocuser, Focuser, FocuserContext } from ".";
+import { Focuser, FocuserContext, currentFocuser } from ".";
 import { $error, Values } from "../..";
+import { $defaultAnimationDurationMs, MuiColor, Repaintable, UseHookProps, useNew } from "../core";
 
 
 
@@ -191,7 +190,79 @@ const CaretBody = styled(
 
 
 
-export class Caret extends Component<{ children?: ReactNode }>
+export function Caret(props: Caret.Props)
+{
+
+	let bhv = useNew(CaretBehavior).use(props);
+
+	let ff = bhv.ff;
+	if (!ff) return null;
+
+
+	return <CaretBody
+
+		ref={bhv.setEl}
+
+		className="focuser-caret-body"
+
+		color={bhv._priorColor ?? ff.color}
+		borderRadius={bhv._priorBorderRadius ?? ff.borderRadius}
+		borderWidth={bhv._priorBorderWidth ?? ff.borderWidth}
+
+		inset={bhv.getInset()}
+		animation={!bhv._priorPosition && (!bhv.ffIsPrior || !currentFocuser())}
+		opacity={ff.isFocused ? 1 : 0}
+
+		children={<div>{props.children}</div>}
+
+	/>;
+}
+
+
+
+
+export module Caret
+{
+
+	//---
+
+
+
+	export interface Props extends UseHookProps<Props>
+	{
+
+		color?: MuiColor;
+		borderRadius?: Focuser.BorderRadius;
+		borderWidth?: Focuser.BorderWidth;
+
+		children?: ReactNode;
+
+	}
+
+
+
+	//---
+
+
+
+	let instanceCount = 0;
+
+
+	export function newId()
+	{
+		return instanceCount++;
+	}
+
+
+
+	//---
+
+}
+
+
+
+
+export class CaretBehavior extends Repaintable.Async()
 {
 
 	//---
@@ -203,39 +274,17 @@ export class Caret extends Component<{ children?: ReactNode }>
 	context: Focuser | undefined;
 
 
-	private static _instanceCount = 0;
-	id: number = Caret._instanceCount++;
+	id: number = Caret.newId();
 
 
 
 	//---
 
 
-
-	get ff(): Focuser | null
-	{
-
-		let ff = this._ff;
+	props!: Caret.Props;
 
 
-		if (ff === undefined)
-		{
-			ff = this.context;
-
-			while (ff && ff.props.noCaret)
-			{
-				ff = ff.parent;
-			}
-
-			this._ff = ff = ff || null;
-		}
-
-
-		return ff;
-	}
-
-	private _ff?: Focuser | null;
-
+	ff?: Focuser | null;
 
 	ffIsPrior?: boolean;
 
@@ -257,10 +306,48 @@ export class Caret extends Component<{ children?: ReactNode }>
 
 
 	private _position?: DOMRect | null;
-	private _priorPosition?: DOMRect | null;
+	/*private*/ _priorPosition?: DOMRect | null;
 	//private _priorPadding?: [number, number, number, number] | null;
-	private _priorBorderRadius?: Focuser.BorderRadius;
-	private _priorBorderWidth?: Focuser.BorderWidth;
+	/*private*/ _priorColor?: MuiColor | null;
+	/*private*/ _priorBorderRadius?: Focuser.BorderRadius;
+	/*private*/ _priorBorderWidth?: Focuser.BorderWidth;
+
+
+
+	//---
+
+
+
+	use(props: Caret.Props, cfg?: Repaintable.UseConfig)
+	{
+
+		this.props = UseHookProps.use(props);
+
+
+		Repaintable.use(this, cfg);
+
+
+		let ff = Focuser.use();
+
+		while (ff && ff.props.noCaret)
+		{
+			ff = ff.parent || null;
+		}
+
+		this.ff = ff || null;
+
+
+		useEffect(() =>
+		{
+			ff?.registerCaret(this);
+			return () => ff?.removeCaret(this);
+		});
+
+
+		return this;
+
+	}
+
 
 
 	//---
@@ -334,7 +421,7 @@ export class Caret extends Component<{ children?: ReactNode }>
 
 
 	//@$logm
-	update(prior: Focuser | null)
+	async update(prior: Focuser | null)
 	{
 
 		let ff = this.ff;
@@ -365,8 +452,9 @@ export class Caret extends Component<{ children?: ReactNode }>
 				prior = null;
 
 			this._priorPosition = prior?.caret?.recalcPosition();
-			this._priorBorderRadius = prior?.props.borderRadius;
-			this._priorBorderWidth = prior?.props.borderWidth;
+			this._priorColor = prior?.color;
+			this._priorBorderRadius = prior?.borderRadius;
+			this._priorBorderWidth = prior?.borderWidth;
 
 			//this._priorPadding = this.ffIsPrior ? null : prior?.safePadding();
 			//$log("this._priorPosition:", this._priorPosition);
@@ -374,20 +462,20 @@ export class Caret extends Component<{ children?: ReactNode }>
 
 			if (!this._priorPosition)
 			{
-				this.forceUpdate();
+				this.repaint();
 			}
 
 			else
 			{
 
-				this.forceUpdate(() =>
-				{
-					this._priorPosition = null;
-					this._priorBorderRadius = null;
-					this._priorBorderWidth = null;
+				await this.repaint();
 
-					this.forceUpdate();
-				});
+				this._priorPosition = null;
+				this._priorColor = null;
+				this._priorBorderRadius = null;
+				this._priorBorderWidth = null;
+
+				this.repaint();
 
 			}
 
@@ -397,7 +485,7 @@ export class Caret extends Component<{ children?: ReactNode }>
 		{
 
 			this._priorPosition = null;
-			this.forceUpdate();
+			this.repaint();
 
 		}
 
@@ -418,60 +506,6 @@ export class Caret extends Component<{ children?: ReactNode }>
 		el.classList.remove('shake-1', 'shake-2', 'shake-3');
 		void el.offsetWidth; // trigger reflow
 		el.classList.add(`shake-${mode || 1}`);
-
-	}
-
-
-
-	//---
-
-
-
-	componentDidMount()
-	{
-		this.ff?.registerCaret(this);
-	}
-
-
-
-	componentWillUnmount()
-	{
-		this.ff?.removeCaret(this);
-	}
-
-
-
-	render()
-	{
-
-		let ff = this.ff;
-
-		if (!ff)
-			return null;
-
-
-		//$log("ff.isFocused:", ff.isFocused);
-		//$log("this.getInset():", this.getInset());
-
-
-		return <CaretBody
-
-			ref={this.setEl}
-
-			className="focuser-caret-body"
-
-			color={ff.color}
-
-			borderRadius={this._priorBorderRadius ?? ff.props.borderRadius}
-			borderWidth={this._priorBorderWidth ?? ff.props.borderWidth}
-
-			inset={this.getInset()}
-			animation={!this._priorPosition && (!this.ffIsPrior || !currentFocuser())}
-			opacity={ff.isFocused ? 1 : 0}
-
-			children={<div>{this.props.children}</div>}
-
-		/>;
 
 	}
 

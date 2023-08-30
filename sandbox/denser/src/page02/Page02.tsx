@@ -1,8 +1,9 @@
-import { Div, Expander, FillFade, FlexExpander, Focuser, Pane, TransitionGroup, useNew } from '@libs';
+import { $log, Div, Expander, FillFade, FlexExpander, Focuser, Pane, TransitionGroup, useNew } from '@libs';
 import { Button } from "@mui/material";
 import { ReactNode, useReducer } from "react";
 import { Tenta } from './tentas';
 import React from "react";
+import { ContainerInfo } from "../@libs/components/pane/ContainerInfo";
 
 
 
@@ -299,7 +300,10 @@ function PileRow(props: Pane.RowProps)
 					cursorPointer
 					zIndex1={bhv.expanded}
 				>
-					<Focuser.Caret />
+					<Focuser.Caret
+						use={usePileRowCaretProps}
+						//color={props.start ? "green" : props.end ? "red" : undefined }
+					/>
 					{props.children}
 				</Pane.Row>
 
@@ -311,3 +315,10 @@ function PileRow(props: Pane.RowProps)
 
 }
 
+
+
+function usePileRowCaretProps()
+{
+	let row = ContainerInfo.use();
+	return { borderRadius: row?.cssBorderRadius };
+}
