@@ -1,8 +1,6 @@
 import _ from "lodash";
-import React, { ReactNode } from "react";
-import { isValidElement, ReactElement } from "react";
+import React, { isValidElement, ReactElement, ReactNode } from "react";
 import { BgColor as PaneBgColor } from "./BgColor";
-import ReactIs from "react-is";
 
 
 
@@ -18,6 +16,14 @@ export module Block
 
 	//---
 
+
+
+	export const bigBorderRadius = 12;
+	export const smallBorderRadius = 3;
+
+
+
+	//---
 
 
 	export interface Props 
@@ -140,13 +146,18 @@ export module Block
 	export function withAutoProps(children: ReactNode): ReactNode
 	{
 
-		let childrenArr = React.Children.toArray(children);
+		//return children;
+
+		let childrenArr = flattenChildren(children);
 
 
-		if (childrenArr.length === 1 && ReactIs.isFragment(childrenArr[0]))
-		{
-			childrenArr = React.Children.toArray(childrenArr[0].props.children);
-		}
+		//let childrenArr = React.Children.toArray(children);
+
+
+		//if (childrenArr.length === 1 && ReactIs.isFragment(childrenArr[0]))
+		//{
+		//	childrenArr = React.Children.toArray(childrenArr[0].props.children);
+		//}
 
 
 		let startChild = _.find(childrenArr, isBlockElement) as ReactElement<Block.Props>;
@@ -199,4 +210,50 @@ export function elementEqualBlockElements(
 ): el is ReactElement<Block.Props>
 {
 	return el === block;
+}
+
+
+
+function flattenChildren(children: ReactNode)
+{
+
+	const result: ReactNode[] = [];
+
+	let index = 0;
+
+
+	append(children);
+
+
+	return result;
+
+
+
+	function append(children: ReactNode)
+	{
+
+		React.Children.forEach(children, child =>
+		{
+			if (React.isValidElement(child))
+			{
+				if (child.type === React.Fragment)
+				{
+					append(child.props.children);
+				}
+				else
+				{
+					result.push(
+						React.cloneElement(child, { key: `.${index++}-.${child.key}` })
+					);
+				}
+			}
+			else
+			{
+				index++;
+				result.push(child);
+			}
+		});
+
+	}
+
 }

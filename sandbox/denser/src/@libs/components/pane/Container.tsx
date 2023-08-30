@@ -1,10 +1,12 @@
 import { styled } from "@mui/material";
-import React, { createContext, ReactNode, useContext, useRef } from "react";
-import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
-import { mui3 } from "../core/mui3";
-import { Block } from "./Block";
-import { Expander, ExpanderBaseProps, FlexExpanderBehavior } from "../expanders";
 import clsx from "clsx";
+import React, { useRef } from "react";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
+import { mui3 } from "../core/mui3";
+import { Expander, FlexExpanderBehavior } from "../expanders";
+import { Block } from "./Block";
+import { ContainerInfo } from "./ContainerInfo";
+import { ContainerProps } from "./ContainerProps";
 
 
 
@@ -25,100 +27,9 @@ export module Container
 
 
 
-	export interface Props extends Block.Props, ExpanderBaseProps, UseHookProps<Props>
-	{
-
-		rounded?: boolean;
-
-		e?: mui3.BoxShadow;
-
-		wrapperCls?: string | null;
-
-		children?: ReactNode;
-
-	}
-
-
-	const containerPropNames: Array<keyof (Props & PrimitiveProps)> = [
-		"rounded",
-		"e",
-		"wrapperCls",
-		...Block.propNames,
-		...ExpanderBaseProps.propNames,
-		...UseHookProps.propNames,
-	];
-
-
-
-	//---
-
-
-
-	export interface ContainerInfo 
-	{
-		type?: "row" | "col";
-
-		rounded?: boolean;
-
-		brtl?: boolean;
-		brtr?: boolean;
-		brbl?: boolean;
-		brbr?: boolean;
-		cssBorderRadius?: string;
-
-		ml?: number;
-		mr?: number;
-		mt?: number;
-		mb?: number;
-
-		pl?: number;
-		pr?: number;
-		pt?: number;
-		pb?: number;
-
-		p2l?: number;
-		p2r?: number;
-		p2t?: number;
-		p2b?: number;
-
-		gap?: number;
-
-	}
-
-
-	const containerInfoPropNames: Array<keyof ContainerInfo> = [
-		"type",
-		"rounded", "brtl", "brtr", "brbl", "brbr", "cssBorderRadius",
-		"ml", "mr", "mt", "mb",
-		"pl", "pr", "pt", "pb",
-		"p2l", "p2r", "p2t", "p2b",
-		"gap",
-	];
-
-
-	export const Context = createContext<ContainerInfo | null>(null);
-
-
-	export function use(): ContainerInfo | null
-	{
-		return useContext(Container.Context);
-	}
-
-
-
-	//---
-
-
-
-	//export function Host(props: Props & PrimitiveProps<HTMLDivElement>)
-	//{
-	//	return renderProvider(undefined, props);
-	//}
-
-
-	export interface DivProps extends Props, PrimitiveProps<HTMLDivElement> { }
-	export interface ColProps extends Props, PrimitiveProps<HTMLDivElement> { }
-	export interface RowProps extends Props, PrimitiveProps<HTMLDivElement> { }
+	export interface DivProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
+	export interface ColProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
+	export interface RowProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
 
 
 	export function Div(props: DivProps)
@@ -144,99 +55,74 @@ export module Container
 
 	export function renderProvider(
 		type: undefined | "row" | "col",
-		props: Partial<Props> & PrimitiveProps<HTMLDivElement>,
-		className?: string
+		props: Partial<ContainerProps> & PrimitiveProps<HTMLDivElement>,
+		addClassName?: string
 	)
 	{
 
 		props = UseHookProps.use(props);
 
-		let cprops = use() || {};
+		let parentInfo = ContainerInfo.use() || {};
 
-
-		let valueRef = useRef<ContainerInfo | null>();
-
-		if (valueRef.current == null)
-		{
-			valueRef.current = {};
-		}
-
-
-		let { rounded, start, end } = props;
-		let inRow = cprops.type === "row";
-		let inCol = cprops.type === "col";
-
-
-		let v0 = valueRef.current!;
-		let v: ContainerInfo = {};
-
-		v.type = type ?? cprops.type;
-
-
-		let ms = PrimitiveProps.getMargins(props);
-		let ps = PrimitiveProps.getPaddings(props);
-
-		v.ml = ms.ml;
-		v.mr = ms.mr;
-		v.mt = ms.mt;
-		v.mb = ms.mb;
-
-		v.pl = ps.pl;
-		v.pr = ps.pr;
-		v.pt = ps.pt;
-		v.pb = ps.pb;
 
 		let gap = PrimitiveProps.getGap(props);
 
-		v.gap = gap === "inherit" ? cprops.gap || 0 : gap || 0;
-
-		v.p2l = (inCol || start ? cprops.p2l || 0 : 0) + (v.ml && v.ml < 0 ? -v.ml - (v.pl || 0) : 0);
-		v.p2r = (inCol || end ? cprops.p2r || 0 : 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);
-		v.p2t = (inRow || start ? cprops.p2t || 0 : 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
-		v.p2b = (inRow || end ? cprops.p2b || 0 : 0) + (v.mb && v.mb < 0 ? -v.mb - (v.pb || 0) : 0);
-
-		let sizes = Block.getBoxSizes(
-			cprops.type,
-			props,
-			{ width: v.p2l + v.p2r, height: v.p2t + v.p2b }
+		let v = ContainerInfo.useValue(
+			ContainerInfo.build(
+				props,
+				parentInfo,
+				{
+					type: type ?? parentInfo.type,
+					...PrimitiveProps.getMargins(props),
+					...PrimitiveProps.getPaddings(props),
+					gap: gap === "inherit" ? parentInfo.gap || 0 : gap || 0,
+				},
+			)
 		);
 
 
-		v.brtl = !!(rounded || cprops.brtl && (inRow && start || inCol && start));
-		v.brtr = !!(rounded || cprops.brtr && (inRow && end || inCol && start));
-		v.brbr = !!(rounded || cprops.brbr && (inRow && end || inCol && end));
-		v.brbl = !!(rounded || cprops.brbl && (inRow && start || inCol && end));
 
-		let br2 = 12;
-		let br0 = 3;
+		let body = renderRoot(props, parentInfo, v, addClassName);
 
-		v.cssBorderRadius = [
-			v.brtl ? `${br2 + (v.pl || 0)}px` : !cprops.gap && (inRow && !start || inCol && !start) ? "0" : `${br0 + (v.pl || 0)}px`,
-			v.brtr ? `${br2 + (v.pr || 0)}px` : !cprops.gap && (inRow && !end || inCol && !start) ? "0" : `${br0 + (v.pr || 0)}px`,
-			v.brbr ? `${br2 + (v.pl || 0)}px` : !cprops.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + (v.pl || 0)}px`,
-			v.brbl ? `${br2 + (v.pr || 0)}px` : !cprops.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + (v.pr || 0)}px`,
-		].join(" ");
+
+		body = <ContainerInfo.Context.Provider
+			value={v}
+			children={body}
+		/>;
 
 
 
-		for (let prop of containerInfoPropNames)
-		{
-			if (v[prop] !== v0[prop])
-			{
-				valueRef.current = v;
-				break;
-			}
-		}
+		return body;
+
+	}
 
 
+
+	//---
+
+
+
+	function renderRoot(
+		props: ContainerProps,
+		parentInfo: ContainerInfo,
+		v: ContainerInfo,
+		addClassName?: string,
+	)
+	{
 
 		let body = props.children;
-
 
 
 		let elRef = useRef<HTMLDivElement>(null);
 
 		let expanderProps: Partial<RootProps> = {};
+
+
+		let sizes = Block.getBoxSizes(
+			parentInfo.type,
+			props,
+			{ width: v.p2l! + v.p2r!, height: v.p2t! + v.p2b! }
+		);
 
 
 		if (props.expanded !== undefined)
@@ -279,18 +165,19 @@ export module Container
 
 
 
-		body = createPrimitive(
+		return createPrimitive(
 			Root,
 			{
 
 				ref: elRef,
-				className,
 
 				...sizes,
 
 				borderRadius: v.cssBorderRadius,
+
 				e: props.e,
 				timeout: props.timeout,
+				className: addClassName,
 
 				...expanderProps,
 
@@ -298,19 +185,9 @@ export module Container
 
 			},
 			props,
-			containerPropNames
+			ContainerProps.propNames
 		);
 
-
-
-		body = <Context.Provider
-			value={valueRef.current!}
-			children={body}
-		/>;
-
-
-
-		return body;
 
 	}
 

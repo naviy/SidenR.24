@@ -17,7 +17,7 @@ export function Page02()
 
 		<Pane.Col mx48 m100 rounded e={0} p2 gap1>
 
-			{/*<Row05 start end />*/}
+			{/*<Row051 start end />*/}
 
 			<Row05 start />
 			<Row05 />
@@ -188,21 +188,77 @@ function Row05(props: Pane.RowProps)
 
 			<Pane.Row gapi end>
 
-				<Pane.Col gapi l={120}>
-					<TransitionGroup>
-						{phase !== 1 && <FillFade>{fs[2]}</FillFade>}
-						{phase === 1 && <FillFade>{fs[3]}</FillFade>}
-					</TransitionGroup>
-				</Pane.Col>
+				{/*<Pane.Col gapi l={120}>*/}
+				{/*	<TransitionGroup>*/}
+				{/*		{phase !== 1 && <FillFade>{fs[2]}</FillFade>}*/}
+				{/*		{phase === 1 && <FillFade>{fs[3]}</FillFade>}*/}
+				{/*	</TransitionGroup>*/}
+				{/*</Pane.Col>*/}
 
-				<Pane.Col l={120} end={false}>
-					{fs[2]}
+				<Pane.Col l={120}>
+					<Pane.Row end={phase !== 1}>
+						{fs[2]}
+					</Pane.Row>
 					<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>
 						{fs[4]}
 					</Pane.Col>
 				</Pane.Col>
 
 				{fs[5]}
+
+			</Pane.Row >
+
+		</>;
+
+	}
+
+
+}
+
+
+
+function Row051(props: Pane.RowProps)
+{
+
+	return <PileRow {...props}>
+		<RowRim>
+
+			<>
+				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
+			</>
+
+
+			<Pane.Col gap1 flex1>
+				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
+				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
+			</Pane.Col>
+
+		</RowRim>
+
+	</PileRow>;
+
+
+
+	function RowRim(props: { children: ReactNode })
+	{
+
+		let phase = Tenta.Phase.use();
+
+		let fs = React.Children.toArray(props.children);
+
+
+		return <>
+
+			<Pane.Row gapi end className="borderGreen">
+
+				<Pane.Col l={120} end={false} className="borderRed">
+					<Pane.Row>
+						{fs[0]}
+					</Pane.Row>
+					<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>
+						{fs[1]}
+					</Pane.Col>
+				</Pane.Col>
 
 			</Pane.Row >
 

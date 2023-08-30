@@ -4,6 +4,7 @@ import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookPr
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
 import { Container } from "./Container";
+import { ContainerInfo } from "./ContainerInfo";
 
 
 
@@ -22,37 +23,37 @@ export function Pane(props: Pane.Props)
 
 	props = UseHookProps.use(props);
 
-	let cprops = Container.use() || {};
+	let parentInfo = ContainerInfo.use() || {};
 
-	let { gap, } = cprops;
+	let { gap, } = parentInfo;
 	let { start, end, } = props;
 
-	let inRow = cprops.type === "row";
-	let inCol = cprops.type === "col";
+	let inRow = parentInfo.type === "row";
+	let inCol = parentInfo.type === "col";
 
 
-	let p2l = cprops.p2l && (inCol || start) ? cprops.p2l : 0;
-	let p2r = cprops.p2r && (inCol || end) ? cprops.p2r : 0;
-	let p2t = cprops.p2t && (inRow || start) ? cprops.p2t : 0;
-	let p2b = cprops.p2b && (inRow || end) ? cprops.p2b : 0;
+	let p2l = parentInfo.p2l && (inCol || start) ? parentInfo.p2l : 0;
+	let p2r = parentInfo.p2r && (inCol || end) ? parentInfo.p2r : 0;
+	let p2t = parentInfo.p2t && (inRow || start) ? parentInfo.p2t : 0;
+	let p2b = parentInfo.p2b && (inRow || end) ? parentInfo.p2b : 0;
 
 	let sizes = Block.getBoxSizes(
-		cprops.type,
+		parentInfo.type,
 		props,
 		{ width: p2l + p2r, height: p2t + p2b }
 	);
 
 
-	let br = cprops.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
-	let br2 = br === true || br === undefined ? "12px" : br === false || br === null ? undefined : `${br}px`;
+	let br = parentInfo.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
+	let br2 = br === true || br === undefined ? `${Block.bigBorderRadius}px` : br === false || br === null ? undefined : `${br}px`;
 
-	let br0 = "3px";
+	let br0 = `${Block.smallBorderRadius}px`;
 
 	let borderRadius = br2 && ([
-		cprops.brtl && (inRow && start || inCol && start) ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
-		cprops.brtr && (inRow && end || inCol && start) ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
-		cprops.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
-		cprops.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
+		parentInfo.brtl && (inRow && start || inCol && start) ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
+		parentInfo.brtr && (inRow && end || inCol && start) ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
+		parentInfo.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
+		parentInfo.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
 	].join(" "));
 
 
@@ -69,7 +70,7 @@ export function Pane(props: Pane.Props)
 	);
 
 
-	body = <Container.Context.Provider
+	body = <ContainerInfo.Context.Provider
 		value={null}
 		children={body}
 	/>;
