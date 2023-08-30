@@ -1,4 +1,4 @@
-import { $log, Focuser, Repaintable } from "@libs";
+import { Repaintable } from "@libs";
 import { TentaFocusable } from "./TentaFocusable";
 import { TentaPhaser } from "./TentaPhaser";
 import { TentaStatuser } from "./TentaStatuser";
