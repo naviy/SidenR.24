@@ -83,10 +83,11 @@ const CaretBody = styled(
 			borderRadius_ === undefined ? defaultBorderRadius :
 				borderRadius_ === null ? `0` :
 					borderRadius_ === "inherit" ? "inherit" :
-						(Values
-							.manyn(borderRadius_, a => a === undefined ? defaultBorderRadius : a === null ? "0" : `${a}px`)
-							.join(" ")
-						)
+						typeof borderRadius_ === "string" ? borderRadius_ :
+							(Values
+								.manyn(borderRadius_, a => a === undefined ? defaultBorderRadius : a === null ? "0" : `${a}px`)
+								.join(" ")
+							)
 		);
 
 
@@ -414,7 +415,7 @@ export class Caret extends Component<{ children?: ReactNode }>
 		let el = this.el!;
 		if (!el) return;
 
-		el.classList.remove('shake-1','shake-2','shake-3');
+		el.classList.remove('shake-1', 'shake-2', 'shake-3');
 		void el.offsetWidth; // trigger reflow
 		el.classList.add(`shake-${mode || 1}`);
 

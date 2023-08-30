@@ -85,16 +85,24 @@ export class FlexExpanderBehavior<Props extends FlexExpanderProps = FlexExpander
 
 
 
+	//@$logm
 	setSizes(
 		overflow: "hidden" | "visible",
-		flex: string | null | undefined
+		flex: string | number | null | undefined,
+		maxSize: string | number | null | undefined
 	)
 	{
 		let { el } = this;
 		if (!el) return;
 
+		flex ??= this.flex;
+		let maxHeight = flex && flex !== "0" ? "9999px" : "0";
+
+		//$log("flex:", flex);
+		//$log("maxHeight:", maxHeight)
 		el.style.overflow = overflow;
-		el.style.flex = flex == null ? this.flex + '' : flex + '';
+		el.style.flex = flex + "";
+		el.style.maxHeight = maxHeight;
 	}
 
 

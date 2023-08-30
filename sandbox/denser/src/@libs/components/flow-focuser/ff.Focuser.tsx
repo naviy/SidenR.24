@@ -4648,6 +4648,7 @@ export module Focuser
 		null /* 0 */ |
 		undefined |
 		"inherit" /* default */ |
+		string |
 		Values.Many<number | boolean>
 	);
 
