@@ -31,8 +31,6 @@ export function Pane(props: Pane.Props)
 	let inRow = parentInfo.type === "row";
 	let inCol = parentInfo.type === "col";
 
-	let { expander } = parentInfo;
-
 	//if (props.id)
 	//{
 	//	$log("Pane", props.id)
@@ -42,11 +40,11 @@ export function Pane(props: Pane.Props)
 	//}
 
 
-	let hasP2 = !expander || !expander.expanded || !expander.collapsed;
-	let p2l = hasP2 && parentInfo.p2l && (inCol || start) ? parentInfo.p2l : 0;
-	let p2r = hasP2 && parentInfo.p2r && (inCol || end) ? parentInfo.p2r : 0;
-	let p2t = hasP2 && parentInfo.p2t && (inRow || start) ? parentInfo.p2t : 0;
-	let p2b = hasP2 && parentInfo.p2b && (inRow || end) ? parentInfo.p2b : 0;
+	let noP2 = parentInfo.noP2;
+	let p2l = !noP2 && parentInfo.p2l && (inCol || start) ? parentInfo.p2l : 0;
+	let p2r = !noP2 && parentInfo.p2r && (inCol || end) ? parentInfo.p2r : 0;
+	let p2t = !noP2 && parentInfo.p2t && (inRow || start) ? parentInfo.p2t : 0;
+	let p2b = !noP2 && parentInfo.p2b && (inRow || end) ? parentInfo.p2b : 0;
 
 	let sizes = Block.getBoxSizes(
 		parentInfo.type,

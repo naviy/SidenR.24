@@ -132,7 +132,7 @@ export module Container
 			{
 
 				let expander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
-				v.expander = expander;
+				v.noP2 = expander.expanded && expander.collapsed;
 
 				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 
@@ -146,7 +146,7 @@ export module Container
 			{
 
 				let expander = useNew(Expander.Behavior).use(elRef, null, props);
-				v.expander = expander;
+				v.noP2 = expander.expanded && expander.collapsed;
 
 				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 

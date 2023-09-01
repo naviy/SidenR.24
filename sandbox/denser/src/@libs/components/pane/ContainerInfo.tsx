@@ -40,14 +40,13 @@ export interface ContainerInfo
 	pt?: number;
 	pb?: number;
 
+	noP2?: boolean;
 	p2l?: number;
 	p2r?: number;
 	p2t?: number;
 	p2b?: number;
 
 	gap?: number;
-
-		expander?: ExpanderBaseBehavior;
 
 }
 
@@ -68,9 +67,8 @@ export module ContainerInfo
 		"debug",
 		"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
-		"p2l", "p2r", "p2t", "p2b",
+		"noP2", "p2l", "p2r", "p2t", "p2b",
 		"gap",
-		"expander",
 	];
 
 
@@ -140,6 +138,7 @@ export module ContainerInfo
 			//_$log("expanded", v.expanded)
 		}
 
+		v.noP2 = v.noP2 || !!parentInfo.noP2;
 		v.p2l = (inCol || start ? parentInfo.p2l || 0 : 0) + (v.ml && v.ml < 0 ? -v.ml - (v.pl || 0) : 0);
 		v.p2r = (inCol || end ? parentInfo.p2r || 0 : 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);
 		v.p2t = (inRow || start ? parentInfo.p2t || 0 : 0) + (v.mt && v.mt < 0 ? -v.mt - (v.pt || 0) : 0);
