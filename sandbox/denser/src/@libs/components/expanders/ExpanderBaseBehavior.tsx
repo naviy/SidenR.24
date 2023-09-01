@@ -69,7 +69,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	get expanded() { return this.props.expanded !== false; }
 	get timeout() { return this.props.timeout ?? $defaultAnimationDurationMs; }
 
-	private collapsed!: boolean;
+	collapsed!: boolean;
 	private _startSize?: string | number | null;
 
 
@@ -237,6 +237,9 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 		this.props.onExpanding?.();
+
+
+		await this.repaint();
 
 
 		await arequestAnimationFrame(() =>

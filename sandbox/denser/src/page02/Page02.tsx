@@ -26,72 +26,9 @@ export function Page02()
 			<Row05 />
 			<Row05 end />
 
-			{/*<Row03 start />*/}
-			{/*<Row03 />*/}
-			{/*<Row03 />*/}
-
-			{/*<Row04 />*/}
-			{/*<Row04 />*/}
-			{/*<Row04 />*/}
-			{/*<Row04 end />*/}
-
 		</Pane.Col>
 
 	</>;
-
-}
-
-
-
-function Row03(props: Pane.RowProps)
-{
-
-	return <PileRow {...props}>
-
-		<Pane l={300} p24>111 1111 11111 111111</Pane>
-		<Pane p24>222 2222 22222 222222</Pane>
-		<Pane l={300} p24 textRight>333 3333 33333 333333</Pane>
-
-	</PileRow>;
-
-}
-
-
-
-function Row04(props: Pane.RowProps)
-{
-
-	return <PileRow {...props}>
-
-		<Pane.Col gapi l={560}>
-
-			<Pane.Row end={false}>
-				<Pane p24>111 1111 11111 111111</Pane>
-				<Pane p24>222 2222 22222 222222</Pane>
-				<Pane p24 textRight>333 3333 33333 333333</Pane>
-			</Pane.Row>
-
-			<Pane.Row gap1>
-				<Pane p24>111 1111 11111 111111</Pane>
-				<Pane p24>222 2222 22222 222222</Pane>
-				<Pane p24 textRight>333 3333 33333 333333</Pane>
-			</Pane.Row>
-
-		</Pane.Col>
-
-		<Pane.Row gapi l={2}>
-			<Pane.Col gapi l={150}>
-				<Pane end={false} p8 center vcenter>aaa aaa aaaa</Pane>
-				<Pane.Col gap1>
-					<Pane p8 center vcenter>bbb bbb bbbb</Pane>
-					<Pane p8 center vcenter>ccc ccc cccc</Pane>
-				</Pane.Col>
-			</Pane.Col>
-			<Pane p24 vcenter>222 2222 22222 222222</Pane>
-			<Pane p24 textRight vcenter>333 3333 33333 333333</Pane>
-		</Pane.Row>
-
-	</PileRow>;
 
 }
 
@@ -189,12 +126,12 @@ function Row05(props: Pane.RowProps)
 
 			<Pane.Row gapi end>
 
-				{/*<Pane.Col gapi l={120}>*/}
-				{/*	<TransitionGroup>*/}
-				{/*		{phase !== 1 && <FillFade>{fs[2]}</FillFade>}*/}
-				{/*		{phase === 1 && <FillFade>{fs[3]}</FillFade>}*/}
-				{/*	</TransitionGroup>*/}
-				{/*</Pane.Col>*/}
+				<Pane.Col gapi l={120}>
+					<TransitionGroup>
+						{phase !== 1 && <FillFade>{fs[2]}</FillFade>}
+						{phase === 1 && <FillFade>{fs[3]}</FillFade>}
+					</TransitionGroup>
+				</Pane.Col>
 
 				<Pane.Col l={120}>
 					<Pane.Row end={phase !== 1}>
@@ -224,15 +161,9 @@ function Row051(props: Pane.RowProps)
 	return <PileRow {...props}>
 		<RowRim>
 
-			<>
-				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
-			</>
+			<Pane id="1" p12>111 1111 11111 111111</Pane>
 
-
-			<Pane.Col gap1 flex1>
-				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
-				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
-			</Pane.Col>
+			<Pane id="2" p12 vcenter>111 1111 11111 111111</Pane>
 
 		</RowRim>
 
@@ -250,18 +181,17 @@ function Row051(props: Pane.RowProps)
 
 		return <>
 
-			<Pane.Row gapi end className="borderGreen">
+			<Pane.Col start end>
 
-				<Pane.Col l={120} end={false} className="borderRed">
-					<Pane.Row>
-						{fs[0]}
-					</Pane.Row>
-					<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>
-						{fs[1]}
-					</Pane.Col>
-				</Pane.Col>
+				<Pane.Row end={phase !== 1}>
+					{fs[0]}
+				</Pane.Row>
 
-			</Pane.Row >
+				<Pane.Row id="row51-2" expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
+					{fs[1]}
+				</Pane.Row>
+
+			</Pane.Col>
 
 		</>;
 
@@ -302,7 +232,7 @@ function PileRow(props: Pane.RowProps)
 				>
 					<Focuser.Caret
 						use={usePileRowCaretProps}
-						//color={props.start ? "green" : props.end ? "red" : undefined }
+					//color={props.start ? "green" : props.end ? "red" : undefined }
 					/>
 					{props.children}
 				</Pane.Row>

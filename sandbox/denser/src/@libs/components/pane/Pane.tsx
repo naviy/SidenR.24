@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, $log, _$log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
 import { Container } from "./Container";
@@ -31,11 +31,22 @@ export function Pane(props: Pane.Props)
 	let inRow = parentInfo.type === "row";
 	let inCol = parentInfo.type === "col";
 
+	let { expander } = parentInfo;
 
-	let p2l = parentInfo.p2l && (inCol || start) ? parentInfo.p2l : 0;
-	let p2r = parentInfo.p2r && (inCol || end) ? parentInfo.p2r : 0;
-	let p2t = parentInfo.p2t && (inRow || start) ? parentInfo.p2t : 0;
-	let p2b = parentInfo.p2b && (inRow || end) ? parentInfo.p2b : 0;
+	//if (props.id)
+	//{
+	//	$log("Pane", props.id)
+	//	_$log("parentInfo:", parentInfo.p2l, parentInfo.p2r)
+	//	expander && _$log("expander:", expander.expanded, expander.collapsed, expander.childrenShouldBeRendered);
+	//	_$log("p2:", p2)
+	//}
+
+
+	let hasP2 = !expander || !expander.expanded || !expander.collapsed;
+	let p2l = hasP2 && parentInfo.p2l && (inCol || start) ? parentInfo.p2l : 0;
+	let p2r = hasP2 && parentInfo.p2r && (inCol || end) ? parentInfo.p2r : 0;
+	let p2t = hasP2 && parentInfo.p2t && (inRow || start) ? parentInfo.p2t : 0;
+	let p2b = hasP2 && parentInfo.p2b && (inRow || end) ? parentInfo.p2b : 0;
 
 	let sizes = Block.getBoxSizes(
 		parentInfo.type,
@@ -55,6 +66,7 @@ export function Pane(props: Pane.Props)
 		parentInfo.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
 		parentInfo.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
 	].join(" "));
+
 
 
 	let body = createPrimitive(
@@ -111,7 +123,7 @@ export module Pane
 
 	export interface Props extends Block.Props, PrimitiveProps<HTMLDivElement>, UseHookProps<Props>
 	{
-
+		id?: string;
 	}
 
 

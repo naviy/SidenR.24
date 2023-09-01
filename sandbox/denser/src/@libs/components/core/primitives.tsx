@@ -577,6 +577,12 @@ export interface PrimitiveClassesProps extends
 	borderBlue?: boolean;
 	borderGreen?: boolean;
 	borderRed?: boolean;
+	border1?: boolean;
+	border2?: boolean;
+	border3?: boolean;
+	border4?: boolean;
+	borderDashed?: boolean;
+	borderDotted?: boolean;
 
 
 	//---
@@ -806,6 +812,12 @@ export function GlobalStylesOfPrimitives(props: {
 		borderBlue: { border: "1px solid blue" },
 		borderGreen: { border: "1px solid green" },
 		borderRed: { border: "1px solid red" },
+		border1: { borderWidth: "1px" },
+		border2: { borderWidth: "2px" },
+		border3: { borderWidth: "3px" },
+		border4: { borderWidth: "4px" },
+		borderDashed: { borderStyle: "dashed" },
+		borderDotted: { borderStyle: "dotted" },
 
 
 		"textPrimary": {

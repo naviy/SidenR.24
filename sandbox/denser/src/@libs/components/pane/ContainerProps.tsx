@@ -19,6 +19,9 @@ import { Block } from "./Block";
 export interface ContainerProps extends Block.Props, ExpanderBaseProps, UseHookProps<ContainerProps>
 {
 
+	id?: string;
+	debug?: boolean;
+
 	rounded?: boolean;
 
 	e?: mui3.BoxShadow;
@@ -37,6 +40,7 @@ export module ContainerProps
 
 
 	export const propNames: Array<keyof (ContainerProps & PrimitiveProps)> = [
+		"debug",
 		"rounded",
 		"e",
 		"wrapperCls",

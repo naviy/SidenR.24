@@ -1,6 +1,8 @@
 import { createContext, useContext, useRef } from "react";
 import { Block } from "./Block";
 import { ContainerProps } from "./ContainerProps";
+import { $log, _$log } from "../core";
+import { ExpanderBaseBehavior } from "../expanders";
 
 
 
@@ -17,6 +19,8 @@ import { ContainerProps } from "./ContainerProps";
 export interface ContainerInfo 
 {
 	type?: "row" | "col";
+
+	debug?: boolean;
 
 	rounded?: boolean;
 
@@ -43,6 +47,8 @@ export interface ContainerInfo
 
 	gap?: number;
 
+		expander?: ExpanderBaseBehavior;
+
 }
 
 
@@ -59,11 +65,12 @@ export module ContainerInfo
 
 	export const propNames: Array<keyof ContainerInfo> = [
 		"type",
-		"rounded", "brtl", "brtr", "brbl", "brbr", "cssBorderRadius",
+		"debug",
 		"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
 		"p2l", "p2r", "p2t", "p2b",
 		"gap",
+		"expander",
 	];
 
 
@@ -117,10 +124,21 @@ export module ContainerInfo
 		v: ContainerInfo,
 	): ContainerInfo
 	{
+		//_$log("props", props)
 
-		let { rounded, start, end } = props;
+
+		let { rounded, start, end, debug } = props;
 		let inRow = parentInfo.type === "row";
 		let inCol = parentInfo.type === "col";
+
+		v.debug = !!(debug ?? parentInfo.debug);
+
+
+		if (props.id)
+		{
+			$log("ContainerInfo", props.id, ".build")
+			//_$log("expanded", v.expanded)
+		}
 
 		v.p2l = (inCol || start ? parentInfo.p2l || 0 : 0) + (v.ml && v.ml < 0 ? -v.ml - (v.pl || 0) : 0);
 		v.p2r = (inCol || end ? parentInfo.p2r || 0 : 0) + (v.mr && v.mr < 0 ? -v.mr - (v.pr || 0) : 0);

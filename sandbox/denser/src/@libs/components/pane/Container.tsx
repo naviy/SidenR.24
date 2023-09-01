@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { Box, colors, styled } from "@mui/material";
 import clsx from "clsx";
 import React, { useRef } from "react";
 import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
@@ -131,28 +131,30 @@ export module Container
 			if (sizes.isFlex)
 			{
 
-				let bhv = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
+				let expander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
+				v.expander = expander;
 
-				body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 
 				expanderProps = {
 					expandMode: "flex",
-					onTransitionEnd: bhv.onTransitionEnd,
+					onTransitionEnd: expander.onTransitionEnd,
 				};
 
 			}
 			else
 			{
 
-				let bhv = useNew(Expander.Behavior).use(elRef, null, props);
+				let expander = useNew(Expander.Behavior).use(elRef, null, props);
+				v.expander = expander;
 
-				body = bhv.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 
-				body = <div ref={bhv.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
+				body = <div ref={expander.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
 
 				expanderProps = {
 					expandMode: "height",
-					onTransitionEnd: bhv.onTransitionEnd,
+					onTransitionEnd: expander.onTransitionEnd,
 				};
 
 			}
@@ -161,6 +163,44 @@ export module Container
 		else
 		{
 			body = Block.withAutoProps(Values.one(body));
+		}
+
+
+
+		if (v.debug)
+		{
+
+			let isRow = v.type === "row";
+
+			let color = isRow ? "rgba(30,30,160, .5)" : "rgba(30,100,30, .5)";
+
+			body = <>
+				<Box sx={{
+					position: "absolute",
+					inset: "0 0 0 0",
+					overflow: "hidden",
+					border: `2px solid ${color}`,
+					borderRadius: "inherit",
+					zIndex: 1
+				}}>
+					<Box sx={{
+						position: "absolute",
+						top: 0,
+						left: 0,
+						fontSize: "8px",
+						padding: "0px 8px 2px 6px",
+						background: color,
+						color: "white",
+						whiteSpace: "nowrap",
+					}}>
+						<b>{v.type}{props.id && ` #${props.id}`}</b>{props.start && " start"}{props.end && " end"}
+					</Box>
+				</Box>
+				{body}
+			</>;
+
+			addClassName = clsx(addClassName, "m4 pt16")
+
 		}
 
 
@@ -181,7 +221,7 @@ export module Container
 
 				...expanderProps,
 
-				children: Block.withAutoProps(body),
+				children: body,
 
 			},
 			props,
