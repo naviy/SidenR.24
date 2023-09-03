@@ -1,8 +1,6 @@
 import { createContext, useContext, useRef } from "react";
 import { Block } from "./Block";
 import { ContainerProps } from "./ContainerProps";
-import { $log, _$log } from "../core";
-import { ExpanderBaseBehavior } from "../expanders";
 
 
 
@@ -45,8 +43,14 @@ export interface ContainerInfo
 	ppr?: number;
 	ppt?: number;
 	ppb?: number;
+	ppl0?: number;
+	ppr0?: number;
+	ppt0?: number;
+	ppb0?: number;
 
 	gap?: number;
+
+	preExpanding?: boolean;
 
 }
 
@@ -67,8 +71,11 @@ export module ContainerInfo
 		"debug",
 		//"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
-		"noPP", "ppl", "ppr", "ppt", "ppb",
+		"noPP",
+		"ppl", "ppr", "ppt", "ppb",
+		"ppl0", "ppr0", "ppt0", "ppb0",
 		"gap",
+		"preExpanding",
 	];
 
 
@@ -116,7 +123,7 @@ export module ContainerInfo
 
 
 
-	export function build(
+	export function init(
 		props: Partial<ContainerProps>,
 		parentInfo: ContainerInfo,
 		v: ContainerInfo,
@@ -125,18 +132,15 @@ export module ContainerInfo
 		//_$log("props", props)
 
 
-		let { rounded, start, end, debug } = props;
-		let inRow = parentInfo.type === "row";
-		let inCol = parentInfo.type === "col";
 
-		v.debug = !!(debug ?? parentInfo.debug);
+		v.debug = !!(props.debug ?? parentInfo.debug);
 
 
-		if (props.id)
-		{
-			$log("ContainerInfo", props.id, ".build")
-			//_$log("expanded", v.expanded)
-		}
+		//if (props.id)
+		//{
+		//	$log("ContainerInfo", props.id, ".build")
+		//	//_$log("expanded", v.expanded)
+		//}
 
 
 		v.pl = v.pl || 0;
@@ -144,13 +148,37 @@ export module ContainerInfo
 		v.pt = v.pt || 0;
 		v.pb = v.pb || 0;
 
-		let { pp, ppx, ppy } = props;
+
+		return v;
+
+	}
+
+
+
+	export function build(
+		props: Partial<ContainerProps>,
+		parentInfo: ContainerInfo,
+		v: ContainerInfo,
+	): ContainerInfo
+	{
+
+		let { rounded, start, end, } = props;
+		let inRow = parentInfo.type === "row";
+		let inCol = parentInfo.type === "col";
 
 		v.noPP = v.noPP || !!props.noPP || !!parentInfo.noPP;
+
+		let { pp, ppx, ppy } = props;
 		v.ppl = (inCol || start ? parentInfo.ppl || 0 : 0) + (props.ppl ?? ppx ?? pp ?? 0);
 		v.ppr = (inCol || end ? parentInfo.ppr || 0 : 0) + (props.ppr ?? ppx ?? pp ?? 0);
 		v.ppt = (inRow || start ? parentInfo.ppt || 0 : 0) + (props.ppt ?? ppy ?? pp ?? 0);
 		v.ppb = (inRow || end ? parentInfo.ppb || 0 : 0) + (props.ppb ?? ppy ?? pp ?? 0);
+
+		let { pp0, ppx0, ppy0 } = props;
+		v.ppl0 = (inCol || start ? parentInfo.ppl0 || 0 : 0) + (props.ppl0 ?? ppx0 ?? pp0 ?? 0);
+		v.ppr0 = (inCol || end ? parentInfo.ppr0 || 0 : 0) + (props.ppr0 ?? ppx0 ?? pp0 ?? 0);
+		v.ppt0 = (inRow || start ? parentInfo.ppt0 || 0 : 0) + (props.ppt0 ?? ppy0 ?? pp0 ?? 0);
+		v.ppb0 = (inRow || end ? parentInfo.ppb0 || 0 : 0) + (props.ppb0 ?? ppy0 ?? pp0 ?? 0);
 
 		v.brtl = !!(rounded || parentInfo.brtl && (inRow && start || inCol && start));
 		v.brtr = !!(rounded || parentInfo.brtr && (inRow && end || inCol && start));
@@ -161,10 +189,10 @@ export module ContainerInfo
 		let br0 = Block.smallBorderRadius;
 
 		v.cssBorderRadius = [
-			v.brtl ? `${br2 + v.pl}px` : !parentInfo.gap && (inRow && !start || inCol && !start) ? "0" : `${br0 + v.pl}px`,
-			v.brtr ? `${br2 + v.pr}px` : !parentInfo.gap && (inRow && !end || inCol && !start) ? "0" : `${br0 + v.pr}px`,
-			v.brbr ? `${br2 + v.pl}px` : !parentInfo.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + v.pl}px`,
-			v.brbl ? `${br2 + v.pr}px` : !parentInfo.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + v.pr}px`,
+			v.brtl ? `${br2 + v.pl!}px` : !parentInfo.gap && (inRow && !start || inCol && !start) ? "0" : `${br0 + v.pl!}px`,
+			v.brtr ? `${br2 + v.pr!}px` : !parentInfo.gap && (inRow && !end || inCol && !start) ? "0" : `${br0 + v.pr!}px`,
+			v.brbr ? `${br2 + v.pl!}px` : !parentInfo.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + v.pl!}px`,
+			v.brbl ? `${br2 + v.pr!}px` : !parentInfo.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + v.pr!}px`,
 		].join(" ");
 
 

@@ -239,7 +239,10 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 		this.props.onExpanding?.();
 
 
-		await this.repaint();
+		if (!this.props.forceRender)
+		{
+			await this.repaint();
+		}
 
 
 		await arequestAnimationFrame(() =>

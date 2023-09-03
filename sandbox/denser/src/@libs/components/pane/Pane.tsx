@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, $log, _$log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
 import { Container } from "./Container";
@@ -31,26 +31,29 @@ export function Pane(props: Pane.Props)
 	let inRow = parentInfo.type === "row";
 	let inCol = parentInfo.type === "col";
 
+
+
+	let { noPP, preExpanding } = parentInfo;
+
+	let p2l = !noPP && (inCol || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
+	let p2r = !noPP && (inCol || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
+	let p2t = !noPP && (inRow || start) && (preExpanding ? parentInfo.ppt0 : parentInfo.ppt) || 0;
+	let p2b = !noPP && (inRow || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
+
+
 	//if (props.id)
 	//{
 	//	$log("Pane", props.id)
-	//	_$log("parentInfo:", parentInfo.p2l, parentInfo.p2r)
-	//	expander && _$log("expander:", expander.expanded, expander.collapsed, expander.childrenShouldBeRendered);
-	//	_$log("p2:", p2)
+	//	_$log("parentInfo:", parentInfo.preExpanding, parentInfo.ppl, parentInfo.ppl0)
+	//	_$log("p2l", p2l)
 	//}
-
-
-	let noPP = parentInfo.noPP;
-	let p2l = !noPP && parentInfo.ppl && (inCol || start) ? parentInfo.ppl : 0;
-	let p2r = !noPP && parentInfo.ppr && (inCol || end) ? parentInfo.ppr : 0;
-	let p2t = !noPP && parentInfo.ppt && (inRow || start) ? parentInfo.ppt : 0;
-	let p2b = !noPP && parentInfo.ppb && (inRow || end) ? parentInfo.ppb : 0;
 
 	let sizes = Block.getBoxSizes(
 		parentInfo.type,
 		props,
-		{ width: p2l + p2r, height: p2t + p2b }
 	);
+
+	sizes = Block.sumBoxSizes(sizes, { width: p2l + p2r, height: p2t + p2b });
 
 
 	let br = parentInfo.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;

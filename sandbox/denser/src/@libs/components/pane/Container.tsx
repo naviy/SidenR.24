@@ -3,7 +3,7 @@ import clsx from "clsx";
 import React, { useRef } from "react";
 import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { mui3 } from "../core/mui3";
-import { Expander, FlexExpanderBehavior } from "../expanders";
+import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
 import { ContainerProps } from "./ContainerProps";
@@ -64,64 +64,21 @@ export module Container
 
 		let parentInfo = ContainerInfo.use() || {};
 
-
-		let gap = PrimitiveProps.getGap(props);
-
-		let v = ContainerInfo.useValue(
-			ContainerInfo.build(
-				props,
-				parentInfo,
-				{
-					type: type ?? parentInfo.type,
-					//...PrimitiveProps.getMargins(props),
-					...PrimitiveProps.getPaddings(props),
-					gap: gap === "inherit" ? parentInfo.gap || 0 : gap || 0,
-				},
-			)
-		);
-
-
-
-		let body = renderRoot(props, parentInfo, v, addClassName);
-
-
-		body = <ContainerInfo.Context.Provider
-			value={v}
-			children={body}
-		/>;
-
-
-
-		return body;
-
-	}
-
-
-
-	//---
-
-
-
-	function renderRoot(
-		props: ContainerProps,
-		parentInfo: ContainerInfo,
-		v: ContainerInfo,
-		addClassName?: string,
-	)
-	{
-
-		let body = props.children;
-
-
 		let elRef = useRef<HTMLDivElement>(null);
 
-		let expanderProps: Partial<RootProps> = {};
 
+		//props.id && $log(type, props.id)
+		//props.id && _$log("ppx", props.ppx);
+		//props.id && _$log("ppx0", props.ppx0);
+		
+
+		let expander: ExpanderBehavior | undefined = undefined;
+		let flexExpander: FlexExpanderBehavior | undefined = undefined;
+		let preExpanding = false;
 
 		let sizes = Block.getBoxSizes(
 			parentInfo.type,
 			props,
-			{ width: v.ppl! + v.ppr!, height: v.ppt! + v.ppb! }
 		);
 
 
@@ -130,34 +87,79 @@ export module Container
 
 			if (sizes.isFlex)
 			{
-
-				let expander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
-				v.noPP = expander.expanded && expander.collapsed;
-
-				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
-
-				expanderProps = {
-					expandMode: "flex",
-					onTransitionEnd: expander.onTransitionEnd,
-				};
+				flexExpander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
+				preExpanding = flexExpander.expanded && flexExpander.collapsed;
 
 			}
 			else
 			{
-
-				let expander = useNew(Expander.Behavior).use(elRef, null, props);
-				v.noPP = expander.expanded && expander.collapsed;
-
-				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
-
-				body = <div ref={expander.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
-
-				expanderProps = {
-					expandMode: "height",
-					onTransitionEnd: expander.onTransitionEnd,
-				};
+				expander = useNew(Expander.Behavior).use(elRef, null, props);
+				preExpanding = expander.expanded && expander.collapsed;
 
 			}
+
+		}
+
+
+		let gap = PrimitiveProps.getGap(props);
+
+
+		let v = ContainerInfo.init(
+			props,
+			parentInfo,
+			{
+				type: type ?? parentInfo.type,
+				//...PrimitiveProps.getMargins(props),
+				...PrimitiveProps.getPaddings(props),
+				gap: gap === "inherit" ? parentInfo.gap || 0 : gap || 0,
+				preExpanding,
+			},
+		);
+
+
+		//if (props.props)
+		//{
+		//	let v2 = props.props(v);
+		//	if (v2)
+		//		props = { ...props, ...v2 };
+		//}
+
+		v = ContainerInfo.build(props, parentInfo, v,);
+
+		v = ContainerInfo.useValue(v);
+
+
+
+
+
+
+		let body = props.children;
+
+
+		let expanderProps: Partial<RootProps> = {};
+
+		if (flexExpander)
+		{
+
+			body = flexExpander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+
+			expanderProps = {
+				expandMode: "flex",
+				onTransitionEnd: flexExpander.onTransitionEnd,
+			};
+
+		}
+		else if (expander)
+		{
+
+			body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+
+			body = <div ref={expander.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
+
+			expanderProps = {
+				expandMode: "height",
+				onTransitionEnd: expander.onTransitionEnd,
+			};
 
 		}
 		else
@@ -205,13 +207,13 @@ export module Container
 
 
 
-		return createPrimitive(
+		body = createPrimitive(
 			Root,
 			{
 
 				ref: elRef,
 
-				...sizes,
+				...Block.sumBoxSizes(sizes, { width: (v.ppl || 0) + (v.ppr || 0), height: (v.ppt || 0) + (v.ppb || 0) }),
 
 				borderRadius: v.cssBorderRadius,
 
@@ -228,6 +230,17 @@ export module Container
 			ContainerProps.propNames
 		);
 
+
+
+
+		body = <ContainerInfo.Context.Provider
+			value={v}
+			children={body}
+		/>;
+
+
+
+		return body;
 
 	}
 

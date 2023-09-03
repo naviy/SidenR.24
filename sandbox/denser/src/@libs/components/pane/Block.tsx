@@ -1,6 +1,7 @@
 import _ from "lodash";
 import React, { isValidElement, ReactElement, ReactNode } from "react";
 import { BgColor as PaneBgColor } from "./BgColor";
+import { type } from "os";
 
 
 
@@ -62,11 +63,32 @@ export module Block
 
 
 
+	//---
+
+
+
+	export interface BoxSizes
+	{
+
+		flex?: string | number;
+
+		width?: string | number;
+		minWidth?: string | number;
+		maxWidth?: string | number;
+		height?: string | number;
+		minHeight?: string | number;
+		maxHeight?: string | number;
+
+		isFlex?: boolean;
+
+	}
+
+
 	export function getBoxSizes(
 		containerType: "row" | "col" | undefined,
 		props: Props,
-		addSizes?: { width: number; height: number; }
-	)
+		//addSizes?: { width: number; height: number; }
+	): BoxSizes
 	{
 
 		let { l, min, max, width, minWidth, maxWidth, height, minHeight, maxHeight, } = props;
@@ -92,17 +114,17 @@ export module Block
 		);
 
 
-		if (addSizes)
-		{
-			if (typeof width === "number")
-				width += addSizes.width;
-			if (typeof maxWidth === "number")
-				maxWidth += addSizes.width;
-			if (typeof height === "number")
-				height += addSizes.height;
-			if (typeof maxHeight === "number")
-				maxHeight += addSizes.height;
-		}
+		//if (addSizes)
+		//{
+		//	if (typeof width === "number")
+		//		width += addSizes.width;
+		//	if (typeof maxWidth === "number")
+		//		maxWidth += addSizes.width;
+		//	if (typeof height === "number")
+		//		height += addSizes.height;
+		//	if (typeof maxHeight === "number")
+		//		maxHeight += addSizes.height;
+		//}
 
 
 		let flex = (inRow
@@ -134,6 +156,34 @@ export module Block
 			isFlex,
 
 		};
+
+	}
+
+
+
+	export function sumBoxSizes(sizes: BoxSizes, addSizes: { width: number; height: number; }): BoxSizes
+	{
+
+		return {
+			...sizes,
+			width: sum(sizes.width, addSizes.width),
+			maxWidth: sum(sizes.maxWidth, addSizes.width),
+			height: sum(sizes.height, addSizes.height),
+			maxHeight: sum(sizes.maxHeight, addSizes.height),
+		};
+
+
+		function sum(x: string | number | undefined, y: number): string | number | undefined
+		{
+			if (typeof x === "number")
+				return x + y;
+			else if (typeof x === "string")
+				return `calc(${x} + ${y})`;
+			else if (x !== undefined && y)
+				return y;
+			else
+				return undefined;
+		}
 
 	}
 

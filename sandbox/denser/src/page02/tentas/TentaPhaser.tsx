@@ -17,6 +17,7 @@ export interface TentaPhaser
 {
 
 	phase: number;
+	priorPhase?: number;
 	expandedPhase: number;
 	openedPhase: number;
 	maxPhase: number;
@@ -51,6 +52,7 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 
 
 		phase!: number;
+		priorPhase?: number;
 		expandedPhase: number = 1;
 		openedPhase: number = 2;
 		maxPhase: number = 2;
@@ -86,6 +88,7 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 				return false;
 
 
+			this.priorPhase = this.phase;
 			this.phase = value;
 
 			await this.phaseChanged();

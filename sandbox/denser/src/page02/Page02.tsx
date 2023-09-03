@@ -1,4 +1,4 @@
-import { $log, Div, Expander, FillFade, FlexExpander, Focuser, Pane, TransitionGroup, useNew } from '@libs';
+import { $log, Div, Expander, FillFade, FlexExpander, Focuser, Pane, TransitionGroup, _$log, useNew } from '@libs';
 import { Button } from "@mui/material";
 import { ReactNode, useReducer } from "react";
 import { Tenta } from './tentas';
@@ -223,18 +223,15 @@ function PileRow(props: Pane.RowProps)
 			>
 
 				<Pane.Row
+					id="pile-row"
 					{...props}
 					gap1
-					{...bhv.expanded && { rounded: true, e: 1, mx: -12, my: 4, p: 2, ppx: 10 }}
-					{...bhv.opened && { rounded: true, e: 3, mx: -24, my: 36, p: 2, ppx: 22 }}
+					{...bhv.expanded && { rounded: true, e: 1, mx: -12, my: 4, p: 2, }}
+					{...bhv.opened && { rounded: true, e: 3, mx: -24, my: 36, p: 2, }}
+					ppx0={bhv.priorPhase === 1 ? 10 : bhv.priorPhase === 2 ? 22 : 0}
+					ppx={bhv.phase === 1 ? 10 : bhv.phase === 2 ? 22 : 0}
 					cursorPointer
 					zIndex1={bhv.expanded}
-
-					//props={row => ({
-					//	ppx: row.preExpanding
-					//		? bhv.priorPhase === 1 ? 10 : bhv.priorPhase === 2 ? 22 : 0
-					//		: bhv.phase === 1 ? 10 : bhv.phase === 2 ? 22 : 0
-					//}) }
 				>
 					<Focuser.Caret
 						use={usePileRowCaretProps}

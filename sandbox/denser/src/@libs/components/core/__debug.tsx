@@ -1,1 +1,1 @@
-export const $defaultAnimationDurationMs = 10 * 150;
+export const $defaultAnimationDurationMs = 1 * 150;
