@@ -1,7 +1,7 @@
-import { Box, colors, styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 import clsx from "clsx";
 import React, { useRef } from "react";
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps, useNew, Values } from "../core";
+import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { mui3 } from "../core/mui3";
 import { Expander, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
@@ -27,9 +27,9 @@ export module Container
 
 
 
-	export interface DivProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
-	export interface ColProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
-	export interface RowProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
+	export interface DivProps extends ContainerProps<DivProps>, PrimitiveProps<HTMLDivElement> { }
+	export interface ColProps extends ContainerProps<ColProps>, PrimitiveProps<HTMLDivElement> { }
+	export interface RowProps extends ContainerProps<RowProps>, PrimitiveProps<HTMLDivElement> { }
 
 
 	export function Div(props: DivProps)
@@ -73,7 +73,7 @@ export module Container
 				parentInfo,
 				{
 					type: type ?? parentInfo.type,
-					...PrimitiveProps.getMargins(props),
+					//...PrimitiveProps.getMargins(props),
 					...PrimitiveProps.getPaddings(props),
 					gap: gap === "inherit" ? parentInfo.gap || 0 : gap || 0,
 				},
@@ -121,7 +121,7 @@ export module Container
 		let sizes = Block.getBoxSizes(
 			parentInfo.type,
 			props,
-			{ width: v.p2l! + v.p2r!, height: v.p2t! + v.p2b! }
+			{ width: v.ppl! + v.ppr!, height: v.ppt! + v.ppb! }
 		);
 
 
@@ -132,7 +132,7 @@ export module Container
 			{
 
 				let expander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
-				v.noP2 = expander.expanded && expander.collapsed;
+				v.noPP = expander.expanded && expander.collapsed;
 
 				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 
@@ -146,7 +146,7 @@ export module Container
 			{
 
 				let expander = useNew(Expander.Behavior).use(elRef, null, props);
-				v.noP2 = expander.expanded && expander.collapsed;
+				v.noPP = expander.expanded && expander.collapsed;
 
 				body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
 

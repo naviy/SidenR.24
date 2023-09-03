@@ -40,11 +40,11 @@ export function Pane(props: Pane.Props)
 	//}
 
 
-	let noP2 = parentInfo.noP2;
-	let p2l = !noP2 && parentInfo.p2l && (inCol || start) ? parentInfo.p2l : 0;
-	let p2r = !noP2 && parentInfo.p2r && (inCol || end) ? parentInfo.p2r : 0;
-	let p2t = !noP2 && parentInfo.p2t && (inRow || start) ? parentInfo.p2t : 0;
-	let p2b = !noP2 && parentInfo.p2b && (inRow || end) ? parentInfo.p2b : 0;
+	let noPP = parentInfo.noPP;
+	let p2l = !noPP && parentInfo.ppl && (inCol || start) ? parentInfo.ppl : 0;
+	let p2r = !noPP && parentInfo.ppr && (inCol || end) ? parentInfo.ppr : 0;
+	let p2t = !noPP && parentInfo.ppt && (inRow || start) ? parentInfo.ppt : 0;
+	let p2b = !noPP && parentInfo.ppb && (inRow || end) ? parentInfo.ppb : 0;
 
 	let sizes = Block.getBoxSizes(
 		parentInfo.type,

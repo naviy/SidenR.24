@@ -111,7 +111,7 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 
 
 
-		priorPhase(canSkipPhase?: (phase: number, bhv: this) => boolean): number
+		findPriorPhase(canSkipPhase?: (phase: number, bhv: this) => boolean): number
 		{
 
 			let { phase } = this;
@@ -138,7 +138,7 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 
 
 
-		nextPhase(canSkipPhase?: (phase: number, bhv: this) => boolean): number
+		findNextPhase(canSkipPhase?: (phase: number, bhv: this) => boolean): number
 		{
 
 			let { phase, maxPhase } = this;
@@ -167,12 +167,12 @@ export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintabl
 
 		async collapse(canSkipPhase?: (phase: number, bhv: this) => boolean): Promise<boolean>
 		{
-			return await this.setPhase(this.priorPhase(canSkipPhase));
+			return await this.setPhase(this.findPriorPhase(canSkipPhase));
 		}
 
 		async expand(canSkipPhase?: (phase: number, bhv: this) => boolean): Promise<boolean>
 		{
-			return await this.setPhase(this.nextPhase(canSkipPhase));
+			return await this.setPhase(this.findNextPhase(canSkipPhase));
 		}
 
 
