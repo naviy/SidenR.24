@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { Box, styled } from "@mui/material";
 
 import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
@@ -35,17 +35,17 @@ export function Pane(props: Pane.Props)
 
 	let { noPP, preExpanding } = parentInfo;
 
-	let p2l = !noPP && (inCol || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
-	let p2r = !noPP && (inCol || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
-	let p2t = !noPP && (inRow || start) && (preExpanding ? parentInfo.ppt0 : parentInfo.ppt) || 0;
-	let p2b = !noPP && (inRow || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
+	let ppl = !noPP && (inCol || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
+	let ppr = !noPP && (inCol || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
+	let ppt = !noPP && (inRow || start) && (preExpanding ? parentInfo.ppt0 : parentInfo.ppt) || 0;
+	let ppb = !noPP && (inRow || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
 
 
 	//if (props.id)
 	//{
 	//	$log("Pane", props.id)
 	//	_$log("parentInfo:", parentInfo.preExpanding, parentInfo.ppl, parentInfo.ppl0)
-	//	_$log("p2l", p2l)
+	//	_$log("ppl", ppl)
 	//}
 
 	let sizes = Block.getBoxSizes(
@@ -53,7 +53,7 @@ export function Pane(props: Pane.Props)
 		props,
 	);
 
-	sizes = Block.sumBoxSizes(sizes, { width: p2l + p2r, height: p2t + p2b });
+	sizes = Block.sumBoxSizes(sizes, { width: ppl + ppr, height: ppt + ppb });
 
 
 	let br = parentInfo.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
@@ -70,13 +70,26 @@ export function Pane(props: Pane.Props)
 
 
 
-	let body = createPrimitive(
+	let body = props.children;
+
+	if (parentInfo.debug)
+	{
+		body = <>
+			<Box sx={{ position: "absolute", inset: "0 0 0 0", border: `2px solid rgba(100,30,30, .5)`, borderRadius: "inherit" }} />
+			{body}
+		</>;
+	}
+
+
+	body = createPrimitive(
 		Pane.Root as any,
 		{
+			debug: parentInfo.debug,
 			bgcolor: props.bgcolor,
 			borderRadius,
-			p2l, p2r, p2t, p2b,
-			...sizes
+			ppl, ppr, ppt, ppb,
+			...sizes,
+			children: body,
 		},
 		props,
 		Pane.propNames
@@ -142,14 +155,15 @@ export module Pane
 
 	interface RootProps
 	{
+		debug?: boolean;
 
 		bgcolor?: Pane.BgColor;
 		borderRadius: string;
 
-		p2l: string;
-		p2r: string;
-		p2t: string;
-		p2b: string;
+		ppl: string;
+		ppr: string;
+		ppt: string;
+		ppb: string;
 
 		flex?: number | string;
 
@@ -165,9 +179,10 @@ export module Pane
 
 
 	const rootPropNames: Array<keyof RootProps> = [
+		"debug",
 		"bgcolor",
 		"borderRadius", //"borderWidth",
-		"p2l", "p2r", "p2t", "p2b",
+		"ppl", "ppr", "ppt", "ppb",
 		"flex",
 		"width", "minWidth", "maxWidth",
 		"height", "minHeight", "maxHeight",
@@ -183,34 +198,57 @@ export module Pane
 				p !== "isFlex" && rootPropNames.indexOf(p as any) < 0
 			,
 		}
-	)<RootProps>((props) => ({
+	)<RootProps>((props) =>
+	{
 
-		position: "relative",
+		let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
 
-		background: Pane.BgColor(props.theme, props.bgcolor),
-		borderRadius: props.borderRadius,
-		//borderWidth: props.borderWidth,
+		return {
 
-		borderLeft: `transparent solid ${props.p2l || 0}px`,
-		borderRight: `transparent solid ${props.p2r || 0}px`,
-		borderTop: `transparent solid ${props.p2t || 0}px`,
-		borderBottom: `transparent solid ${props.p2b || 0}px`,
+			display: "flex",
+			position: "relative",
 
-		boxSizing: 'border-box',
+			background: Pane.BgColor(props.theme, props.bgcolor),
+			borderRadius: props.borderRadius,
+			//borderWidth: props.borderWidth,
 
-		flex: props.flex,
+			borderLeft: `${ppColor} solid ${props.ppl || 0}px`,
+			borderRight: `${ppColor} solid ${props.ppr || 0}px`,
+			borderTop: `${ppColor} solid ${props.ppt || 0}px`,
+			borderBottom: `${ppColor} solid ${props.ppb || 0}px`,
 
-		width: props.width,
-		minWidth: props.minWidth,
-		maxWidth: props.maxWidth,
+			boxSizing: 'border-box',
 
-		height: props.height,
-		minHeight: props.minHeight,
-		maxHeight: props.maxHeight,
+			flex: props.flex,
 
-		transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+			width: props.width,
+			minWidth: props.minWidth,
+			maxWidth: props.maxWidth,
 
-	}));
+			height: props.height,
+			minHeight: props.minHeight,
+			maxHeight: props.maxHeight,
+
+			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+
+			//"> div": {
+			//	display: "inherit",
+			//	flexDirection: "inherit",
+			//	justifyContent: "inherit",
+			//	alignItems: "inherit",
+			//	gap: "inherit",
+			//	flex: 1,
+			//	////padding: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
+			//	//borderLeft: `blue solid ${props.ppl || 0}px`,
+			//	//borderRight: `blue solid ${props.ppr || 0}px`,
+			//	//borderTop: `blue solid ${props.ppt || 0}px`,
+			//	//borderBottom: `blue solid ${props.ppb || 0}px`,
+
+			//	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+			//}
+
+		};
+	});
 
 
 

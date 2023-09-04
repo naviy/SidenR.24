@@ -70,7 +70,7 @@ export module Container
 		//props.id && $log(type, props.id)
 		//props.id && _$log("ppx", props.ppx);
 		//props.id && _$log("ppx0", props.ppx0);
-		
+
 
 		let expander: ExpanderBehavior | undefined = undefined;
 		let flexExpander: FlexExpanderBehavior | undefined = undefined;
@@ -171,38 +171,14 @@ export module Container
 
 		if (v.debug)
 		{
-
-			let isRow = v.type === "row";
-
-			let color = isRow ? "rgba(30,30,160, .5)" : "rgba(30,100,30, .5)";
-
 			body = <>
-				<Box sx={{
-					position: "absolute",
-					inset: "0 0 0 0",
-					overflow: "hidden",
-					border: `2px solid ${color}`,
-					borderRadius: "inherit",
-					zIndex: 1
-				}}>
-					<Box sx={{
-						position: "absolute",
-						top: 0,
-						left: 0,
-						fontSize: "8px",
-						padding: "0px 8px 2px 6px",
-						background: color,
-						color: "white",
-						whiteSpace: "nowrap",
-					}}>
-						<b>{v.type}{props.id && ` #${props.id}`}</b>{props.start && " start"}{props.end && " end"}
-					</Box>
-				</Box>
+				<DebugBox type={type!}>
+					<div><b>{v.type}{props.id && ` #${props.id}`}</b>{props.start && " start"}{props.end && " end"}</div>
+				</DebugBox>
 				{body}
 			</>;
 
-			addClassName = clsx(addClassName, "m4 pt16")
-
+			addClassName = clsx(addClassName, "m4 pt16");
 		}
 
 
@@ -331,6 +307,41 @@ export module Container
 
 		};
 	});
+
+
+
+	export const DebugBox = styled(
+		"div",
+		{ shouldForwardProp: p => p !== "type", }
+	)<{ type: "row" | "col" }>(
+		({ type }) =>
+		{
+
+			let color = type === "row" ? "rgba(30,30,160, .5)" : "rgba(30,100,30, .5)";
+
+			return {
+				position: "absolute",
+				inset: "-1px",
+				overflow: "hidden",
+				border: `2px solid ${color}`,
+				borderRadius: "inherit",
+				//zIndex: 1,
+
+				"> div": {
+					position: "absolute",
+					top: 0,
+					left: 0,
+					fontSize: "8px",
+					padding: "0px 8px 2px 6px",
+					background: color,
+					color: "white",
+					borderBottomRightRadius: 3,
+
+					whiteSpace: "nowrap",
+				}
+			};
+		}
+	);
 
 
 

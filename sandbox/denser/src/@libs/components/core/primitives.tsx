@@ -730,6 +730,8 @@ export function GlobalStylesOfPrimitives(props: {
 			//flex: 1,
 			display: "flex",
 			flexDirection: "inherit",
+			justifyContent: "inherit",
+			alignItems: "inherit",
 			gap: "inherit",
 		},
 

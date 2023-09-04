@@ -223,6 +223,7 @@ function PileRow(props: Pane.RowProps)
 			>
 
 				<Pane.Row
+					//debug
 					id="pile-row"
 					{...props}
 					gap1
