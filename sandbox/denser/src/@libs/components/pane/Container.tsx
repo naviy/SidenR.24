@@ -1,7 +1,7 @@
 import { Box, styled } from "@mui/material";
 import clsx from "clsx";
 import React, { useRef } from "react";
-import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
+import { $defaultAnimationDurationMs, $log, PrimitiveProps, UseHookProps, Values, _$log, createPrimitive, useNew } from "../core";
 import { mui3 } from "../core/mui3";
 import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
@@ -67,7 +67,7 @@ export module Container
 		let elRef = useRef<HTMLDivElement>(null);
 
 
-		//props.id && $log(type, props.id)
+		props.id && $log(type, props.id)
 		//props.id && _$log("ppx", props.ppx);
 		//props.id && _$log("ppx0", props.ppx0);
 
@@ -129,10 +129,6 @@ export module Container
 		v = ContainerInfo.useValue(v);
 
 
-
-
-
-
 		let body = props.children;
 
 
@@ -141,7 +137,7 @@ export module Container
 		if (flexExpander)
 		{
 
-			body = flexExpander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+			body = flexExpander.childrenShouldBeRendered && Block.injectProps(Values.one(body));
 
 			expanderProps = {
 				expandMode: "flex",
@@ -152,7 +148,7 @@ export module Container
 		else if (expander)
 		{
 
-			body = expander.childrenShouldBeRendered && Block.withAutoProps(Values.one(body));
+			body = expander.childrenShouldBeRendered && Block.injectProps(Values.one(body));
 
 			body = <div ref={expander.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
 
@@ -164,7 +160,7 @@ export module Container
 		}
 		else
 		{
-			body = Block.withAutoProps(Values.one(body));
+			body = Block.injectProps(Values.one(body));
 		}
 
 
@@ -173,7 +169,13 @@ export module Container
 		{
 			body = <>
 				<DebugBox type={type!}>
-					<div><b>{v.type}{props.id && ` #${props.id}`}</b>{props.start && " start"}{props.end && " end"}</div>
+					<div>
+						<b>{v.type}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
+						{props.start && " start"}{props.end && " end"}
+						<div className="gaps" style={{ borderWidth: `${v.gapt ? 2 : .5}px ${v.gapr ? 2 : .5}px ${v.gapb ? 2 : .5}px ${v.gapl ? 2 : .5}px`, }}>
+							gap: {v.gap}
+						</div>
+					</div>
 				</DebugBox>
 				{body}
 			</>;
@@ -338,6 +340,15 @@ export module Container
 					borderBottomRightRadius: 3,
 
 					whiteSpace: "nowrap",
+
+					".gaps": {
+						display: "inline-block",
+						border: "0px solid white",
+						padding: '0 2px',
+						margin: `1px 0 1px 8px`,
+						fontSize: '8px',
+						lineHeight: `10px`,
+					},
 				}
 			};
 		}

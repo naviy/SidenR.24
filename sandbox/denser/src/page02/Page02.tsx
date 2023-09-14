@@ -1,9 +1,8 @@
-import { $log, Div, Expander, FillFade, FlexExpander, Focuser, Pane, TransitionGroup, _$log, useNew } from '@libs';
+import { Expander, FillFade, Focuser, Pane, TransitionGroup, useNew } from '@libs';
 import { Button } from "@mui/material";
-import { ReactNode, useReducer } from "react";
-import { Tenta } from './tentas';
-import React from "react";
+import React, { ReactNode, useReducer } from "react";
 import { ContainerInfo } from "../@libs/components/pane/ContainerInfo";
+import { Tenta } from './tentas';
 
 
 
@@ -19,12 +18,13 @@ export function Page02()
 		<Pane.Col mx48 m100 rounded e={0} p2 gap1>
 
 			{/*<Row051 start end />*/}
+			<Row05 start end />
 
-			<Row05 start />
-			<Row05 />
-			<Row05 />
-			<Row05 />
-			<Row05 end />
+			{/*<Row05 start />*/}
+			{/*<Row05 />*/}
+			{/*<Row05 />*/}
+			{/*<Row05 />*/}
+			{/*<Row05 end />*/}
 
 		</Pane.Col>
 
@@ -128,8 +128,8 @@ function Row05(props: Pane.RowProps)
 
 				<Pane.Col gapi l={120}>
 					<TransitionGroup>
-						{phase !== 1 && <FillFade>{fs[2]}</FillFade>}
-						{phase === 1 && <FillFade>{fs[3]}</FillFade>}
+						{phase !== 1 && <FillFade>{Pane.injectProps(fs[2])}</FillFade>}
+						{phase === 1 && <FillFade>{Pane.injectProps(fs[3])}</FillFade>}
 					</TransitionGroup>
 				</Pane.Col>
 
@@ -161,7 +161,11 @@ function Row051(props: Pane.RowProps)
 	return <PileRow {...props}>
 		<RowRim>
 
-			<Pane id="1" p12>111 1111 11111 111111</Pane>
+			<>
+				<Pane p12>111 1111 11111 111111</Pane>
+				<Pane p12>222 2222 22222 222222</Pane>
+				<Pane p12 textRight>333 3333 33333 333333</Pane>
+			</>
 
 			<Pane id="2" p12 vcenter>111 1111 11111 111111</Pane>
 
@@ -183,11 +187,11 @@ function Row051(props: Pane.RowProps)
 
 			<Pane.Col start end>
 
-				<Pane.Row end={phase !== 1}>
+				<Pane.Row end={phase !== 1} gapi>
 					{fs[0]}
 				</Pane.Row>
 
-				<Pane.Row id="row51-2" expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
+				<Pane.Row id="row51-2" expanded={phase === 1} wrapperCls="pt1" gapi noreexpand>
 					{fs[1]}
 				</Pane.Row>
 
@@ -226,11 +230,19 @@ function PileRow(props: Pane.RowProps)
 					//debug
 					id="pile-row"
 					{...props}
+
 					gap1
-					{...bhv.expanded && { rounded: true, e: 1, mx: -12, my: 4, p: 2, }}
-					{...bhv.opened && { rounded: true, e: 3, mx: -24, my: 36, p: 2, }}
+					{...bhv.expanded && { rounded: true, e: 1, mx: -12, my: 4, p: 2 }}
+					{...bhv.opened && { rounded: true, e: 3, mx: -24, my: 36, p: 2 }}
 					ppx0={bhv.priorPhase === 1 ? 10 : bhv.priorPhase === 2 ? 22 : 0}
 					ppx={bhv.phase === 1 ? 10 : bhv.phase === 2 ? 22 : 0}
+
+					//gap1 pg={1}
+					//{...bhv.expanded && { rounded: true, e: 1, mx: -12, my: 4, p: 3, gap: 3, pg: 0, }}
+					//{...bhv.opened && { rounded: true, e: 3, mx: -24, my: 36, p: 3, gap: 3, pg: 0 }}
+					//ppx0={bhv.priorPhase === 1 ? 9 : bhv.priorPhase === 2 ? 22 : 0}
+					//ppx={bhv.phase === 1 ? 9 : bhv.phase === 2 ? 21 : 0}
+
 					cursorPointer
 					zIndex1={bhv.expanded}
 				>

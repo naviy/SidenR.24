@@ -1,6 +1,6 @@
 import { Box, styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, $log, _$log, _log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
 import { Container } from "./Container";
@@ -25,7 +25,6 @@ export function Pane(props: Pane.Props)
 
 	let parentInfo = ContainerInfo.use() || {};
 
-	let { gap, } = parentInfo;
 	let { start, end, } = props;
 
 	let inRow = parentInfo.type === "row";
@@ -33,20 +32,34 @@ export function Pane(props: Pane.Props)
 
 
 
-	let { noPP, preExpanding } = parentInfo;
+	let { noPP, preExpanding, gap, pg, png } = parentInfo;
 
-	let ppl = !noPP && (inCol || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
-	let ppr = !noPP && (inCol || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
-	let ppt = !noPP && (inRow || start) && (preExpanding ? parentInfo.ppt0 : parentInfo.ppt) || 0;
-	let ppb = !noPP && (inRow || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
+	let ppl = !noPP && (!inRow || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
+	let ppr = !noPP && (!inRow || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
+	let ppt = !noPP && (!inCol || start) && (preExpanding ? parentInfo.ppt0 : parentInfo.ppt) || 0;
+	let ppb = !noPP && (!inCol || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
 
 
-	//if (props.id)
-	//{
-	//	$log("Pane", props.id)
-	//	_$log("parentInfo:", parentInfo.preExpanding, parentInfo.ppl, parentInfo.ppl0)
-	//	_$log("ppl", ppl)
-	//}
+	let gapl = inRow && !start ? !!gap : !!parentInfo.gapl;
+	let gapr = inRow && !end ? !!gap : !!parentInfo.gapr;
+	let gapt = inCol && !start ? !!gap : !!parentInfo.gapt;
+	let gapb = inCol && !end ? !!gap : !!parentInfo.gapb;
+
+	ppl += gapl ? pg || 0 : png || 0;
+	ppr += gapr ? pg || 0 : png || 0;
+	ppt += gapt ? pg || 0 : png || 0;
+	ppb += gapb ? pg || 0 : png || 0;
+
+
+	if (props.id)
+	{
+		$log("Pane", props.id)
+		_$log("parentInfo.gaps:", parentInfo.gapt, parentInfo.gapr, parentInfo.gapb, parentInfo.gapl);
+		_$log("start:", start);
+		_$log("end:", end);
+		//	_$log("parentInfo:", parentInfo.preExpanding, parentInfo.ppl, parentInfo.ppl0)
+		//	_$log("ppl", ppl)
+	}
 
 	let sizes = Block.getBoxSizes(
 		parentInfo.type,
@@ -75,7 +88,12 @@ export function Pane(props: Pane.Props)
 	if (parentInfo.debug)
 	{
 		body = <>
-			<Box sx={{ position: "absolute", inset: "0 0 0 0", border: `2px solid rgba(100,30,30, .5)`, borderRadius: "inherit" }} />
+			<Pane.DebugBox>
+				<div>
+					<b>pane{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
+					{props.start && " start"}{props.end && " end"}
+				</div>
+			</Pane.DebugBox>
 			{body}
 		</>;
 	}
@@ -128,6 +146,9 @@ export module Pane
 	export const Col = Container.Col;
 	export const Div = Container.Div;
 	export const Row = Container.Row;
+
+
+	export const injectProps = Block.injectProps;
 
 
 
@@ -201,6 +222,7 @@ export module Pane
 	)<RootProps>((props) =>
 	{
 
+		//let ppColor = `rgb(231,171,171)`;
 		let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
 
 		return {
@@ -212,10 +234,8 @@ export module Pane
 			borderRadius: props.borderRadius,
 			//borderWidth: props.borderWidth,
 
-			borderLeft: `${ppColor} solid ${props.ppl || 0}px`,
-			borderRight: `${ppColor} solid ${props.ppr || 0}px`,
-			borderTop: `${ppColor} solid ${props.ppt || 0}px`,
-			borderBottom: `${ppColor} solid ${props.ppb || 0}px`,
+			border: `${ppColor} solid 0px`,
+			borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
 
 			boxSizing: 'border-box',
 
@@ -247,6 +267,40 @@ export module Pane
 			//	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 			//}
 
+		};
+	});
+
+
+
+	//---
+
+
+
+	export const DebugBox = styled("div")(() =>
+	{
+
+		let color = "rgba(100,30,30, .5)";
+
+		return {
+			position: "absolute",
+			inset: "-1px",
+			overflow: "hidden",
+			border: `2px solid ${color}`,
+			borderRadius: "inherit",
+
+			"> div": {
+				position: "absolute",
+				top: 0,
+				left: 0,
+				fontSize: "8px",
+				padding: "0px 8px 2px 6px",
+				background: color,
+				color: "white",
+				borderBottomRightRadius: 3,
+
+				whiteSpace: "nowrap",
+
+			}
 		};
 	});
 

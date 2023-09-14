@@ -1,6 +1,7 @@
 import { createContext, useContext, useRef } from "react";
 import { Block } from "./Block";
 import { ContainerProps } from "./ContainerProps";
+import { $log, _$log } from "../core";
 
 
 
@@ -38,6 +39,13 @@ export interface ContainerInfo
 	pt?: number;
 	pb?: number;
 
+	pg?: number;
+	png?: number;
+	gapl?: boolean;
+	gapr?: boolean;
+	gapt?: boolean;
+	gapb?: boolean;
+
 	noPP?: boolean;
 	ppl?: number;
 	ppr?: number;
@@ -71,6 +79,8 @@ export module ContainerInfo
 		"debug",
 		//"ml", "mr", "mt", "mb",
 		"pl", "pr", "pt", "pb",
+		"pg", "png",
+		"gapl", "gapr", "gapt", "gapb",
 		"noPP",
 		"ppl", "ppr", "ppt", "ppb",
 		"ppl0", "ppr0", "ppt0", "ppb0",
@@ -132,8 +142,10 @@ export module ContainerInfo
 		//_$log("props", props)
 
 
-
 		v.debug = !!(props.debug ?? parentInfo.debug);
+
+		v.pg = props.pg ?? parentInfo.pg;
+		v.png = props.png ?? parentInfo.png;
 
 
 		//if (props.id)
@@ -166,6 +178,11 @@ export module ContainerInfo
 		let inRow = parentInfo.type === "row";
 		let inCol = parentInfo.type === "col";
 
+		$log("ContainerInfo.build()");
+		_$log("start:", start);
+		_$log("end:", end);
+
+
 		v.noPP = v.noPP || !!props.noPP || !!parentInfo.noPP;
 
 		let { pp, ppx, ppy } = props;
@@ -179,6 +196,11 @@ export module ContainerInfo
 		v.ppr0 = (inCol || end ? parentInfo.ppr0 || 0 : 0) + (props.ppr0 ?? ppx0 ?? pp0 ?? 0);
 		v.ppt0 = (inRow || start ? parentInfo.ppt0 || 0 : 0) + (props.ppt0 ?? ppy0 ?? pp0 ?? 0);
 		v.ppb0 = (inRow || end ? parentInfo.ppb0 || 0 : 0) + (props.ppb0 ?? ppy0 ?? pp0 ?? 0);
+
+		v.gapl = inRow && !start ? !!parentInfo.gap : !!parentInfo.gapl;
+		v.gapr = inRow && !end ? !!parentInfo.gap : !!parentInfo.gapr;
+		v.gapt = inCol && !start ? !!parentInfo.gap : !!parentInfo.gapt;
+		v.gapb = inCol && !end ? !!parentInfo.gap : !!parentInfo.gapb;
 
 		v.brtl = !!(rounded || parentInfo.brtl && (inRow && start || inCol && start));
 		v.brtr = !!(rounded || parentInfo.brtr && (inRow && end || inCol && start));

@@ -193,7 +193,7 @@ export module Block
 
 
 
-	export function withAutoProps(children: ReactNode): ReactNode
+	export function injectProps(children: ReactNode): ReactNode
 	{
 
 		//return children;
