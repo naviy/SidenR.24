@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 
-import { ReactNode, useMemo, useRef } from 'react';
+import { type ReactNode, useMemo, useRef } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { $defaultAnimationDurationMs, Div, DivProps, Expander } from '..';
-import { FillSlide, FillSlideAnimateProps } from './FillSlide';
+import { $defaultAnimationDurationMs, Div, type DivProps, Expander } from '..';
+import { FillSlide, type FillSlideAnimateProps } from './FillSlide';
 
 
 

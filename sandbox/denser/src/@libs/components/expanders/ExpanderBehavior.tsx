@@ -1,4 +1,4 @@
-import { createRef, RefObject } from "react";
+import { createRef, type RefObject } from "react";
 
 import { ExpanderBaseBehavior, ExpanderBaseProps } from "./ExpanderBaseBehavior";
 

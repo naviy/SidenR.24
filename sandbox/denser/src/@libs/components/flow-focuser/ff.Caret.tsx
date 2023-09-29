@@ -1,8 +1,9 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { alpha, styled } from "@mui/material";
 
-import { Focuser, currentFocuser } from ".";
+import type { Focuser } from "./ff.Focuser";
+import { currentFocuser } from "./ff.Core";
 import { Values } from "../..";
 import { $defaultAnimationDurationMs, MuiColor, UseHookProps, useNew } from "../core";
 import { CaretBehavior } from "./ff.CaretBehavior";

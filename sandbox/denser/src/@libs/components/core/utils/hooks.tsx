@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useReducer, useRef } from 'react';
+import { type MutableRefObject, useEffect, useReducer, useRef } from 'react';
 import { $error } from './logging';
 
 

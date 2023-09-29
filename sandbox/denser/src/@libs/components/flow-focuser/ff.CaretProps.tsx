@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import { Focuser } from ".";
-import { MuiColor, UseHookProps } from "../core";
+import type { ReactNode } from "react";
+import type { Focuser } from "./ff.Focuser";
+import type { MuiColor, UseHookProps } from "../core";
 
 
 

@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { createPrimitive, Div, DivProps, UseHookProps, useNew, Values } from "../core";
+import { createPrimitive, Div, type DivProps, UseHookProps, useNew, Values } from "../core";
 import { ExpanderBehavior, ExpanderProps } from "./ExpanderBehavior";
 import { FlexExpanderBehavior } from "./FlexExpanderBehavior";
 

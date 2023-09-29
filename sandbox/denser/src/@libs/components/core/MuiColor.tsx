@@ -1,4 +1,4 @@
-import { colors, styled, Theme } from "@mui/material";
+import { colors, styled, type Theme } from "@mui/material";
 import { Div as _Div, PrimitiveProps, Span as _Span } from "./primitives";
 
 

@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, type ReactNode, useContext } from "react";
 import { TentaBehavior } from "./TentaBehavior";
-import { TentaPhaser } from "./TentaPhaser";
+import type { TentaPhaser } from "./TentaPhaser";
 
 
 

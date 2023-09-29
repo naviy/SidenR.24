@@ -1,4 +1,4 @@
-import { Constructor, useForceUpdate, useForceUpdateAsync } from '@libs';
+import { type Constructor, useForceUpdate, useForceUpdateAsync } from '@libs';
 
 
 
@@ -60,7 +60,7 @@ export module Repaintable
 			extends Repaintable(Base || Object)
 		{
 
-			useForceUpdate(): void
+			override useForceUpdate(): void
 			{
 				this.forceUpdate = useForceUpdateAsync();
 			}

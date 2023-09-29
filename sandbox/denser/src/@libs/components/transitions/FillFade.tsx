@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { useRef } from 'react';
-import { Transition, TransitionStatus } from 'react-transition-group';
-import { $defaultAnimationDurationMs, DivProps, createPrimitive } from '../core';
+import { Transition, type TransitionStatus } from 'react-transition-group';
+import { $defaultAnimationDurationMs, type DivProps, createPrimitive } from '../core';
 import { Focuser } from "../flow-focuser";
 import { TransitionProps } from "./TransitionProps";
 

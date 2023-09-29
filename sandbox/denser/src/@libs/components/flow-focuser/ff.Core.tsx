@@ -1,5 +1,5 @@
 import React from "react";
-import { FocusActionProps, Focuser } from ".";
+import { type FocusActionProps, Focuser } from ".";
 import { $log, _$log, adelay } from "../..";
 
 

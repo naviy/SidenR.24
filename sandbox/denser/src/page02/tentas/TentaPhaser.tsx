@@ -1,5 +1,5 @@
-import { Constructor, Repaintable } from '@libs';
-import { TentaStatuser } from "./TentaStatuser";
+import type { Constructor, Repaintable } from '@libs';
+import type { TentaStatuser } from "./TentaStatuser";
 
 
 

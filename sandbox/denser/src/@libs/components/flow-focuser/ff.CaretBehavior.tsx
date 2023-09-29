@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Focuser, FocuserContext } from ".";
 import { $error } from "../..";
 import { MuiColor, Repaintable, UseHookProps } from "../core";
-import { CaretProps } from "./ff.CaretProps";
+import type { CaretProps } from "./ff.CaretProps";
 
 
 
@@ -126,7 +126,7 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 
-	toString()
+	override toString()
 	{
 		return `Caret[${this.id}]`;
 	}

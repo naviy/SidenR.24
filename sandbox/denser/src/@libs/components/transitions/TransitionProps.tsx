@@ -1,4 +1,4 @@
-import { TransitionProps as TransitionProps_ } from 'react-transition-group/Transition';
+import type { TransitionProps as TransitionProps_ } from 'react-transition-group/Transition';
 
 
 

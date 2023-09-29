@@ -44,14 +44,14 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 	//---
 
 
-	onPhaseChanged?: (tenta: this) => void;
+	override onPhaseChanged?: (tenta: this) => void;
 
 
 	//---
 
 
 
-	protected async onLeftClick()
+	protected override async onLeftClick()
 	{
 
 		if (!this.focused)
@@ -71,7 +71,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 	}
 
 
-	protected async onRightClick()
+	protected override async onRightClick()
 	{
 
 		if (!this.focused)
@@ -91,7 +91,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 
 
 
-	async onEnter()
+	override async onEnter()
 	{
 
 		if (await this.expand())
@@ -107,7 +107,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 	}
 
 
-	async onExit()
+	override async onExit()
 	{
 
 		if (await this.collapse())
@@ -123,7 +123,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 
 
 
-	protected async onLeftKey()
+	protected override  async onLeftKey()
 	{
 
 		if (await this.collapse())
@@ -140,7 +140,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 
 
 
-	protected async onRightKey()
+	protected override async onRightKey()
 	{
 
 		if (await this.expand())

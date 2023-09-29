@@ -1,7 +1,6 @@
 import _ from "lodash";
-import React, { isValidElement, ReactElement, ReactNode } from "react";
-import { BgColor as PaneBgColor } from "./BgColor";
-import { type } from "os";
+import React, { isValidElement, type ReactElement, type ReactNode } from "react";
+import type { BgColor as PaneBgColor } from "./BgColor";
 
 
 

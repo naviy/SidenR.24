@@ -1,7 +1,7 @@
-import { Constructor, Focuser } from '@libs';
-import { RefObject, useRef } from 'react';
-import { TentaPhaser } from './TentaPhaser';
-import { TentaStatuser } from './TentaStatuser';
+import type { Constructor, Focuser } from '@libs';
+import { type RefObject, useRef } from 'react';
+import type { TentaPhaser } from './TentaPhaser';
+import type { TentaStatuser } from './TentaStatuser';
 
 
 

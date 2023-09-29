@@ -3,14 +3,14 @@
 
 
 
-import { Component, ReactNode, RefObject, useContext } from "react";
+import { Component, type ReactNode, type RefObject, useContext } from "react";
 import ReactDOM from "react-dom";
 
 import { Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
-import { $animationDurationMs, Anchor, AnchorPart, AnchorProps, anchorPropsToString } from ".";
+import { $animationDurationMs, type Anchor, type AnchorPart, type AnchorProps, anchorPropsToString } from ".";
 
 import {
 	$min_priority,
@@ -456,9 +456,9 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	static contextType = FocuserContext;
+	static override contextType = FocuserContext;
 
-	context: Focuser | undefined;
+	override context: Focuser | undefined;
 
 
 
@@ -997,7 +997,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	toString()
+	override toString()
 	{
 		return (
 			`Focuser[${this.id}] `
@@ -1054,7 +1054,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	componentDidMount()
+	override componentDidMount()
 	{
 
 		//this._mounted = true;
@@ -1206,7 +1206,7 @@ export class Focuser extends Component<FocuserProps>
 	}
 
 
-	shouldComponentUpdate(nextProps: any, nextState: any): boolean
+	override shouldComponentUpdate(nextProps: any, nextState: any): boolean
 	{
 
 		this._prioriry = undefined;
@@ -1218,7 +1218,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	componentDidUpdate()
+	override componentDidUpdate()
 	{
 
 		this.updateBorderer();
@@ -1234,7 +1234,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	componentWillUnmount()
+	override componentWillUnmount()
 	{
 
 		this._unmounted = true;
@@ -1304,7 +1304,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	render()
+	override render()
 	{
 
 		this.clearState();

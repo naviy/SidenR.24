@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { PrimitiveProps, UseHookProps } from "../core";
-import { mui3 } from "../core/mui3";
+import type { mui3 } from "../core/mui3";
 import { ExpanderBaseProps } from "../expanders";
 import { Block } from "./Block";
 

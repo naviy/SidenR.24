@@ -1,4 +1,4 @@
-import { Constructor } from '@libs';
+import type { Constructor } from '@libs';
 
 
 

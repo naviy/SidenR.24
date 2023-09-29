@@ -1,8 +1,8 @@
-import { GlobalProps } from "@emotion/react";
+import { type GlobalProps } from "@emotion/react";
 import { GlobalStyles, styled } from "@mui/material";
 import clsx from "clsx";
 import * as React from "react";
-import { forwardRef, ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { Values } from "./utils";
 import { $defaultAnimationDurationMs } from "./__debug";
 

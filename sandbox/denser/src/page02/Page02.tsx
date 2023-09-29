@@ -1,6 +1,6 @@
 import { Expander, FillFade, Focuser, Pane, TransitionGroup, useNew } from '@libs';
 import { Button } from "@mui/material";
-import React, { ReactNode, useReducer } from "react";
+import React, { type ReactNode, useReducer } from "react";
 import { ContainerInfo } from "../@libs/components/pane/ContainerInfo";
 import { Tenta } from './tentas';
 
@@ -18,13 +18,13 @@ export function Page02()
 		<Pane.Col mx48 m100 rounded e={0} p2 gap1>
 
 			{/*<Row051 start end />*/}
-			<Row05 start end />
+			{/*<Row05 start end />*/}
 
-			{/*<Row05 start />*/}
-			{/*<Row05 />*/}
-			{/*<Row05 />*/}
-			{/*<Row05 />*/}
-			{/*<Row05 end />*/}
+			<Row05 start />
+			<Row05 />
+			<Row05 />
+			<Row05 />
+			<Row05 end />
 
 		</Pane.Col>
 

@@ -1,5 +1,5 @@
-import { currentFocuser, focusers } from ".";
-import { Focuser, FocuserProps } from ".";
+import { currentFocuser, focusers } from "./ff.Core";
+import type { Focuser, FocuserProps } from "./ff.Focuser";
 
 
 

@@ -1,4 +1,4 @@
-import { Focuser } from ".";
+import type { Focuser } from "./ff.Focuser";
 
 
 

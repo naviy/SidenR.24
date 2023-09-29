@@ -1,6 +1,6 @@
 import { createContext, useContext, useRef } from "react";
 import { Block } from "./Block";
-import { ContainerProps } from "./ContainerProps";
+import type { ContainerProps } from "./ContainerProps";
 import { $log, _$log } from "../core";
 
 

@@ -1,4 +1,4 @@
-import { ReactNode, useLayoutEffect } from "react";
+import { type ReactNode, useLayoutEffect } from "react";
 
 import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
 
