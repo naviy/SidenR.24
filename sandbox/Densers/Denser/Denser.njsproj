@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <SchemaVersion>2.0</SchemaVersion>
+        <ProjectGuid>{26472b7f-541d-470a-869d-807ea9b09b5e}</ProjectGuid>
+        <ProjectHome>.</ProjectHome>
+        <ProjectView>ShowAllFiles</ProjectView>
+        <StartupFile />
+        <WorkingDirectory>.</WorkingDirectory>
+        <OutputPath>.</OutputPath>
+        <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+        <EnableTypeScript>true</EnableTypeScript>
+        <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">17.0</VisualStudioVersion>
+        <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+    <ItemGroup>
+        <Content Include="package-lock.json" />
+        <Content Include="package.json" />
+        <None Include="tsconfig.json" />
+        <Content Include="README.md" />
+        <Content Include="public\index.html" />
+        <Content Include="public\favicon.ico" />
+        <None Include="src\App.tsx" />
+        <None Include="src\index.tsx" />
+        <None Include="src\Page01.tsx" />
+        <None Include="src\@libs\index.tsx" />
+        <None Include="src\page02\index.tsx" />
+        <None Include="src\page02\Page02.tsx" />
+        <None Include="src\@libs\components\AppTheme.tsx" />
+        <None Include="src\@libs\components\index.tsx" />
+        <None Include="src\@libs\components\core\index.tsx" />
+        <None Include="src\@libs\components\core\mui3.tsx" />
+        <None Include="src\@libs\components\core\MuiColor.tsx" />
+        <None Include="src\@libs\components\core\primitives.tsx" />
+        <None Include="src\@libs\components\core\Repaintable.tsx" />
+        <None Include="src\@libs\components\core\SpaWaitingMask.tsx" />
+        <None Include="src\@libs\components\core\__debug.tsx" />
+        <None Include="src\@libs\components\expanders\Expander.tsx" />
+        <None Include="src\@libs\components\expanders\ExpanderBaseBehavior.tsx" />
+        <None Include="src\@libs\components\expanders\ExpanderBehavior.tsx" />
+        <None Include="src\@libs\components\expanders\FlexExpander.tsx" />
+        <None Include="src\@libs\components\expanders\FlexExpanderBehavior.tsx" />
+        <None Include="src\@libs\components\expanders\index.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.Anchor.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.Caret.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.CaretBehavior.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.CaretProps.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.Core.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.Focuser.tsx" />
+        <None Include="src\@libs\components\flow-focuser\ff.Navigation.tsx" />
+        <None Include="src\@libs\components\flow-focuser\index.tsx" />
+        <None Include="src\@libs\components\pane\BgColor.tsx" />
+        <None Include="src\@libs\components\pane\Block.tsx" />
+        <None Include="src\@libs\components\pane\Container.tsx" />
+        <None Include="src\@libs\components\pane\ContainerInfo.tsx" />
+        <None Include="src\@libs\components\pane\ContainerProps.tsx" />
+        <None Include="src\@libs\components\pane\index.tsx" />
+        <None Include="src\@libs\components\pane\Pane.tsx" />
+        <None Include="src\@libs\components\transitions\FillFade.tsx" />
+        <None Include="src\@libs\components\transitions\FillSlide.tsx" />
+        <None Include="src\@libs\components\transitions\index.tsx" />
+        <None Include="src\@libs\components\transitions\TransitionGroup.tsx" />
+        <None Include="src\@libs\components\transitions\TransitionProps.tsx" />
+        <None Include="src\@libs\components\transitions\ValueFader.tsx" />
+        <None Include="src\@libs\components\transitions\ValueSlider.tsx" />
+        <None Include="src\@libs\components\core\utils\array.ts" />
+        <None Include="src\@libs\components\core\utils\asyncs.ts" />
+        <None Include="src\@libs\components\core\utils\Key.ts" />
+        <None Include="src\@libs\components\core\utils\mixins.ts" />
+        <None Include="src\@libs\components\core\utils\object.ts" />
+        <None Include="src\@libs\components\core\utils\TaskQueue.ts" />
+        <None Include="src\@libs\components\core\utils\hooks.tsx" />
+        <None Include="src\@libs\components\core\utils\index.tsx" />
+        <None Include="src\@libs\components\core\utils\logging.tsx" />
+        <None Include="src\@libs\components\core\utils\UseHookProps.tsx" />
+        <None Include="src\@libs\components\core\utils\Values.tsx" />
+        <None Include="src\page02\tentas\index.tsx" />
+        <None Include="src\page02\tentas\TentaBehavior.tsx" />
+        <None Include="src\page02\tentas\TentaFocusable.tsx" />
+        <None Include="src\page02\tentas\TentaPhaser.tsx" />
+        <None Include="src\page02\tentas\TentaStatuser.tsx" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="public" />
+        <Folder Include="src" />
+        <Folder Include="src\@libs" />
+        <Folder Include="src\@libs\components" />
+        <Folder Include="src\@libs\components\core" />
+        <Folder Include="src\@libs\components\core\utils" />
+        <Folder Include="src\@libs\components\expanders" />
+        <Folder Include="src\@libs\components\flow-focuser" />
+        <Folder Include="src\@libs\components\pane" />
+        <Folder Include="src\@libs\components\transitions" />
+        <Folder Include="src\page02" />
+        <Folder Include="src\page02\tentas" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+    <ProjectExtensions>
+        <VisualStudio>
+          <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+            <WebProjectProperties>
+              <UseIIS>False</UseIIS>
+              <AutoAssignPort>True</AutoAssignPort>
+              <DevelopmentServerPort>0</DevelopmentServerPort>
+              <DevelopmentServerVPath>/</DevelopmentServerVPath>
+              <IISUrl>http://localhost:48022/</IISUrl>
+              <NTLMAuthentication>False</NTLMAuthentication>
+              <UseCustomServer>True</UseCustomServer>
+              <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+              <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+            </WebProjectProperties>
+          </FlavorProperties>
+          <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+            <WebProjectProperties>
+              <StartPageUrl>
+              </StartPageUrl>
+              <StartAction>CurrentPage</StartAction>
+              <AspNetDebugging>True</AspNetDebugging>
+              <SilverlightDebugging>False</SilverlightDebugging>
+              <NativeDebugging>False</NativeDebugging>
+              <SQLDebugging>False</SQLDebugging>
+              <ExternalProgram>
+              </ExternalProgram>
+              <StartExternalURL>
+              </StartExternalURL>
+              <StartCmdLineArguments>
+              </StartCmdLineArguments>
+              <StartWorkingDirectory>
+              </StartWorkingDirectory>
+              <EnableENC>False</EnableENC>
+              <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+            </WebProjectProperties>
+          </FlavorProperties>
+        </VisualStudio>
+    </ProjectExtensions>
+</Project>

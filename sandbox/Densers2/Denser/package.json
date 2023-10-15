@@ -1,0 +1,69 @@
+{
+
+
+	"name": "denser",
+	"version": "0.2.0",
+	"private": true,
+	"type": "module",
+
+	"scripts": {
+		"start": "vite",
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview"
+	},
+
+	"dependencies": {
+
+		"@emotion/react": "latest",
+		"@emotion/styled": "latest",
+		"@mui/material": "latest",
+		"clsx": "latest",
+		"csstype": "latest",
+		"lodash": "latest",
+		"moment": "latest",
+		"numeral": "latest",
+		"react": "latest",
+		"react-dom": "latest",
+		"react-transition-group": "latest",
+		"react-world-flags": "latest"
+
+	},
+
+	"devDependencies": {
+
+		"@types/lodash": "latest",
+		"@types/node": "latest",
+		"@types/numeral": "latest",
+		"@types/react": "latest",
+		"@types/react-dom": "latest",
+		"@types/react-transition-group": "latest",
+		"@typescript-eslint/eslint-plugin": "latest",
+		"@typescript-eslint/parser": "latest",
+		"@vitejs/plugin-react": "latest",
+		"eslint": "latest",
+		"eslint-plugin-react-hooks": "latest",
+		"eslint-plugin-react-refresh": "latest",
+		"typescript": "latest",
+		"vite": "latest",
+		"vite-plugin-checker": "latest",
+		"vite-tsconfig-paths": "latest"
+
+	},
+
+	"eslintConfig": {
+
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		],
+
+		"rules": {
+			"no-mixed-operators": "off",
+			"react-hooks/rules-of-hooks": "off",
+			"@typescript-eslint/no-redeclare": "off"
+		}
+
+	}
+
+}

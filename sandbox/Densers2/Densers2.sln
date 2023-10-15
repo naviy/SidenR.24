@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Denser", "Denser\Denser.njsproj", "{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3AB63D21-8811-46D0-8743-0F05089E45C1}
+	EndGlobalSection
+EndGlobal
