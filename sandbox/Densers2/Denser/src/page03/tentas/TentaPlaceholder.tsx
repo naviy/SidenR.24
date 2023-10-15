@@ -1,7 +1,6 @@
-import { $log, Repaintable, useNew } from "@libs";
+import { Repaintable, useNew } from "@libs";
 import type React from "react";
 import { createContext, useContext, type ReactNode } from "react";
-import type { TentaBehavior } from "./TentaBehavior";
 import { TentaStage } from "./TentaStage";
 import type { TentaPhaser } from "./TentaPhaser";
 
@@ -75,7 +74,7 @@ export module TentaPlaceholder
 			public stage: TentaStage,
 		)
 		{
-			$log("create Placeholder")
+			//$log("create Placeholder")
 		}
 
 

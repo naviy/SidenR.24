@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-import { $defaultAnimationDurationMs, $log, _$log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
 import { Container } from "./Container";
@@ -20,7 +20,7 @@ import { ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
 
 export function Pane(props: Pane.Props)
 {
-	_$log("Pane");
+	//__$log("Pane");
 	props = UseHookProps.use(props);
 
 	let parentInfo = ContainerInfo_.use() || {};
@@ -33,7 +33,7 @@ export function Pane(props: Pane.Props)
 
 
 
-	let { noPP, preExpanding, gap, pg, png } = parentInfo;
+	let { noPP, preExpanding, gap, /*pg, png*/ } = parentInfo;
 
 	let ppl = !noPP && (!inRow || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
 	let ppr = !noPP && (!inRow || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
@@ -41,15 +41,15 @@ export function Pane(props: Pane.Props)
 	let ppb = !noPP && (!inCol || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
 
 
-	let gapl = inRow && !start ? !!gap : !!parentInfo.gapl;
-	let gapr = inRow && !end ? !!gap : !!parentInfo.gapr;
-	let gapt = inCol && !start ? !!gap : !!parentInfo.gapt;
-	let gapb = inCol && !end ? !!gap : !!parentInfo.gapb;
+	//let gapl = inRow && !start ? !!gap : !!parentInfo.gapl;
+	//let gapr = inRow && !end ? !!gap : !!parentInfo.gapr;
+	//let gapt = inCol && !start ? !!gap : !!parentInfo.gapt;
+	//let gapb = inCol && !end ? !!gap : !!parentInfo.gapb;
 
-	ppl += gapl ? pg || 0 : png || 0;
-	ppr += gapr ? pg || 0 : png || 0;
-	ppt += gapt ? pg || 0 : png || 0;
-	ppb += gapb ? pg || 0 : png || 0;
+	//ppl += gapl ? pg || 0 : png || 0;
+	//ppr += gapr ? pg || 0 : png || 0;
+	//ppt += gapt ? pg || 0 : png || 0;
+	//ppb += gapb ? pg || 0 : png || 0;
 
 
 	//if (props.id)

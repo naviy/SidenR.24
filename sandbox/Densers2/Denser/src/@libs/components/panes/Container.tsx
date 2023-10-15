@@ -1,7 +1,7 @@
 import { styled } from "@mui/material";
 import clsx from "clsx";
 import React, { useRef } from "react";
-import { $defaultAnimationDurationMs, $log, PrimitiveProps, UseHookProps, Values, _$log, createPrimitive, useNew } from "../core";
+import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { mui3 } from "../core/mui3";
 import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
@@ -53,7 +53,7 @@ export module Container
 	//---
 
 
-	
+
 	export function renderProvider(
 		type: undefined | "row" | "col",
 		props: Partial<ContainerProps> & PrimitiveProps<HTMLDivElement>,
@@ -61,12 +61,13 @@ export module Container
 	)
 	{
 
+		//_$log(type, props.id)
+
 		props = UseHookProps.use(props);
 
 		let parentInfo = ContainerInfo.use() || {};
 
 		let elRef = useRef<HTMLDivElement>(null);
-
 
 		//props.id && $log(type, props.id)
 		//props.id && _$log("ppx", props.ppx);
@@ -118,16 +119,9 @@ export module Container
 		);
 
 
-		//if (props.props)
-		//{
-		//	let v2 = props.props(v);
-		//	if (v2)
-		//		props = { ...props, ...v2 };
-		//}
-
 		v = ContainerInfo.build(props, parentInfo, v,);
 
-		v = ContainerInfo.useValue(v);
+		v = ContainerInfo.useValue(v, props.id);
 
 
 		let body = props.children;
@@ -173,9 +167,14 @@ export module Container
 					<div>
 						<b>{v.type}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
 						{props.start && " start"}{props.end && " end"}
-						<div className="gaps" style={{ borderWidth: `${v.gapt ? 2 : .5}px ${v.gapr ? 2 : .5}px ${v.gapb ? 2 : .5}px ${v.gapl ? 2 : .5}px`, }}>
+						<div
+							className="gaps"
+							//style={{ borderWidth: `${v.gapt ? 2 : .5}px ${v.gapr ? 2 : .5}px ${v.gapb ? 2 : .5}px ${v.gapl ? 2 : .5}px`, }}
+						>
 							gap: {v.gap}
 						</div>
+						{v.brtl && ` brtl`}
+						{/*{"   radius: " + v.cssBorderRadius}*/}
 					</div>
 				</DebugBox>
 				{body}

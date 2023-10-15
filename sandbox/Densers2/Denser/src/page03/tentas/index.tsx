@@ -39,20 +39,12 @@ export module Tenta
 
 
 
-		export function Provider(props:
-			{ phase: number; children: ReactNode; } |
-			{ bhv: TentaPhaser; children: ReactNode; }
-		)
+		export function Provider(props: { phase: number; children: ReactNode; })
 		{
-
-			let phase = (props as any)["phase"] ?? ((props as any)["bhv"] as TentaPhaser).phase;
-
-
 			return <Context.Provider
-				value={phase}
+				value={props.phase}
 				children={props.children}
 			/>;
-
 		}
 
 

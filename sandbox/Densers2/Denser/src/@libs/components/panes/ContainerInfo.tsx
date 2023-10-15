@@ -1,8 +1,6 @@
-import { createContext, useContext, useRef } from "react";
+import React, { createContext, useContext, useRef } from "react";
 import { Block } from "./Block";
 import type { ContainerProps } from "./ContainerProps";
-import { $log, _$log, __$log } from "..";
-//import { $log, _$log } from "../core";
 
 
 
@@ -22,6 +20,8 @@ export interface ContainerInfo
 
 	debug?: boolean;
 
+	start?: boolean; // must have
+	end?: boolean;   // must have
 	rounded?: boolean;
 
 	brtl?: boolean;
@@ -40,12 +40,12 @@ export interface ContainerInfo
 	pt?: number;
 	pb?: number;
 
-	pg?: number;
-	png?: number;
-	gapl?: boolean;
-	gapr?: boolean;
-	gapt?: boolean;
-	gapb?: boolean;
+	//pg?: number;
+	//png?: number;
+	//gapl?: boolean;
+	//gapr?: boolean;
+	//gapt?: boolean;
+	//gapb?: boolean;
 
 	noPP?: boolean;
 	ppl?: number;
@@ -75,13 +75,16 @@ export module ContainerInfo
 
 
 
-	export const propNames: Array<keyof ContainerInfo> = [
+	export const propNames: (keyof ContainerInfo)[] = [
 		"type",
 		"debug",
+		"start", "end",
 		//"ml", "mr", "mt", "mb",
+
+		"brtl", "brtr", "brbl", "brbr",
+		"cssBorderRadius",
 		"pl", "pr", "pt", "pb",
-		"pg", "png",
-		"gapl", "gapr", "gapt", "gapb",
+		//"pg", "png", "gapl", "gapr", "gapt", "gapb",
 		"noPP",
 		"ppl", "ppr", "ppt", "ppb",
 		"ppl0", "ppr0", "ppt0", "ppb0",
@@ -104,7 +107,7 @@ export module ContainerInfo
 
 
 
-	export function useValue(newValue: ContainerInfo): ContainerInfo
+	export function useValue(newValue: ContainerInfo, id?: React.Key): ContainerInfo
 	{
 
 		let valueRef = useRef<ContainerInfo | null>();
@@ -122,8 +125,8 @@ export module ContainerInfo
 		{
 			if (newValue[prop] !== v0[prop])
 			{
-				_$log("ContainerInfo: create")
-				__$log("prop:", prop, v0[prop], '=>', newValue[prop]);
+				//__$log("ContainerInfo: create", id)
+				//___$log("prop:", prop, v0[prop], '=>', newValue[prop]);
 				//__$log("old value: ", v0);
 				//__$log("new value: ", newValue);
 
@@ -150,8 +153,8 @@ export module ContainerInfo
 
 		v.debug = !!(props.debug ?? parentInfo.debug);
 
-		v.pg = props.pg ?? parentInfo.pg;
-		v.png = props.png ?? parentInfo.png;
+		//v.pg = props.pg ?? parentInfo.pg;
+		//v.png = props.png ?? parentInfo.png;
 
 
 		//if (props.id)
@@ -188,6 +191,9 @@ export module ContainerInfo
 		//_$log("start:", start);
 		//_$log("end:", end);
 
+		v.start = start;
+		v.end = end;
+
 
 		v.noPP = v.noPP || !!props.noPP || !!parentInfo.noPP;
 
@@ -203,15 +209,19 @@ export module ContainerInfo
 		v.ppt0 = (inRow || start ? parentInfo.ppt0 || 0 : 0) + (props.ppt0 ?? ppy0 ?? pp0 ?? 0);
 		v.ppb0 = (inRow || end ? parentInfo.ppb0 || 0 : 0) + (props.ppb0 ?? ppy0 ?? pp0 ?? 0);
 
-		v.gapl = inRow && !start ? !!parentInfo.gap : !!parentInfo.gapl;
-		v.gapr = inRow && !end ? !!parentInfo.gap : !!parentInfo.gapr;
-		v.gapt = inCol && !start ? !!parentInfo.gap : !!parentInfo.gapt;
-		v.gapb = inCol && !end ? !!parentInfo.gap : !!parentInfo.gapb;
+		//v.gapl = inRow && !start ? !!parentInfo.gap : !!parentInfo.gapl;
+		//v.gapr = inRow && !end ? !!parentInfo.gap : !!parentInfo.gapr;
+		//v.gapt = inCol && !start ? !!parentInfo.gap : !!parentInfo.gapt;
+		//v.gapb = inCol && !end ? !!parentInfo.gap : !!parentInfo.gapb;
 
+		//__$log("parentInfo.brtl:", parentInfo.brtl)
+		//__$log("inRow:", inRow);
+		//__$log("start:", start);
 		v.brtl = !!(rounded || parentInfo.brtl && (inRow && start || inCol && start));
 		v.brtr = !!(rounded || parentInfo.brtr && (inRow && end || inCol && start));
 		v.brbr = !!(rounded || parentInfo.brbr && (inRow && end || inCol && end));
 		v.brbl = !!(rounded || parentInfo.brbl && (inRow && start || inCol && end));
+		//__$log("v.brtl:", v.brtl);
 
 		let br2 = Block.bigBorderRadius;
 		let br0 = Block.smallBorderRadius;
@@ -222,7 +232,8 @@ export module ContainerInfo
 			v.brbr ? `${br2 + v.pl!}px` : !parentInfo.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + v.pl!}px`,
 			v.brbl ? `${br2 + v.pr!}px` : !parentInfo.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + v.pr!}px`,
 		].join(" ");
-
+		//__$log("cssBorderRadius:", v.cssBorderRadius);
+		
 
 		return v;
 

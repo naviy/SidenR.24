@@ -1,4 +1,4 @@
-import { $log, Div, Expander, FillFade, Focuser, Pane, TransitionGroup, __$log, useNew } from '@libs';
+import { $log, Div, Expander, FillFade, Focuser, Pane, TransitionGroup, _$log, __$log, useNew } from '@libs';
 import { Button } from "@mui/material";
 import React, { type ReactNode, useReducer, type Key } from "react";
 import { Tenta } from './tentas';
@@ -17,18 +17,7 @@ export function Page03()
 
 		<Pane.Col mx48 m100 rounded elevation={0} p2 gap1>
 
-			<Tenta.Placeholder.Collector placeholders={[1, 2, 3, 4, 5]}>
-
-				{/*<Row051 start end />*/}
-				{/*<Row05 start end />*/}
-
-				<Row05 id={1} />
-				<Row05 id={2} />
-				<Row05 id={3} />
-				<Row05 id={4} />
-				<Row05 id={5} />
-
-			</Tenta.Placeholder.Collector>
+			<Rows05 />
 
 		</Pane.Col>
 
@@ -38,14 +27,34 @@ export function Page03()
 
 
 
+function Rows05()
+{
+	return <>
+
+		<Tenta.Placeholder.Collector placeholders={[1, 2, 3, 4, 5, 6, 7]}>
+
+			<Row05 id={1} />
+			<Row05 id={2} />
+			<Row05 id={3} />
+			<Row05 id={4} />
+			<Row05 id={5} />
+			<Row05 id={6} />
+			<Row05 id={7} />
+
+		</Tenta.Placeholder.Collector>
+
+	</>;
+}
+
+
 function Row05(props: PileRowProps)
 {
-	$log("Row05.id:", props.id)
+	//$log("Row05.id:", props.id)
 
 
 	return <PileRow {...props}>
 
-		<RowRim>
+		<RowRim id={props.id}>
 
 			<>
 				<Pane p12>111 1111 11111 111111</Pane>
@@ -63,7 +72,6 @@ function Row05(props: PileRowProps)
 					</div>
 				</Pane>
 			</>
-
 
 			<>
 				<Pane l={1} center vcenter>aaa aaa aaaa</Pane>
@@ -109,51 +117,68 @@ function Row05(props: PileRowProps)
 	}
 
 
-	function RowRim(props: { children: ReactNode })
+	function RowRim(props: { id: React.Key; children: ReactNode })
 	{
 
 		let phase = Tenta.Phase.use();
 
 		let fs = React.Children.toArray(props.children);
 
-		$log("RowRim")
+		//$log("RowRim", props.id)
 
 
 		return <>
 
-			<Pane.Col start>
+			<Pane.Col start end gapi>
 
-				<Pane.Row end={phase !== 1}>
-					{fs[0]}
+				<Pane.Row gapi end>
+
+					<Pane.Col>
+
+						<Pane.Row end={phase !== 1}>
+							{fs[0]}
+						</Pane.Row>
+
+						<Pane.Row id={`row05-expander #${props.id}`} expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
+							{fs[1]}
+						</Pane.Row>
+
+					</Pane.Col>
+
+					<Pane.Row id="row05-bottom" gapi end>
+
+						{/*<Pane.Col gapi l={120}>*/}
+						{/*	<TransitionGroup>*/}
+						{/*		{phase !== 1 && <FillFade>{Pane.injectProps(fs[2])}</FillFade>}*/}
+						{/*		{phase === 1 && <FillFade>{Pane.injectProps(fs[3])}</FillFade>}*/}
+						{/*	</TransitionGroup>*/}
+						{/*</Pane.Col>*/}
+
+						{/*<Pane.Col l={120}>*/}
+						{/*	<Pane.Row end={phase !== 1}>*/}
+						{/*		{fs[2]}*/}
+						{/*	</Pane.Row>*/}
+						{/*	<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>*/}
+						{/*		{fs[4]}*/}
+						{/*	</Pane.Col>*/}
+						{/*</Pane.Col>*/}
+
+						{fs[5]}
+
+					</Pane.Row >
+
 				</Pane.Row>
 
-				<Pane.Row expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
-					{fs[1]}
-				</Pane.Row>
+
+				<Pane.Col expanded={phase === 2} wrapperCls="p8 pl32">
+
+					<Rows05 />
+
+				</Pane.Col>
+
 
 			</Pane.Col>
 
-			<Pane.Row gapi end>
-
-				{/*<Pane.Col gapi l={120}>*/}
-				{/*	<TransitionGroup>*/}
-				{/*		{phase !== 1 && <FillFade>{Pane.injectProps(fs[2])}</FillFade>}*/}
-				{/*		{phase === 1 && <FillFade>{Pane.injectProps(fs[3])}</FillFade>}*/}
-				{/*	</TransitionGroup>*/}
-				{/*</Pane.Col>*/}
-
-				{/*<Pane.Col l={120}>*/}
-				{/*	<Pane.Row end={phase !== 1}>*/}
-				{/*		{fs[2]}*/}
-				{/*	</Pane.Row>*/}
-				{/*	<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>*/}
-				{/*		{fs[4]}*/}
-				{/*	</Pane.Col>*/}
-				{/*</Pane.Col>*/}
-
-				{fs[5]}
-
-			</Pane.Row >
 
 		</>;
 
@@ -168,22 +193,6 @@ function Row05(props: PileRowProps)
 
 
 
-//function Row05(props: PileRowProps)
-//{
-//	return <PileRow2 {...props}>
-//		<RowData05 />
-//	</PileRow2>;
-
-//}
-//function RowData05()
-//{
-//	__$log("RowData05")
-//	return <div>111 222 333</div>;
-//}
-
-
-
-
 
 interface PileRowProps extends Omit<Pane.RowProps, 'id'>
 {
@@ -191,80 +200,27 @@ interface PileRowProps extends Omit<Pane.RowProps, 'id'>
 }
 
 
-//function PileRow2({ id, ...rowProps }: PileRowProps)
-//{
-//	$log("PileRow.id:", id)
-//	let placeholder = Tenta.Placeholder.use(id);
-//	let tenta = useNew(Tenta.Behavior).use({
-//		placeholder,
-//	});
-//	//phr?.useTenta(tenta);
-
-
-//	let topStage = placeholder?.prior ? null : tenta.stage;
-//	let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
-
-
-//	return (
-
-//		<Tenta.Phase.Provider bhv={tenta}>
-
-//			<Focuser
-//				ref={tenta.ffRef}
-//				padding={tenta.collapsed ? -2 : 0}
-//				listener={tenta}
-//			>
-
-//				<Pane.Row2
-//					//debug
-//					id="pile-row"
-
-//					start={!placeholder?.prior || !placeholder.prior.collapsed}
-//					end={!placeholder?.next || !placeholder.next.collapsed}
-
-//					{...rowProps}
-
-//					gap1
-
-//					{...tenta.expanded && { rounded: true, elevation: 1, mx: -12, p: 2 }}
-//					{...tenta.opened && { rounded: true, elevation: 3, mx: -24, p: 2 }}
-
-//					mt={topStage === "expanded" ? 4 : topStage === "opened" ? 36 : 0}
-//					mb={btmStage === "expanded" ? 4 : btmStage === "opened" ? 36 : 0}
-
-//					cursorPointer
-//					zIndex1={tenta.expanded}
-//				>
-//					<Focuser.Caret use={usePileRowCaretProps} />
-//					{rowProps.children}
-//				</Pane.Row2>
-
-//			</Focuser>
-
-//		</Tenta.Phase.Provider>
-
-//	);
-
-//}
 
 
 function PileRow({ id, ...rowProps }: PileRowProps)
 {
-	$log("PileRow.id:", id)
+	//$log("PileRow.id:", id)
 	let placeholder = Tenta.Placeholder.use(id);
 	let tenta = useNew(Tenta.Behavior).use({
 		placeholder,
 	});
-	//phr?.useTenta(tenta);
 
 
 	let topStage = placeholder?.prior ? null : tenta.stage;
 	let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
 
+	let start = tenta.opened || !placeholder?.prior || placeholder.prior.opened;
+	let end = tenta.opened || !placeholder?.next || placeholder.next.opened;
+
 
 	return (
 
-		<Tenta.Phase.Provider bhv={tenta}>
+		<Tenta.Phase.Provider phase={tenta.phase}>
 
 			<Focuser
 				ref={tenta.ffRef}
@@ -274,16 +230,18 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 				<Pane.Row
 					//debug
-					id="pile-row"
+					id={`pile-row #${id}`}
 
-					start={!placeholder?.prior || !placeholder.prior.collapsed}
-					end={!placeholder?.next || !placeholder.next.collapsed}
+					start={start}
+					end={end}
 
 					{...rowProps}
 
 					gap1
 
-					{...tenta.expanded && { rounded: true, elevation: 1, mx: -12, p: 2 }}
+					//elevation={btmStage !== "collapsed" ? 1 : undefined}
+
+					{...tenta.expanded && { elevation: 1, mx: -12, p: 2 }}
 					{...tenta.opened && { rounded: true, elevation: 3, mx: -24, p: 2 }}
 					ppx0={tenta.priorPhase === 1 ? 10 : tenta.priorPhase === 2 ? 22 : 0}
 					ppx={tenta.phase === 1 ? 10 : tenta.phase === 2 ? 22 : 0}
@@ -294,11 +252,17 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 					cursorPointer
 					zIndex1={tenta.expanded}
 				>
-					<Focuser.Caret
-						use={usePileRowCaretProps}
-					//color={props.start ? "green" : props.end ? "red" : undefined }
-					/>
-					{rowProps.children}
+
+					<Tenta.Placeholder.NoCollector>
+
+						<Focuser.Caret
+							use={usePileRowCaretProps}
+						//color={props.start ? "green" : props.end ? "red" : undefined }
+						/>
+						{rowProps.children}
+
+					</Tenta.Placeholder.NoCollector>
+
 				</Pane.Row>
 
 			</Focuser>
