@@ -3,14 +3,14 @@
 
 
 
-import { Component, type ReactNode, type RefObject, useContext } from "react";
+import { Component, useContext, type ReactNode, type RefObject } from "react";
 import ReactDOM from "react-dom";
 
-import { Div, MuiColor, SpaWaitingMask } from "../core";
+import { $log, __$log, Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
-import { $animationDurationMs, type Anchor, type AnchorPart, type AnchorProps, anchorPropsToString } from ".";
+import { $animationDurationMs, anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from ".";
 
 import {
 	$min_priority,
@@ -625,6 +625,7 @@ export class Focuser extends Component<FocuserProps>
 			//	this._el = this.props.element();
 			//else
 			this._el = ReactDOM.findDOMNode(this) as HTMLElement || null;
+			//this._el = this.caret?.el;
 
 			this.initElement(this._el);
 
@@ -1006,6 +1007,7 @@ export class Focuser extends Component<FocuserProps>
 			+ (" -lvl:" + this.level)
 			+ (this.root ? " -root=" + this.root : "")
 			+ (this.ghost ? " -ghost" : "")
+			+ (this.props.focusable ? " -focusable" : "")
 			+ (this.focused ? " -focused" : "")
 			+ (this.itemFocused ? " -itemFocused" : "")
 		);
@@ -1185,10 +1187,15 @@ export class Focuser extends Component<FocuserProps>
 	updateCarets(prior: Focuser | null)
 	{
 
-		if (this.canFocus() && !this.carets.length)
+		if (!this.canFocusCaret())
+			return;
+
+
+		if (!this.carets.length)
 		{
 			$error(`Focuser: не найден Focuser.Caret для "${this}"`);
 			_$log("focuser:", this);
+			_$log("focuser.el:", this.el);
 		}
 
 
@@ -2148,6 +2155,12 @@ export class Focuser extends Component<FocuserProps>
 	}
 
 
+	canFocusCaret()
+	{
+		return !this.ghost && this.enabled;
+	}
+
+
 
 	async focus(focusProps?: FocusActionProps | null): Promise<Focuser | null>
 	{
@@ -2191,7 +2204,7 @@ export class Focuser extends Component<FocuserProps>
 
 			if (focusFirst && !disabled)
 			{
-				let ff2 = await this.focusFirst(focusProps2 as FocusActionProps);
+				let ff2 = await this.focusFirst(focusProps2);
 
 				if (ff2)
 					return ff2;
@@ -2200,7 +2213,7 @@ export class Focuser extends Component<FocuserProps>
 
 			if (focusLast && !disabled)
 			{
-				let ff2 = await this.focusLast(focusProps2 as FocusActionProps);
+				let ff2 = await this.focusLast(focusProps2);
 
 				if (ff2)
 					return ff2;
@@ -2209,7 +2222,7 @@ export class Focuser extends Component<FocuserProps>
 
 			if (enter && !disabled)
 			{
-				let ff2 = await this.enter(focusProps2 as FocusActionProps) || await this.focus(focusProps2 as FocusActionProps);
+				let ff2 = await this.enter(focusProps2) || await this.focus(focusProps2);
 
 				if (ff2)
 					return ff2;
@@ -2217,7 +2230,7 @@ export class Focuser extends Component<FocuserProps>
 
 			if (focusProps.outer && !this.canFocus())
 			{
-				return await this.focusParent(focusProps2 as FocusActionProps);
+				return await this.focusParent(focusProps2);
 			}
 
 		}
@@ -2817,6 +2830,20 @@ export class Focuser extends Component<FocuserProps>
 		let parent = this.parentBy();
 
 		return parent?.focus(focusProps) || null;
+
+	}
+
+
+
+	focusParentIfCan(focusProps?: FocusActionProps | null)
+	{
+		$log("focusParentIfCan")
+		let parent = this.parentBy();
+		if (!parent?.canFocus())
+			return null;
+		_$log("parent:", parent)
+
+		return parent.focus(focusProps) || null;
 
 	}
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { type FocusActionProps, Focuser } from ".";
-import { $log, _$log, adelay } from "../..";
+import { $log, _$log, adelay } from "../core";
 
 
 
@@ -346,181 +346,181 @@ function focuserFocusStep(next: Focuser | null, focusProps?: FocusActionProps | 
 	//$logb("focuserFocusStep()", () =>
 	//{
 
-	//$log("prior:", _currentFocuser);
-	//$log("next:", next);
+		//$log("prior:", _currentFocuser);
+		//$log("next:", next);
 
 
 
-	if (_currentFocuser === next || next && next.disabled)
-		return;
-
-
-	const prior = _currentFocuser;
-
-
-	let willUnfocus: Focuser[] = [];
-	let willFocus: Focuser[] = [];
-	let willItemUnfocus: Focuser[] = [];
-	let willItemFocus: Focuser[] = [];
-	let confirmFocus: Focuser[] = [];
-
-
-
-	if (prior)
-	{
-
-		prior.caret?.recalcPosition();
-
-
-		let parent: Focuser | undefined = prior;
-
-		while (parent)
-		{
-			willUnfocus.push(parent);
-			parent = parent.parent;
-		}
-	}
-
-
-	//$$log("willUnfocus0:", willUnfocus.map(a => a.el));
-
-
-	if (next)
-	{
-
-		let parent: Focuser | undefined = next;
-
-		while (parent)
-		{
-
-			if (willUnfocus.remove(parent))
-			{
-				confirmFocus.push(parent);
-			}
-			else
-			{
-				willFocus.push(parent);
-			}
-
-			parent = parent.parent;
-
-		}
-
-	}
-
-
-	//$log("willUnfocus:", willUnfocus.map(a => a.el));
-	//$log("willFocus:", willFocus.map(a => a.el));
-	//$log("confirmFocus:", confirmFocus.map(a => a.el));
-
-
-	for (let i = willUnfocus.length - 1; i >= 0; i--)
-	{
-		setItemFocused(willUnfocus[i], false);
-
-		//let a = willUnfocus[i];
-		//a.itemFocused = false;
-		//$log("itemFocused = ", a.itemFocused, a);
-	}
-
-
-	if (prior)
-	{
-		prior.focused = false;
-		//$log("focused = false", prior);
-	}
-
-
-	if (next)
-	{
-		next.focused = true;
-		//$log("focused = true", next);
-	}
-
-
-
-	_currentFocuser = next;
-
-
-
-	for (let a of confirmFocus)
-	{
-		setItemFocused(a, a !== next);
-	}
-
-
-	for (let a of willFocus)
-	{
-		setItemFocused(a, a !== next);
-	}
-
-
-
-	function setItemFocused(ff: Focuser, value: boolean)
-	{
-
-		if (ff.itemFocused === value)
+		if (_currentFocuser === next || next && next.disabled)
 			return;
 
 
-		if (value)
-			willItemFocus.push(ff);
-		else
-			willItemUnfocus.push(ff);
+		const prior = _currentFocuser;
 
 
-		ff.itemFocused = value;
-
-	}
-
-
-
-	//AnimationFrame.beginUpdate();
+		let willUnfocus: Focuser[] = [];
+		let willFocus: Focuser[] = [];
+		let willItemUnfocus: Focuser[] = [];
+		let willItemFocus: Focuser[] = [];
+		let confirmFocus: Focuser[] = [];
 
 
-	try
-	{
-		//requestAnimationFrame(() =>
-		//{
 
-		//console.time("animate FF");
-
-		for (let a of willItemUnfocus)
+		if (prior)
 		{
-			a.onItemUnfocus(prior, next);
+
+			prior.caret?.recalcPosition();
+
+
+			let parent: Focuser | undefined = prior;
+
+			while (parent)
+			{
+				willUnfocus.push(parent);
+				parent = parent.parent;
+			}
 		}
 
-		for (let a of willItemFocus)
+
+		//$$log("willUnfocus0:", willUnfocus.map(a => a.el));
+
+
+		if (next)
 		{
-			a.onItemFocus(prior, next);
+
+			let parent: Focuser | undefined = next;
+
+			while (parent)
+			{
+
+				if (willUnfocus.remove(parent))
+				{
+					confirmFocus.push(parent);
+				}
+				else
+				{
+					willFocus.push(parent);
+				}
+
+				parent = parent.parent;
+
+			}
+
 		}
+
+
+		//$log("willUnfocus:", willUnfocus.map(a => a.el));
+		//$log("willFocus:", willFocus.map(a => a.el));
+		//$log("confirmFocus:", confirmFocus.map(a => a.el));
+
+
+		for (let i = willUnfocus.length - 1; i >= 0; i--)
+		{
+			setItemFocused(willUnfocus[i], false);
+
+			//let a = willUnfocus[i];
+			//a.itemFocused = false;
+			//$log("itemFocused = ", a.itemFocused, a);
+		}
+
+
+		if (prior)
+		{
+			prior.focused = false;
+			//$log("focused = false", prior);
+		}
+
+
+		if (next)
+		{
+			next.focused = true;
+			//$log("focused = true", next);
+		}
+
+
+
+		_currentFocuser = next;
+
 
 
 		for (let a of confirmFocus)
 		{
-			a.onChangeItemFocus(prior, next);
+			setItemFocused(a, a !== next);
 		}
 
-		for (let a of willUnfocus)
-		{
-			a.onUnfocus(prior, next);
-		}
 
 		for (let a of willFocus)
 		{
-			a.onFocus(prior, next, focusProps);
+			setItemFocused(a, a !== next);
 		}
 
-		//console.timeEnd("animate FF");
 
-		//});
-	}
-	finally
-	{
-		//AnimationFrame.endUpdate();
-	}
 
-	//$log("END focuserFocusStep");
+		function setItemFocused(ff: Focuser, value: boolean)
+		{
+
+			if (ff.itemFocused === value)
+				return;
+
+
+			if (value)
+				willItemFocus.push(ff);
+			else
+				willItemUnfocus.push(ff);
+
+
+			ff.itemFocused = value;
+
+		}
+
+
+
+		//AnimationFrame.beginUpdate();
+
+
+		try
+		{
+			//requestAnimationFrame(() =>
+			//{
+
+			//console.time("animate FF");
+
+			for (let a of willItemUnfocus)
+			{
+				a.onItemUnfocus(prior, next);
+			}
+
+			for (let a of willItemFocus)
+			{
+				a.onItemFocus(prior, next);
+			}
+
+
+			for (let a of confirmFocus)
+			{
+				a.onChangeItemFocus(prior, next);
+			}
+
+			for (let a of willUnfocus)
+			{
+				a.onUnfocus(prior, next);
+			}
+
+			for (let a of willFocus)
+			{
+				a.onFocus(prior, next, focusProps);
+			}
+
+			//console.timeEnd("animate FF");
+
+			//});
+		}
+		finally
+		{
+			//AnimationFrame.endUpdate();
+		}
+
+		//$log("END focuserFocusStep");
 	//});
 }
 

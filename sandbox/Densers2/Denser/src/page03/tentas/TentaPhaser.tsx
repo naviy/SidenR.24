@@ -1,7 +1,7 @@
-import { $log, _$log, type Constructor, type Repaintable } from '@libs';
-import { type TentaStatuser } from "./TentaStatuser";
-import { TentaStage } from "./TentaStage";
+import { type Constructor, type Repaintable } from '@libs';
 import type { TentaPlaceholder } from "./TentaPlaceholder";
+import { TentaStage } from "./TentaStage";
+import { type TentaBase } from "./TentaBase";
 
 
 
@@ -15,7 +15,7 @@ import type { TentaPlaceholder } from "./TentaPlaceholder";
 
 
 
-export interface TentaPhaser //extends TentaStage.Props
+export interface TentaPhaser extends TentaBase, Repaintable
 {
 
 	phase: number;
@@ -47,7 +47,7 @@ export interface TentaPhaser //extends TentaStage.Props
 
 
 
-export function TentaPhaser<TBase extends Constructor<TentaStatuser & Repaintable>>(Base: TBase) 
+export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(Base: TBase) 
 {
 	return class TentaPhaserClass extends Base
 		implements TentaPhaser

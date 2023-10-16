@@ -86,7 +86,7 @@ devDependencies:
     specifier: latest
     version: 4.4.11(@types/node@20.8.4)
   vite-plugin-checker:
-    specifier: ^0.6.2
+    specifier: latest
     version: 0.6.2(eslint@8.51.0)(typescript@5.2.2)(vite@4.4.11)
   vite-tsconfig-paths:
     specifier: latest

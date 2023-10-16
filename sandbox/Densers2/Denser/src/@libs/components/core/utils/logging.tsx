@@ -576,60 +576,32 @@ export function $printStack(msg: any[])
 
 
 
-export function $logm(filter: (target: any, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => boolean): ((target: any, methodName: string, descriptor: PropertyDescriptor) => void);
-export function $logm(cfg: { async: boolean }): ((target: any, methodName: string, descriptor: PropertyDescriptor) => void);
-
-//export function $logm(...keys: string[]): ((target: any, methodName: string, descriptor: PropertyDescriptor) => void);
-
-export function $logm(target: any, methodName: string, descriptor: PropertyDescriptor): void;
-
+export interface LogConfig
+{
+	filter?: (target: any, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => boolean;
+	async?: boolean;
+}
 
 
-export function $logm(...args: any[]): void | ((target: any, methodName: string, descriptor: PropertyDescriptor) => void)
+
+export function $logm(originalMethod: any, context: ClassMethodDecoratorContext): any;
+export function $logm(cfg: LogConfig): ((originalMethod: any, context: ClassMethodDecoratorContext) => any);
+
+
+
+export function $logm(arg0: any, arg1?: any): ((this: any, ...args: any[]) => any)
 {
 
-	if (args && typeof args[0] === 'function')
+	if (typeof arg0 === 'object')
 	{
-		let filter = args[0];
-
-		return (target: any, methodName: string, descriptor: PropertyDescriptor) =>
+		return (originalMethod: any, context: ClassMethodDecoratorContext) =>
 		{
-			_logm(target, methodName, descriptor, filter);
+			return _logm(originalMethod, context, arg0 as LogConfig);
 		}
 	}
 
 
-	if (args?.length === 1)
-	{
-		let cfg = args[0];
-
-		return (target: any, methodName: string, descriptor: PropertyDescriptor) =>
-		{
-			_logm(target, methodName, descriptor, undefined, cfg);
-		}
-	}
-
-
-	//if (args && typeof args[0] === 'string')
-	//{
-	//	let keys = args as string[];
-
-	//	return (target: any, methodName: string, descriptor: PropertyDescriptor) => 
-	//	{
-	//		_logm(target, methodName, descriptor, trg => keys.indexOf(getComponentKey(trg)) >= 0);
-	//	}
-	//}
-
-
-
-	(_logm as any)(...args);
-
-
-
-	//function getComponentKey(cmp: any)
-	//{
-	//	return cmp?.['_reactInternals']?.key;
-	//}
+	return _logm(arg0, arg1);
 
 }
 
@@ -637,29 +609,25 @@ export function $logm(...args: any[]): void | ((target: any, methodName: string,
 
 
 function _logm(
-	target: any,
-	methodName: string,
-	descriptor: PropertyDescriptor,
-	filter?: (target: any, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => boolean,
-	cfg?: { async?: boolean }
-): void
+	originalMethod: any,
+	context: ClassMethodDecoratorContext,
+	cfg?: LogConfig
+)
 {
 
-	let method = descriptor.value;
+	let methodName = String(context.name);
 
 
-
-	descriptor.value = function (this: any, ...args: any[])
+	return function (this: any, ...args: any[])
 	{
 
-		if (filter && !filter(this, ...args))
+		if (cfg?.filter && !cfg.filter(this, ...args))
 		{
-			return method.apply(this, args);
+			return originalMethod.apply(this, args);
 		}
 
 
-
-		let logPrms = methodLogParams(this, method, methodName, args);
+		let logPrms = methodLogParams(this, originalMethod, methodName, args);
 
 		blockHeader([logPrms.fmt, ...logPrms.args]);
 
@@ -696,7 +664,7 @@ function _logm(
 
 		let startTime = new Date().getTime();
 
-		let result = method.apply(this, args);
+		let result = originalMethod.apply(this, args);
 		//$log(`%c${methodName}%c.result: `, 'color: #c5790f; font-weight: bold;', '', result);
 
 

@@ -1,7 +1,8 @@
-import { Repaintable } from "@libs";
+import { Focuser, Repaintable } from "@libs";
 import { TentaFocusable } from "./TentaFocusable";
 import { TentaPhaser } from "./TentaPhaser";
-import { TentaStatuser } from "./TentaStatuser";
+import { TentaBase } from "./TentaBase";
+import { createRef, type RefObject } from "react";
 
 
 
@@ -14,11 +15,12 @@ import { TentaStatuser } from "./TentaStatuser";
 
 
 
-export interface TentaBehaviorUseConfig extends
-	TentaFocusable.UseConfig,
+
+export interface TentaBehavior1UseConfig extends
+	Repaintable.UseConfig,
+	TentaBase.UseConfig,
 	TentaPhaser.UseConfig,
-	TentaStatuser.UseConfig,
-	Repaintable.UseConfig
+	TentaFocusable.UseConfig
 {
 	//id: React.Key;
 }
@@ -26,19 +28,27 @@ export interface TentaBehaviorUseConfig extends
 
 
 
-export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repaintable.Async())))
+export class TentaBehavior1 extends
+	TentaFocusable(
+		TentaPhaser(
+			TentaBase(
+				Repaintable.Async()
+			)
+		)
+	)
 {
 
 	//---
 
 
-	use(cfg: TentaBehaviorUseConfig)
+
+	use(cfg: TentaBehavior1UseConfig)
 	{
 
 		//this.id = cfg.id;
 
 		Repaintable.use(this, cfg);
-		TentaStatuser.use(this, cfg);
+		TentaBase.use(this, cfg);
 		TentaPhaser.use(this, cfg);
 		TentaFocusable.use(this, cfg);
 
@@ -48,12 +58,47 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 	}
 
 
+
 	//---
 
 
-	//id!: React.Key;
 
 	declare onPhaseChanged?: (tenta: this) => void;
+
+
+	rootFfRef = createRef<Focuser>();
+	get rootFf(): Focuser | null { return this.rootFfRef.current; }
+
+	itemsFfRef = createRef<Focuser>();
+	get itemsFf(): Focuser | null { return this.itemsFfRef.current; }
+
+
+	get itemsFocused() { return !!this.itemsFf?.isFocused; }
+
+
+
+	//---
+
+
+
+	async focusParent(): Promise<Focuser | null>
+	{
+		return this.rootFfRef.current && await this.rootFfRef.current.focusParentIfCan({ focusFirst: true });
+	}
+
+
+
+	async focusItems(): Promise<Focuser | null>
+	{
+		return this.itemsFfRef.current && await this.itemsFfRef.current.enter();
+	}
+
+
+	unfocusItems()
+	{
+		this.itemsFf?.unfocus();
+	}
+
 
 
 	//---
@@ -141,8 +186,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 		}
 		else
 		{
-			await this.shake(3);
-			//await this.backToParent();
+			await this.focusParent() || await this.shake(3);
 		}
 
 	}
@@ -162,7 +206,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 		}
 		else
 		{
-			await this.shake();
+			await this.focusItems() || await this.shake();
 		}
 
 	}
@@ -189,6 +233,7 @@ export class TentaBehavior extends TentaFocusable(TentaPhaser(TentaStatuser(Repa
 	//	}
 
 	//}
+
 
 
 	//---

@@ -22,7 +22,6 @@
 		"esModuleInterop": false,
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
-		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitOverride": true,
 		"strictNullChecks":  true,

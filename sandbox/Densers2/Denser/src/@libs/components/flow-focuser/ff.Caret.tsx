@@ -5,7 +5,7 @@ import { alpha, styled } from "@mui/material";
 import type { Focuser } from "./ff.Focuser";
 import { currentFocuser } from "./ff.Core";
 import { Values } from "../..";
-import { $defaultAnimationDurationMs, MuiColor, UseHookProps, useNew } from "../core";
+import { $defaultAnimationDurationMs, Div, MuiColor, UseHookProps, useNew } from "../core";
 import { CaretBehavior } from "./ff.CaretBehavior";
 
 
@@ -43,23 +43,25 @@ export function Caret(props: Caret.CaretProps)
 	if (!ff) return null;
 
 
-	return <Caret.Root
+	return (
 
-		ref={bhv.setEl}
+		<Caret.Body
 
-		className="focuser-caret-body"
+			ref={bhv.setBodyEl}
 
-		color={bhv._priorColor ?? ff.color}
-		borderRadius={bhv._priorBorderRadius ?? ff.borderRadius}
-		borderWidth={bhv._priorBorderWidth ?? ff.borderWidth}
+			color={bhv._priorColor ?? ff.color}
+			borderRadius={bhv._priorBorderRadius ?? ff.borderRadius}
+			borderWidth={bhv._priorBorderWidth ?? ff.borderWidth}
 
-		inset={bhv.getInset()}
-		animation={!bhv._priorPosition && (!bhv.ffIsPrior || !currentFocuser())}
-		opacity={ff.isFocused ? 1 : 0}
+			inset={bhv.getInset()}
+			animation={!bhv._priorPosition && (!bhv.ffIsPrior || !currentFocuser())}
+			opacity={ff.isFocused ? 1 : 0}
 
-		children={<div>{props.children}</div>}
+			children={props.children && <div>{props.children}</div>}
 
-	/>;
+		/>
+
+	);
 
 }
 
@@ -120,7 +122,7 @@ export module Caret
 
 
 
-	export const Root = styled(
+	export const Body = styled(
 		"div",
 		{
 			name: "focuser-caret-body",

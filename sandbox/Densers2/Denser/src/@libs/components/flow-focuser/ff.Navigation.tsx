@@ -250,7 +250,7 @@ export function findDown(
 
 		let overlap = ff.props.overlapY ?? ff.props.overlap ?? defaultOverlap;
 
-		//$log({ p, y02, py1: p && p.y1 });
+		//$log({ p, y02, py1: p?.y1 });
 
 		if (!p || p.y1 < y02 - overlap)
 			continue;

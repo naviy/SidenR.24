@@ -1,7 +1,7 @@
-import type { Constructor, Focuser } from '@libs';
-import { type RefObject, useRef } from 'react';
-import type { TentaPhaser } from './TentaPhaser';
-import type { TentaStatuser } from './TentaStatuser';
+import type { Constructor, Focuser } from "@libs"; 
+import { type RefObject, useRef, createRef } from "react";
+import type { TentaPhaser } from "./TentaPhaser";
+import type { TentaBase } from "./TentaBase";
 
 
 
@@ -15,7 +15,7 @@ import type { TentaStatuser } from './TentaStatuser';
 
 
 
-export interface TentaFocusable
+export interface TentaFocusable extends TentaBase, TentaPhaser
 {
 
 	ffRef: RefObject<Focuser>;
@@ -34,7 +34,7 @@ export interface TentaFocusable
 
 
 
-export function TentaFocusable<TBase extends Constructor<TentaStatuser & TentaPhaser>>(Base: TBase) 
+export function TentaFocusable<TBase extends Constructor<TentaBase & TentaPhaser>>(Base: TBase) 
 {
 	return class TentaFocusableClass extends Base
 		implements TentaFocusable, Focuser.Listener
@@ -44,10 +44,15 @@ export function TentaFocusable<TBase extends Constructor<TentaStatuser & TentaPh
 
 
 
-		ffRef!: RefObject<Focuser>;
+		ffRef = createRef<Focuser>();
 		get ff(): Focuser | null { return this.ffRef.current; }
 
+
 		get focused() { return !!this.ff?.isFocused; }
+
+
+
+		//---
 
 
 
@@ -61,6 +66,7 @@ export function TentaFocusable<TBase extends Constructor<TentaStatuser & TentaPh
 		{
 			this.ff?.unfocus();
 		}
+
 
 
 		async scrollIntoView(): Promise<boolean>
@@ -242,7 +248,6 @@ export module TentaFocusable
 
 	export function use(me: TentaFocusable, cfg?: UseConfig)
 	{
-		me.ffRef = useRef<Focuser>(null);
 	}
 
 

@@ -1,20 +1,15 @@
 {
-
-
 	"name": "denser",
 	"version": "0.2.0",
 	"private": true,
 	"type": "module",
-
 	"scripts": {
 		"start": "vite",
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview"
 	},
-
 	"dependencies": {
-
 		"@emotion/react": "latest",
 		"@emotion/styled": "latest",
 		"@mui/material": "latest",
@@ -27,11 +22,8 @@
 		"react-dom": "latest",
 		"react-transition-group": "latest",
 		"react-world-flags": "latest"
-
 	},
-
 	"devDependencies": {
-
 		"@types/lodash": "latest",
 		"@types/node": "latest",
 		"@types/numeral": "latest",
@@ -48,22 +40,16 @@
 		"vite": "latest",
 		"vite-plugin-checker": "latest",
 		"vite-tsconfig-paths": "latest"
-
 	},
-
 	"eslintConfig": {
-
 		"extends": [
 			"react-app",
 			"react-app/jest"
 		],
-
 		"rules": {
 			"no-mixed-operators": "off",
 			"react-hooks/rules-of-hooks": "off",
 			"@typescript-eslint/no-redeclare": "off"
 		}
-
 	}
-
 }

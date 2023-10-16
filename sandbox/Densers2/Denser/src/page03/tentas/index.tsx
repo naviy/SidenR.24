@@ -1,6 +1,5 @@
-import { createContext, type ReactNode, useContext } from "react";
-import { TentaBehavior } from "./TentaBehavior";
-import type { TentaPhaser } from "./TentaPhaser";
+import { createContext, useContext, type ReactNode } from "react";
+import { TentaBehavior1 } from "./TentaBehavior1";
 import { TentaPlaceholder } from "./TentaPlaceholder";
 
 
@@ -16,11 +15,35 @@ export module Tenta
 
 
 
-	export type Behavior = TentaBehavior;
-	export const Behavior = TentaBehavior;
+	export type Behavior1 = TentaBehavior1;
+	export const Behavior1 = TentaBehavior1;
 
 	export type Placeholder = typeof TentaPlaceholder;
 	export const Placeholder = TentaPlaceholder;
+
+
+
+	//---
+
+
+
+	//export const Context = createContext<TentaBase | undefined>(undefined);
+
+
+	//export function Provider(props: { tenta: TentaBase | undefined; children: ReactNode })
+	//{
+	//	return <Context.Provider
+	//		value={props.tenta}
+	//		children={props.children}
+	//	/>;
+	//}
+
+
+	//export function use(): TentaBase | undefined
+	//{
+	//	return useContext(Context)
+	//}
+
 
 
 

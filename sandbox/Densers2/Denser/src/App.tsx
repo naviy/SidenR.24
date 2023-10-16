@@ -15,11 +15,13 @@ export function App()
 
 	return <>
 
-		<Focuser root cursor ghost click="unfocus">
+		<Focuser root ghost click="unfocus">
 
 			<Div fill overflowAutoX scrollY style={{ background: Pane.BgColor('light', 'background') }}>
 
-				<Page03 />
+				<Focuser cursor ghost>
+					<Page03 />
+				</Focuser>
 
 			</Div>
 

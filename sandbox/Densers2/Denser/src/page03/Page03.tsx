@@ -1,6 +1,6 @@
-import { $log, Div, Expander, FillFade, Focuser, Pane, TransitionGroup, _$log, __$log, useNew } from '@libs';
+import { Expander, Focuser, Pane, useNew } from '@libs';
 import { Button } from "@mui/material";
-import React, { type ReactNode, useReducer, type Key } from "react";
+import React, { useReducer, type ReactNode } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
 
@@ -27,6 +27,18 @@ export function Page03()
 
 
 
+//function Rows05()
+//{
+//	return <>
+
+//		<Tenta.Placeholder.Collector placeholders={[1]}>
+//			<Row05 id={1} />
+//		</Tenta.Placeholder.Collector>
+
+//	</>;
+//}
+
+
 function Rows05()
 {
 	return <>
@@ -47,6 +59,7 @@ function Rows05()
 }
 
 
+
 function Row05(props: PileRowProps)
 {
 	//$log("Row05.id:", props.id)
@@ -54,7 +67,7 @@ function Row05(props: PileRowProps)
 
 	return <PileRow {...props}>
 
-		<RowRim id={props.id}>
+		<RowBody id={props.id}>
 
 			<>
 				<Pane p12>111 1111 11111 111111</Pane>
@@ -93,7 +106,13 @@ function Row05(props: PileRowProps)
 				<Pane end p12 textRight vcenter>333 3333 33333 333333</Pane>
 			</>
 
-		</RowRim>
+		</RowBody>
+
+
+		<>
+			<Rows05 />
+		</>
+
 
 	</PileRow>;
 
@@ -117,68 +136,51 @@ function Row05(props: PileRowProps)
 	}
 
 
-	function RowRim(props: { id: React.Key; children: ReactNode })
+	function RowBody(props: { id: React.Key; children: ReactNode })
 	{
 
 		let phase = Tenta.Phase.use();
 
-		let fs = React.Children.toArray(props.children);
+		let parts = React.Children.toArray(props.children);
 
 		//$log("RowRim", props.id)
 
 
 		return <>
 
-			<Pane.Col start end gapi>
+			<Pane.Col start>
 
-				<Pane.Row gapi end>
-
-					<Pane.Col>
-
-						<Pane.Row end={phase !== 1}>
-							{fs[0]}
-						</Pane.Row>
-
-						<Pane.Row id={`row05-expander #${props.id}`} expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
-							{fs[1]}
-						</Pane.Row>
-
-					</Pane.Col>
-
-					<Pane.Row id="row05-bottom" gapi end>
-
-						{/*<Pane.Col gapi l={120}>*/}
-						{/*	<TransitionGroup>*/}
-						{/*		{phase !== 1 && <FillFade>{Pane.injectProps(fs[2])}</FillFade>}*/}
-						{/*		{phase === 1 && <FillFade>{Pane.injectProps(fs[3])}</FillFade>}*/}
-						{/*	</TransitionGroup>*/}
-						{/*</Pane.Col>*/}
-
-						{/*<Pane.Col l={120}>*/}
-						{/*	<Pane.Row end={phase !== 1}>*/}
-						{/*		{fs[2]}*/}
-						{/*	</Pane.Row>*/}
-						{/*	<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>*/}
-						{/*		{fs[4]}*/}
-						{/*	</Pane.Col>*/}
-						{/*</Pane.Col>*/}
-
-						{fs[5]}
-
-					</Pane.Row >
-
+				<Pane.Row start end={phase !== 1}>
+					{parts[0]}
 				</Pane.Row>
 
-
-				<Pane.Col expanded={phase === 2} wrapperCls="p8 pl32">
-
-					<Rows05 />
-
-				</Pane.Col>
-
+				<Pane.Row end id={`row05-expander #${props.id}`} expanded={phase === 1} wrapperCls="pt1" gap1 noreexpand>
+					{parts[1]}
+				</Pane.Row>
 
 			</Pane.Col>
 
+			<Pane.Row id="row05-bottom" gapi end>
+
+				{/*<Pane.Col gapi l={120}>*/}
+				{/*	<TransitionGroup>*/}
+				{/*		{phase !== 1 && <FillFade>{Pane.injectProps(fs[2])}</FillFade>}*/}
+				{/*		{phase === 1 && <FillFade>{Pane.injectProps(fs[3])}</FillFade>}*/}
+				{/*	</TransitionGroup>*/}
+				{/*</Pane.Col>*/}
+
+				{/*<Pane.Col l={120}>*/}
+				{/*	<Pane.Row end={phase !== 1}>*/}
+				{/*		{fs[2]}*/}
+				{/*	</Pane.Row>*/}
+				{/*	<Pane.Col l={2} expanded={phase === 1} pt1={phase === 1}>*/}
+				{/*		{fs[4]}*/}
+				{/*	</Pane.Col>*/}
+				{/*</Pane.Col>*/}
+
+				{parts[5]}
+
+			</Pane.Row >
 
 		</>;
 
@@ -186,6 +188,7 @@ function Row05(props: PileRowProps)
 
 
 }
+
 
 
 
@@ -206,7 +209,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 {
 	//$log("PileRow.id:", id)
 	let placeholder = Tenta.Placeholder.use(id);
-	let tenta = useNew(Tenta.Behavior).use({
+	let tenta = useNew(Tenta.Behavior1).use({
 		placeholder,
 	});
 
@@ -218,19 +221,18 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 	let end = tenta.opened || !placeholder?.next || placeholder.next.opened;
 
 
+	let parts = React.Children.toArray(rowProps.children);
+
+
 	return (
 
 		<Tenta.Phase.Provider phase={tenta.phase}>
 
-			<Focuser
-				ref={tenta.ffRef}
-				padding={tenta.collapsed ? -2 : 0}
-				listener={tenta}
-			>
+			<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
 
-				<Pane.Row
+				<Pane.Col
 					//debug
-					id={`pile-row #${id}`}
+					id={`pile-row#${id}`}
 
 					start={start}
 					end={end}
@@ -255,15 +257,40 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 					<Tenta.Placeholder.NoCollector>
 
-						<Focuser.Caret
-							use={usePileRowCaretProps}
-						//color={props.start ? "green" : props.end ? "red" : undefined }
-						/>
-						{rowProps.children}
+						<Focuser
+							ref={tenta.ffRef}
+							name={`pile-row-body#${id}`}
+							padding={tenta.collapsed ? -2 : 0}
+							listener={tenta}
+						>
+
+							<Pane.Row start end gapi>
+
+								<Focuser.Caret
+									use={usePileRowCaretProps}
+								//color={props.start ? "green" : props.end ? "red" : undefined }
+								/>
+
+								{parts[0]}
+
+							</Pane.Row>
+
+						</Focuser>
+
+						{parts[1] &&
+
+							<Focuser ref={tenta.itemsFfRef} ghost>
+
+								<Pane.Col start end expanded={tenta.opened} wrapperCls="pl48 mr-2 pr24 pb8 pt12">
+									{parts[1]}
+								</Pane.Col>
+
+							</Focuser>
+						}
 
 					</Tenta.Placeholder.NoCollector>
 
-				</Pane.Row>
+				</Pane.Col>
 
 			</Focuser>
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, createRef } from "react";
 
 
 import { Focuser, FocuserContext } from ".";
@@ -62,17 +62,17 @@ export class CaretBehavior extends Repaintable.Async()
 	ffIsPrior?: boolean;
 
 
-	el?: HTMLDivElement;
+	bodyEl?: HTMLDivElement;
 
-	setEl = (el: HTMLDivElement) =>
+	setBodyEl = (el: HTMLDivElement) =>
 	{
 
-		if (this.el && !el)
+		if (this.bodyEl && !el)
 			this.recalcPosition();
 
-		this.el = el;
+		this.bodyEl = el;
 
-		if (this.el)
+		if (this.bodyEl)
 			this.recalcPosition();
 	};
 
@@ -135,10 +135,10 @@ export class CaretBehavior extends Repaintable.Async()
 
 	toLogValue()
 	{
-		if (!this.el)
+		if (!this.bodyEl)
 			return [this.toString()];
 
-		return [this.toString(), this.el];
+		return [this.toString(), this.bodyEl];
 	}
 
 
@@ -151,7 +151,7 @@ export class CaretBehavior extends Repaintable.Async()
 	recalcPosition(force?: boolean)
 	{
 
-		let el = this.el;
+		let el = this.bodyEl;
 		//$log("el:", el);
 		if (el)
 		{
@@ -274,7 +274,7 @@ export class CaretBehavior extends Repaintable.Async()
 	async shake(mode?: 1 | 2 | 3)
 	{
 
-		let el = this.el!;
+		let el = this.bodyEl!;
 		if (!el) return;
 
 		el.classList.remove('shake-1', 'shake-2', 'shake-3');
