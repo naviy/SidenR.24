@@ -143,6 +143,7 @@ export module TentaPlaceholder
 
 
 	export function Collector(props: {
+		root?: boolean;
 		placeholders: DefaultProps[];
 		children: ReactNode;
 	})
@@ -173,20 +174,31 @@ export module TentaPlaceholder
 		//---
 
 
+
+		root!: boolean;
+
 		placeholders!: Behavior[];
+
 
 
 		//---
 
 
-		use(cfg: { placeholders: DefaultProps[] } & Repaintable.UseConfig)
+
+		use(cfg: Repaintable.UseConfig & {
+			root?: boolean;
+			placeholders: DefaultProps[]
+		})
 		{
 			Repaintable.use(this, cfg);
+
+			this.root = cfg?.root||false;
 
 			this.usePlaceholders(cfg.placeholders);
 
 			return this;
 		}
+
 
 
 		usePlaceholders(news: DefaultProps[])
@@ -218,7 +230,9 @@ export module TentaPlaceholder
 		}
 
 
+
 		//---
+
 
 
 		byId(id: React.Key)
@@ -230,6 +244,7 @@ export module TentaPlaceholder
 		{
 			return this.placeholders.findIndex(a => a.id === id);
 		}
+
 
 
 		//---

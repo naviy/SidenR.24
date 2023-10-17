@@ -1,5 +1,5 @@
-import { Expander, Focuser, Pane, useNew } from '@libs';
-import { Button } from "@mui/material";
+import { $defaultAnimationDurationMs, Div, Expander, Focuser, Pane, useNew } from '@libs';
+import { Button, styled } from "@mui/material";
 import React, { useReducer, type ReactNode } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
@@ -15,11 +15,11 @@ export function Page03()
 
 	return <>
 
-		<Pane.Col mx48 m100 rounded elevation={0} p2 gap1>
+		<Div mx200 m100>
 
-			<Rows05 />
+			<Rows05 root />
 
-		</Pane.Col>
+		</Div>
 
 	</>;
 
@@ -39,21 +39,28 @@ export function Page03()
 //}
 
 
-function Rows05()
+function Rows05({ root }: { root?: boolean })
 {
 	return <>
 
-		<Tenta.Placeholder.Collector placeholders={[1, 2, 3, 4, 5, 6, 7]}>
+		<Pane.Col rounded elevation={0} p2 gap1>
 
-			<Row05 id={1} />
-			<Row05 id={2} />
-			<Row05 id={3} />
-			<Row05 id={4} />
-			<Row05 id={5} />
-			<Row05 id={6} />
-			<Row05 id={7} />
+			<Tenta.Placeholder.Collector
+				root={root}
+				placeholders={[1, 2, 3, 4, 5, 6, 7]}
+			>
 
-		</Tenta.Placeholder.Collector>
+				<Row05 id={1} />
+				<Row05 id={2} />
+				<Row05 id={3} />
+				<Row05 id={4} />
+				<Row05 id={5} />
+				<Row05 id={6} />
+				<Row05 id={7} />
+
+			</Tenta.Placeholder.Collector>
+
+		</Pane.Col>
 
 	</>;
 }
@@ -208,7 +215,9 @@ interface PileRowProps extends Omit<Pane.RowProps, 'id'>
 function PileRow({ id, ...rowProps }: PileRowProps)
 {
 	//$log("PileRow.id:", id)
+
 	let placeholder = Tenta.Placeholder.use(id);
+
 	let tenta = useNew(Tenta.Behavior1).use({
 		placeholder,
 	});
@@ -244,16 +253,18 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 					//elevation={btmStage !== "collapsed" ? 1 : undefined}
 
 					{...tenta.expanded && { elevation: 1, mx: -12, p: 2 }}
-					{...tenta.opened && { rounded: true, elevation: 3, mx: -24, p: 2 }}
-					ppx0={tenta.priorPhase === 1 ? 10 : tenta.priorPhase === 2 ? 22 : 0}
-					ppx={tenta.phase === 1 ? 10 : tenta.phase === 2 ? 22 : 0}
+					{...tenta.opened && { rounded: true, elevation: 0, mx: -24, p: 3 }}
+					ppx0={tenta.priorPhase === 1 ? 10 : tenta.priorPhase === 2 ? 21 : 0}
+					ppx={tenta.phase === 1 ? 10 : tenta.phase === 2 ? 21 : 0}
 
-					mt={topStage === "expanded" ? 4 : topStage === "opened" ? 36 : 0}
-					mb={btmStage === "expanded" ? 4 : btmStage === "opened" ? 36 : 0}
+					mt={topStage === "expanded" ? 0 : topStage === "opened" ? 0 : 0}
+					mb={btmStage === "expanded" ? 8 : btmStage === "opened" ? 40 : 0}
 
 					cursorPointer
 					zIndex1={tenta.expanded}
 				>
+
+					<TentaItemsBackfill />
 
 					<Tenta.Placeholder.NoCollector>
 
@@ -264,7 +275,14 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 							listener={tenta}
 						>
 
-							<Pane.Row start end gapi>
+							<Pane.Row start end gapi elevation={tenta.opened ? 2 : 0}>
+
+								{(!placeholder || !placeholder.collector.root) &&
+									<TentaItemsLinkLine
+										width={tenta.opened ? 31 : tenta.expanded ? 41 : 51}
+										thickness={tenta.opened ? 3 : tenta.expanded ? 2 : 2}
+									/>
+								}
 
 								<Focuser.Caret
 									use={usePileRowCaretProps}
@@ -281,7 +299,12 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 							<Focuser ref={tenta.itemsFfRef} ghost>
 
-								<Pane.Col start end expanded={tenta.opened} wrapperCls="pl48 mr-2 pr24 pb8 pt12">
+								<Pane.Col
+									start
+									end
+									expanded={tenta.opened}
+									wrapperCls="pl48 mr-5 pr24 pb16 pt16"
+								>
 									{parts[1]}
 								</Pane.Col>
 
@@ -307,3 +330,34 @@ function usePileRowCaretProps()
 	let row = Pane.ContainerInfo.use();
 	return { borderRadius: row?.cssBorderRadius };
 }
+
+
+
+const TentaItemsBackfill = styled("div")({
+	position: "absolute",
+	inset: "2px",
+	left: "4px",
+	background: Pane.BgColor.Light.Background,
+	borderRadius: "inherit",
+})
+
+
+const TentaItemsLinkLine = styled(
+	"div",
+	{ shouldForwardProp: p => p !== "width" && p !== "thickness" }
+)<{
+	width: number;
+	thickness?: number;
+}>(({ width, thickness }) =>
+({
+	position: "absolute",
+	left: -width,
+	top: 12,
+	height: 12,
+	width: width,
+	border: `${thickness || 1}px solid #dadada`,
+	borderTopWidth: 0,
+	borderRightWidth: 0,
+	borderBottomLeftRadius: 12,
+	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+}));

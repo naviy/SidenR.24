@@ -36,8 +36,8 @@ import { CaretBehavior } from "./ff.CaretBehavior";
 
 
 
-export var scrollIntoViewYOffset = 150;
-export var scrollIntoViewTopOffset = 24;
+export var scrollIntoViewYOffset = 100;
+export var scrollIntoViewTopOffset = 50;
 
 
 
