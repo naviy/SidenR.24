@@ -257,7 +257,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 					ppx0={tenta.priorPhase === 1 ? 10 : tenta.priorPhase === 2 ? 21 : 0}
 					ppx={tenta.phase === 1 ? 10 : tenta.phase === 2 ? 21 : 0}
 
-					mt={topStage === "expanded" ? 0 : topStage === "opened" ? 0 : 0}
+					mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
 					mb={btmStage === "expanded" ? 8 : btmStage === "opened" ? 40 : 0}
 
 					cursorPointer
