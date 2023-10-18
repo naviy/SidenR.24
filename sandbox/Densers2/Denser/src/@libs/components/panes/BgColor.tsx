@@ -56,7 +56,7 @@ export module BgColor
 		//Surface: '#ffffff',
 		//Background = '#c2d0d9',
 		//Container = '#edf5f9',
-		Background = '#f3f3f3',
+		Background = '#f0f2f5',
 		Container = '#c2d0d9',
 		Surface = '#ffffff',
 

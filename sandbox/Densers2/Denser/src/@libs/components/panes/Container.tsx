@@ -195,7 +195,7 @@ export module Container
 
 				borderRadius: v.cssBorderRadius,
 
-				e: props.elevation,
+				elevation: props.elevation,
 				timeout: props.timeout,
 				className: addClassName,
 
@@ -244,7 +244,7 @@ export module Container
 		maxHeight?: number | string;
 
 		borderRadius?: string;
-		e?: mui3.BoxShadow;
+		elevation?: mui3.BoxShadow;
 
 		timeout?: number;
 
@@ -266,7 +266,7 @@ export module Container
 				p !== "minHeight" &&
 				p !== "maxHeight" &&
 				p !== "borderRadius" &&
-				p !== "e" &&
+				p !== "elevation" &&
 				p !== "timeout"
 			,
 		}
@@ -285,8 +285,8 @@ export module Container
 
 			borderRadius: props.borderRadius || "0",
 
-			background: props.e == null ? "none" : mui3.Elevation.light[props.e].background,
-			boxShadow: props.e == null ? "none" : mui3.Elevation.light[props.e].boxShadow,
+			//background: props.elevation == null ? "none" : mui3.Elevation.light[props.elevation].background,
+			//boxShadow: props.elevation == null ? "none" : mui3.Elevation.light[props.elevation].boxShadow,
 
 			width: props.width,
 			minWidth: props.minWidth,

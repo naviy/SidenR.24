@@ -3,7 +3,7 @@ import { useEffect, createRef } from "react";
 
 import { Focuser, FocuserContext } from ".";
 import { $error } from "../..";
-import { MuiColor, Repaintable, UseHookProps } from "../core";
+import { $log, MuiColor, Repaintable, UseHookProps, _$log } from "../core";
 import type { CaretProps } from "./ff.CaretProps";
 
 
@@ -193,7 +193,7 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 	//@$logm
-	async update(prior: Focuser | null)
+	update(prior: Focuser | null)
 	{
 
 		let ff = this.ff;
@@ -209,7 +209,6 @@ export class CaretBehavior extends Repaintable.Async()
 			return;
 
 
-
 		if (ff.isFocused)
 		{
 
@@ -219,49 +218,71 @@ export class CaretBehavior extends Repaintable.Async()
 			}
 
 
-
-			if (this.ffIsPrior)
-				prior = null;
-
-			this._priorPosition = prior?.caret?.recalcPosition();
-
-			this._priorColor = prior?.color;
-			this._priorBorderRadius = prior?.borderRadius;
-			this._priorBorderWidth = prior?.borderWidth;
-
-			//this._priorPadding = this.ffIsPrior ? null : prior?.safePadding();
-			//$log("this._priorPosition:", this._priorPosition);
-
-
-			if (!this._priorPosition)
-			{
-				this.repaint();
-			}
-
-			else
-			{
-
-				await this.repaint();
-
-				this._priorPosition = null;
-
-				this._priorColor = null;
-				this._priorBorderRadius = null;
-				this._priorBorderWidth = null;
-
-				this.repaint();
-
-			}
+			this.#updateFocused(prior);
 
 		}
 
 		else if (this.ffIsPrior)
 		{
 
+			this.#updatePrior(prior);
+
+		}
+
+	}
+
+
+
+	async #updateFocused(prior: Focuser | null)
+	{
+
+		//$log("updateFocused " + this)
+
+		if (this.ffIsPrior)
+			prior = null;
+
+
+
+		this._priorPosition = prior?.caret?.recalcPosition();
+
+		this._priorColor = prior?.color;
+		this._priorBorderRadius = prior?.borderRadius;
+		this._priorBorderWidth = prior?.borderWidth;
+
+		//this._priorPadding = this.ffIsPrior ? null : prior?.safePadding();
+		//$log("this._priorPosition:", this._priorPosition);
+
+
+		//let parents = diffParents(prior?.caret?.bodyEl, this.bodyEl);
+		//_$log("parents:", parents)
+
+		if (!this._priorPosition)
+		{
+			this.repaint();
+		}
+
+		else
+		{
+
+			await this.repaint();
+
 			this._priorPosition = null;
+
+			this._priorColor = null;
+			this._priorBorderRadius = null;
+			this._priorBorderWidth = null;
+
 			this.repaint();
 
 		}
+
+	}
+
+	#updatePrior(prior: Focuser | null)
+	{
+		//$log("updatePrior " + this)
+		this._priorPosition = null;
+		this.repaint();
 
 	}
 
@@ -288,3 +309,52 @@ export class CaretBehavior extends Repaintable.Async()
 	//---
 
 }
+
+
+
+
+//===
+
+
+
+
+//function diffParents(el1: HTMLElement | null | undefined, el2: HTMLElement | null | undefined)
+//{
+
+//	let parents1 = allParentsAndMe(el1);
+//	let parents2: HTMLElement[] = [];
+
+//	let el = el2;
+
+
+//	while (el)
+//	{
+
+//		let i = parents1.indexOf(el);
+
+//		if (i >= 0)
+//			return parents2;
+
+//		parents2.push(el);
+//		el = el.parentElement;
+
+//	}
+
+
+//	return null; // Если общего родителя не найдено
+
+
+//	function allParentsAndMe(el: HTMLElement | null | undefined)
+//	{
+//		let parents: HTMLElement[] = [];
+
+//		while (el)
+//		{
+//			parents.push(el);
+//			el = el.parentElement;
+//		}
+
+//		return parents;
+//	}
+
+//}

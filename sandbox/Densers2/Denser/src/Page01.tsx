@@ -164,13 +164,13 @@ function Row03()
 			<Pane l={300} p24 textRight>333 3333 33333 333333</Pane>
 		</Pane.Row>
 
-		<Pane.Row gap1 {...expanded && { rounded: true, p: 4, e: 3, my: 24, mx: -24 }} onClick={toggleExpanded} cursorPointer>
+		<Pane.Row gap1 {...expanded && { rounded: true, p: 4, elevation: 3, my: 24, mx: -24 }} onClick={toggleExpanded} cursorPointer>
 			<Pane l={300} p24>111 1111 11111 111111</Pane>
 			<Pane p24>222 2222 22222 222222</Pane>
 			<Pane l={300} p24 textRight>333 3333 33333 333333</Pane>
 		</Pane.Row>
 
-		<Pane.Row gap1 {...expanded && { rounded: true, p: 12, e: 3, my: 24, mx: -48 }} onClick={toggleExpanded} cursorPointer>
+		<Pane.Row gap1 {...expanded && { rounded: true, p: 12, elevation: 3, my: 24, mx: -48 }} onClick={toggleExpanded} cursorPointer>
 			<Pane l={300} p24>111 1111 11111 111111</Pane>
 			<Pane p24>222 2222 22222 222222</Pane>
 			<Pane l={300} p24 textRight>333 3333 33333 333333</Pane>
@@ -189,7 +189,7 @@ function Row04()
 
 	return <>
 
-		<Pane.Row gap1 {...expanded && { rounded: true, p: 2, e: 3, mx: -24, my: 24 }} onClick={toggleExpanded} cursorPointer>
+		<Pane.Row gap1 {...expanded && { rounded: true, p: 2, elevation: 3, mx: -24, my: 24 }} onClick={toggleExpanded} cursorPointer>
 
 			<Pane.Col gapi>
 

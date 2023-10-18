@@ -201,10 +201,9 @@ export class TentaBehavior1 extends
 			//if (this.opened /*&& await this.focusItems()*/)
 			//{
 			//await
-			this.scrollIntoView();
 			//}
 		}
-		else
+		else if (!await this.ff?.scrollIntoViewTop({ topOffset: 32}))
 		{
 			await this.focusItems() || await this.shake();
 		}
