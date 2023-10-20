@@ -283,7 +283,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 							{...tenta.expanded && { e: "L1", mx: -12, }}
 							{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
 
-							ppRelative
+							ppStart
 							ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
 							ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
 
