@@ -54,7 +54,7 @@ function Rows05({ root }: { root?: boolean })
 
 		<Pane.Col rounded>
 
-			<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}`} }  />
+			<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
 
 			<Tenta.Placeholder.Collector
 				root={root}
@@ -237,8 +237,10 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 	let topStage = placeholder?.prior ? null : tenta.stage;
 	let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
 
-	let start = tenta.opened || !placeholder?.prior || placeholder.prior.opened;
-	let end = tenta.opened || !placeholder?.next;// || placeholder.next.opened;
+	let isFirst = !placeholder?.prior;
+	let isLast = !placeholder?.next;
+	let start = tenta.opened || isFirst;// || placeholder.prior.opened;
+	let end = tenta.opened || isLast;// || placeholder.next.opened;
 
 
 	let parts = React.Children.toArray(rowProps.children);
@@ -246,95 +248,106 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 	return (
 
+
 		<Tenta.Phase.Provider phase={tenta.phase}>
 
-			<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
+			<Tenta.Placeholder.NoCollector>
 
-				<Pane.Col
-					//debug
-					id={`pile-row#${id}`}
+				<Div relative >
 
-					start={start}
-					end={end}
+					{(!placeholder || !placeholder.collector.root) &&
+						<TentaItemsLinkLine
+							width={36}
+							thickness={tenta.opened ? 2 : tenta.expanded ? 2 : 2}
+						>
+							{isFirst && <div className="line-to-root" />}
+							<div className="angle" />
+							{!isLast && <div className="line-to-next" />}
+						</TentaItemsLinkLine>
+					}
 
-					{...rowProps}
+					<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
 
-					//elevation={btmStage !== "collapsed" ? 1 : undefined}
+						<Pane.Col
+							//debug
+							id={`pile-row#${id}`}
+
+							start={start}
+							end={end}
+
+							{...rowProps}
+
+							//elevation={btmStage !== "collapsed" ? 1 : undefined}
 
 
-					{...tenta.expanded && { e: "L1", mx: -12, }}
-					{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
-					ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
-					ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
+							{...tenta.expanded && { e: "L1", mx: -12, }}
+							{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
 
-					//mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
-					mb={btmStage === "expanded" ? 8 : btmStage === "opened" ? 40 : 0}
+							ppRelative
+							ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
+							ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
 
-					cursorPointer
-				>
+							//mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
+							mb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 40 : 0}
 
-					{/*<TentaItemsBackfill />*/}
-
-					<Tenta.Placeholder.NoCollector>
-
-						<Focuser
-							ref={tenta.ffRef}
-							name={`pile-row-body#${id}`}
-							padding={tenta.collapsed ? -2 : 0}
-							listener={tenta}
+							cursorPointer
 						>
 
-							<Pane.Row
-								start end
-								bg={tenta.opened ? "4" : tenta.expanded ? "3" : "2"}
-								gap1
-								px2
-								pt={tenta.opened ? 2 : tenta.expanded ? 2 : start ? 2 : 1} 
-								pb={tenta.opened ? 2 : tenta.expanded ? 2 : end ? 2 : 0 }
-								e={tenta.opened ? "L2" : "0"}
+							{/*<TentaItemsBackfill />*/}
+
+							<Focuser
+								ref={tenta.ffRef}
+								name={`pile-row-body#${id}`}
+								padding={tenta.collapsed ? -2 : 0}
+								listener={tenta}
 							>
 
-								{(!placeholder || !placeholder.collector.root) &&
-									<TentaItemsLinkLine
-										width={tenta.opened ? 12 : tenta.expanded ? 24 : 36}
-										thickness={tenta.opened ? 2 : tenta.expanded ? 2 : 2}
-									/>
-								}
-
-								<Focuser.Caret
-									use={usePileRowCaretProps}
-								//color={props.start ? "green" : props.end ? "red" : undefined }
-								/>
-
-								{parts[0]}
-
-							</Pane.Row>
-
-						</Focuser>
-
-						{parts[1] &&
-
-							<Focuser ref={tenta.itemsFfRef} ghost>
-
-								<Pane.Col
-									start
-									end
-									expanded={tenta.opened}
-									wrapperCls="p24 pl60"
-
+								<Pane.Row
+									start end
+									bg={tenta.opened ? "4" : tenta.expanded ? "3" : "2"}
+									gap1
+									px2
+									pt={tenta.opened ? 2 : tenta.expanded ? 2 : start ? 2 : 1}
+									pb={tenta.opened ? 2 : tenta.expanded ? 2 : end ? 2 : btmStage !== "collapsed" ? 1 : 0}
+									e={tenta.opened ? "L2" : tenta.expanded ? "L1b" : end || btmStage !== "collapsed" ? "L1b" : "0"}
 								>
 
-									{parts[1]}
-								</Pane.Col>
+
+									<Focuser.Caret
+										use={usePileRowCaretProps}
+									//color={props.start ? "green" : props.end ? "red" : undefined }
+									/>
+
+									{parts[0]}
+
+								</Pane.Row>
 
 							</Focuser>
-						}
 
-					</Tenta.Placeholder.NoCollector>
+							{parts[1] &&
 
-				</Pane.Col>
+								<Focuser ref={tenta.itemsFfRef} ghost>
 
-			</Focuser>
+									<Pane.Col
+										start end
+										expanded={tenta.opened}
+										wrapperCls="py24 pl60 pr48"
+
+									>
+
+										{parts[1]}
+									</Pane.Col>
+
+								</Focuser>
+							}
+
+						</Pane.Col>
+
+					</Focuser>
+
+				</Div>
+
+			</Tenta.Placeholder.NoCollector>
 
 		</Tenta.Phase.Provider>
 
@@ -374,14 +387,42 @@ const TentaItemsLinkLine = styled(
 	thickness?: number;
 }>(({ width, thickness }) =>
 ({
+
 	position: "absolute",
 	left: -width,
-	top: 12,
-	height: 12,
-	width: width,
-	border: `${thickness || 1}px solid ${bgColors[3]}`,
-	borderTopWidth: 0,
-	borderRightWidth: 0,
-	borderBottomLeftRadius: 12,
+	top: 0,
+	bottom: 0,
+	width,
+
 	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+
+
+	"> .angle": {
+		position: "absolute",
+		left: 0,
+		right: 0,
+		top: 0,
+		height: 24,
+
+		border: `${thickness || 2}px solid ${bgColors[3]}`,
+		borderTopWidth: 0,
+		borderRightWidth: 0,
+		borderBottomLeftRadius: 12,
+	},
+
+	"> .line-to-root": {
+		position: "absolute",
+		left: 0,
+		right: 0,
+		top: -24,
+		height: 24,
+		borderLeft: `${thickness || 2}px solid ${bgColors[3]}`,
+	},
+
+	"> .line-to-next": {
+		position: "absolute",
+		inset: 0,
+		borderLeft: `${thickness || 2}px solid ${bgColors[3]}`,
+	},
+
 }));

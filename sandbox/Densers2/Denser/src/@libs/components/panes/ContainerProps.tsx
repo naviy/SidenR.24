@@ -31,6 +31,7 @@ export interface ContainerProps<P extends ContainerProps = any> extends Block.Pr
 	wrapperCls?: string | null;
 
 	noPP?: boolean;
+	ppRelative?: boolean;
 
 	pp?: number;
 	ppx?: number;

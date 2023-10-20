@@ -197,11 +197,11 @@ export module ContainerInfo
 
 		v.noPP = v.noPP || !!props.noPP || !!parentInfo.noPP;
 
-		let { pp, ppx, ppy } = props;
-		v.ppl = (inCol || start ? parentInfo.ppl || 0 : 0) + (props.ppl ?? ppx ?? pp ?? 0);
-		v.ppr = (inCol || end ? parentInfo.ppr || 0 : 0) + (props.ppr ?? ppx ?? pp ?? 0);
-		v.ppt = (inRow || start ? parentInfo.ppt || 0 : 0) + (props.ppt ?? ppy ?? pp ?? 0);
-		v.ppb = (inRow || end ? parentInfo.ppb || 0 : 0) + (props.ppb ?? ppy ?? pp ?? 0);
+		let { ppRelative, pp, ppx, ppy } = props;
+		v.ppl = (!ppRelative && (inCol || start) ? parentInfo.ppl || 0 : 0) + (props.ppl ?? ppx ?? pp ?? 0);
+		v.ppr = (!ppRelative && (inCol || end) ? parentInfo.ppr || 0 : 0) + (props.ppr ?? ppx ?? pp ?? 0);
+		v.ppt = (!ppRelative && (inRow || start) ? parentInfo.ppt || 0 : 0) + (props.ppt ?? ppy ?? pp ?? 0);
+		v.ppb = (!ppRelative && (inRow || end) ? parentInfo.ppb || 0 : 0) + (props.ppb ?? ppy ?? pp ?? 0);
 
 		let { pp0, ppx0, ppy0 } = props;
 		v.ppl0 = (inCol || start ? parentInfo.ppl0 || 0 : 0) + (props.ppl0 ?? ppx0 ?? pp0 ?? 0);

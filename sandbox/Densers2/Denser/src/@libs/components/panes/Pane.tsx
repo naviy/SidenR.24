@@ -23,22 +23,22 @@ export function Pane(props: Pane.Props)
 	//__$log("Pane");
 	props = UseHookProps.use(props);
 
-	let parentInfo = ContainerInfo_.use() || {};
+	let containerInfo = ContainerInfo_.use() || {};
 	//let parentInfo:ContainerInfo_ = {};
 
 	let { start, end, } = props;
 
-	let inRow = parentInfo.type === "row";
-	let inCol = parentInfo.type === "col";
+	let inRow = containerInfo.type === "row";
+	let inCol = containerInfo.type === "col";
 
 
 
-	let { noPP, preExpanding, gap, /*pg, png*/ } = parentInfo;
+	let { noPP, preExpanding, gap, /*pg, png*/ } = containerInfo;
 
-	let ppl = !noPP && (!inRow || start) && (preExpanding ? parentInfo.ppl0 : parentInfo.ppl) || 0;
-	let ppr = !noPP && (!inRow || end) && (preExpanding ? parentInfo.ppr0 : parentInfo.ppr) || 0;
-	let ppt = !noPP && (!inCol || start) && (preExpanding ? parentInfo.ppt0 : parentInfo.ppt) || 0;
-	let ppb = !noPP && (!inCol || end) && (preExpanding ? parentInfo.ppb0 : parentInfo.ppb) || 0;
+	let ppl = !noPP && (!inRow || start) && (preExpanding ? containerInfo.ppl0 : containerInfo.ppl) || 0;
+	let ppr = !noPP && (!inRow || end) && (preExpanding ? containerInfo.ppr0 : containerInfo.ppr) || 0;
+	let ppt = !noPP && (!inCol || start) && (preExpanding ? containerInfo.ppt0 : containerInfo.ppt) || 0;
+	let ppb = !noPP && (!inCol || end) && (preExpanding ? containerInfo.ppb0 : containerInfo.ppb) || 0;
 
 
 	//let gapl = inRow && !start ? !!gap : !!parentInfo.gapl;
@@ -63,30 +63,30 @@ export function Pane(props: Pane.Props)
 	//}
 
 	let sizes = Block.getBoxSizes(
-		parentInfo.type,
+		containerInfo.type,
 		props,
 	);
 
 	sizes = Block.sumBoxSizes(sizes, { width: ppl + ppr, height: ppt + ppb });
 
 
-	let br = parentInfo.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
+	let br = containerInfo.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
 	let br2 = br === true || br === undefined ? `${Block.bigBorderRadius}px` : br === false || br === null ? undefined : `${br}px`;
 
 	let br0 = `${Block.smallBorderRadius}px`;
 
 	let borderRadius = br2 && ([
-		parentInfo.brtl && (inRow && start || inCol && start) ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
-		parentInfo.brtr && (inRow && end || inCol && start) ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
-		parentInfo.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
-		parentInfo.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
+		containerInfo.brtl && (inRow && start || inCol && start) ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
+		containerInfo.brtr && (inRow && end || inCol && start) ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
+		containerInfo.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
+		containerInfo.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
 	].join(" "));
 
 
 
 	let body = props.children;
 
-	if (parentInfo.debug)
+	if (containerInfo.debug)
 	{
 		body = <>
 			<Pane.DebugBox>
@@ -103,7 +103,7 @@ export function Pane(props: Pane.Props)
 	body = createPrimitive(
 		Pane.Root as any,
 		{
-			debug: parentInfo.debug,
+			debug: containerInfo.debug,
 			bgcolor: props.bgcolor,
 			borderRadius,
 			ppl, ppr, ppt, ppb,
