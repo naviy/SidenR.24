@@ -85,24 +85,18 @@ export function Caret(props: Caret.CaretProps)
 		style={{
 
 			inset,
-			opacity: ff.isFocused ? 1 : 0,
-			color,
 
-			borderColor: color,
-			borderStyle: "solid",
-			borderRadius,
-			borderWidth,
+			...ff.isFocused && {
+				opacity: 1,
+				borderRadius,
+				borderWidth,
+			},
 
-			boxShadow: `0px 7px 8px -4px ${alpha(color, .25)}, 0px 12px 17px 2px ${alpha(color, .18)}, 0px 5px 22px 4px ${alpha(color, .16)}${Caret.bordererMask}`,
+			"--color": hex2rgb(color),
 
-			//transition: `all ${$defaultAnimationDurationMs}ms linear`,
+			"--transition": bhv._priorPosition || bhv.ffIsPrior && currentFocuser()	? `none` : undefined,
 
-			transition: (bhv._priorPosition || bhv.ffIsPrior && currentFocuser()
-				? `none`
-				: `all ${$defaultAnimationDurationMs}ms linear`
-			),
-
-		}}
+		} as any}
 
 		children={props.children && <div>{props.children}</div> || <div />}
 
@@ -128,6 +122,16 @@ export function Caret(props: Caret.CaretProps)
 	//	/>
 
 	//);
+
+
+	function hex2rgb(hex: string)
+	{
+		const r = parseInt(hex.slice(1, 3), 16);
+		const g = parseInt(hex.slice(3, 5), 16);
+		const b = parseInt(hex.slice(5, 7), 16);
+
+		return `${r},${g},${b}`;
+	}
 
 }
 

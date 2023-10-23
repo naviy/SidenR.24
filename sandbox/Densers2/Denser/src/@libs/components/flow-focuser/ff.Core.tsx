@@ -1218,6 +1218,21 @@ export function Core()
 				zIndex: 999999,
 				pointerEvents: "none",
 
+				//"--color": "var(--color, red)",
+				color: "rgb(var(--color))",
+				borderColor: "rgb(var(--color))",
+				boxShadow: `0px 7px 8px -4px rgba(var(--color), .25), 0px 12px 17px 2px rgba(var(--color), .18), 0px 5px 22px 4px rgba(var(--color), .16)`,
+
+				borderStyle: "solid",
+
+				opacity: 0,
+				borderRadius: 3,
+				borderWidth: 2,
+
+				//inset: 0,
+
+				transition: `var(--transition, all ${$defaultAnimationDurationMs}ms linear)`,
+
 
 				"> div": {
 					borderRadius: "inherit",
@@ -1239,6 +1254,7 @@ export function Core()
 					animationTimingFunction: "ease-in-out",
 					animationName: "ff-shake-3",
 				},
+
 
 			},
 
