@@ -6,18 +6,18 @@
 import { Component, useContext, type ReactNode, type RefObject } from "react";
 import ReactDOM from "react-dom";
 
-import { $log, __$log, Div, MuiColor, SpaWaitingMask } from "../core";
+import { $defaultAnimationDurationMs, $log, __$log, Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
-import { $animationDurationMs, anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from ".";
+import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from ".";
 
 import
 {
 	$min_priority,
 	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
 	focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers,
-	runCore,
+	Core,
 	unfocus
 } from ".";
 
@@ -435,7 +435,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	static runCore = runCore;
+	static Core = Core;
 
 
 	static current = currentFocuser;
@@ -1199,8 +1199,15 @@ export class Focuser extends Component<FocuserProps>
 			_$log("focuser.el:", this.el);
 		}
 
+		else if (this.carets.length === 1)
+		{
+			this.carets[0].update(prior, mustRepaint);
+		}
 
-		this.carets.reverse().forEach(a => a.update(prior, mustRepaint));
+		else
+		{
+			this.carets.reverse().forEach(a => a.update(prior, mustRepaint));
+		}
 
 	}
 
@@ -2355,6 +2362,8 @@ export class Focuser extends Component<FocuserProps>
 
 	onFocus(prior: Focuser | null, next: Focuser | null, focusProps: FocusActionProps | null | undefined, mustRepaint: boolean)
 	{
+		//_$log("onFocus")
+
 		//$log("this.props.borderer:", this.props.borderer)
 
 		this.props.onFocus?.(this, prior, next);
@@ -2368,11 +2377,6 @@ export class Focuser extends Component<FocuserProps>
 		this.updateCarets(prior, mustRepaint);
 		this.updateBorderer();
 
-
-		if (this.isFocused)
-		{
-			//this.scrollIntoView();
-		}
 	}
 
 
@@ -2399,7 +2403,7 @@ export class Focuser extends Component<FocuserProps>
 
 	onChangeItemFocus(prior: Focuser | null, next: Focuser | null, mustRepaint: boolean)
 	{
-
+		//_$log("onChangeItemFocus")
 		this.props.onChangeItemFocus?.(this, prior, next);
 
 		this.props.listener?.ff_onChangeItemFocus?.(this, prior, next);
@@ -2418,6 +2422,7 @@ export class Focuser extends Component<FocuserProps>
 		if (this._unmounted)
 			return;
 
+		//_$log("onUnfocus")
 
 		this.exitTargetId = null;
 
@@ -3861,7 +3866,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	async forceAnimation(delay: number = $animationDurationMs)
+	async forceAnimation(delay: number = $defaultAnimationDurationMs)
 	{
 
 		this.useForceAnimation = true;
@@ -3874,7 +3879,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	async fastAnimation(delay: number = $animationDurationMs)
+	async fastAnimation(delay: number = $defaultAnimationDurationMs)
 	{
 
 		this.useFastAnimation = true;
@@ -3901,7 +3906,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		if (delay == null)
-			delay = $animationDurationMs + (delayOffset || 0);
+			delay = $defaultAnimationDurationMs + (delayOffset || 0);
 		else
 			delay += (delayOffset || 0);
 

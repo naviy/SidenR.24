@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { type FocusActionProps, Focuser } from ".";
 import { $defaultAnimationDurationMs, $log, _$log, __$log, adelay } from "../core";
+import { GlobalStyles } from "@mui/material";
 
 
 
@@ -351,7 +352,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 
 			},
 
-			100
+			50
 
 		);
 
@@ -420,7 +421,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 
 function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | null | undefined, mustRepaint: boolean)
 {
-	//__$log("focuserFocusStep");
+	//$log("focuserFocusStep " + next);
 
 	//$logb("focuserFocusStep()", () =>
 	//{
@@ -577,12 +578,12 @@ function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | n
 
 		for (let a of confirmFocus)
 		{
-			a.onChangeItemFocus(prior, next, mustRepaint);
+			a.onChangeItemFocus(prior, next, /*mustRepaint*/willUnfocus.indexOf(a) < 0 && willFocus.indexOf(a) < 0);
 		}
 
 		for (let a of willUnfocus)
 		{
-			a.onUnfocus(prior, next, mustRepaint);
+			a.onUnfocus(prior, next, /*mustRepaint*/willFocus.indexOf(a) < 0);
 		}
 
 		for (let a of willFocus)
@@ -1188,3 +1189,91 @@ function onKeyDown(e: KeyboardEvent)
 
 
 //}
+
+
+
+
+
+
+//===
+
+
+
+
+
+
+export function Core()
+{
+
+	useEffect(() => runCore(), []);
+
+
+	return (
+
+		<GlobalStyles styles={{
+
+			".ff-caret-body": {
+
+				position: "absolute",
+				zIndex: 999999,
+				pointerEvents: "none",
+
+
+				"> div": {
+					borderRadius: "inherit",
+					transition: `opacity ${$defaultAnimationDurationMs}ms linear`,
+				},
+
+				"&.shake-1": {
+					animationDuration: ".5s",
+					animationTimingFunction: "ease-in-out",
+					animationName: "ff-shake-1",
+				},
+				"&.shake-2": {
+					animationDuration: ".5s",
+					animationTimingFunction: "ease-in-out",
+					animationName: "ff-shake-2",
+				},
+				"&.shake-3": {
+					animationDuration: ".5s",
+					animationTimingFunction: "ease-in-out",
+					animationName: "ff-shake-3",
+				},
+
+			},
+
+
+			"@keyframes ff-shake-1": {
+				"0%": { transform: "translateY(0)" },
+				"6.5%": { transform: "translateY(-2px) rotateY(-9deg)" },
+				"18.5%": { transform: "translateY(2px) rotateY(7deg)" },
+				"31.5%": { transform: "translateY(-1px) rotateY(-5deg)" },
+				"43.5%": { transform: "translateY(1px) rotateY(3deg)" },
+				"50%": { transform: "translateY(0)" },
+			},
+
+			"@keyframes ff-shake-2": {
+				"0%": { transform: "translateX(0)" },
+				"6.5%": { transform: "translateX(-6px) rotateY(-9deg)" },
+				"18.5%": { transform: "translateX(5px) rotateY(7deg)" },
+				"31.5%": { transform: "translateX(-3px) rotateY(-5deg)" },
+				"43.5%": { transform: "translateX(2px) rotateY(3deg)" },
+				"50%": { transform: "translateX(0)" },
+			},
+
+			"@keyframes ff-shake-3": {
+				"0%": { transform: "skew(-10deg)" },
+				"5%": { transform: "skewX(10deg)" },
+				"10%": { transform: "skewX(-10deg)" },
+				"15%": { transform: "skewX(10deg)" },
+				"20%": { transform: "skewX(0deg)" },
+				"100%": { transform: "skewX(0deg)" },
+			},
+
+
+		}} />
+
+	);
+
+
+}

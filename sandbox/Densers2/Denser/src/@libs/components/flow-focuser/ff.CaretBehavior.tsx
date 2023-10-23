@@ -3,7 +3,7 @@ import { useEffect, createRef } from "react";
 
 import { Focuser, FocuserContext } from ".";
 import { $error } from "../..";
-import { $log, MuiColor, Repaintable, UseHookProps, _$log } from "../core";
+import { $log, MuiColor, Repaintable, UseHookProps, _$log, __$log, adelay } from "../core";
 import type { CaretProps } from "./ff.CaretProps";
 
 
@@ -196,6 +196,8 @@ export class CaretBehavior extends Repaintable.Async()
 	async update(prior: Focuser | null, mustRepaint: boolean)
 	{
 
+		//__$log("UPDATE " + this);
+
 		let ff = this.ff;
 
 
@@ -239,13 +241,13 @@ export class CaretBehavior extends Repaintable.Async()
 			if (!this._priorPosition)
 			{
 				mustRepaint && this.repaint();
-
 			}
 
 			else
 			{
 
 				mustRepaint && await this.repaint();
+				await adelay(0);
 
 				this._priorPosition = null;
 

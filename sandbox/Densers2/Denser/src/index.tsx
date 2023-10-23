@@ -1,6 +1,6 @@
 import { CssBaseline } from "@mui/material";
 import ReactDOM from "react-dom/client";
-import { AppThemes, GlobalStylesOfPrimitives } from "./@libs";
+import { AppThemes, Focuser, GlobalStylesOfPrimitives } from "./@libs";
 import { App } from "./App";
 
 
@@ -17,6 +17,8 @@ root.render(
 		<CssBaseline />
 
 		<GlobalStylesOfPrimitives />
+
+		<Focuser.Core />
 
 		<AppThemes>
 

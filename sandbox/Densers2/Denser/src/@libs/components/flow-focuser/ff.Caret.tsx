@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 
-import { alpha, styled } from "@mui/material";
+import { alpha, styled, useTheme } from "@mui/material";
 
-import type { Focuser } from "./ff.Focuser";
+import { Focuser } from "./ff.Focuser";
 import { currentFocuser } from "./ff.Core";
 import { Values } from "../..";
-import { $defaultAnimationDurationMs, Div, MuiColor, UseHookProps, useNew } from "../core";
+import { $defaultAnimationDurationMs, $log, Div, MuiColor, UseHookProps, _$log, __$log, useNew } from "../core";
 import { CaretBehavior } from "./ff.CaretBehavior";
 
 
@@ -20,7 +20,7 @@ import { CaretBehavior } from "./ff.CaretBehavior";
 
 
 
-export const $animationDurationMs = 1 * $defaultAnimationDurationMs;
+//export const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 
 
 
@@ -37,31 +37,97 @@ export const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 export function Caret(props: Caret.CaretProps)
 {
 
+	let theme = useTheme();
+
 	let bhv = useNew(CaretBehavior).use(props);
-
 	let ff = bhv.ff;
-	if (!ff) return null;
+
+	if (!ff)
+		return null;
+
+	let inset = bhv.getInset();
 
 
-	return (
+	//__$log("Caret", bhv.id, inset);
 
-		<Caret.Body
+	//$log("ff " + ff);
 
-			ref={bhv.setBodyEl}
 
-			color={bhv._priorColor ?? ff.color}
-			borderRadius={bhv._priorBorderRadius ?? ff.borderRadius}
-			borderWidth={bhv._priorBorderWidth ?? ff.borderWidth}
+	let color = MuiColor(theme, bhv._priorColor || ff.color || Focuser.defaultColor)!;
 
-			inset={bhv.getInset()}
-			animation={!bhv._priorPosition && (!bhv.ffIsPrior || !currentFocuser())}
-			opacity={ff.isFocused ? 1 : 0}
 
-			children={props.children && <div>{props.children}</div>}
+	let borderRadius_ = bhv._priorBorderRadius ?? ff.borderRadius;
 
-		/>
-
+	let borderRadius = (
+		borderRadius_ === undefined ? Caret.defaultBorderRadius :
+			borderRadius_ === null ? `0` :
+				borderRadius_ === "inherit" ? "inherit" :
+					typeof borderRadius_ === "string" ? borderRadius_ :
+						(Values
+							.manyn(borderRadius_, a => a === undefined ? Caret.defaultBorderRadius : a === null ? "0" : `${a}px`)
+							.join(" ")
+						)
 	);
+
+
+	let borderWidth = (Values
+		.manyn(bhv._priorBorderWidth ?? ff.borderWidth, a => a === undefined ? `${Caret.defaultBorderWidth}px` : a === null ? "0" : `${a}px`)
+		.join(" ")
+	);
+
+
+	return <div
+
+		ref={bhv.setBodyEl}
+
+		className="ff-caret-body"
+
+		style={{
+
+			inset,
+			opacity: ff.isFocused ? 1 : 0,
+			color,
+
+			borderColor: color,
+			borderStyle: "solid",
+			borderRadius,
+			borderWidth,
+
+			boxShadow: `0px 7px 8px -4px ${alpha(color, .25)}, 0px 12px 17px 2px ${alpha(color, .18)}, 0px 5px 22px 4px ${alpha(color, .16)}${Caret.bordererMask}`,
+
+			//transition: `all ${$defaultAnimationDurationMs}ms linear`,
+
+			transition: (bhv._priorPosition || bhv.ffIsPrior && currentFocuser()
+				? `none`
+				: `all ${$defaultAnimationDurationMs}ms linear`
+			),
+
+		}}
+
+		children={props.children && <div>{props.children}</div> || <div />}
+
+	/>
+
+
+	//return (
+
+	//	<Caret.Body
+
+	//		ref={bhv.setBodyEl}
+
+	//		color={bhv._priorColor ?? ff.color}
+	//		borderRadius={bhv._priorBorderRadius ?? ff.borderRadius}
+	//		borderWidth={bhv._priorBorderWidth ?? ff.borderWidth}
+
+	//		inset={bhv.getInset()}
+	//		animation={!bhv._priorPosition && (!bhv.ffIsPrior || !currentFocuser())}
+	//		opacity={ff.isFocused ? 1 : 0}
+
+	//		children={props.children && <div>{props.children}</div>}
+
+	//	/>
+
+	//);
 
 }
 
@@ -171,11 +237,11 @@ export module Caret
 
 			return {
 
-				position: "absolute",
-				inset: props.inset,
-				zIndex: 999999,
-				pointerEvents: "none",
+				//position: "absolute",
+				//zIndex: 999999,
+				//pointerEvents: "none",
 
+				inset: props.inset,
 				opacity: props.opacity,
 				color,
 
@@ -192,59 +258,59 @@ export module Caret
 
 				transition: (!props.animation
 					? `none`
-					: `all ${$animationDurationMs}ms linear, border ${$animationDurationMs}ms linear, box-shadow ${$animationDurationMs}ms linear`
+					: `all ${$defaultAnimationDurationMs}ms linear, border ${$defaultAnimationDurationMs}ms linear, box-shadow ${$defaultAnimationDurationMs}ms linear`
 				),
 
 
-				">div": {
-					borderRadius: "inherit",
-					//opacity: props.opacity,
-					transition: `opacity ${$animationDurationMs}ms linear`,
-				},
+				//">div": {
+				//	borderRadius: "inherit",
+				//	//opacity: props.opacity,
+				//	transition: `opacity ${$defaultAnimationDurationMs}ms linear`,
+				//},
 
-				"&.shake-1": {
-					animationDuration: ".5s",
-					animationTimingFunction: "ease-in-out",
-					animationName: "ff-shake-1",
-				},
-				"&.shake-2": {
-					animationDuration: ".5s",
-					animationTimingFunction: "ease-in-out",
-					animationName: "ff-shake-2",
-				},
-				"&.shake-3": {
-					animationDuration: ".5s",
-					animationTimingFunction: "ease-in-out",
-					animationName: "ff-shake-3",
-				},
+				//"&.shake-1": {
+				//	animationDuration: ".5s",
+				//	animationTimingFunction: "ease-in-out",
+				//	animationName: "ff-shake-1",
+				//},
+				//"&.shake-2": {
+				//	animationDuration: ".5s",
+				//	animationTimingFunction: "ease-in-out",
+				//	animationName: "ff-shake-2",
+				//},
+				//"&.shake-3": {
+				//	animationDuration: ".5s",
+				//	animationTimingFunction: "ease-in-out",
+				//	animationName: "ff-shake-3",
+				//},
 
 
-				"@keyframes ff-shake-1": {
-					"0%": { transform: "translateY(0)" },
-					"6.5%": { transform: "translateY(-2px) rotateY(-9deg)" },
-					"18.5%": { transform: "translateY(2px) rotateY(7deg)" },
-					"31.5%": { transform: "translateY(-1px) rotateY(-5deg)" },
-					"43.5%": { transform: "translateY(1px) rotateY(3deg)" },
-					"50%": { transform: "translateY(0)" },
-				},
+				//"@keyframes ff-shake-1": {
+				//	"0%": { transform: "translateY(0)" },
+				//	"6.5%": { transform: "translateY(-2px) rotateY(-9deg)" },
+				//	"18.5%": { transform: "translateY(2px) rotateY(7deg)" },
+				//	"31.5%": { transform: "translateY(-1px) rotateY(-5deg)" },
+				//	"43.5%": { transform: "translateY(1px) rotateY(3deg)" },
+				//	"50%": { transform: "translateY(0)" },
+				//},
 
-				"@keyframes ff-shake-2": {
-					"0%": { transform: "translateX(0)" },
-					"6.5%": { transform: "translateX(-6px) rotateY(-9deg)" },
-					"18.5%": { transform: "translateX(5px) rotateY(7deg)" },
-					"31.5%": { transform: "translateX(-3px) rotateY(-5deg)" },
-					"43.5%": { transform: "translateX(2px) rotateY(3deg)" },
-					"50%": { transform: "translateX(0)" },
-				},
+				//"@keyframes ff-shake-2": {
+				//	"0%": { transform: "translateX(0)" },
+				//	"6.5%": { transform: "translateX(-6px) rotateY(-9deg)" },
+				//	"18.5%": { transform: "translateX(5px) rotateY(7deg)" },
+				//	"31.5%": { transform: "translateX(-3px) rotateY(-5deg)" },
+				//	"43.5%": { transform: "translateX(2px) rotateY(3deg)" },
+				//	"50%": { transform: "translateX(0)" },
+				//},
 
-				"@keyframes ff-shake-3": {
-					"0%": { transform: "skew(-10deg)" },
-					"5%": { transform: "skewX(10deg)" },
-					"10%": { transform: "skewX(-10deg)" },
-					"15%": { transform: "skewX(10deg)" },
-					"20%": { transform: "skewX(0deg)" },
-					"100%": { transform: "skewX(0deg)" },
-				},
+				//"@keyframes ff-shake-3": {
+				//	"0%": { transform: "skew(-10deg)" },
+				//	"5%": { transform: "skewX(10deg)" },
+				//	"10%": { transform: "skewX(-10deg)" },
+				//	"15%": { transform: "skewX(10deg)" },
+				//	"20%": { transform: "skewX(0deg)" },
+				//	"100%": { transform: "skewX(0deg)" },
+				//},
 
 			};
 
