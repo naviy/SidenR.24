@@ -192,7 +192,7 @@ export module Caret
 
 				transition: (!props.animation
 					? `none`
-					: `all ${$animationDurationMs}ms ease-out, border ${$animationDurationMs}ms linear, box-shadow ${$animationDurationMs}ms linear`
+					: `all ${$animationDurationMs}ms linear, border ${$animationDurationMs}ms linear, box-shadow ${$animationDurationMs}ms linear`
 				),
 
 

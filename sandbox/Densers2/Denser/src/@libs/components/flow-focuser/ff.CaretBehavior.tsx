@@ -193,7 +193,7 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 	//@$logm
-	update(prior: Focuser | null)
+	async update(prior: Focuser | null, mustRepaint: boolean)
 	{
 
 		let ff = this.ff;
@@ -218,71 +218,53 @@ export class CaretBehavior extends Repaintable.Async()
 			}
 
 
-			this.#updateFocused(prior);
+			if (this.ffIsPrior)
+				prior = null;
 
+
+
+			this._priorPosition = prior?.caret?.recalcPosition();
+
+			this._priorColor = prior?.color;
+			this._priorBorderRadius = prior?.borderRadius;
+			this._priorBorderWidth = prior?.borderWidth;
+
+			//this._priorPadding = this.ffIsPrior ? null : prior?.safePadding();
+			//$log("this._priorPosition:", this._priorPosition);
+
+
+			//let parents = diffParents(prior?.caret?.bodyEl, this.bodyEl);
+			//_$log("parents:", parents)
+
+			if (!this._priorPosition)
+			{
+				mustRepaint && this.repaint();
+
+			}
+
+			else
+			{
+
+				mustRepaint && await this.repaint();
+
+				this._priorPosition = null;
+
+				this._priorColor = null;
+				this._priorBorderRadius = null;
+				this._priorBorderWidth = null;
+
+				mustRepaint && this.repaint();
+
+			}
 		}
 
 		else if (this.ffIsPrior)
 		{
 
-			this.#updatePrior(prior);
-
-		}
-
-	}
-
-
-
-	async #updateFocused(prior: Focuser | null)
-	{
-
-		//$log("updateFocused " + this)
-
-		if (this.ffIsPrior)
-			prior = null;
-
-
-
-		this._priorPosition = prior?.caret?.recalcPosition();
-
-		this._priorColor = prior?.color;
-		this._priorBorderRadius = prior?.borderRadius;
-		this._priorBorderWidth = prior?.borderWidth;
-
-		//this._priorPadding = this.ffIsPrior ? null : prior?.safePadding();
-		//$log("this._priorPosition:", this._priorPosition);
-
-
-		//let parents = diffParents(prior?.caret?.bodyEl, this.bodyEl);
-		//_$log("parents:", parents)
-
-		if (!this._priorPosition)
-		{
-			this.repaint();
-		}
-
-		else
-		{
-
-			await this.repaint();
-
 			this._priorPosition = null;
-
-			this._priorColor = null;
-			this._priorBorderRadius = null;
-			this._priorBorderWidth = null;
-
-			this.repaint();
+			mustRepaint && this.repaint();
 
 		}
-
-	}
-
-	#updatePrior(prior: Focuser | null)
-	{
-		//$log("updatePrior " + this)
-		this._priorPosition = null;
-		this.repaint();
 
 	}
 

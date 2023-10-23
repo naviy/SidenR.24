@@ -1,6 +1,6 @@
 import React from "react";
 import { type FocusActionProps, Focuser } from ".";
-import { $log, _$log, adelay } from "../core";
+import { $defaultAnimationDurationMs, $log, _$log, __$log, adelay } from "../core";
 
 
 
@@ -306,221 +306,300 @@ export function currentFocuser()
 
 const _focusSteps: { next: Focuser | null, focusProps?: FocusActionProps | null }[] = [];
 let _isFocusing: boolean;
+//let _focuserFocusTimer = 0;
 
 
 
-export const focuserFocus = (function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps | null)
+
+export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps | null)
 {
+	//_$log("focuserFocus");
 
-	_focusSteps.push({ next, focusProps });
 
-
-	if (_isFocusing)
-		return;
-
-	try
+	if (!_isFocusing)
 	{
+
 		_isFocusing = true;
 
 
-		while (_focusSteps.length)
-		{
-			let step = _focusSteps.shift()!;
+		focuserFocusStep(next, focusProps, true);
+		next?.scrollIntoView();
 
-			focuserFocusStep(step.next, step.focusProps);
-		}
+
+		window.setTimeout(
+
+			() =>
+			{
+
+				let last: Focuser | null = null;
+
+				while (_focusSteps.length)
+				{
+					let step = _focusSteps.shift()!;
+
+					let mustRepaint = true;//!_focusSteps.length;
+
+					focuserFocusStep(step.next, step.focusProps, mustRepaint);
+
+					last = step.next ?? last;
+				}
+
+
+				last?.scrollIntoView();
+
+				_isFocusing = false;
+
+			},
+
+			100
+
+		);
+
+
+		return true;
+
 	}
-	finally
+
+	else
 	{
-		_isFocusing = false;
+
+		_focusSteps.push({ next, focusProps });
+
+
+		//while (_focusSteps.length > 1)
+		//{
+		//	let step = _focusSteps.shift()!;
+
+		//	focuserFocusStep(step.next, step.focusProps, false);
+		//}
+
+
+		return false;
+
 	}
 
-});
+}
+
+
+//export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps | null): boolean
+//{
+//	//_$log("focuserFocus");
+
+//	_focusSteps.push({ next, focusProps });
+
+
+//	if (_isFocusing)
+//		return false;
+
+//	try
+//	{
+//		_isFocusing = true;
+
+
+//		while (_focusSteps.length)
+//		{
+//			let step = _focusSteps.shift()!;
+
+//			let mustRepaint = !_focusSteps.length;
+
+//			focuserFocusStep(step.next, step.focusProps, mustRepaint);
+//		}
+//	}
+//	finally
+//	{
+//		_isFocusing = false;
+//	}
+
+
+//	return true;
+
+//}
 
 
 
 
-function focuserFocusStep(next: Focuser | null, focusProps?: FocusActionProps | null)
+function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | null | undefined, mustRepaint: boolean)
 {
+	//__$log("focuserFocusStep");
 
 	//$logb("focuserFocusStep()", () =>
 	//{
 
-		//$log("prior:", _currentFocuser);
-		//$log("next:", next);
+	//$log("prior:", _currentFocuser);
+	//$log("next:", next);
 
 
 
-		if (_currentFocuser === next || next && next.disabled)
+	if (_currentFocuser === next || next && next.disabled)
+		return;
+
+
+	const prior = _currentFocuser;
+
+
+	let willUnfocus: Focuser[] = [];
+	let willFocus: Focuser[] = [];
+	let willItemUnfocus: Focuser[] = [];
+	let willItemFocus: Focuser[] = [];
+	let confirmFocus: Focuser[] = [];
+
+
+
+	if (prior)
+	{
+
+		prior.caret?.recalcPosition();
+
+
+		let parent: Focuser | undefined = prior;
+
+		while (parent)
+		{
+			willUnfocus.push(parent);
+			parent = parent.parent;
+		}
+	}
+
+
+	//$$log("willUnfocus0:", willUnfocus.map(a => a.el));
+
+
+	if (next)
+	{
+
+		let parent: Focuser | undefined = next;
+
+		while (parent)
+		{
+
+			if (willUnfocus.remove(parent))
+			{
+				confirmFocus.push(parent);
+			}
+			else
+			{
+				willFocus.push(parent);
+			}
+
+			parent = parent.parent;
+
+		}
+
+	}
+
+
+	//$log("willUnfocus:", willUnfocus.map(a => a.el));
+	//$log("willFocus:", willFocus.map(a => a.el));
+	//$log("confirmFocus:", confirmFocus.map(a => a.el));
+
+
+	for (let i = willUnfocus.length - 1; i >= 0; i--)
+	{
+		setItemFocused(willUnfocus[i], false);
+
+		//let a = willUnfocus[i];
+		//a.itemFocused = false;
+		//$log("itemFocused = ", a.itemFocused, a);
+	}
+
+
+	if (prior)
+	{
+		prior.focused = false;
+		//$log("focused = false", prior);
+	}
+
+
+	if (next)
+	{
+		next.focused = true;
+		//$log("focused = true", next);
+	}
+
+
+
+	_currentFocuser = next;
+
+
+
+	for (let a of confirmFocus)
+	{
+		setItemFocused(a, a !== next);
+	}
+
+
+	for (let a of willFocus)
+	{
+		setItemFocused(a, a !== next);
+	}
+
+
+
+	function setItemFocused(ff: Focuser, value: boolean)
+	{
+
+		if (ff.itemFocused === value)
 			return;
 
 
-		const prior = _currentFocuser;
+		if (value)
+			willItemFocus.push(ff);
+		else
+			willItemUnfocus.push(ff);
 
 
-		let willUnfocus: Focuser[] = [];
-		let willFocus: Focuser[] = [];
-		let willItemUnfocus: Focuser[] = [];
-		let willItemFocus: Focuser[] = [];
-		let confirmFocus: Focuser[] = [];
+		ff.itemFocused = value;
+
+	}
 
 
 
-		if (prior)
+	//AnimationFrame.beginUpdate();
+
+
+	try
+	{
+		//requestAnimationFrame(() =>
+		//{
+
+		//console.time("animate FF");
+
+		for (let a of willItemUnfocus)
 		{
-
-			prior.caret?.recalcPosition();
-
-
-			let parent: Focuser | undefined = prior;
-
-			while (parent)
-			{
-				willUnfocus.push(parent);
-				parent = parent.parent;
-			}
+			a.onItemUnfocus(prior, next);
 		}
 
-
-		//$$log("willUnfocus0:", willUnfocus.map(a => a.el));
-
-
-		if (next)
+		for (let a of willItemFocus)
 		{
-
-			let parent: Focuser | undefined = next;
-
-			while (parent)
-			{
-
-				if (willUnfocus.remove(parent))
-				{
-					confirmFocus.push(parent);
-				}
-				else
-				{
-					willFocus.push(parent);
-				}
-
-				parent = parent.parent;
-
-			}
-
+			a.onItemFocus(prior, next);
 		}
-
-
-		//$log("willUnfocus:", willUnfocus.map(a => a.el));
-		//$log("willFocus:", willFocus.map(a => a.el));
-		//$log("confirmFocus:", confirmFocus.map(a => a.el));
-
-
-		for (let i = willUnfocus.length - 1; i >= 0; i--)
-		{
-			setItemFocused(willUnfocus[i], false);
-
-			//let a = willUnfocus[i];
-			//a.itemFocused = false;
-			//$log("itemFocused = ", a.itemFocused, a);
-		}
-
-
-		if (prior)
-		{
-			prior.focused = false;
-			//$log("focused = false", prior);
-		}
-
-
-		if (next)
-		{
-			next.focused = true;
-			//$log("focused = true", next);
-		}
-
-
-
-		_currentFocuser = next;
-
 
 
 		for (let a of confirmFocus)
 		{
-			setItemFocused(a, a !== next);
+			a.onChangeItemFocus(prior, next, mustRepaint);
 		}
 
+		for (let a of willUnfocus)
+		{
+			a.onUnfocus(prior, next, mustRepaint);
+		}
 
 		for (let a of willFocus)
 		{
-			setItemFocused(a, a !== next);
+			a.onFocus(prior, next, focusProps, mustRepaint);
 		}
 
+		//console.timeEnd("animate FF");
 
+		//});
+	}
+	finally
+	{
+		//AnimationFrame.endUpdate();
+	}
 
-		function setItemFocused(ff: Focuser, value: boolean)
-		{
-
-			if (ff.itemFocused === value)
-				return;
-
-
-			if (value)
-				willItemFocus.push(ff);
-			else
-				willItemUnfocus.push(ff);
-
-
-			ff.itemFocused = value;
-
-		}
-
-
-
-		//AnimationFrame.beginUpdate();
-
-
-		try
-		{
-			//requestAnimationFrame(() =>
-			//{
-
-			//console.time("animate FF");
-
-			for (let a of willItemUnfocus)
-			{
-				a.onItemUnfocus(prior, next);
-			}
-
-			for (let a of willItemFocus)
-			{
-				a.onItemFocus(prior, next);
-			}
-
-
-			for (let a of confirmFocus)
-			{
-				a.onChangeItemFocus(prior, next);
-			}
-
-			for (let a of willUnfocus)
-			{
-				a.onUnfocus(prior, next);
-			}
-
-			for (let a of willFocus)
-			{
-				a.onFocus(prior, next, focusProps);
-			}
-
-			//console.timeEnd("animate FF");
-
-			//});
-		}
-		finally
-		{
-			//AnimationFrame.endUpdate();
-		}
-
-		//$log("END focuserFocusStep");
+	//$log("END focuserFocusStep");
 	//});
 }
 

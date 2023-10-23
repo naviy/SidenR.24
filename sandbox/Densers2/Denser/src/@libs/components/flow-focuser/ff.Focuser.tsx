@@ -12,7 +12,8 @@ import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAni
 
 import { $animationDurationMs, anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from ".";
 
-import {
+import
+{
 	$min_priority,
 	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
 	focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers,
@@ -1184,7 +1185,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	updateCarets(prior: Focuser | null)
+	updateCarets(prior: Focuser | null, mustRepaint: boolean)
 	{
 
 		if (!this.canFocusCaret())
@@ -1199,7 +1200,7 @@ export class Focuser extends Component<FocuserProps>
 		}
 
 
-		this.carets.reverse().forEach(a => a.update(prior));
+		this.carets.reverse().forEach(a => a.update(prior, mustRepaint));
 
 	}
 
@@ -2298,10 +2299,9 @@ export class Focuser extends Component<FocuserProps>
 	private doFocus(focusProps?: FocusActionProps | null)
 	{
 
+		//$log("doFocus");
+
 		focuserFocus(this, focusProps);
-
-
-		this.scrollIntoView();
 
 
 		let domFocus0 = focusProps?.domFocus;
@@ -2353,7 +2353,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	onFocus(prior: Focuser | null, next: Focuser | null, focusProps: FocusActionProps | null | undefined)
+	onFocus(prior: Focuser | null, next: Focuser | null, focusProps: FocusActionProps | null | undefined, mustRepaint: boolean)
 	{
 		//$log("this.props.borderer:", this.props.borderer)
 
@@ -2365,9 +2365,14 @@ export class Focuser extends Component<FocuserProps>
 		this.parent?.setLastFocusedItem(this);
 
 
-		this.updateCarets(prior);
+		this.updateCarets(prior, mustRepaint);
 		this.updateBorderer();
 
+
+		if (this.isFocused)
+		{
+			//this.scrollIntoView();
+		}
 	}
 
 
@@ -2392,7 +2397,7 @@ export class Focuser extends Component<FocuserProps>
 	}
 
 
-	onChangeItemFocus(prior: Focuser | null, next: Focuser | null)
+	onChangeItemFocus(prior: Focuser | null, next: Focuser | null, mustRepaint: boolean)
 	{
 
 		this.props.onChangeItemFocus?.(this, prior, next);
@@ -2400,14 +2405,14 @@ export class Focuser extends Component<FocuserProps>
 		this.props.listener?.ff_onChangeItemFocus?.(this, prior, next);
 
 
-		this.updateCarets(prior);
+		this.updateCarets(prior, mustRepaint);
 		this.updateBorderer();
 
 	}
 
 
 
-	onUnfocus(prior: Focuser | null, next: Focuser | null)
+	onUnfocus(prior: Focuser | null, next: Focuser | null, mustRepaint: boolean)
 	{
 
 		if (this._unmounted)
@@ -2421,7 +2426,7 @@ export class Focuser extends Component<FocuserProps>
 		this.props.listener?.ff_onUnfocus?.(this, prior, next);
 
 
-		this.updateCarets(prior);
+		this.updateCarets(prior, mustRepaint);
 		this.updateBorderer();
 
 
@@ -2529,7 +2534,7 @@ export class Focuser extends Component<FocuserProps>
 	scrollIntoView(cfg?: ScrollIntoViewOptions)
 	{
 
-		//console.profile("scrollIntoView");
+		//_$log("scrollIntoView");
 
 
 		if (this.props.scrollIntoView === false || !this.el || !this.cursorEl)
