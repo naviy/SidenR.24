@@ -1,10 +1,11 @@
-import { useEffect, createRef } from "react";
+import { useEffect, type CSSProperties } from "react";
 
 
-import { Focuser, FocuserContext } from ".";
-import { $error } from "../..";
-import { $log, MuiColor, Repaintable, UseHookProps, _$log, __$log, adelay } from "../core";
-import type { CaretProps } from "./ff.CaretProps";
+import { useTheme, type Theme } from "@mui/material";
+import { $error, MuiColor, Repaintable, UseHookProps, Values, adelay, arequestAnimationFrame } from "../core";
+import { Caret, type CaretProps } from "./ff.Caret";
+import { FocuserContext, currentFocuser } from "./ff.Core";
+import { Focuser } from "./ff.Focuser";
 
 
 
@@ -34,7 +35,7 @@ let instanceCount = 0;
 
 
 
-export class CaretBehavior extends Repaintable.Async()
+export class CaretBehavior extends Repaintable()
 {
 
 	//---
@@ -56,7 +57,7 @@ export class CaretBehavior extends Repaintable.Async()
 
 	props!: CaretProps;
 
-
+	theme!: Theme;
 	ff?: Focuser | null;
 
 	ffIsPrior?: boolean;
@@ -97,6 +98,9 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 		Repaintable.use(this, cfg);
+
+
+		this.theme = useTheme();
 
 
 		let ff = Focuser.use();
@@ -179,7 +183,9 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 		if (p && pp)
+		{
 			return `${pp.top - p.top + pd[0]}px ${p.left + p.width - pp.left - pp.width + pd[1]}px ${p.top + p.height - pp.top - pp.height + pd[2]}px ${pp.left - p.left + pd[3]}px`;
+		}
 
 
 		return `${pd[0]}px ${pd[1]}px ${pd[2]}px ${pd[3]}px`;
@@ -188,12 +194,102 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 
+	getStyle(): CSSProperties | undefined
+	{
+
+		let ff = this.ff;
+		if (!ff)
+			return undefined;
+
+
+		let color = MuiColor(this.theme, this._priorColor || ff.color || Focuser.defaultColor)!;
+
+		let inset = this.getInset();
+
+		let borderRadius_ = this._priorBorderRadius ?? ff.borderRadius;
+
+		let borderRadius = (
+			borderRadius_ === undefined ? Caret.defaultBorderRadius :
+				borderRadius_ === null ? `0` :
+					borderRadius_ === "inherit" ? "inherit" :
+						typeof borderRadius_ === "string" ? borderRadius_ :
+							(Values
+								.manyn(borderRadius_, a => a === undefined ? Caret.defaultBorderRadius : a === null ? "0" : `${a}px`)
+								.join(" ")
+							)
+		);
+
+
+		let borderWidth = (Values
+			.manyn(this._priorBorderWidth ?? ff.borderWidth, a => a === undefined ? `${Caret.defaultBorderWidth}px` : a === null ? "0" : `${a}px`)
+			.join(" ")
+		);
+
+
+		let focused = ff.isFocused;
+
+
+		return {
+
+			inset,
+			opacity: focused ? 1 : undefined,
+			borderRadius: focused ? borderRadius : undefined,
+			borderWidth: focused ? borderWidth : undefined,
+
+			"--color": hex2rgb(color),
+
+			"--transition": this._priorPosition || this.ffIsPrior && currentFocuser() ? `none` : undefined,
+
+		} as CSSProperties;
+
+
+
+		function hex2rgb(hex: string)
+		{
+			const r = parseInt(hex.slice(1, 3), 16);
+			const g = parseInt(hex.slice(3, 5), 16);
+			const b = parseInt(hex.slice(5, 7), 16);
+
+			return `${r},${g},${b}`;
+		}
+
+	}
+
+
+	//async #updateBody()
+	//{
+	//	await arequestAnimationFrame(() =>
+	//	{
+
+	//		let style = this.bodyEl?.style;
+	//		let newStyle = this.getStyle();
+
+	//		if (!style || !newStyle)
+	//			return;
+
+
+	//		for (let p in newStyle)
+	//		{
+
+	//			let value = (newStyle as any)[p];
+
+	//			if (value === undefined)
+	//				style.removeProperty(p);
+	//			else
+	//				style.setProperty(p, value);
+	//		}
+
+	//	});
+	//}
+
+
+
 	//---
 
 
 
 	//@$logm
-	async update(prior: Focuser | null, mustRepaint: boolean)
+	update(prior: Focuser | null, mustRepaint: boolean)
 	{
 
 		//__$log("UPDATE " + this);
@@ -225,18 +321,8 @@ export class CaretBehavior extends Repaintable.Async()
 
 
 
-			this._priorPosition = prior?.caret?.recalcPosition();
+			this.#assignPriorProps(prior);
 
-			this._priorColor = prior?.color;
-			this._priorBorderRadius = prior?.borderRadius;
-			this._priorBorderWidth = prior?.borderWidth;
-
-			//this._priorPadding = this.ffIsPrior ? null : prior?.safePadding();
-			//$log("this._priorPosition:", this._priorPosition);
-
-
-			//let parents = diffParents(prior?.caret?.bodyEl, this.bodyEl);
-			//_$log("parents:", parents)
 
 			if (!this._priorPosition)
 			{
@@ -246,16 +332,16 @@ export class CaretBehavior extends Repaintable.Async()
 			else
 			{
 
-				mustRepaint && await this.repaint();
-				await adelay(0);
-
-				this._priorPosition = null;
-
-				this._priorColor = null;
-				this._priorBorderRadius = null;
-				this._priorBorderWidth = null;
-
+				//mustRepaint && await this.#updateBody();
 				mustRepaint && this.repaint();
+				//await adelay(0);
+
+				window.setTimeout(() =>
+				{
+					this.#assignPriorProps(null);
+					mustRepaint && this.repaint();
+				});
+				//mustRepaint && await this.#updateBody();
 
 			}
 		}
@@ -263,11 +349,22 @@ export class CaretBehavior extends Repaintable.Async()
 		else if (this.ffIsPrior)
 		{
 
-			this._priorPosition = null;
+			this.#assignPriorProps(null);
 			mustRepaint && this.repaint();
+			//mustRepaint && await this.#updateBody();
 
 		}
 
+	}
+
+
+
+	#assignPriorProps(prior: Focuser | null)
+	{
+		this._priorPosition = prior?.caret?.recalcPosition();
+		this._priorColor = prior?.color;
+		this._priorBorderRadius = prior?.borderRadius;
+		this._priorBorderWidth = prior?.borderWidth;
 	}
 
 
