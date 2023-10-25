@@ -1,5 +1,4 @@
-import { styled } from "@mui/material";
-
+import { styled } from "@mui/material/styles";
 import { $defaultAnimationDurationMs, $log, _$log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
@@ -52,15 +51,15 @@ export function Pane(props: Pane.Props)
 	//ppb += gapb ? pg || 0 : png || 0;
 
 
-	if (props.id)
-	{
-		$log("Pane", props.id)
-		_$log("containerInfo.brtl:", containerInfo.brtl);
-		_$log("start:", start);
-		_$log("end:", end);
-		//	_$log("parentInfo:", parentInfo.preExpanding, parentInfo.ppl, parentInfo.ppl0)
-		//	_$log("ppl", ppl)
-	}
+	//if (props.id)
+	//{
+	//	$log("Pane", props.id)
+	//	_$log("containerInfo.brtl:", containerInfo.brtl);
+	//	_$log("start:", start);
+	//	_$log("end:", end);
+	//	//	_$log("parentInfo:", parentInfo.preExpanding, parentInfo.ppl, parentInfo.ppl0)
+	//	//	_$log("ppl", ppl)
+	//}
 
 	let sizes = Block.getBoxSizes(
 		containerInfo.type,

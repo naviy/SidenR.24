@@ -1,4 +1,4 @@
-import { Focuser, Repaintable } from "@libs";
+import { $log, Focuser, Repaintable } from "@libs";
 import { TentaFocusable } from "./TentaFocusable";
 import { TentaPhaser } from "./TentaPhaser";
 import { TentaBase } from "./TentaBase";
@@ -117,6 +117,7 @@ export class TentaBehavior1 extends
 		{
 			await this.scrollIntoView();
 		}
+
 		else
 		{
 			await this.shake();

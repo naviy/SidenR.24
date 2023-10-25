@@ -1,8 +1,6 @@
+import { useTheme, type Theme } from "@mui/material/styles";
 import { useEffect, type CSSProperties } from "react";
-
-
-import { useTheme, type Theme } from "@mui/material";
-import { $error, MuiColor, Repaintable, UseHookProps, Values, adelay, arequestAnimationFrame } from "../core";
+import { $error, MuiColor, Repaintable, UseHookProps, Values } from "../core";
 import { Caret, type CaretProps } from "./ff.Caret";
 import { FocuserContext, currentFocuser } from "./ff.Core";
 import { Focuser } from "./ff.Focuser";

@@ -1,8 +1,9 @@
 import { $defaultAnimationDurationMs, Div, Expander, Focuser, Pane, bgColors, useNew } from '@libs';
-import { Button, styled } from "@mui/material";
 import React, { useReducer, type ReactNode } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 
 
 

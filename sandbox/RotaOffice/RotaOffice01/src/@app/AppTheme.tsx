@@ -1,5 +1,6 @@
-import { createTheme, type PaletteMode, ThemeProvider } from "@mui/material";
-import { createContext, type ReactNode, useContext } from "react";
+import type { PaletteMode } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { createContext, useContext, type ReactNode } from "react";
 
 
 

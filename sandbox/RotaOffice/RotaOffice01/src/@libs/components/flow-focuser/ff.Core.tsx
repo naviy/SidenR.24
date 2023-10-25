@@ -1,7 +1,7 @@
+import GlobalStyles from "@mui/material/GlobalStyles";
 import React, { useEffect } from "react";
-import { type FocusActionProps, Focuser } from ".";
-import { $defaultAnimationDurationMs, $log, _$log, __$log, adelay } from "../core";
-import { GlobalStyles } from "@mui/material";
+import { Focuser, type FocusActionProps } from ".";
+import { $defaultAnimationDurationMs, $log, _$log, adelay } from "../core";
 
 
 

@@ -1,6 +1,14 @@
-import { CssBaseline } from "@mui/material";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+
+import { AppThemes } from "@app";
+import { Focuser, GlobalStylesOfPrimitives } from "@libs";
+import CssBaseline from "@mui/material/CssBaseline";
 import ReactDOM from "react-dom/client";
-import { $log, AppThemes, Focuser, GlobalStylesOfPrimitives } from "./@libs";
+import { HashRouter } from "react-router-dom";
 import { App } from "./App";
 
 
@@ -11,8 +19,6 @@ import { App } from "./App";
 
 
 	let rootEl = document.getElementById("root") as HTMLElement;
-	$log("rootEl:", rootEl);
-
 
 	const root = ReactDOM.createRoot(rootEl);
 
@@ -20,17 +26,24 @@ import { App } from "./App";
 	root.render(
 		//<React.StrictMode>
 		<>
+
 			<CssBaseline />
 
 			<GlobalStylesOfPrimitives />
 
 			<Focuser.Core />
 
-			<AppThemes>
 
-				<App />
+			<HashRouter>
 
-			</AppThemes>
+				<AppThemes>
+
+					<App />
+
+				</AppThemes>
+
+			</HashRouter>
+
 		</>
 		//</React.StrictMode>
 	);

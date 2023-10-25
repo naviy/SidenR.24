@@ -1,5 +1,5 @@
-import { styled } from '@mui/material';
-import { type ReactNode, useRef } from 'react';
+import { styled } from '@mui/material/styles';
+import { useRef, type ReactNode } from 'react';
 import { Transition, type TransitionStatus } from 'react-transition-group';
 import { type TransitionProps } from 'react-transition-group/Transition';
 import { $defaultAnimationDurationMs, Focuser } from '..';

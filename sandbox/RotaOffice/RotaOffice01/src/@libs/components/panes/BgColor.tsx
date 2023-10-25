@@ -1,4 +1,5 @@
-import type { PaletteMode, Theme } from '@mui/material';
+import type { PaletteMode } from "@mui/material";
+import type { Theme } from "@mui/material/styles";
 import type { Property } from 'csstype';
 
 

@@ -12,6 +12,8 @@
 	"dependencies": {
 		"@emotion/react": "latest",
 		"@emotion/styled": "latest",
+		"@fontsource/roboto": "latest",
+		"@mui/icons-material": "latest",
 		"@mui/material": "latest",
 		"clsx": "latest",
 		"csstype": "latest",

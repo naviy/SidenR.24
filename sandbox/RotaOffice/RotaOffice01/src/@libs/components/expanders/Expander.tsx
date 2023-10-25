@@ -1,8 +1,7 @@
-import { styled } from "@mui/material";
-
-import { createPrimitive, Div, type DivProps, UseHookProps, useNew, Values } from "../core";
-import { ExpanderProps, ExpanderBehavior } from "./ExpanderBehavior";
+import { styled } from "@mui/material/styles";
 import type { RefObject } from "react";
+import { Div, UseHookProps, Values, createPrimitive, useNew, type DivProps } from "../core";
+import { ExpanderBehavior, ExpanderProps } from "./ExpanderBehavior";
 
 
 

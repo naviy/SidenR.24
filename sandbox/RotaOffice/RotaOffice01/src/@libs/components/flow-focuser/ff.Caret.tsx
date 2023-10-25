@@ -1,7 +1,4 @@
 import type { ReactNode } from "react";
-
-import { useTheme } from "@mui/material";
-
 import { MuiColor, UseHookProps, useNew } from "../core";
 import { CaretBehavior } from "./ff.CaretBehavior";
 import { Focuser } from "./ff.Focuser";
