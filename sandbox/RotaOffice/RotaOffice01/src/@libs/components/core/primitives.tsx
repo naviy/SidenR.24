@@ -375,6 +375,7 @@ export interface PrimitiveClassesProps extends
 
 	text?: undefined | "primary";
 
+	fontRoboto?: boolean;
 
 	bold?: boolean;
 	bolder?: boolean;
@@ -613,6 +614,8 @@ export function GlobalStylesOfPrimitives(props: {
 			letterSpacing: ".75px",
 		},
 
+		fontRoboto: { fontFamily: "Roboto" },
+
 
 		bold: { fontWeight: "bold !important" },
 		bolder: { fontWeight: "bolder !important" },
@@ -680,6 +683,7 @@ export function GlobalStylesOfPrimitives(props: {
 
 		lineHeight1: { lineHeight: "1em!important" },
 		lineHeight15: { lineHeight: "1.5em!important" },
+
 
 
 		textLeft: {

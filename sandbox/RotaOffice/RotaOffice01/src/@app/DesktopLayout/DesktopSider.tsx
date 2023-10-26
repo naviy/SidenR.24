@@ -21,6 +21,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 export function DesktopSider(props: {
 
+	logo?: ReactNode;
 	children?: ReactNode;
 
 })
@@ -47,16 +48,15 @@ export function DesktopSider(props: {
 							<DesktopSiderHeader>
 
 								<DesktopIconButton onClick={layout?.toggleSider} flexGrow flexEnd>
-									{layout?.logo || null}
-									<Div flex1 />
+									{props.logo}
 									<VR />
-									<ChevronLeftIcon />
+									<ChevronLeftIcon fontSize="large" />
 								</DesktopIconButton>
 								<VR />
 
 							</DesktopSiderHeader>
 
-							{props.children || null}
+							{props.children}
 
 						</div>
 

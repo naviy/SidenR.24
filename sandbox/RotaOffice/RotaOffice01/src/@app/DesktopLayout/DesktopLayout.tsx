@@ -17,17 +17,11 @@ import { DesktopSider } from "./DesktopSider";
 
 
 
-export function DesktopLayout(props: {
-
-	logo?: ReactNode;
-	children?: ReactNode;
-
-})
+export function DesktopLayout(props: { children?: ReactNode; })
 {
 
 	const bhv = useNew(DesktopLayout.Behavior).use({
 		defaultSiderOpen: true,
-		logo: props.logo,
 	});
 
 
@@ -115,9 +109,6 @@ export module DesktopLayout
 		siderWidth!: number;
 		siderIsOpened!: boolean;
 
-		logo?: ReactNode;
-
-
 
 		//---
 
@@ -127,8 +118,6 @@ export module DesktopLayout
 
 			siderWidth?: number;
 			defaultSiderOpen?: boolean;
-
-			logo?: ReactNode;
 
 		})
 		{
@@ -146,9 +135,6 @@ export module DesktopLayout
 			{
 				this.siderIsOpened = !!cfg?.defaultSiderOpen;
 			}
-
-
-			this.logo = cfg?.logo;
 
 
 			return this;

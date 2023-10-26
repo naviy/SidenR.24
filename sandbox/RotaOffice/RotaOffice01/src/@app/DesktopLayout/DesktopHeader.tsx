@@ -20,15 +20,19 @@ import { DesktopLayout } from "./DesktopLayout";
 
 
 
-//export const DesktopHeader = $logf(
-export function DesktopHeader(props: { children?: ReactNode; })
+export function DesktopHeader(props: {
+
+	logo?: ReactNode;
+	children?: ReactNode;
+
+})
 {
 
 
 	const layout = DesktopLayout.use();
 
 	const siderIsOpened = layout?.siderIsOpened !== false;
-	
+
 	let siderWidth = layout?.siderWidth || DesktopLayout.defaultSiderWidth;
 
 
@@ -42,41 +46,36 @@ export function DesktopHeader(props: { children?: ReactNode; })
 
 					{/*<HideOnScroll>*/}
 
-						<HeaderRoot1 
-							siderWidth={siderIsOpened ? siderWidth : 0}
-						>
+					<HeaderRoot1
+						siderWidth={siderIsOpened ? siderWidth : 0}
+					>
 
-							<TopBar 
-								//siderIsOpened={siderIsOpened} position="static"
-							>
+						<TopBar>
 
-								<Toolbar>
+							<Toolbar>
 
-									<HeaderLogo 
-									//visible={!siderIsOpened} 
-									siderWidth={siderWidth}
-									>
+								<HeaderLogo siderWidth={siderWidth}>
 
-										<DesktopIconButton onClick={toggleClick} flexGrow>
-											<MenuIcon />
-											<VR />
-											<Div pr1 />
-											{layout?.logo || null}
-											<Div pr3 />
-										</DesktopIconButton>
+									<DesktopIconButton onClick={toggleClick} flexGrow>
+										<MenuIcon fontSize="large" />
+										<VR />
+										<Div pr1 />
+										{props.logo || null}
+										<Div pr3 />
+									</DesktopIconButton>
 
-									</HeaderLogo>
+								</HeaderLogo>
 
-									<VR />
+								<VR />
 
-									{props.children || null}
+								{props.children || null}
 
 
-								</Toolbar>
+							</Toolbar>
 
-							</TopBar>
+						</TopBar>
 
-						</HeaderRoot1>
+					</HeaderRoot1>
 
 
 					{/*</HideOnScroll>*/}
@@ -109,15 +108,9 @@ export function DesktopHeader(props: { children?: ReactNode; })
 
 
 
-export const HeaderRoot = styled('div')<{
-
-	theme?: Theme;
-
-}>(
+export const HeaderRoot = styled('div')(
 	({ theme }) =>
 	({
-
-		//minHeight: 64, 
 
 		backgroundColor: theme.palette.mode === 'light'
 			? theme.palette.grey[100]
@@ -133,26 +126,21 @@ export const HeaderRoot = styled('div')<{
 
 
 export const HeaderRoot1 = styled(
-	'div', 
+	'div',
 	{
 		name: 'header-root-1',
 		shouldForwardProp: p => p !== 'siderWidth',
 	}
 )<{
 
-	theme?: Theme;
 	siderWidth: number;
 
 }>(
 	({ theme, siderWidth }) =>
 	({
-		//position: 'fixed', 
-		//top: 0, 
 		left: siderWidth,
-		//right: 0,
-		//zIndex: 1100,
 
-		minHeight: 64, 
+		minHeight: 64,
 
 		transition: theme.transitions.create(['left'], {
 			easing: theme.transitions.easing.easeOut,
@@ -167,36 +155,13 @@ export const HeaderRoot1 = styled(
 
 
 
-const TopBar = styled(
-
-	AppBar,
-	//{ shouldForwardProp: p => p !== 'siderIsOpened', }
-
-)<{
-
-	theme?: Theme,
-	//siderIsOpened: boolean;
-
-}>(
-
-	({ /*theme, siderIsOpened*/ }) => ({
-
-
+const TopBar = styled(AppBar)
+	({
 		'& .MuiToolbar-root': {
 			alignItems: 'stretch',
 			paddingLeft: 0,
-			//paddingLeft: siderIsOpened ? 24 : 0,
-		},
-
-
-		//transition: theme.transitions.create(['padding-left'], {
-		//	easing: theme.transitions.easing.sharp,
-		//	duration: theme.transitions.duration.leavingScreen,
-		//}),
-
-	})
-
-);
+		}
+	});
 
 
 
@@ -207,25 +172,20 @@ export const HeaderLogo = styled(
 	'div',
 	{
 		name: 'header-logo',
-		shouldForwardProp: p => /*p !== 'visible' &&*/ p !== 'siderWidth'
+		shouldForwardProp: p => p !== 'siderWidth'
 	}
 )<{
 
-	theme?: Theme;
-	//visible: boolean;
 	siderWidth: number;
 
 }>(
-	({ theme, /*visible,*/ siderWidth }) =>
+	({ theme, siderWidth }) =>
 	({
 
 		width: siderWidth,
-		//width: visible ? siderWidth : 24,
-		//marginLeft: visible ? 0 : -siderWidth,
 		marginRight: 24,
 
 		borderRight: `1px solid ${theme.palette.divider}`,
-		//opacity: visible ? 1 : 0,
 
 		display: 'flex',
 		overflow: 'hidden',

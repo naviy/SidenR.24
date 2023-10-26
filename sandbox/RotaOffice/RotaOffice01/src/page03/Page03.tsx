@@ -16,23 +16,12 @@ export function Page03()
 
 	return <>
 
-		<Focuser root ghost click="unfocus">
 
-			<Div fill overflowAutoX scrollY bg1>
+		<Div mx200 m100>
 
-				<Focuser cursor ghost>
+			<Rows05 root />
 
-					<Div mx200 m100>
-
-						<Rows05 root />
-
-					</Div>
-
-				</Focuser>
-
-			</Div>
-
-		</Focuser>
+		</Div>
 
 	</>;
 
