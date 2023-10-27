@@ -1,9 +1,9 @@
-import { $defaultAnimationDurationMs, Div, Expander, Focuser, Pane, bgColors, useNew } from '@libs';
+import { $defaultAnimationDurationMs, Div, Expander, Focuser, GlobalState, Pane, bgColors, useNew } from '@libs';
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 import React, { useReducer, type ReactNode } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 
 
 
@@ -16,12 +16,15 @@ export function Page03()
 
 	return <>
 
+		<GlobalState name="page03">
 
-		<Div mx200 m100>
+			<Div mx200 m100>
 
-			<Rows05 root />
+				<Rows05 root />
 
-		</Div>
+			</Div>
+
+		</GlobalState>
 
 	</>;
 
@@ -33,27 +36,30 @@ function Rows05({ root }: { root?: boolean })
 {
 	return <>
 
+		<GlobalState name="rows05">
 
-		<Pane.Col rounded>
+			<Pane.Col rounded>
 
-			<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
+				<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
 
-			<Tenta.Placeholder.Collector
-				root={root}
-				placeholders={[1, 2, 3, 4, 5, 6, 7]}
-			>
+				<Tenta.Placeholder.Collector
+					root={root}
+					placeholders={[1, 2, 3, 4, 5, 6, 7]}
+				>
 
-				<Row05 id={1} />
-				<Row05 id={2} />
-				<Row05 id={3} />
-				<Row05 id={4} />
-				<Row05 id={5} />
-				<Row05 id={6} />
-				<Row05 id={7} />
+					<Row05 id={1} />
+					<Row05 id={2} />
+					<Row05 id={3} />
+					<Row05 id={4} />
+					<Row05 id={5} />
+					<Row05 id={6} />
+					<Row05 id={7} />
 
-			</Tenta.Placeholder.Collector>
+				</Tenta.Placeholder.Collector>
 
-		</Pane.Col>
+			</Pane.Col>
+
+		</GlobalState>
 
 	</>;
 }
@@ -207,13 +213,17 @@ interface PileRowProps extends Omit<Pane.RowProps, 'id'>
 
 function PileRow({ id, ...rowProps }: PileRowProps)
 {
+
 	//$log("PileRow.id:", id)
 
-	let placeholder = Tenta.Placeholder.use(id);
 
-	let tenta = useNew(Tenta.Behavior1).use({
-		placeholder,
-	});
+	let globalState = GlobalState.use<Tenta.Placeholder.GlobalState>(`row${id}`);
+
+
+
+	let placeholder = Tenta.Placeholder.use(id)?.useGlobalState(`row${id}`);
+
+	let tenta = useNew(Tenta.Behavior1).use({ placeholder });
 
 
 	let topStage = placeholder?.prior ? null : tenta.stage;
@@ -339,11 +349,13 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 
 
+
 function usePileRowCaretProps()
 {
 	let row = Pane.ContainerInfo.use();
 	return { borderRadius: row?.cssBorderRadius };
 }
+
 
 
 

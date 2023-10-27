@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { PrimitiveProps, UseHookProps } from "../core";
-import type { mui3 } from "../core/mui3";
 import { ExpanderBaseProps } from "../expanders";
 import { Block } from "./Block";
 
@@ -25,8 +24,6 @@ export interface ContainerProps<P extends ContainerProps = any> extends Block.Pr
 	debug?: boolean;
 
 	rounded?: boolean;
-
-	elevation?: mui3.BoxShadow;
 
 	wrapperCls?: string | null;
 
@@ -66,7 +63,6 @@ export module ContainerProps
 	export const propNames: Array<keyof (ContainerProps & PrimitiveProps)> = [
 		"debug",
 		"rounded",
-		"elevation",
 		"noPP",
 		"pp", "ppx", "ppy", "ppl", "ppr", "ppt", "ppb",
 		"pp0", "ppx0", "ppy0", "ppl0", "ppr0", "ppt0", "ppb0",

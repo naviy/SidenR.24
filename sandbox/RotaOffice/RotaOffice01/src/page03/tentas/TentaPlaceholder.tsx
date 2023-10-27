@@ -1,4 +1,4 @@
-import { Repaintable, useNew } from "@libs";
+import { GlobalState as GlobalState_, Repaintable, useNew } from "@libs";
 import type React from "react";
 import { createContext, useContext, type ReactNode } from "react";
 import { TentaStage } from "./TentaStage";
@@ -15,14 +15,15 @@ export module TentaPlaceholder
 
 
 
+
 	export function use(id: React.Key)
 	{
-		let col = useContext(CollectorContext)?.collector;
+		let collector = useContext(CollectorContext)?.collector;
 
-		if (!col)
+		if (!collector)
 			return null;
 
-		let exist = col.byId(id);
+		let exist = collector.byId(id);
 
 		if (exist)
 			return exist;
@@ -39,6 +40,8 @@ export module TentaPlaceholder
 
 
 	//---
+
+
 
 
 	export interface Props
@@ -62,10 +65,19 @@ export module TentaPlaceholder
 
 
 
+	interface GlobalState extends GlobalState_
+	{
+		stage?: TentaStage;
+	}
+
+
+
 	export class Behavior
 	{
 
+
 		//---
+
 
 
 		constructor(
@@ -85,7 +97,9 @@ export module TentaPlaceholder
 		}
 
 
+
 		//---
+
 
 
 		tenta?: TentaPhaser;
@@ -97,7 +111,44 @@ export module TentaPlaceholder
 		get expanded() { return this.stage === "expanded"; }
 		get opened() { return this.stage === "opened"; }
 
+
+
 		//---
+
+
+
+		globalState?: GlobalState;
+
+
+
+		useGlobalState(name: string)
+		{
+
+			this.globalState = GlobalState_.use<GlobalState>(name);
+
+			this.resolveGlobalState();
+
+
+			return this;
+
+		}
+
+
+
+		resolveGlobalState()
+		{
+
+			if (!this.globalState)
+				return;
+
+			this.stage = GlobalState_.prop(this.globalState, 'stage', this.stage, TentaStage.Default, TentaStage.Default)!;
+
+		}
+
+
+
+		//---
+
 
 
 		useTenta(tenta: TentaPhaser)
@@ -112,10 +163,19 @@ export module TentaPlaceholder
 
 		}
 
+
+
+		//---
+
+
+
 		setProps(props: Partial<Props>)
 		{
 			if (props.stage !== undefined)
+			{
 				this.stage = props.stage;
+				this.resolveGlobalState();
+			}
 		}
 
 
@@ -126,14 +186,16 @@ export module TentaPlaceholder
 		}
 
 
+
 		//---
+
 
 	}
 
 
 
 
-	//===
+	//---
 
 
 
@@ -192,7 +254,7 @@ export module TentaPlaceholder
 		{
 			Repaintable.use(this, cfg);
 
-			this.root = cfg?.root||false;
+			this.root = cfg?.root || false;
 
 			this.usePlaceholders(cfg.placeholders);
 
@@ -250,6 +312,7 @@ export module TentaPlaceholder
 		//---
 
 	}
+
 
 
 

@@ -1,8 +1,8 @@
-import { $log, Focuser, Repaintable } from "@libs";
+import { Focuser, GlobalState, Repaintable } from "@libs";
+import { createRef } from "react";
+import { TentaBase } from "./TentaBase";
 import { TentaFocusable } from "./TentaFocusable";
 import { TentaPhaser } from "./TentaPhaser";
-import { TentaBase } from "./TentaBase";
-import { createRef, type RefObject } from "react";
 
 
 
@@ -25,6 +25,13 @@ export interface TentaBehavior1UseConfig extends
 	//id: React.Key;
 }
 
+
+
+
+//interface Tenta1GlobalState extends GlobalState
+//{
+//	phase?: number;
+//}
 
 
 
@@ -74,6 +81,43 @@ export class TentaBehavior1 extends
 
 
 	get itemsFocused() { return !!this.itemsFf?.isFocused; }
+
+
+
+	////---
+
+
+
+	//globalState?: Tenta1GlobalState;
+
+
+
+	//useGlobalState(name: string)
+	//{
+
+	//	this.globalState = GlobalState.use<Tenta1GlobalState>(name);
+
+	//	this.resolveGlobalState();
+
+
+	//	return this;
+
+	//}
+
+
+
+	//resolveGlobalState()
+	//{
+
+	//	if (!this.globalState)
+	//		throw new Error(`${this.constructor.name}: попытка вызвать tenta.resolveState(), когда tenta.state еще не присвоен`);
+
+
+	//	this.phase = GlobalState.prop(this.globalState!, 'phase', this.phase, this.defaultPhase, 0)!;
+		
+
+	//}
+
 
 
 

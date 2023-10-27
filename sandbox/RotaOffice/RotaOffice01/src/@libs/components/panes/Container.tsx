@@ -2,7 +2,6 @@ import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import React, { useRef } from "react";
 import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
-import { mui3 } from "../core/mui3";
 import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
@@ -195,7 +194,6 @@ export module Container
 
 				borderRadius: v.cssBorderRadius,
 
-				elevation: props.elevation,
 				timeout: props.timeout,
 				className: addClassName,
 
@@ -244,7 +242,6 @@ export module Container
 		maxHeight?: number | string;
 
 		borderRadius?: string;
-		elevation?: mui3.BoxShadow;
 
 		timeout?: number;
 
@@ -266,7 +263,6 @@ export module Container
 				p !== "minHeight" &&
 				p !== "maxHeight" &&
 				p !== "borderRadius" &&
-				p !== "elevation" &&
 				p !== "timeout"
 			,
 		}
@@ -284,9 +280,6 @@ export module Container
 			flex: props.flex,
 
 			borderRadius: props.borderRadius || "0",
-
-			//background: props.elevation == null ? "none" : mui3.Elevation.light[props.elevation].background,
-			//boxShadow: props.elevation == null ? "none" : mui3.Elevation.light[props.elevation].boxShadow,
 
 			width: props.width,
 			minWidth: props.minWidth,

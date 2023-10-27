@@ -1,16 +1,18 @@
 import { DesktopLayout } from "@app";
-import { Div, HR, Text, VR } from "@libs";
+import { $log, Div, HR, Text, VR } from "@libs";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { RouteObject } from "react-router-dom";
 import { Link, Outlet, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { Page03 } from './page03';
 import { Page04 } from './page04';
 import ListItemIcon from "@mui/material/ListItemIcon";
+import { GlobalState } from "./@libs/components/core/GlobalState";
+import { Button } from "@mui/material";
 
 
 
@@ -27,7 +29,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 let routes: RouteObject[] = [
 	{
 		path: "/",
-		element: <Layout />,
+		element: <AppDesktop />,
 		children: [
 			{ index: true, element: <Page03 /> },
 			{ path: "/page03", element: <Page03 />, },
@@ -57,42 +59,47 @@ export function App()
 
 
 
-function Layout()
+function AppDesktop()
 {
 
 	let location = useLocation();
 
+	let [globalState] = useState(() => ({}));
+
 
 	return (
 
+		<GlobalState.Root rootState={globalState}>
 
+			<DesktopLayout>
 
-		<DesktopLayout>
+				<DesktopLayout.Sider logo={<BigLogo />}>
 
-			<DesktopLayout.Sider logo={<BigLogo />}>
+					<HR />
 
-				<HR />
+					<List>
+						<MainMenuItem path="/" title="Home" divider />
+						<MainMenuItem path="/page03" title="Page03" />
+						<MainMenuItem path="/page04" title="Page04" />
+					</List>
+				</DesktopLayout.Sider>
 
-				<List>
-					<MainMenuItem path="/" title="Home" divider />
-					<MainMenuItem path="/page03" title="Page03" />
-					<MainMenuItem path="/page04" title="Page04" />
-				</List>
-			</DesktopLayout.Sider>
+				<DesktopLayout.Container>
 
-			<DesktopLayout.Container>
+					<DesktopLayout.Header logo={<SmallLogo />}>
+						<div>location: {location.pathname}</div>
+						<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+					</DesktopLayout.Header>
 
-				<DesktopLayout.Header logo={<SmallLogo />}>
-					<Text.H3>location: {location.pathname}</Text.H3>
-				</DesktopLayout.Header>
+					<DesktopLayout.Main>
+						<Outlet />
+					</DesktopLayout.Main>
 
-				<DesktopLayout.Main>
-					<Outlet />
-				</DesktopLayout.Main>
+				</DesktopLayout.Container>
 
-			</DesktopLayout.Container>
+			</DesktopLayout>
 
-		</DesktopLayout>
+		</GlobalState.Root>
 
 
 	);
