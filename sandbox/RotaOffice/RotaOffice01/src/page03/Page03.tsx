@@ -45,17 +45,19 @@ function Rows05({ root }: { root?: boolean })
 			<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
 
 			<Tenta.Placeholder.Collector
+				globalState="rows05"
 				root={root}
-				placeholders={[1, 2, 3, 4, 5, 6, 7]}
+				//placeholders={[1, 2, 3, 4, 5, 6, 7]}
+				placeholders={[1, 2, 3]}
 			>
 
 				<Row05 id={1} />
 				<Row05 id={2} />
 				<Row05 id={3} />
-				<Row05 id={4} />
-				<Row05 id={5} />
-				<Row05 id={6} />
-				<Row05 id={7} />
+				{/*<Row05 id={4} />*/}
+				{/*<Row05 id={5} />*/}
+				{/*<Row05 id={6} />*/}
+				{/*<Row05 id={7} />*/}
 
 			</Tenta.Placeholder.Collector>
 
@@ -76,7 +78,7 @@ function Row05(props: PileRowProps)
 		<RowBody id={props.id}>
 
 			<>
-				<Pane id="pane-1" p12>111 1111 11111 111111</Pane>
+				<Pane id="pane-1" p12><span>111 1111 11111 111111</span></Pane>
 				<Pane p12>222 2222 22222 222222</Pane>
 				<Pane p12 textRight>333 3333 33333 333333</Pane>
 			</>
@@ -217,22 +219,9 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 	//$log("PileRow.id:", id)
 
 
-	let globalState = (
-		GlobalState
-			.use<Tenta.Placeholder.GlobalState>(`row${id}`)
-	);
+	let placeholder = Tenta.Placeholder.use(id);
 
-	let placeholder = (
-		Tenta.Placeholder
-			.use(id)
-			?.useGlobalState(globalState)
-	);
-
-	let tenta = (
-		useNew(Tenta.Behavior1)
-			.use({ placeholder })
-	);
-
+	let tenta = useNew(Tenta.Behavior1).use({ placeholder });
 
 
 	let topStage = placeholder?.prior ? null : tenta.stage;
@@ -251,7 +240,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 	return (
 
 
-		<GlobalState state={globalState}>
+		<GlobalState state={placeholder?.globalState}>
 
 			<Tenta.Phase.Provider phase={tenta.phase}>
 
@@ -331,24 +320,16 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 								{parts[1] &&
 
-									<GlobalState name="items">
+									<Focuser ref={tenta.itemsFfRef} ghost>
 
+										<Pane.Col
+											start end
+											expanded={tenta.opened}
+											wrapperCls="py24 pl60 pr48"
+											children={parts[1]}
+										/>
 
-										<Focuser ref={tenta.itemsFfRef} ghost>
-
-											<Pane.Col
-												start end
-												expanded={tenta.opened}
-												wrapperCls="py24 pl60 pr48"
-
-											>
-
-												{parts[1]}
-											</Pane.Col>
-
-										</Focuser>
-
-									</GlobalState>
+									</Focuser>
 								}
 
 							</Pane.Col>

@@ -1,4 +1,4 @@
-import { GlobalState as GlobalState_, Repaintable, useNew } from "@libs";
+import { $log, GlobalState, GlobalState as GlobalState_, Repaintable, _$log, useNew } from "@libs";
 import type React from "react";
 import { createContext, useContext, type ReactNode } from "react";
 import { TentaStage } from "./TentaStage";
@@ -130,36 +130,34 @@ export module TentaPlaceholder
 
 
 
-		useGlobalState(name: string): this;
-		useGlobalState(state: GlobalState): this;
-
-		useGlobalState(arg0: string | GlobalState)
+		setGlobalState(value: GlobalState)
 		{
 
-			this.globalState = (
-				typeof arg0 === "object" ? arg0 :
-					GlobalState_.use<GlobalState>(arg0)
-			);
+			this.globalState = value;
 
-
-			this.resolveGlobalState();
-
-
-			return this;
+			this.#loadFromGlobalState();
 
 		}
 
 
 
-		resolveGlobalState()
+		#loadFromGlobalState()
 		{
+			if (!this.globalState) return;
 
-			if (!this.globalState)
-				return;
-
-			this.stage = GlobalState_.prop(this.globalState, 'stage', this.stage, TentaStage.Default, TentaStage.Default)!;
-
+			this.stage = GlobalState_.get(this.globalState, 'stage', this.stage)!;
 		}
+
+
+
+		#saveToGlobalState()
+		{
+			if (!this.globalState) return;
+
+
+			GlobalState_.set(this.globalState, 'stage', this.stage, TentaStage.Default)!;
+		}
+
 
 
 
@@ -169,11 +167,10 @@ export module TentaPlaceholder
 
 		useTenta(tenta: TentaPhaser)
 		{
-
-			if (this.tenta && this.tenta !== tenta)
-			{
-				throw Error(`Tenta.Placeholder.CollectorBehavior: по ключу ${this.id} уже зарегистрирован placeholder с другой tenta`)
-			}
+			//if (this.tenta && this.tenta !== tenta)
+			//{
+			//	throw Error(`Tenta.Placeholder.CollectorBehavior: по ключу ${this.id} уже зарегистрирован placeholder с другой tenta`)
+			//}
 
 			this.tenta = tenta;
 
@@ -190,7 +187,7 @@ export module TentaPlaceholder
 			if (props.stage !== undefined)
 			{
 				this.stage = props.stage;
-				this.resolveGlobalState();
+				this.#saveToGlobalState();
 			}
 		}
 
@@ -222,6 +219,7 @@ export module TentaPlaceholder
 
 	export function Collector(props: {
 		root?: boolean;
+		globalState?: string | GlobalState;
 		placeholders: DefaultProps[];
 		children: ReactNode;
 	})
@@ -258,6 +256,9 @@ export module TentaPlaceholder
 		placeholders!: Behavior[];
 
 
+		globalState?: GlobalState;
+
+
 
 		//---
 
@@ -265,16 +266,27 @@ export module TentaPlaceholder
 
 		use(cfg: Repaintable.UseConfig & {
 			root?: boolean;
-			placeholders: DefaultProps[]
+			placeholders: DefaultProps[];
+			globalState?: string | GlobalState;
 		})
 		{
+
 			Repaintable.use(this, cfg);
+
+
+			if (cfg?.globalState !== undefined)
+			{
+				this.globalState = GlobalState.use(cfg.globalState);
+			}
+
 
 			this.root = cfg?.root || false;
 
 			this.usePlaceholders(cfg.placeholders);
 
+
 			return this;
+
 		}
 
 
@@ -290,7 +302,13 @@ export module TentaPlaceholder
 			{
 				a.prior = all[i - 1] || null;
 				a.next = all[i + 1] || null;
-			})
+
+				this.globalState && a.setGlobalState(
+					GlobalState.node(this.globalState, `tenta${a.id}`)
+				);
+			});
+
+
 
 			function mergePlaceholders(olds: Behavior[], news: DefaultProps[])
 			{

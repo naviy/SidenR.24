@@ -85,6 +85,13 @@ export function Pane(props: Pane.Props)
 
 	let body = props.children;
 
+
+	if (typeof body === "string")
+	{
+		body = <span>{body}</span>;
+	}
+
+
 	if (containerInfo.debug)
 	{
 		body = <>
@@ -253,6 +260,12 @@ export module Pane
 			maxHeight: props.maxHeight,
 
 			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+
+			userSelect: "none", 
+
+			"> *": {
+				userSelect: "text", 
+			},
 
 			//"> div": {
 			//	display: "inherit",

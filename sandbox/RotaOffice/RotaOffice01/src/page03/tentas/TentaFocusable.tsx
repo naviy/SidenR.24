@@ -1,7 +1,7 @@
-import type { Constructor, Focuser } from "@libs"; 
-import { type RefObject, useRef, createRef } from "react";
-import type { TentaPhaser } from "./TentaPhaser";
+import type { Constructor, Focuser } from "@libs";
+import { createRef, type RefObject } from "react";
 import type { TentaBase } from "./TentaBase";
+import type { TentaPhaser } from "./TentaPhaser";
 
 
 
@@ -25,7 +25,6 @@ export interface TentaFocusable extends TentaBase, TentaPhaser
 
 	focus(): Promise<Focuser | null>;
 	unfocus(): void;
-	scrollIntoView(): Promise<boolean>;
 
 }
 
@@ -68,22 +67,6 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & TentaPhaser
 		}
 
 
-
-		async scrollIntoView(): Promise<boolean>
-		{
-
-			let { ff } = this;
-
-			if (!ff)
-				return false;
-
-			if (this.opened)
-				return await ff.scrollIntoViewTop({ topOffset: 0 });
-
-
-			return await ff.scrollIntoView();
-
-		}
 
 		//async focusItems()
 		//{

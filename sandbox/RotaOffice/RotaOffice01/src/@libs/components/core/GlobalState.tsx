@@ -22,7 +22,7 @@ export interface GlobalState
 
 
 export function GlobalState(props: {
-	state: GlobalState;
+	state: GlobalState | undefined;
 	children: ReactNode;
 }): JSX.Element;
 
@@ -41,14 +41,15 @@ export function GlobalState(props: {
 	let { state, name } = props;
 
 
+	if (state === undefined && name === undefined)
+	{
+		return props.children
+	}
+
+
 	if (state === undefined)
 	{
-		if (!name)
-		{
-			throw new Error(`GlobalState: properties 'state' is ${state} and 'name' is ${name}`);
-		}
-
-		state = GlobalState.use<GlobalState>(name);
+		state = GlobalState.use<GlobalState>(name!);
 	}
 
 
@@ -81,7 +82,7 @@ export module GlobalState
 	export interface Node
 	{
 		[key: string]: GlobalState | Value | undefined;
-	};
+	}
 
 
 
@@ -131,20 +132,15 @@ export module GlobalState
 
 
 	export function use<TState extends GlobalState = GlobalState>(parentState: GlobalState, name: string): TState;
-	export function use<TState extends GlobalState = GlobalState>(name: string): TState;
+	export function use<TState extends GlobalState = GlobalState>(nameOrState: string | TState): TState;
 
-	export function use<TState extends GlobalState = GlobalState>(arg0: GlobalState | string, arg1?: string): TState
+	export function use<TState extends GlobalState = GlobalState>(arg0: GlobalState | string | TState, arg1?: string): TState
 	{
-
-		let parentNode: Node | undefined;
-		let name: string;
-
 
 		if (typeof arg0 === "string")
 		{
 
-			parentNode = useContext(Context);
-			name = arg0;
+			let parentNode = useContext(Context);
 
 			if (!parentNode)
 			{
@@ -152,20 +148,19 @@ export module GlobalState
 				parentNode = {};
 			}
 
+			return node<TState>(parentNode, arg0)
+
 		}
 
-		else
+
+		if (typeof arg1 === "string")
 		{
-			parentNode = arg0;
-			name = arg1!;
+			return node<TState>(arg0, arg1)
+
 		}
 
 
-
-		let state = node<TState>(parentNode, name);
-
-
-		return state;
+		return arg0 as TState;
 
 	}
 
@@ -196,49 +191,78 @@ export module GlobalState
 
 
 
-	export function prop<
-		TState extends GlobalState,// = GlobalState,
-		TProp extends keyof TState,// = keyof TState,
-		TValue extends TState[TProp],// = TState[TProp]
+	export function get<
+		TState extends GlobalState,
+		TProp extends keyof TState,
 	>(
 		state: TState,
 		propName: TProp,
-		value?: TValue,
-		defaultValue?: TValue,
-		emptyValue?: TValue
-	): TValue | undefined
+		defaultValue?: TState[TProp],
+	): TState[TProp] | undefined
 	{
 
-		if (value !== undefined && value !== emptyValue)
-		{
-
-			if (value === defaultValue)
-			{
-				delete state[propName];
-			}
-			else
-			{
-				state[propName] = value;
-			}
-
-
-			return value;
-
-		}
-
-
-		value = state![propName] as any;
+		let value = state![propName] as any;
 
 
 		if (value !== undefined)
 			return value;
 
 
-		if (defaultValue !== undefined)
+		return defaultValue;
+
+	}
+
+
+
+	export function set<
+		TState extends GlobalState,
+		TProp extends keyof TState,
+	>(
+		state: TState,
+		propName: TProp,
+		value: TState[TProp],
+		defaultValue?: TState[TProp]
+	): TState[TProp] | undefined
+	{
+
+		if (value === undefined)
 			return defaultValue;
 
 
-		return emptyValue;
+		if (value === defaultValue)
+		{
+			delete state[propName];
+		}
+		else
+		{
+			state[propName] = value;
+		}
+
+
+		return value;
+
+	}
+
+
+
+	export function prop<
+		TState extends GlobalState,
+		TProp extends keyof TState,
+	>(
+		state: TState,
+		propName: TProp,
+		value?: TState[TProp],
+		defaultValue?: TState[TProp]
+	): TState[TProp] | undefined
+	{
+
+		if (value !== undefined)
+		{
+			return set(state, propName, value, defaultValue);
+		}
+
+
+		return get(state, propName, defaultValue);
 
 	}
 

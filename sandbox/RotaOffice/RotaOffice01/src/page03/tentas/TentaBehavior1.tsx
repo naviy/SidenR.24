@@ -93,6 +93,13 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 	}
 
 
+	async scrollIntoViewTop(): Promise<boolean>
+	{
+		let { ff } = this;
+		return !!ff && await ff.scrollIntoViewTop({ topOffset: 32 });
+	}
+
+
 
 	//---
 
@@ -104,19 +111,43 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 		if (!this.focused)
 		{
 			await this.focus();
+			return;
 		}
 
-		else if (await this.expand())
-		{
-			await this.scrollIntoView();
-		}
 
-		else
-		{
-			await this.shake();
-		}
+		if (await this.expand())
+			return;
+
+
+		if (await this.scrollIntoViewTop())
+			return;
+
+
+		await this.shake();
 
 	}
+
+
+
+	protected override async onRightKey()
+	{
+
+		if (await this.expand())
+			return;
+
+
+		if (await this.scrollIntoViewTop())
+			return;
+
+
+		if (await this.focusItems())
+			return;
+
+
+		await this.shake();
+
+	}
+
 
 
 	protected override async onRightClick()
@@ -128,7 +159,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 		}
 		else if (await this.collapse())
 		{
-			await this.scrollIntoView();
+			await this.scrollIntoViewTop();
 		}
 		else
 		{
@@ -144,7 +175,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 		if (await this.expand())
 		{
-			await this.scrollIntoView();
+			await this.scrollIntoViewTop();
 		}
 		else
 		{
@@ -160,7 +191,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 		if (await this.collapse())
 		{
-			await this.scrollIntoView();
+			await this.scrollIntoViewTop();
 		}
 		else
 		{
@@ -176,30 +207,11 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 		if (await this.collapse())
 		{
-			/*await*/ this.scrollIntoView();
+			/*await*/ this.scrollIntoViewTop();
 		}
 		else
 		{
 			await this.focusParent() || await this.shake(3);
-		}
-
-	}
-
-
-
-	protected override async onRightKey()
-	{
-
-		if (await this.expand())
-		{
-			//if (this.opened /*&& await this.focusItems()*/)
-			//{
-			//await
-			//}
-		}
-		else if (!await this.ff?.scrollIntoViewTop({ topOffset: 32 }))
-		{
-			await this.focusItems() || await this.shake();
 		}
 
 	}
