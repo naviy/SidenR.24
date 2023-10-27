@@ -130,27 +130,42 @@ export module GlobalState
 
 
 
+	export function use<TState extends GlobalState = GlobalState>(parentState: GlobalState, name: string): TState;
+	export function use<TState extends GlobalState = GlobalState>(name: string): TState;
 
-	export function use<TState extends GlobalState = GlobalState>(
-		name: string,
-	): TState
+	export function use<TState extends GlobalState = GlobalState>(arg0: GlobalState | string, arg1?: string): TState
 	{
 
-		let parentNode = useContext(Context);
+		let parentNode: Node | undefined;
+		let name: string;
 
-		if (!parentNode)
+
+		if (typeof arg0 === "string")
 		{
-			$error('GlobalState.use() можно использовать только внутри <GlobalState.Root ... />');
-			parentNode = {};
+
+			parentNode = useContext(Context);
+			name = arg0;
+
+			if (!parentNode)
+			{
+				$error('GlobalState.use() можно использовать только внутри <GlobalState.Root ... />');
+				parentNode = {};
+			}
+
 		}
+
+		else
+		{
+			parentNode = arg0;
+			name = arg1!;
+		}
+
 
 
 		let state = node<TState>(parentNode, name);
 
 
-
 		return state;
-
 
 	}
 
@@ -159,10 +174,6 @@ export module GlobalState
 
 	//---
 
-
-
-
-	
 
 
 
@@ -180,7 +191,7 @@ export module GlobalState
 		}
 
 
-		return state as TState;
+		return state;
 	}
 
 
@@ -230,54 +241,6 @@ export module GlobalState
 		return emptyValue;
 
 	}
-
-
-	//export function prop<
-	//	TState extends GlobalState = GlobalState,
-	//	TProp extends keyof TState = keyof TState,
-	//	TValue extends TState[TProp] = TState[TProp]
-	//>(
-	//	state: TState | null | undefined,
-	//	propName: TProp,
-	//	value?: TValue,
-	//	defaultValue?: TValue
-	//): TValue | undefined
-	//{
-
-	//	if (state == null)
-	//		return undefined;
-
-
-	//	if (value !== undefined)
-	//	{
-
-	//		if (value === defaultValue)
-	//		{
-	//			delete state[propName];
-	//		}
-	//		else
-	//		{
-	//			state[propName] = value;
-	//		}
-
-
-	//		return value;
-
-	//	}
-
-
-	//	value = state![propName] as TValue | undefined;
-
-
-	//	if (value === undefined && defaultValue !== undefined)
-	//	{
-	//		value = defaultValue;
-	//	}
-
-
-	//	return value;
-
-	//}
 
 
 
