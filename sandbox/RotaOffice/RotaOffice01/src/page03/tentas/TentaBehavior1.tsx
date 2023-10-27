@@ -93,10 +93,15 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 	}
 
 
+	async scrollIntoView(): Promise<boolean>
+	{
+		let { ff } = this;
+		return !!ff && await ff.scrollIntoView();
+	}
 	async scrollIntoViewTop(): Promise<boolean>
 	{
 		let { ff } = this;
-		return !!ff && await ff.scrollIntoViewTop({ topOffset: 32 });
+		return !!ff && await ff.scrollIntoViewTop({ topOffset: 80 });
 	}
 
 
@@ -150,6 +155,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 
 
+
 	protected override async onRightClick()
 	{
 
@@ -159,7 +165,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 		}
 		else if (await this.collapse())
 		{
-			await this.scrollIntoViewTop();
+			await this.scrollIntoView();
 		}
 		else
 		{
@@ -191,7 +197,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 		if (await this.collapse())
 		{
-			await this.scrollIntoViewTop();
+			await this.scrollIntoView();
 		}
 		else
 		{
@@ -207,7 +213,7 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 		if (await this.collapse())
 		{
-			/*await*/ this.scrollIntoViewTop();
+			/*await*/ this.scrollIntoView();
 		}
 		else
 		{

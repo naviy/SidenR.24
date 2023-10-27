@@ -112,7 +112,11 @@ function BigLogo()
 {
 	return <Div mt24 mb16 flex1 vflex textCenter>
 		<Div>
-			<NguIcon sx={{ fontSize: 128, width: `128px !important` }} />
+			<NguIcon sx={{
+				fontSize: 128,
+				width: `128px !important`,
+				filter: "drop-shadow(0px 3px 12px rgba(241, 235, 211, 0.4))",
+			}} />
 		</Div>
 		<Div mt8 fontRoboto font300 upperCase>
 			<span style={{ color: "gold" }}>Rota</span>
@@ -127,7 +131,11 @@ function BigLogo()
 function SmallLogo()
 {
 	return <Div ml8 vcenter >
-		<NguIcon sx={{ fontSize: 48 }} />
+		<NguIcon sx={{
+			fontSize: 48,
+			filter: "drop-shadow(0px 0px 8px rgba(241, 235, 211, 0.4))",
+
+		}} />
 		<Div textLeft ml4 fontRoboto font300 upperCase>
 			<div style={{ color: "gold" }}>Rota</div>
 			<div style={{ color: "#00c3ff" }}>Office</div>
