@@ -22,21 +22,34 @@ export interface GlobalState
 
 
 export function GlobalState(props: {
+	state: GlobalState;
+	children: ReactNode;
+}): JSX.Element;
+
+export function GlobalState(props: {
 	name: string;
+	children: ReactNode;
+}): JSX.Element;
+
+export function GlobalState(props: {
+	state?: GlobalState;
+	name?: string;
 	children: ReactNode;
 })
 {
 
-	let { name } = props;
+	let { state, name } = props;
 
 
-	if (!name)
+	if (state === undefined)
 	{
-		throw new Error(`GlobalState: properties 'state' and 'name' is ${name}`);
+		if (!name)
+		{
+			throw new Error(`GlobalState: properties 'state' is ${state} and 'name' is ${name}`);
+		}
+
+		state = GlobalState.use<GlobalState>(name);
 	}
-
-
-	let state = GlobalState.use<GlobalState>(name/*, props.init*/);
 
 
 	return <GlobalState.Context.Provider
@@ -73,25 +86,18 @@ export module GlobalState
 
 
 
-	//export type InitAction<TState extends GlobalState = GlobalState> = (
-
-	//	propSetter: <TProp extends keyof TState, TValue extends TState[TProp]>(propName: TProp, value?: TValue, defaultValue?: TValue, emptyValue?: TValue) => TValue | undefined,
-
-	//	state: TState
-
-	//) => void;
-
-
-
-
 	//---
 
 
 
 
 	export function Root(props: {
+
 		rootState?: GlobalState;
+		compress?: boolean;
+
 		children: ReactNode;
+
 	})
 	{
 
@@ -101,6 +107,9 @@ export module GlobalState
 		{
 			[rootNode] = useState<Node>(() => ({}));
 		}
+
+
+		props.compress && GlobalState.compress(rootNode);
 
 
 		return <Context.Provider
@@ -124,7 +133,6 @@ export module GlobalState
 
 	export function use<TState extends GlobalState = GlobalState>(
 		name: string,
-		//init?: InitAction<TState>
 	): TState
 	{
 
@@ -140,8 +148,6 @@ export module GlobalState
 		let state = node<TState>(parentNode, name);
 
 
-		//init && initialize(state, init);
-
 
 		return state;
 
@@ -156,72 +162,13 @@ export module GlobalState
 
 
 
-	//export function initialize<TState extends GlobalState = GlobalState>(
-	//	state: TState,
-	//	init: InitAction<TState>
-	//): void
-	//{
-
-	//	init(prop, state);
-
-
-
-	//	function prop<TProp extends keyof TState, TValue extends TState[TProp]>(
-	//		propName: TProp,
-	//		value?: TValue,
-	//		defaultValue?: TValue,
-	//		emptyValue?: TValue
-	//	): TValue | undefined
-	//	{
-
-	//		if (value !== undefined)
-	//		{
-
-	//			if (value === emptyValue)
-	//			{
-	//				delete state[propName];
-	//			}
-	//			else
-	//			{
-	//				state[propName] = value;
-	//			}
-
-
-	//			return value;
-
-	//		}
-
-
-	//		value = state![propName] as any;
-
-
-	//		if (value === undefined)
-	//		{
-
-	//			if (defaultValue !== undefined)
-	//			{
-	//				state[propName] = value = defaultValue;
-	//			}
-	//			else
-	//			{
-	//				value = emptyValue;
-	//			}
-
-	//		}
-
-
-	//		return value;
-
-	//	}
-
-	//}
+	
 
 
 
 	export function node<TState extends GlobalState = GlobalState>(
 		parentNode: Node,
-		name: string,
-		//init?: InitAction<TState>
+		name: string
 	): TState
 	{
 
@@ -231,9 +178,6 @@ export module GlobalState
 		{
 			parentNode[name] = state = {} as TState;
 		}
-
-
-		//init && initialize(state, init);
 
 
 		return state as TState;
@@ -254,10 +198,10 @@ export module GlobalState
 	): TValue | undefined
 	{
 
-		if (value !== undefined)
+		if (value !== undefined && value !== emptyValue)
 		{
 
-			if (value === emptyValue)
+			if (value === defaultValue)
 			{
 				delete state[propName];
 			}
@@ -267,7 +211,7 @@ export module GlobalState
 			}
 
 
-			return value!;
+			return value;
 
 		}
 
@@ -275,22 +219,15 @@ export module GlobalState
 		value = state![propName] as any;
 
 
-		if (value === undefined)
-		{
-
-			if (defaultValue !== undefined)
-			{
-				state[propName] = value = defaultValue;
-			}
-			else
-			{
-				value = emptyValue;
-			}
-
-		}
+		if (value !== undefined)
+			return value;
 
 
-		return value;
+		if (defaultValue !== undefined)
+			return defaultValue;
+
+
+		return emptyValue;
 
 	}
 
@@ -357,25 +294,40 @@ export module GlobalState
 			return;
 
 
-		for (let propName in node)
+		//$log("compress");
+		compress(node);
+		//_$log("node:", _.cloneDeep(node));
+
+
+
+		function compress(node: Node)
 		{
 
-			if (!Object.prototype.hasOwnProperty.call(node, propName))
-				continue;
-
-
-			let value = node[propName];
-
-
-			if (typeof value === 'object')
+			for (let propName in node)
 			{
 
-				compress(value as Node);
+				if (!Object.prototype.hasOwnProperty.call(node, propName))
+					continue;
 
 
-				if (!Object.keys(value as Object).length)
+				let value = node[propName];
+
+				if (value === undefined)
 				{
 					delete node[propName];
+				}
+
+				else if (typeof value === 'object')
+				{
+
+					compress(value as Node);
+
+
+					if (!Object.keys(value as Object).length)
+					{
+						delete node[propName];
+					}
+
 				}
 
 			}

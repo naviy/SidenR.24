@@ -2,6 +2,7 @@ import { type Constructor, type Repaintable } from '@libs';
 import type { TentaPlaceholder } from "./TentaPlaceholder";
 import { TentaStage } from "./TentaStage";
 import { type TentaBase } from "./TentaBase";
+import type { TentaPhase } from "./TentaPhase";
 
 
 
@@ -18,13 +19,13 @@ import { type TentaBase } from "./TentaBase";
 export interface TentaPhaser extends TentaBase, Repaintable
 {
 
-	phase: number;
-	priorPhase?: number;
-	expandedPhase: number;
-	openedPhase: number;
-	maxPhase: number;
+	phase: TentaPhase;
+	priorPhase?: TentaPhase;
+	expandedPhase: TentaPhase;
+	openedPhase: TentaPhase;
+	maxPhase: TentaPhase;
 
-	//defaultPhase?: number;
+	//defaultPhase?: TentaPhase;
 
 	stage: TentaStage;
 
@@ -35,8 +36,8 @@ export interface TentaPhaser extends TentaBase, Repaintable
 	canCollapse(): boolean;
 	canExpand(): boolean;
 
-	collapse(canSkipPhase?: (phase: number, bhv: this) => boolean): Promise<boolean>;
-	expand(canSkipPhase?: (phase: number, bhv: this) => boolean): Promise<boolean>;
+	collapse(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): Promise<boolean>;
+	expand(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): Promise<boolean>;
 
 	placeholder?: TentaPlaceholder.Behavior;
 
@@ -56,13 +57,13 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 		//---
 
 
-		phase!: number;
-		priorPhase?: number;
-		expandedPhase: number = 1;
-		openedPhase: number = 2;
-		maxPhase: number = 2;
+		phase!: TentaPhase;
+		priorPhase?: TentaPhase;
+		expandedPhase: TentaPhase = 1;
+		openedPhase: TentaPhase = 2;
+		maxPhase: TentaPhase = 2;
 
-		defaultPhase?: number;
+		defaultPhase?: TentaPhase;
 
 
 		get collapsed() { return !this.phase; }
@@ -97,7 +98,7 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 
 
 
-		async setPhase(value: number): Promise<boolean>
+		async setPhase(value: TentaPhase): Promise<boolean>
 		{
 
 			let { phase } = this;
@@ -140,7 +141,7 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 
 
 
-		findPriorPhase(canSkipPhase?: (phase: number, bhv: this) => boolean): number
+		findPriorPhase(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
 		{
 
 			let { phase } = this;
@@ -167,7 +168,7 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 
 
 
-		findNextPhase(canSkipPhase?: (phase: number, bhv: this) => boolean): number
+		findNextPhase(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
 		{
 
 			let { phase, maxPhase } = this;
@@ -194,12 +195,12 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 
 
 
-		async collapse(canSkipPhase?: (phase: number, bhv: this) => boolean): Promise<boolean>
+		async collapse(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): Promise<boolean>
 		{
 			return await this.setPhase(this.findPriorPhase(canSkipPhase));
 		}
 
-		async expand(canSkipPhase?: (phase: number, bhv: this) => boolean): Promise<boolean>
+		async expand(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): Promise<boolean>
 		{
 			return await this.setPhase(this.findNextPhase(canSkipPhase));
 		}
@@ -222,7 +223,7 @@ export module TentaPhaser
 
 	export interface UseConfig 
 	{
-		readonly defaultPhase?: number;
+		readonly defaultPhase?: TentaPhase;
 		readonly defaultStage?: TentaStage;
 
 		readonly placeholder?: TentaPlaceholder.Behavior | null;

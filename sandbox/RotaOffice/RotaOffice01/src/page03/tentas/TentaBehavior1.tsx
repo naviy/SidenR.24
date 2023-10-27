@@ -1,4 +1,4 @@
-import { Focuser, GlobalState, Repaintable } from "@libs";
+import { Focuser, Repaintable } from "@libs";
 import { createRef } from "react";
 import { TentaBase } from "./TentaBase";
 import { TentaFocusable } from "./TentaFocusable";
@@ -28,21 +28,7 @@ export interface TentaBehavior1UseConfig extends
 
 
 
-//interface Tenta1GlobalState extends GlobalState
-//{
-//	phase?: number;
-//}
-
-
-
-export class TentaBehavior1 extends
-	TentaFocusable(
-		TentaPhaser(
-			TentaBase(
-				Repaintable.Async()
-			)
-		)
-	)
+export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaintable.Async())))
 {
 
 	//---
@@ -81,43 +67,6 @@ export class TentaBehavior1 extends
 
 
 	get itemsFocused() { return !!this.itemsFf?.isFocused; }
-
-
-
-	////---
-
-
-
-	//globalState?: Tenta1GlobalState;
-
-
-
-	//useGlobalState(name: string)
-	//{
-
-	//	this.globalState = GlobalState.use<Tenta1GlobalState>(name);
-
-	//	this.resolveGlobalState();
-
-
-	//	return this;
-
-	//}
-
-
-
-	//resolveGlobalState()
-	//{
-
-	//	if (!this.globalState)
-	//		throw new Error(`${this.constructor.name}: попытка вызвать tenta.resolveState(), когда tenta.state еще не присвоен`);
-
-
-	//	this.phase = GlobalState.prop(this.globalState!, 'phase', this.phase, this.defaultPhase, 0)!;
-		
-
-	//}
-
 
 
 
@@ -248,7 +197,7 @@ export class TentaBehavior1 extends
 			//await
 			//}
 		}
-		else if (!await this.ff?.scrollIntoViewTop({ topOffset: 32}))
+		else if (!await this.ff?.scrollIntoViewTop({ topOffset: 32 }))
 		{
 			await this.focusItems() || await this.shake();
 		}

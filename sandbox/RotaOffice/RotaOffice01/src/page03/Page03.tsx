@@ -20,7 +20,11 @@ export function Page03()
 
 			<Div mx200 m100>
 
-				<Rows05 root />
+				<GlobalState name="Rows05Pile">
+
+					<Rows05 root />
+
+				</GlobalState>
 
 			</Div>
 
@@ -36,30 +40,26 @@ function Rows05({ root }: { root?: boolean })
 {
 	return <>
 
-		<GlobalState name="rows05">
+		<Pane.Col rounded>
 
-			<Pane.Col rounded>
+			<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
 
-				<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
+			<Tenta.Placeholder.Collector
+				root={root}
+				placeholders={[1, 2, 3, 4, 5, 6, 7]}
+			>
 
-				<Tenta.Placeholder.Collector
-					root={root}
-					placeholders={[1, 2, 3, 4, 5, 6, 7]}
-				>
+				<Row05 id={1} />
+				<Row05 id={2} />
+				<Row05 id={3} />
+				<Row05 id={4} />
+				<Row05 id={5} />
+				<Row05 id={6} />
+				<Row05 id={7} />
 
-					<Row05 id={1} />
-					<Row05 id={2} />
-					<Row05 id={3} />
-					<Row05 id={4} />
-					<Row05 id={5} />
-					<Row05 id={6} />
-					<Row05 id={7} />
+			</Tenta.Placeholder.Collector>
 
-				</Tenta.Placeholder.Collector>
-
-			</Pane.Col>
-
-		</GlobalState>
+		</Pane.Col>
 
 	</>;
 }
@@ -217,13 +217,22 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 	//$log("PileRow.id:", id)
 
 
-	let globalState = GlobalState.use<Tenta.Placeholder.GlobalState>(`row${id}`);
+	let globalState = (
+		GlobalState
+			.use<Tenta.Placeholder.GlobalState>(`row${id}`)
+	);
 
+	let placeholder = (
+		Tenta.Placeholder
+			.use(id)
+			?.useGlobalState(globalState)
+	);
 
+	let tenta = (
+		useNew(Tenta.Behavior1)
+			.use({ placeholder })
+	);
 
-	let placeholder = Tenta.Placeholder.use(id)?.useGlobalState(`row${id}`);
-
-	let tenta = useNew(Tenta.Behavior1).use({ placeholder });
 
 
 	let topStage = placeholder?.prior ? null : tenta.stage;
@@ -238,110 +247,122 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 	let parts = React.Children.toArray(rowProps.children);
 
 
+
 	return (
 
 
-		<Tenta.Phase.Provider phase={tenta.phase}>
+		<GlobalState state={globalState}>
 
-			<Tenta.Placeholder.NoCollector>
+			<Tenta.Phase.Provider phase={tenta.phase}>
 
-				<Div relative >
-
-					{(!placeholder || !placeholder.collector.root) &&
-						<TentaItemsLinkLine
-							width={36}
-							thickness={tenta.opened ? 2 : tenta.expanded ? 2 : 2}
-						>
-							{isFirst && <div className="line-to-root" />}
-							<div className="angle" />
-							{!isLast && <div className="line-to-next" />}
-						</TentaItemsLinkLine>
-					}
-
-					<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
-
-						<Pane.Col
-							//debug
-							id={`pile-row#${id}`}
-
-							start={start}
-							end={end}
-
-							{...rowProps}
-
-							//elevation={btmStage !== "collapsed" ? 1 : undefined}
+				<Tenta.Placeholder.NoCollector>
 
 
-							{...tenta.expanded && { e: "L1", mx: -12, }}
-							{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
+					<Div relative>
 
-							ppStart
-							ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
-							ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
+						{(!placeholder || !placeholder.collector.root) &&
+							<TentaItemsLinkLine
+								width={36}
+								thickness={tenta.opened ? 2 : tenta.expanded ? 2 : 2}
+							>
+								{isFirst && <div className="line-to-root" />}
+								<div className="angle" />
+								{!isLast && <div className="line-to-next" />}
+							</TentaItemsLinkLine>
+						}
 
-							//mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
-							mb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 40 : 0}
+						<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
 
-							cursorPointer
-						>
+							<Pane.Col
+								//debug
+								id={`pile-row#${id}`}
 
-							{/*<TentaItemsBackfill />*/}
+								start={start}
+								end={end}
 
-							<Focuser
-								ref={tenta.ffRef}
-								name={`pile-row-body#${id}`}
-								padding={tenta.collapsed ? -2 : 0}
-								listener={tenta}
+								{...rowProps}
+
+								//elevation={btmStage !== "collapsed" ? 1 : undefined}
+
+
+								{...tenta.expanded && { e: "L1", mx: -12, }}
+								{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
+
+								ppStart
+								ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
+								ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
+
+								//mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
+								mb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 40 : 0}
+
+								cursorPointer
 							>
 
-								<Pane.Row
-									start end
-									bg={tenta.opened ? "4" : tenta.expanded ? "3" : "2"}
-									gap1
-									px2
-									pt={tenta.opened ? 2 : tenta.expanded ? 2 : start ? 2 : 1}
-									pb={tenta.opened ? 2 : tenta.expanded ? 2 : end ? 2 : btmStage !== "collapsed" ? 1 : 0}
-									e={tenta.opened ? "L2" : tenta.expanded ? "L1b" : end || btmStage !== "collapsed" ? "L1b" : "0"}
+								{/*<TentaItemsBackfill />*/}
+
+								<Focuser
+									ref={tenta.ffRef}
+									name={`pile-row-body#${id}`}
+									padding={tenta.collapsed ? -2 : 0}
+									listener={tenta}
 								>
 
-
-									<Focuser.Caret
-										use={usePileRowCaretProps}
-									//color={props.start ? "green" : props.end ? "red" : undefined }
-									/>
-
-									{parts[0]}
-
-								</Pane.Row>
-
-							</Focuser>
-
-							{parts[1] &&
-
-								<Focuser ref={tenta.itemsFfRef} ghost>
-
-									<Pane.Col
+									<Pane.Row
 										start end
-										expanded={tenta.opened}
-										wrapperCls="py24 pl60 pr48"
-
+										bg={tenta.opened ? "4" : tenta.expanded ? "3" : "2"}
+										gap1
+										px2
+										pt={tenta.opened ? 2 : tenta.expanded ? 2 : start ? 2 : 1}
+										pb={tenta.opened ? 2 : tenta.expanded ? 2 : end ? 2 : btmStage !== "collapsed" ? 1 : 0}
+										e={tenta.opened ? "L2" : tenta.expanded ? "L1b" : end || btmStage !== "collapsed" ? "L1b" : "0"}
 									>
 
-										{parts[1]}
-									</Pane.Col>
+
+										<Focuser.Caret
+											use={usePileRowCaretProps}
+										//color={props.start ? "green" : props.end ? "red" : undefined }
+										/>
+
+										{parts[0]}
+
+									</Pane.Row>
 
 								</Focuser>
-							}
 
-						</Pane.Col>
+								{parts[1] &&
 
-					</Focuser>
+									<GlobalState name="items">
 
-				</Div>
 
-			</Tenta.Placeholder.NoCollector>
+										<Focuser ref={tenta.itemsFfRef} ghost>
 
-		</Tenta.Phase.Provider>
+											<Pane.Col
+												start end
+												expanded={tenta.opened}
+												wrapperCls="py24 pl60 pr48"
+
+											>
+
+												{parts[1]}
+											</Pane.Col>
+
+										</Focuser>
+
+									</GlobalState>
+								}
+
+							</Pane.Col>
+
+						</Focuser>
+
+					</Div>
+
+
+				</Tenta.Placeholder.NoCollector>
+
+			</Tenta.Phase.Provider>
+
+		</GlobalState>
 
 	);
 

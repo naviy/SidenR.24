@@ -7,6 +7,15 @@ import type { TentaPhaser } from "./TentaPhaser";
 
 
 
+
+
+//===
+
+
+
+
+
+
 export module TentaPlaceholder
 {
 
@@ -65,7 +74,7 @@ export module TentaPlaceholder
 
 
 
-	interface GlobalState extends GlobalState_
+	export interface GlobalState extends GlobalState_
 	{
 		stage?: TentaStage;
 	}
@@ -121,10 +130,17 @@ export module TentaPlaceholder
 
 
 
-		useGlobalState(name: string)
+		useGlobalState(name: string): this;
+		useGlobalState(state: GlobalState): this;
+
+		useGlobalState(arg0: string | GlobalState)
 		{
 
-			this.globalState = GlobalState_.use<GlobalState>(name);
+			this.globalState = (
+				typeof arg0 === "object" ? arg0 :
+					GlobalState_.use<GlobalState>(arg0)
+			);
+
 
 			this.resolveGlobalState();
 

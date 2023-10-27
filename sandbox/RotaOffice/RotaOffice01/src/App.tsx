@@ -1,18 +1,18 @@
 import { DesktopLayout } from "@app";
-import { $log, Div, HR, Text, VR } from "@libs";
+import { $log, Div, HR } from "@libs";
+import { Button } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useState, type ReactNode } from "react";
 import type { RouteObject } from "react-router-dom";
 import { Link, Outlet, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import NguIcon from "./@icons/ngu";
+import { GlobalState } from "./@libs/components/core/GlobalState";
 import { Page03 } from './page03';
 import { Page04 } from './page04';
-import ListItemIcon from "@mui/material/ListItemIcon";
-import { GlobalState } from "./@libs/components/core/GlobalState";
-import { Button } from "@mui/material";
 
 
 
@@ -69,7 +69,7 @@ function AppDesktop()
 
 	return (
 
-		<GlobalState.Root rootState={globalState}>
+		<GlobalState.Root rootState={globalState} compress>
 
 			<DesktopLayout>
 
