@@ -130,7 +130,7 @@ function BigLogo()
 
 function SmallLogo()
 {
-	return <Div ml8 vcenter >
+	return <Div ml8 vcenter>
 		<NguIcon sx={{
 			fontSize: 48,
 			filter: "drop-shadow(0px 0px 8px rgba(241, 235, 211, 0.4))",

@@ -137,6 +137,7 @@ export module GlobalState
 	export function use<TState extends GlobalState = GlobalState>(arg0: GlobalState | string | TState, arg1?: string): TState
 	{
 
+		//(name: string)
 		if (typeof arg0 === "string")
 		{
 
@@ -153,6 +154,7 @@ export module GlobalState
 		}
 
 
+		// (parentState: GlobalState, name: string)
 		if (typeof arg1 === "string")
 		{
 			return node<TState>(arg0, arg1)
@@ -160,6 +162,7 @@ export module GlobalState
 		}
 
 
+		// (state: GlobalState)
 		return arg0 as TState;
 
 	}
