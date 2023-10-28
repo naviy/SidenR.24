@@ -44,14 +44,14 @@ export function RouteChildren<TRoute extends RouteBehavior = RouteBehavior>({
 
 	return (
 
-		<GlobalState state={route.globalState}>
+		//<GlobalState state={route.globalState}>
 
 			<Route.Provider
 				route={route}
 				children={route.getChildren(children)}
 			/>
 
-		</GlobalState>
+		// </GlobalState>
 
 	);
 

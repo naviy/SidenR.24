@@ -17,7 +17,15 @@ import { TentaStage } from "./tentas/TentaStage";
 
 
 
-//export const Page03Route = Route.create()
+const pageRoute = Route.create({
+	key: "/page03",
+	title: "Page 03",
+	content: () => <Page03 />,
+});
+
+
+
+
 
 
 export function Page03()
@@ -42,6 +50,24 @@ export function Page03()
 	</>;
 
 }
+
+
+
+
+export module Page03
+{
+	export const route = pageRoute;
+}
+
+
+
+
+
+
+//===
+
+
+
 
 
 

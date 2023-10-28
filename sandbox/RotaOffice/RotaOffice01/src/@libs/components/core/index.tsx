@@ -6,5 +6,5 @@ export * from "./GlobalState";
 export * from "./MuiColor";
 export * from "./Repaintable";
 export * from "./SpaWaitingMask";
-export * from "./Text";
+export * from "./Txt";
 export * from "./primitives";

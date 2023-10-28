@@ -1,8 +1,8 @@
 import { DesktopLayout } from "@app";
-import { $log, Div, HR, Route } from "@libs";
+import { $log, Div, HR, Route, Txt } from "@libs";
 import { Button } from "@mui/material";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
+import ListItem, { type ListItemProps } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -26,14 +26,8 @@ import { Page04 } from './page04';
 
 
 let routes: ReactRouter.RouteObject[] = [{
-	path: "/",
+	path: "*",
 	element: <AppDesktop />,
-	children: [
-		{ index: true, element: <Page03 /> },
-		{ path: "/page03", element: <Page03 />, },
-		{ path: "/page04", element: <Page04 />, },
-		{ path: "*", element: <NoMatch /> },
-	],
 }];
 
 
@@ -70,6 +64,8 @@ function AppDesktop()
 	let router = Route.Router.useBehavior({
 
 		routes: [
+			Page03.route,
+			Page04.route,
 		],
 
 		activeKey: location.pathname,
@@ -86,18 +82,21 @@ function AppDesktop()
 
 			<Route.Router.Provider router={router}>
 
+
 				<DesktopLayout>
+
 
 					<DesktopLayout.Sider logo={<BigLogo />}>
 
 						<HR />
 
 						<List>
-							<MainMenuItem path="/" title="Home" divider />
-							<MainMenuItem path="/page03" title="Page03" />
-							<MainMenuItem path="/page04" title="Page04" />
+							<MainMenuItem route={Page03.route} />
+							<MainMenuItem route={Page04.route} />
 						</List>
+
 					</DesktopLayout.Sider>
+
 
 					<DesktopLayout.Container>
 
@@ -108,12 +107,15 @@ function AppDesktop()
 
 						<DesktopLayout.Main>
 							{/*<Route.Children route={router.activeRoute} />*/}
-							<ReactRouter.Outlet />
+							{/*<ReactRouter.Outlet />*/}
+							<RouteContent />
 						</DesktopLayout.Main>
 
 					</DesktopLayout.Container>
 
+
 				</DesktopLayout>
+
 
 			</Route.Router.Provider>
 
@@ -124,6 +126,18 @@ function AppDesktop()
 
 }
 
+
+
+function RouteContent()
+{
+
+	let activeRoute=Route.useActive();
+
+	let content = activeRoute?.content();
+
+	return content;
+
+}
 
 
 
@@ -168,54 +182,35 @@ function SmallLogo()
 
 
 
-function NoMatch()
-{
-	return (
-		<div>
-			<h2>It looks like you're lost...</h2>
-		</div>
-	);
-}
-
-
-
-function MainMenuItem(props: {
-	path: string;
-	icon?: ReactNode;
-	title?: ReactNode;
-	description?: ReactNode;
-	extra?: ReactNode;
-	divider?: boolean;
+function MainMenuItem({
+	route,
+	...props
+}: Omit<ListItemProps, 'children'> & {
+	route: Route.Behavior;
 })
 {
 
-	let l = ReactRouter.useLocation();
-	let navigate = ReactRouter.useNavigate();
-
-
-	function onClick()
-	{
-		navigate(props.path);
-	}
+	const icon = route.icon();
+	const title = route.title();
+	const description = route.description();
 
 
 	return (
 
-		<ListItem disablePadding divider={props.divider}>
+		<ListItem disablePadding {...props}>
 
-			<ListItemButton onClick={onClick} selected={props.path === l.pathname}>
+			<ListItemButton onClick={route.activate} selected={route.active}>
 
-				{props.icon ? <ListItemIcon children={props.icon} /> : null}
+				{icon ? <ListItemIcon children={icon} /> : null}
 
 				<ListItemText
-					primary={props.title || props.path}
-					secondary={props.description}
+					primary={<Txt.Button>{title}</Txt.Button>}
+					secondary={description}
 				/>
 
 			</ListItemButton>
 
 
-			{props.extra}
 
 
 		</ListItem>
@@ -223,3 +218,50 @@ function MainMenuItem(props: {
 	);
 
 }
+
+
+
+//function MainMenuItem(props: {
+//	path: string;
+//	icon?: ReactNode;
+//	title?: ReactNode;
+//	description?: ReactNode;
+//	extra?: ReactNode;
+//	divider?: boolean;
+//})
+//{
+
+//	let l = ReactRouter.useLocation();
+//	let navigate = ReactRouter.useNavigate();
+
+
+//	function onClick()
+//	{
+//		navigate(props.path);
+//	}
+
+
+//	return (
+
+//		<ListItem disablePadding divider={props.divider}>
+
+//			<ListItemButton onClick={onClick} selected={props.path === l.pathname}>
+
+//				{props.icon ? <ListItemIcon children={props.icon} /> : null}
+
+//				<ListItemText
+//					primary={props.title || props.path}
+//					secondary={props.description}
+//				/>
+
+//			</ListItemButton>
+
+
+//			{props.extra}
+
+
+//		</ListItem>
+
+//	);
+
+//}

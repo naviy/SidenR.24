@@ -15,7 +15,7 @@ import { styled } from "@mui/material/styles";
 
 
 
-export interface TextProps extends TypographyProps
+export interface TxtProps extends TypographyProps
 {
 
 	//component?: React.ElementType;
@@ -29,7 +29,7 @@ export interface TextProps extends TypographyProps
 
 
 
-export function Text({ divider, ...props }: TextProps)
+export function Txt({ divider, ...props }: TxtProps)
 {
 
 	let body = <Typography {...props} />;
@@ -37,7 +37,7 @@ export function Text({ divider, ...props }: TextProps)
 
 	if (divider)
 	{
-		body = <Text.Divider textAlign="left" children={body} />;
+		body = <Txt.Divider textAlign="left" children={body} />;
 	}
 
 
@@ -50,7 +50,7 @@ export function Text({ divider, ...props }: TextProps)
 
 
 
-export module Text
+export module Txt
 {
 
 
@@ -62,7 +62,7 @@ export module Text
 
 
 
-	function text(variant: TextProps['variant'], { divider, ...props }: TextProps)
+	function text(variant: TxtProps['variant'], { divider, ...props }: TxtProps)
 	{
 
 		let body = <Typography variant={variant} {...props} />;
@@ -83,79 +83,79 @@ export module Text
 
 
 
-	export function H1(props: TextProps)
+	export function H1(props: TxtProps)
 	{
 		return text('h1', props);
 	}
 
 
-	export function H2(props: TextProps)
+	export function H2(props: TxtProps)
 	{
 		return text('h2', props);
 	}
 
 
-	export function H3(props: TextProps)
+	export function H3(props: TxtProps)
 	{
 		return text('h3', props);
 	}
 
 
-	export function H4(props: TextProps)
+	export function H4(props: TxtProps)
 	{
 		return text('h4', props);
 	}
 
 
-	export function H5(props: TextProps)
+	export function H5(props: TxtProps)
 	{
 		return text('h5', props);
 	}
 
 
-	export function H6(props: TextProps)
+	export function H6(props: TxtProps)
 	{
 		return text('h6', props);
 	}
 
 
-	export function Subtitle1(props: TextProps)
+	export function Subtitle1(props: TxtProps)
 	{
 		return text('subtitle1', props);
 	}
 
 
-	export function Subtitle2(props: TextProps)
+	export function Subtitle2(props: TxtProps)
 	{
 		return text('subtitle2', props);
 	}
 
 
-	export function Body1(props: TextProps)
+	export function Body1(props: TxtProps)
 	{
 		return text('body1', props);
 	}
 
 
-	export function Body2(props: TextProps)
+	export function Body2(props: TxtProps)
 	{
 		return text('body2', props);
 	}
 
 
-	export function Button(props: TextProps)
+	export function Button(props: TxtProps)
 	{
 		return text('button', props);
 	}
 
 
-	export function Caption(props: TextProps)
+	export function Caption(props: TxtProps)
 	{
 		return text('caption', props);
 	}
 
 
-	export function Overline(props: TextProps)
+	export function Overline(props: TxtProps)
 	{
 		return text('overline', props);
 	}
@@ -172,7 +172,7 @@ export module Text
 
 
 
-	export function LI(props: TextProps)
+	export function LI(props: TxtProps)
 	{
 		return <Typography component="li" {...props} />;
 	}

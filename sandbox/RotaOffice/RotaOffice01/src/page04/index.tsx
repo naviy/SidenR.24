@@ -1,4 +1,24 @@
-import { Div, Focuser } from "../@libs";
+import { Div, Focuser, Route } from "@libs";
+
+
+
+
+
+
+//===
+
+
+
+
+
+
+const pageRoute = Route.create({
+	key: "/page04",
+	title: "Page 04",
+	content: () => <Page04 />,
+});
+
+
 
 
 
@@ -28,4 +48,12 @@ export function Page04()
 
 	);
 
+}
+
+
+
+
+export module Page04
+{
+	export const route = pageRoute;
 }

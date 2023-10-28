@@ -1,7 +1,8 @@
 import _ from "lodash";
-import { Repaintable, Values, useNew } from "../core";
+import { $log, Repaintable, Values, _$log, useNew } from "../core";
 import type { RouteBehavior } from "./RouteBehavior";
 import * as Route from "./Route";
+import { useEffect } from "react";
 
 
 
@@ -70,43 +71,41 @@ export class RouterBehavior extends Repaintable()
 
 	parentRoute: RouteBehavior | null = null;
 
-	//parentState!: RouteState | null;
-
 
 	routes: RouteBehavior[] = [];
-	private _routesIsChanged?: boolean;
+	#routesIsChanged?: boolean;
 
 
+	#routesByActivateTime?: RouteBehavior[];
 	get routesByActivateTime(): RouteBehavior[]
 	{
 
-		if (this._routesIsChanged || !this._routesByActivateTime)
+		if (this.#routesIsChanged || !this.#routesByActivateTime)
 		{
 			let minDate = new Date(-8640000000000000); //min date
-			this._routesByActivateTime = _.orderBy(this.routes, a => a.lastActivateTime || minDate, "desc");
+			this.#routesByActivateTime = _.orderBy(this.routes, a => a.lastActivateTime || minDate, "desc");
 		}
 
 
-		return this._routesByActivateTime;
+		return this.#routesByActivateTime;
 
 	}
-	private _routesByActivateTime?: RouteBehavior[];
 
 
-	private _activeRoute: RouteBehavior | null = null;
-	get activeRoute() { return this._activeRoute; }
+	#activeRoute: RouteBehavior | null = null;
+	get activeRoute() { return this.#activeRoute; }
 
 
-	private _activeKey?: string | null;
-	get activeKey(): string | null | undefined { return this._activeKey; }
+	#activeKey?: string | null;
+	get activeKey(): string | null | undefined { return this.#activeKey; }
 
 
-	private _priorKey?: string | null;
-	get priorKey(): string | null { return this._priorKey || null; }
+	#priorKey?: string | null;
+	get priorKey(): string | null { return this.#priorKey || null; }
 
 
-	private _defaultActiveKey?: string | null;
-	get defaultActiveKey() { return this._defaultActiveKey; }
+	#defaultActiveKey?: string | null;
+	get defaultActiveKey() { return this.#defaultActiveKey; }
 
 
 
@@ -120,9 +119,6 @@ export class RouterBehavior extends Repaintable()
 		Repaintable.use(this, cfg);
 
 
-		this.props = props || {};
-		
-
 		this.parentRoute = Route.use();
 
 
@@ -130,41 +126,24 @@ export class RouterBehavior extends Repaintable()
 			return this;
 
 
-		//if (props.ref)
-		//	props.ref.current = this;
-
-
-		if (props.routes !== undefined && !this.routes.length)
-		{
-
-			//$log("props.routes:", props.routes);
-			//$log("Values.many(props.routes):", Values.many(props.routes));
-
-			this.routes.push(...Values.many(props.routes) as any[]);
-
-			if (this._activeKey === undefined && props.activeKey === undefined)
-			{
-				this.setActiveKey(this.routes[0].key);
-				//$log("this._activeKey:", this._activeKey);
-			}
-
-		}
+		this.props = props || {};
 
 
 		if (props.activeKey !== undefined)
 		{
-
-			let activeKey = typeof props.activeKey === "function" ? props.activeKey(this) : props.activeKey;
-
-			this.setActiveKey(activeKey);
-
+			this.#activeKey = typeof props.activeKey === "function" ? props.activeKey(this) : props.activeKey;
 		}
 
 
 		if (props.defaultActiveKey !== undefined)
 		{
-			this._defaultActiveKey = props.defaultActiveKey;
+			this.#defaultActiveKey = props.defaultActiveKey;
 		}
+
+
+
+		this.#useRoutes(Values.many(props.routes));
+
 
 
 		return this;
@@ -177,26 +156,67 @@ export class RouterBehavior extends Repaintable()
 
 
 
-	register(route: RouteBehavior): boolean
+	#useRoutes(routes: (RouteBehavior | false | 0)[])
+	{
+
+		routes.forEach(a => a && this.#register(a));
+		_$log("routes:", routes);
+
+		useEffect(() =>
+			() => routes.forEach(a => a && this.#unregister(a))
+		);
+
+
+		if (this.#activeKey === undefined && this.routes.length)
+		{
+			this.#setActiveRoute(this.routes[0]);
+		}
+
+	}
+
+
+
+	#register(route: RouteBehavior): boolean
 	{
 
 		let result = this.routes.register(route);
 
 		if (result)
-			this._routesIsChanged = true;
+		{
+			route.registred(this);
+			this.#routesIsChanged = true;
+		}
+
+
+		if (this.activeKey !== undefined)
+		{
+			if (route.key === this.activeKey)
+			{
+				this.#setActiveRoute(route);
+			}
+		}
+
+		else if (!this.activeRoute && this.defaultActiveKey !== undefined)
+		{
+			if (route.key === this.defaultActiveKey)
+			{
+				this.#setActiveRoute(route);
+			}
+		}
+
 
 		return result;
 
 	}
 
 
-	unregister(route: RouteBehavior): boolean
+	#unregister(route: RouteBehavior): boolean
 	{
 
 		let result = this.routes.remove(route);
 
 		if (result)
-			this._routesIsChanged = true;
+			this.#routesIsChanged = true;
 
 		return result;
 
@@ -229,13 +249,13 @@ export class RouterBehavior extends Repaintable()
 	dir(): number
 	{
 
-		if (!this._activeRoute || !this._priorKey)
+		if (!this.#activeRoute || !this.#priorKey)
 			return 0;
 
 
-		let activeIndex = this.routes.indexOf(this._activeRoute);
+		let activeIndex = this.routes.indexOf(this.#activeRoute);
 
-		let priorIndex = this.indexOfKey(this._priorKey);
+		let priorIndex = this.indexOfKey(this.#priorKey);
 
 
 		if (priorIndex == null)
@@ -300,7 +320,7 @@ export class RouterBehavior extends Repaintable()
 
 	activeIndex()
 	{
-		return this.indexOfKey(this._activeKey);
+		return this.indexOfKey(this.#activeKey);
 	}
 
 
@@ -308,7 +328,12 @@ export class RouterBehavior extends Repaintable()
 	async activate(route: RouteBehavior | null): Promise<boolean>
 	{
 
+		$log("activate "+ route);
+
 		route = route || null;
+
+		_$log("route:", route);
+		_$log("routes:", this.routes)
 
 
 		let activeRoute = this.activeRoute;
@@ -318,7 +343,9 @@ export class RouterBehavior extends Repaintable()
 
 
 		if (route && this.routes.indexOf(route) < 0)
+		{
 			throw new Error(`Can"t Find route#${route.iid} in routes`);
+		}
 
 
 		//if (activeRoute?.onDeactivate && await activeRoute.onDeactivate() === false)
@@ -342,10 +369,10 @@ export class RouterBehavior extends Repaintable()
 			}
 
 		}
-		
 
-		this.setActiveRoute(route);
-		
+
+		this.#setActiveRoute(route);
+
 
 		if (!this.parentRoute?.activate())
 		{
@@ -359,38 +386,38 @@ export class RouterBehavior extends Repaintable()
 
 
 
-	private setActiveKey(value: string | null | undefined)
+	#setActiveKey(value: string | null | undefined)
 	{
 
-		if (this._activeKey === value)
+		if (this.#activeKey === value)
 			return;
 
 
-		this._priorKey = this._activeKey;
-		this._activeKey = value;
+		this.#priorKey = this.#activeKey;
+		this.#activeKey = value;
 
 
-		if (this._activeRoute && this._activeRoute.key !== value)
+		if (this.#activeRoute && this.#activeRoute.key !== value)
 		{
-			this._activeRoute = null;
+			this.#activeRoute = null;
 		}
 
 	}
 
 
 
-	setActiveRoute(value: RouteBehavior | null)
+	#setActiveRoute(value: RouteBehavior | null)
 	{
 
-		if (this._activeRoute === value)
+		if (this.#activeRoute === value)
 			return;
 
 
-		this._routesIsChanged = true;
+		this.#routesIsChanged = true;
 
-		this.setActiveKey(value?.key);
+		this.#setActiveKey(value?.key);
 
-		this._activeRoute = value;
+		this.#activeRoute = value;
 
 		value?.activated();
 

@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react';
-import { GlobalState } from "../core";
+import { GlobalState, Values } from "../core";
 import type { RouteChildren } from "./RouteChildren";
 import type { RouterBehavior } from "./RouterBehavior";
 import { Router } from "./Router";
@@ -26,11 +26,11 @@ export interface RouteBehaviorProps
 	onActivated?: () => void;
 	//onDeactivate?: () => Promise<boolean>;
 
-	icon?: React.ReactElement | undefined | ((route: RouteBehavior) => React.ReactElement | undefined);
-	title?: ReactNode | undefined | ((route: RouteBehavior) => ReactNode);
-	description?: ReactNode | undefined | ((route: RouteBehavior) => ReactNode);
+	icon?: React.ReactNode | ((route: RouteBehavior) => ReactNode);
+	title?: ReactNode | ((route: RouteBehavior) => ReactNode);
+	description?: ReactNode | ((route: RouteBehavior) => ReactNode);
 
-	content?: (route: RouteBehavior) => ReactNode;
+	content?: ReactNode | ((route: RouteBehavior) => ReactNode);
 
 
 }
@@ -67,14 +67,13 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 	get key(): string { return this.props.key; }
 
+	#router: RouterBehavior | null = null;
 
-	private _router: RouterBehavior | null = null;
-
-	get active(): boolean { return this._router?.activeRoute === this; }
+	get active(): boolean { return this.#router?.activeRoute === this; }
 
 	index(): number | null
 	{
-		let i = this._router?.routes.indexOf(this);
+		let i = this.#router?.routes.indexOf(this);
 		return i == null || i < 0 ? null : i;
 	}
 
@@ -82,7 +81,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 	lastActivateTime?: Date;
 
 
-	globalState?: GlobalState;
+	//globalState?: GlobalState;
 
 
 
@@ -96,45 +95,48 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 	}
 
 
-
-	use(props?: { defaultActive?: boolean; })
+	registred(router: RouterBehavior)
 	{
-
-		let router = this._router = Router.use();
-
-
-		this.globalState = GlobalState.use(this.key);
-
-
-
-		let registred = this._router?.register(this);
-
-		useEffect(
-			() => () => { registred && this._router?.unregister(this); },
-			[]
-		);
-
-
-		if (router && router.activeKey !== undefined)
-		{
-			if (this.key === router.activeKey)
-			{
-				router.setActiveRoute(this);
-			}
-		}
-
-		else if (router && !router.activeRoute && (props?.defaultActive || router.defaultActiveKey !== undefined))
-		{
-			if (props?.defaultActive || this.key === router.defaultActiveKey)
-			{
-				router.setActiveRoute(this);
-			}
-		}
-
-
-		return this;
-
+		this.#router=router;
 	}
+
+	//use(props?: { defaultActive?: boolean; })
+	//{
+
+	//	let router = this._router = Router.use();
+
+
+	//	//this.globalState = GlobalState.use(this.key);
+
+
+	//	let registred = this._router?.register(this);
+
+	//	useEffect(
+	//		() => () => { registred && this._router?.unregister(this); },
+	//		[]
+	//	);
+
+
+	//	if (router && router.activeKey !== undefined)
+	//	{
+	//		if (this.key === router.activeKey)
+	//		{
+	//			router.setActiveRoute(this);
+	//		}
+	//	}
+
+	//	else if (router && !router.activeRoute && (props?.defaultActive || router.defaultActiveKey !== undefined))
+	//	{
+	//		if (props?.defaultActive || this.key === router.defaultActiveKey)
+	//		{
+	//			router.setActiveRoute(this);
+	//		}
+	//	}
+
+
+	//	return this;
+
+	//}
 
 
 
@@ -144,7 +146,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 	activate = async (): Promise<boolean> =>
 	{
-		return await this._router?.activate(this) || false;
+		return await this.#router?.activate(this) || false;
 	}
 
 
@@ -190,7 +192,10 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 	content(): ReactNode | undefined
 	{
-		return this.props.content?.(this) || undefined;
+		return (typeof this.props.content === 'function'
+			? (this.props.content as any)?.(this) || undefined
+			: this.props.content || undefined
+		);
 	}
 
 
