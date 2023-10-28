@@ -20,7 +20,7 @@ export interface RouteBehaviorProps
 {
 
 	key: string;
-	stateKey?: string;
+	//stateKey?: string | null;
 
 	onActivating?: () => Promise<boolean | void | undefined> | boolean | void | undefined;
 	onActivated?: () => void;
@@ -40,23 +40,7 @@ export interface RouteBehaviorProps
 
 
 
-//export interface IRouteBehavior
-//{
-
-//	icon(): React.ReactElement | undefined;
-//	title(): ReactNode;
-//	description(): ReactNode;
-//	content(): ReactNode;
-
-//}
-
-
-
-
-
-
 export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProps>
-	//implements IRouteBehavior
 {
 
 	//---
@@ -98,7 +82,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 	lastActivateTime?: Date;
 
 
-	globalState!: GlobalState;
+	globalState?: GlobalState;
 
 
 
@@ -126,10 +110,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 		let registred = this._router?.register(this);
 
 		useEffect(
-			() =>
-			{
-				return () => { registred && this._router?.unregister(this); };
-			},
+			() => () => { registred && this._router?.unregister(this); },
 			[]
 		);
 
@@ -215,7 +196,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 
 	getChildren<TRoute extends RouteBehavior = RouteBehavior>(
-		children: RouteChildren<TRoute>,
+		children?: RouteChildren<TRoute>,
 		//state?: GlobalState,
 	): ReactNode
 	{

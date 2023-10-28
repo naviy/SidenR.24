@@ -35,7 +35,7 @@ export function useRouterBehavior(props?: RouterBehaviorProps): RouterBehavior
 export interface RouterBehaviorProps
 {
 
-	ref?: React.MutableRefObject<RouterBehavior>,
+	//ref?: React.MutableRefObject<RouterBehavior>,
 
 	routes?: Values.Many<RouteBehavior | false | 0>,
 
@@ -130,8 +130,8 @@ export class RouterBehavior extends Repaintable()
 			return this;
 
 
-		if (props.ref)
-			props.ref.current = this;
+		//if (props.ref)
+		//	props.ref.current = this;
 
 
 		if (props.routes !== undefined && !this.routes.length)

@@ -33,7 +33,7 @@ export function RouteChildren<TRoute extends RouteBehavior = RouteBehavior>({
 }: {
 
 	route: TRoute | null | undefined;
-	children: RouteChildren<TRoute>;
+	children?: RouteChildren<TRoute>;
 
 }): JSX.Element | null
 {

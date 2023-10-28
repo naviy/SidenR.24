@@ -1,5 +1,5 @@
 import { DesktopLayout } from "@app";
-import { $log, Div, HR } from "@libs";
+import { $log, Div, HR, Route } from "@libs";
 import { Button } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -7,8 +7,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useState, type ReactNode } from "react";
-import type { RouteObject } from "react-router-dom";
-import { Link, Outlet, useLocation, useNavigate, useRoutes } from "react-router-dom";
+import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
 import { Page03 } from './page03';
@@ -26,18 +25,16 @@ import { Page04 } from './page04';
 
 
 
-let routes: RouteObject[] = [
-	{
-		path: "/",
-		element: <AppDesktop />,
-		children: [
-			{ index: true, element: <Page03 /> },
-			{ path: "/page03", element: <Page03 />, },
-			{ path: "/page04", element: <Page04 />, },
-			{ path: "*", element: <NoMatch /> },
-		],
-	},
-];
+let routes: ReactRouter.RouteObject[] = [{
+	path: "/",
+	element: <AppDesktop />,
+	children: [
+		{ index: true, element: <Page03 /> },
+		{ path: "/page03", element: <Page03 />, },
+		{ path: "/page04", element: <Page04 />, },
+		{ path: "*", element: <NoMatch /> },
+	],
+}];
 
 
 
@@ -45,7 +42,7 @@ let routes: RouteObject[] = [
 export function App()
 {
 
-	let element = useRoutes(routes);
+	let element = ReactRouter.useRoutes(routes);
 
 
 	return <>
@@ -62,47 +59,69 @@ export function App()
 function AppDesktop()
 {
 
-	let location = useLocation();
 
 	let [globalState] = useState(() => ({}));
+
+
+	let location = ReactRouter.useLocation();
+	let navigate = ReactRouter.useNavigate();
+
+
+	let router = Route.Router.useBehavior({
+
+		routes: [
+		],
+
+		activeKey: location.pathname,
+
+		onActivating: (route) => navigate(route?.key || "/"),
+
+	});
+
 
 
 	return (
 
 		<GlobalState.Root rootState={globalState} compress>
 
-			<DesktopLayout>
+			<Route.Router.Provider router={router}>
 
-				<DesktopLayout.Sider logo={<BigLogo />}>
+				<DesktopLayout>
 
-					<HR />
+					<DesktopLayout.Sider logo={<BigLogo />}>
 
-					<List>
-						<MainMenuItem path="/" title="Home" divider />
-						<MainMenuItem path="/page03" title="Page03" />
-						<MainMenuItem path="/page04" title="Page04" />
-					</List>
-				</DesktopLayout.Sider>
+						<HR />
 
-				<DesktopLayout.Container>
+						<List>
+							<MainMenuItem path="/" title="Home" divider />
+							<MainMenuItem path="/page03" title="Page03" />
+							<MainMenuItem path="/page04" title="Page04" />
+						</List>
+					</DesktopLayout.Sider>
 
-					<DesktopLayout.Header logo={<SmallLogo />}>
-						<div>location: {location.pathname}</div>
-						<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
-					</DesktopLayout.Header>
+					<DesktopLayout.Container>
 
-					<DesktopLayout.Main>
-						<Outlet />
-					</DesktopLayout.Main>
+						<DesktopLayout.Header logo={<SmallLogo />}>
+							<div>location: {location.pathname}</div>
+							<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+						</DesktopLayout.Header>
 
-				</DesktopLayout.Container>
+						<DesktopLayout.Main>
+							{/*<Route.Children route={router.activeRoute} />*/}
+							<ReactRouter.Outlet />
+						</DesktopLayout.Main>
 
-			</DesktopLayout>
+					</DesktopLayout.Container>
+
+				</DesktopLayout>
+
+			</Route.Router.Provider>
 
 		</GlobalState.Root>
 
-
 	);
+
+
 }
 
 
@@ -110,6 +129,7 @@ function AppDesktop()
 
 function BigLogo()
 {
+
 	return <Div mt24 mb16 flex1 vflex textCenter>
 		<Div>
 			<NguIcon sx={{
@@ -130,6 +150,7 @@ function BigLogo()
 
 function SmallLogo()
 {
+
 	return <Div ml8 vcenter>
 		<NguIcon sx={{
 			fontSize: 48,
@@ -152,9 +173,6 @@ function NoMatch()
 	return (
 		<div>
 			<h2>It looks like you're lost...</h2>
-			<p>
-				<Link to="/">Go to the home page</Link>
-			</p>
 		</div>
 	);
 }
@@ -171,8 +189,8 @@ function MainMenuItem(props: {
 })
 {
 
-	let l = useLocation();
-	let navigate = useNavigate();
+	let l = ReactRouter.useLocation();
+	let navigate = ReactRouter.useNavigate();
 
 
 	function onClick()

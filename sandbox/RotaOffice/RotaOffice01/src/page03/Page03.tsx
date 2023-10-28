@@ -1,4 +1,4 @@
-import { $defaultAnimationDurationMs, Div, Expander, Focuser, GlobalState, Pane, bgColors, useNew } from '@libs';
+import { $defaultAnimationDurationMs, Div, Expander, Focuser, GlobalState, Pane, Route, bgColors, useNew } from '@libs';
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import React, { useReducer, type ReactNode } from "react";
@@ -9,6 +9,15 @@ import { TentaStage } from "./tentas/TentaStage";
 
 
 
+
+//===
+
+
+
+
+
+
+//export const Page03Route = Route.create()
 
 
 export function Page03()

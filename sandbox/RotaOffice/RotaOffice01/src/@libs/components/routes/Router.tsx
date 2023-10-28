@@ -21,9 +21,7 @@ export function Router(props: {
 	rootState?: GlobalState;
 	compressState?: boolean;
 
-	forceUpdate?: () => void;
-
-	children: Values.One<ReactNode>;
+	children: ReactNode;
 
 })
 {
@@ -34,9 +32,9 @@ export function Router(props: {
 	}
 
 
-	let body: ReactNode = <Router.Context.Provider
-		value={props.router}
-		children={Values.one(props.children)}
+	let body: ReactNode = <Router.Provider
+		router={props.router}
+		children={props.children}
 	/>;
 
 
@@ -71,7 +69,7 @@ export module Router
 
 
 
-	export const Context = createContext<RouterBehavior | null>(null);
+	export const Context = createContext<{ router: RouterBehavior | null }>({ router: null });
 
 
 
@@ -79,8 +77,21 @@ export module Router
 	export function use(): RouterBehavior | null
 	{
 
-		return useContext(Context);
+		return useContext(Context).router;
 
+	}
+
+
+
+	export function Provider(props: {
+		router: RouterBehavior,
+		children: ReactNode;
+	})
+	{
+		return <Router.Context.Provider
+			value={{ router: props.router }}
+			children={props.children}
+		/>;
 	}
 
 
