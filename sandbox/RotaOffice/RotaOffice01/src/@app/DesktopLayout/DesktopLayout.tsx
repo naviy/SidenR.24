@@ -4,6 +4,7 @@ import { DesktopContainer } from "./DesktopContainer";
 import { DesktopHeader } from "./DesktopHeader";
 import { DesktopMain } from "./DesktopMain";
 import { DesktopSider } from "./DesktopSider";
+import { DesktopContent } from "./DesktopContent";
 
 
 
@@ -64,6 +65,7 @@ export module DesktopLayout
 	export const Container = DesktopContainer;
 	export const Header = DesktopHeader;
 	export const Main = DesktopMain;
+	export const Content = DesktopContent;
 
 
 

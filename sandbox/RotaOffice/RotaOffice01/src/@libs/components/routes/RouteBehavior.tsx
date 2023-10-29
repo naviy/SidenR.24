@@ -1,8 +1,5 @@
-import { useEffect, type ReactNode } from 'react';
-import { GlobalState, Values } from "../core";
-import type { RouteChildren } from "./RouteChildren";
+import { type ReactNode } from 'react';
 import type { RouterBehavior } from "./RouterBehavior";
-import { Router } from "./Router";
 
 
 
@@ -196,34 +193,6 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 			? (this.props.content as any)?.(this) || undefined
 			: this.props.content || undefined
 		);
-	}
-
-
-
-	getChildren<TRoute extends RouteBehavior = RouteBehavior>(
-		children?: RouteChildren<TRoute>,
-		//state?: GlobalState,
-	): ReactNode
-	{
-
-		if (children === undefined)
-			return this.content();
-
-
-		if (children === null)
-			return null;
-
-
-		if (typeof children === 'function')
-			return (children as any)(this);
-
-
-		if (typeof children === 'string' && (this as any)[children])
-			return (this as any)[children]();
-
-
-		return children as ReactNode;
-
 	}
 
 

@@ -1,12 +1,12 @@
 import { DesktopLayout } from "@app";
-import { $log, Div, HR, Route, Txt } from "@libs";
+import { $log, Div, Focuser, HR, Route, Txt } from "@libs";
 import { Button } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem, { type ListItemProps } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
@@ -53,7 +53,6 @@ export function App()
 function AppDesktop()
 {
 
-
 	let [globalState] = useState(() => ({}));
 
 
@@ -61,18 +60,22 @@ function AppDesktop()
 	let navigate = ReactRouter.useNavigate();
 
 
-	let router = Route.Router.useBehavior({
+	let router = Route.Router.useNew({
 
 		routes: [
 			Page03.route,
 			Page04.route,
 		],
 
+		defaultActiveKey: Page03.route.key,
 		activeKey: location.pathname,
 
-		onActivating: (route) => navigate(route?.key || "/"),
+		onActivating: (route) => { navigate(route?.key || "/") },
 
 	});
+
+
+	let route = router.activeRoute;
 
 
 
@@ -100,16 +103,39 @@ function AppDesktop()
 
 					<DesktopLayout.Container>
 
+
 						<DesktopLayout.Header logo={<SmallLogo />}>
-							<div>location: {location.pathname}</div>
+
+							<Route.Fader router={router} flex flex1>
+
+								<DesktopLayout.Header.Icon>
+									<Route.Icon />
+								</DesktopLayout.Header.Icon>
+
+								<DesktopLayout.Header.Title>
+									<Route.Title />
+								</DesktopLayout.Header.Title>
+
+							</Route.Fader>
+
+
 							<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+
 						</DesktopLayout.Header>
 
+
 						<DesktopLayout.Main>
-							{/*<Route.Children route={router.activeRoute} />*/}
-							{/*<ReactRouter.Outlet />*/}
-							<RouteContent />
+
+							<Route.Fader router={router} fill>
+
+								<DesktopLayout.Content>
+									<Route.Content />
+								</DesktopLayout.Content>
+
+							</Route.Fader>
+
 						</DesktopLayout.Main>
+
 
 					</DesktopLayout.Container>
 
@@ -126,18 +152,6 @@ function AppDesktop()
 
 }
 
-
-
-function RouteContent()
-{
-
-	let activeRoute=Route.useActive();
-
-	let content = activeRoute?.content();
-
-	return content;
-
-}
 
 
 
@@ -210,58 +224,8 @@ function MainMenuItem({
 
 			</ListItemButton>
 
-
-
-
 		</ListItem>
 
 	);
 
 }
-
-
-
-//function MainMenuItem(props: {
-//	path: string;
-//	icon?: ReactNode;
-//	title?: ReactNode;
-//	description?: ReactNode;
-//	extra?: ReactNode;
-//	divider?: boolean;
-//})
-//{
-
-//	let l = ReactRouter.useLocation();
-//	let navigate = ReactRouter.useNavigate();
-
-
-//	function onClick()
-//	{
-//		navigate(props.path);
-//	}
-
-
-//	return (
-
-//		<ListItem disablePadding divider={props.divider}>
-
-//			<ListItemButton onClick={onClick} selected={props.path === l.pathname}>
-
-//				{props.icon ? <ListItemIcon children={props.icon} /> : null}
-
-//				<ListItemText
-//					primary={props.title || props.path}
-//					secondary={props.description}
-//				/>
-
-//			</ListItemButton>
-
-
-//			{props.extra}
-
-
-//		</ListItem>
-
-//	);
-
-//}

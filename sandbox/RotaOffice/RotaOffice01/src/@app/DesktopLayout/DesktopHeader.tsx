@@ -2,7 +2,7 @@ import { Div, VR } from "@libs";
 import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import { styled, type Theme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import type { ReactNode } from 'react';
 import { AppThemes } from "../AppTheme";
 import { DesktopIconButton } from "./DesktopButtons";
@@ -103,6 +103,47 @@ export function DesktopHeader(props: {
 
 
 
+export module DesktopHeader
+{
+
+	export const Icon = styled(Div)({
+
+
+		display: "flex",
+		alignItems: "center",
+		minWidth: 64,
+
+		fontSize: 40,
+
+		">svg": {
+			fontSize: "1em",
+		},
+
+	});
+
+	export const Title = styled(Div)({
+
+
+		display: "flex",
+		alignItems: "center",
+
+		margin: 0,
+
+		fontFamily: "Roboto,Helvetica,Arial,sans-serif",
+		fontWeight: 300,
+		fontSize: 40,
+
+		lineHeight: "64px",
+		letterSpacing: "-0.00833em",
+
+		padding: "0 24px 0 0",
+
+	});
+
+}
+
+
+
 //---
 
 
@@ -138,6 +179,7 @@ export const HeaderRoot1 = styled(
 }>(
 	({ theme, siderWidth }) =>
 	({
+
 		left: siderWidth,
 
 		minHeight: 64,
@@ -155,13 +197,14 @@ export const HeaderRoot1 = styled(
 
 
 
-const TopBar = styled(AppBar)
-	({
-		'& .MuiToolbar-root': {
-			alignItems: 'stretch',
-			paddingLeft: 0,
-		}
-	});
+const TopBar = styled(AppBar)({
+
+	'& .MuiToolbar-root': {
+		alignItems: 'stretch',
+		paddingLeft: 0,
+	}
+
+});
 
 
 

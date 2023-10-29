@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { $log, Repaintable, Values, _$log, useNew } from "../core";
-import type { RouteBehavior } from "./RouteBehavior";
-import * as Route from "./Route";
 import { useEffect } from "react";
+import { $log, Repaintable, Values, useNew } from "../core";
+import * as Route from "./Route";
+import type { RouteBehavior } from "./RouteBehavior";
 
 
 
@@ -46,7 +46,7 @@ export interface RouterBehaviorProps
 	activeKey?: string | null | ((router: RouterBehavior) => string | null | undefined),
 
 
-	onActivating?: (route: RouteBehavior | null) => Promise<string | null | undefined | void> | string | null | undefined | void;
+	onActivating?: (route: RouteBehavior | null) => Promise<string | boolean | null | undefined | void> | string | boolean | null | undefined | void;
 
 }
 
@@ -160,11 +160,14 @@ export class RouterBehavior extends Repaintable()
 	{
 
 		routes.forEach(a => a && this.#register(a));
-		_$log("routes:", routes);
+
 
 		useEffect(() =>
-			() => routes.forEach(a => a && this.#unregister(a))
-		);
+		{
+			routes.forEach(a => a && this.#register(a));
+
+			return () => routes.forEach(a => a && this.#unregister(a));
+		});
 
 
 		if (this.#activeKey === undefined && this.routes.length)
@@ -328,12 +331,7 @@ export class RouterBehavior extends Repaintable()
 	async activate(route: RouteBehavior | null): Promise<boolean>
 	{
 
-		$log("activate "+ route);
-
 		route = route || null;
-
-		_$log("route:", route);
-		_$log("routes:", this.routes)
 
 
 		let activeRoute = this.activeRoute;
@@ -351,7 +349,8 @@ export class RouterBehavior extends Repaintable()
 		//if (activeRoute?.onDeactivate && await activeRoute.onDeactivate() === false)
 		//	return false;
 
-		if (route?.props.onActivating && await route!.props.onActivating() !== false)
+
+		if (route?.props.onActivating && await route.props.onActivating() !== false)
 		{
 			return true;
 		}
@@ -363,9 +362,14 @@ export class RouterBehavior extends Repaintable()
 			let newRouteKey = await this.props.onActivating(route);
 
 
-			if (newRouteKey || newRouteKey === null)
+			if (typeof newRouteKey === "string" || newRouteKey === null)
 			{
 				route = this.routeByKey(newRouteKey);
+			}
+
+			else if (newRouteKey !== false)
+			{
+				return true;
 			}
 
 		}
@@ -376,6 +380,7 @@ export class RouterBehavior extends Repaintable()
 
 		if (!this.parentRoute?.activate())
 		{
+			$log("Router.repaint() " + this)
 			this.repaint();
 		}
 

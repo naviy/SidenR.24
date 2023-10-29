@@ -33,21 +33,19 @@ export function DesktopMain(props: {
 
 		<AppThemes.Default>
 
-			<Main siderIsOpened={siderIsOpened}>
+				<Main siderIsOpened={siderIsOpened}>
 
-				<Focuser cursor ghost click="unfocus">
 
-					<Div relative>
-						
-						{props.children || null}
+					{/*<Div relative>*/}
 
-						<Box sx={{ height: "80vh" }} />
+					{props.children}
 
-					</Div>
+					{/*<Box sx={{ height: "80vh" }} />*/}
 
-				</Focuser>
+					{/*</Div>*/}
 
-			</Main>
+
+				</Main>
 
 		</AppThemes.Default>
 
@@ -74,7 +72,7 @@ const Main = styled(
 
 		position: "relative",
 
-		overflow: "auto scroll",
+		//overflow: "auto scroll",
 
 		backgroundColor: theme.palette.mode === "light"
 			? "#f3f6f9"

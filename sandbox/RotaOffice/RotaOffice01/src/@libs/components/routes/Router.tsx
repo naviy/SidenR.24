@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from 'react';
+import { Route } from ".";
+import { GlobalState, Values, useNew as useNew_ } from "../core";
 import { RouterBehavior, type RouterBehaviorProps } from "./RouterBehavior";
-import { GlobalState, Values, useNew } from "../core";
 
 
 
@@ -88,17 +89,20 @@ export module Router
 		children: ReactNode;
 	})
 	{
-		return <Router.Context.Provider
-			value={{ router: props.router }}
-			children={props.children}
-		/>;
+		return (
+			<Context.Provider value={{ router: props.router }}>
+				<Route.Provider route={null}>
+					{props.children}
+				</Route.Provider>
+			</Context.Provider>
+		);
 	}
 
 
 
-	export function useBehavior(props?: RouterBehaviorProps): RouterBehavior
+	export function useNew(props?: RouterBehaviorProps): RouterBehavior
 	{
-		return useNew(RouterBehavior).use(props);
+		return useNew_(RouterBehavior).use(props);
 	}
 
 

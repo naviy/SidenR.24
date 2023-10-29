@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import React, { useReducer, type ReactNode } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
+import FestivalIcon from '@mui/icons-material/Festival';
 
 
 
@@ -19,6 +20,7 @@ import { TentaStage } from "./tentas/TentaStage";
 
 const pageRoute = Route.create({
 	key: "/page03",
+	icon: <FestivalIcon />,
 	title: "Page 03",
 	content: () => <Page03 />,
 });
@@ -82,17 +84,17 @@ function Rows05({ root }: { root?: boolean })
 			<Tenta.Placeholder.Collector
 				globalState="rows05"
 				root={root}
-				//placeholders={[1, 2, 3, 4, 5, 6, 7]}
-				placeholders={[1, 2, 3]}
+				placeholders={[1, 2, 3, 4, 5, 6, 7]}
+				//placeholders={[1, 2, 3]}
 			>
 
 				<Row05 id={1} />
 				<Row05 id={2} />
 				<Row05 id={3} />
-				{/*<Row05 id={4} />*/}
-				{/*<Row05 id={5} />*/}
-				{/*<Row05 id={6} />*/}
-				{/*<Row05 id={7} />*/}
+				<Row05 id={4} />
+				<Row05 id={5} />
+				<Row05 id={6} />
+				<Row05 id={7} />
 
 			</Tenta.Placeholder.Collector>
 
