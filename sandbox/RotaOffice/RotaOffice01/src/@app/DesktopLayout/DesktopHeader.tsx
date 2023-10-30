@@ -38,53 +38,41 @@ export function DesktopHeader(props: {
 
 	return (
 
-		<AppThemes.Default>
+		<AppThemes.Navigation>
 
-			<HeaderRoot>
+			<HeaderRoot1
+				siderWidth={siderIsOpened ? siderWidth : 0}
+			>
 
-				<AppThemes.Navigation>
+				<TopBar>
 
-					{/*<HideOnScroll>*/}
+					<Toolbar>
 
-					<HeaderRoot1
-						siderWidth={siderIsOpened ? siderWidth : 0}
-					>
+						<HeaderLogo siderWidth={siderWidth}>
 
-						<TopBar>
-
-							<Toolbar>
-
-								<HeaderLogo siderWidth={siderWidth}>
-
-									<DesktopIconButton onClick={toggleClick} flexGrow>
-										<MenuIcon fontSize="large" />
-										<VR />
-										<Div pr1 />
-										{props.logo || null}
-										<Div pr3 />
-									</DesktopIconButton>
-
-								</HeaderLogo>
-
+							<DesktopIconButton onClick={toggleClick} flexGrow>
+								<MenuIcon fontSize="large" />
 								<VR />
+								<Div pr1 />
+								{props.logo || null}
+								<Div pr3 />
+							</DesktopIconButton>
 
-								{props.children || null}
+						</HeaderLogo>
+
+						<VR />
+
+						{props.children || null}
 
 
-							</Toolbar>
+					</Toolbar>
 
-						</TopBar>
+				</TopBar>
 
-					</HeaderRoot1>
+			</HeaderRoot1>
 
 
-					{/*</HideOnScroll>*/}
-
-				</AppThemes.Navigation>
-
-			</HeaderRoot>
-
-		</AppThemes.Default>
+		</AppThemes.Navigation>
 
 	);
 
@@ -153,11 +141,11 @@ export const HeaderRoot = styled('div')(
 	({ theme }) =>
 	({
 
-		backgroundColor: theme.palette.mode === 'light'
-			? theme.palette.grey[100]
-			: theme.palette.grey[900]
-		,
-		zIndex: 1,
+		//backgroundColor: theme.palette.mode === 'light'
+		//	? theme.palette.grey[100]
+		//	: theme.palette.grey[900]
+		//,
+		//zIndex: 1,
 	})
 );
 
@@ -202,7 +190,11 @@ const TopBar = styled(AppBar)({
 	'& .MuiToolbar-root': {
 		alignItems: 'stretch',
 		paddingLeft: 0,
-	}
+	},
+
+	backgroundImage: "unset",
+	boxShadow: "unset",
+	//zIndex: "unset",
 
 });
 

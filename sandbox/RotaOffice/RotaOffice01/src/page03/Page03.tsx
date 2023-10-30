@@ -19,7 +19,7 @@ import FestivalIcon from '@mui/icons-material/Festival';
 
 
 const pageRoute = Route.create({
-	key: "/page03",
+	key: "page03",
 	icon: <FestivalIcon />,
 	title: "Page 03",
 	content: () => <Page03 />,

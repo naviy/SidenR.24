@@ -1,5 +1,5 @@
 import { Focuser, VR } from "@libs";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Drawer from "@mui/material/Drawer";
 import { styled, type Theme } from "@mui/material/styles";
 import type { ReactNode } from "react";
@@ -85,8 +85,8 @@ export function DesktopSider(props: {
 
 
 const SiderSlide = styled(
-	'div',
-	{ shouldForwardProp: p => p !== 'open' && p !== 'width' }
+	"div",
+	{ shouldForwardProp: p => p !== "open" && p !== "width" }
 )<{
 
 	open: boolean;
@@ -97,7 +97,7 @@ const SiderSlide = styled(
 
 		width: props.open ? props.width : 0,
 
-		transition: 'width 225ms cubic-bezier(0, 0, 0.2, 1)',
+		transition: "width 225ms cubic-bezier(0, 0, 0.2, 1)",
 
 	})
 );
@@ -109,31 +109,34 @@ const SiderSlide = styled(
 
 const Sider = styled(
 	Drawer,
-	{ shouldForwardProp: p => p !== 'width' }
+	{ shouldForwardProp: p => p !== "width" }
 
 )<{
 
 	theme?: Theme;
 	width: number;
 
-}>(({ theme, width }) => ({
+}>(({ width }) => ({
 
 
 	width: width,
 
-	flexShrink: 0,
 
-	'& .MuiDrawer-paper': {
+	//">.MuiPaper-root": {
+	//	zIndex: 1,
+	//},
+
+	"& .MuiDrawer-paper": {
 
 		width: width,
-		boxSizing: 'border-box',
-		scrollbarWidth: 'thin',
+		boxSizing: "border-box",
+		scrollbarWidth: "thin",
 
-		'& > div': {
+		"& > div": {
 			flex: 1,
-			flexDirection: 'column',
-			display: 'flex',
-			background: theme.palette.action.hover,
+			flexDirection: "column",
+			display: "flex",
+			//background: theme.palette.action.hover,
 		},
 
 	},
@@ -143,20 +146,20 @@ const Sider = styled(
 
 
 
-const DesktopSiderHeader = styled('div')<{
+const DesktopSiderHeader = styled("div")<{
 
 	theme?: Theme;
 
 }>(
 	({ theme }) => ({
 
-		display: 'flex',
-		alignItems: 'stretch',
+		display: "flex",
+		alignItems: "stretch",
 
 		// necessary for content to be below app bar
 		...theme.mixins.toolbar,
 
-		justifyContent: 'flex-end',
+		justifyContent: "flex-end",
 
 	})
 );

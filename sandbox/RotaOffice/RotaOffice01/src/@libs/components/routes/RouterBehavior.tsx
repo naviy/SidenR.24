@@ -46,7 +46,7 @@ export interface RouterBehaviorProps
 	activeKey?: string | null | ((router: RouterBehavior) => string | null | undefined),
 
 
-	onActivating?: (route: RouteBehavior | null) => Promise<string | boolean | null | undefined | void> | string | boolean | null | undefined | void;
+	onActivating?: (route: RouteBehavior) => Promise<string | boolean | null | undefined | void> | string | boolean | null | undefined | void;
 
 }
 
@@ -356,7 +356,7 @@ export class RouterBehavior extends Repaintable()
 		}
 
 
-		if (this.props.onActivating)
+		if (route && this.props.onActivating)
 		{
 
 			let newRouteKey = await this.props.onActivating(route);

@@ -56,7 +56,8 @@ export const darkTheme = createTheme({
 		mode: 'dark',
 		background: {
 			//paper: "#1a200e",
-			paper: "#222b13",
+			//paper: "#222b13",
+			paper: "#2b3618",
 		},
 	},
 });
@@ -85,10 +86,9 @@ function AppDesktop()
 			Page04.route2,
 		],
 
-		defaultActiveKey: Page03.route.key,
-		activeKey: location.pathname,
+		activeKey: location.pathname.substring(1) || Page03.route.key,
 
-		onActivating: (route) => { navigate(route?.key || "/") },
+		onActivating: (route) => { navigate("/" + route.key) },
 
 	});
 
@@ -128,7 +128,7 @@ function AppDesktop()
 
 							<DesktopLayout.Header logo={<SmallLogo />}>
 
-								<Route.Slider router={router} flex flex1 vertical offset={32}>
+								<Route.Slider router={router} flex flex1 vertical offset={24} hidden>
 
 									<DesktopLayout.Header.Icon>
 										<Route.Icon />
@@ -148,7 +148,7 @@ function AppDesktop()
 
 							<DesktopLayout.Main>
 
-								<Route.Slider router={router} fill vertical offset={128}>
+								<Route.Slider router={router} fill vertical offset={64}>
 
 									<DesktopLayout.Content>
 										<Route.Content />

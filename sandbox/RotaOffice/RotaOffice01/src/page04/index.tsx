@@ -13,17 +13,17 @@ import { Div, Focuser, Route } from "@libs";
 
 
 const pageRoute = Route.create({
-	key: "/page04",
+	key: "page04",
 	title: "Page 04",
 	content: () => <Page04 />,
 });
 const page1Route = Route.create({
-	key: "/page04.1",
+	key: "page04.1",
 	title: "Page 04.1",
 	content: () => <Page04 />,
 });
 const page2Route = Route.create({
-	key: "/page04.2",
+	key: "page04.2",
 	title: "Page 04.2",
 	content: () => <Page04 />,
 });
