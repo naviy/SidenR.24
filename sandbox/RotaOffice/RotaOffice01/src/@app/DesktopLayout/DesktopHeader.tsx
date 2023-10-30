@@ -55,7 +55,7 @@ export function DesktopHeader(props: {
 								<VR />
 								<Div pr1 />
 								{props.logo || null}
-								<Div pr3 />
+								{/*<Div pr3 />*/}
 							</DesktopIconButton>
 
 						</HeaderLogo>

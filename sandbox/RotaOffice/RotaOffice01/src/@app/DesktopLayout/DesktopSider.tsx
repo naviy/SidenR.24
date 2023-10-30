@@ -52,7 +52,7 @@ export function DesktopSider(props: {
 									<VR />
 									<ChevronLeftIcon fontSize="large" />
 								</DesktopIconButton>
-								<VR />
+								{/*<VR />*/}
 
 							</DesktopSiderHeader>
 
@@ -122,9 +122,10 @@ const Sider = styled(
 	width: width,
 
 
-	//">.MuiPaper-root": {
-	//	zIndex: 1,
-	//},
+	">.MuiPaper-root": {
+		//zIndex: 1,
+		border: "unset",
+	},
 
 	"& .MuiDrawer-paper": {
 
