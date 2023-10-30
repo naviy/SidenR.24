@@ -5,7 +5,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 
-import { AppThemes } from "@app";
 import { Focuser, GlobalStylesOfPrimitives } from "@libs";
 import CssBaseline from "@mui/material/CssBaseline";
 import ReactDOM from "react-dom/client";
@@ -34,14 +33,9 @@ import { App } from "./App";
 
 			<Focuser.Core />
 
-
 			<HashRouter>
 
-				<AppThemes>
-
-					<App />
-
-				</AppThemes>
+				<App />
 
 			</HashRouter>
 

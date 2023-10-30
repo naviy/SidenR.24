@@ -1,24 +1,7 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-
-
 import { type ReactNode, useMemo, useRef } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import { $defaultAnimationDurationMs, Div, type DivProps, Expander } from '..';
 import { FillSlide, type FillSlideAnimateProps } from './FillSlide';
-
-
-
-
-
-
-//===
-
-
-
-
-
-
-const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 
 
 
@@ -41,7 +24,7 @@ export function ValueSlider<TValue>({
 	vertical,
 	dir,
 	offset,
-	zoom,
+	//zoom,
 
 	mountOnEnter,
 	unmountOnExit,
@@ -86,7 +69,7 @@ export function ValueSlider<TValue>({
 	let animatePropsRef = useRef<FillSlideAnimateProps>({});
 
 
-	Object.assignDefined(animatePropsRef.current, { vertical, dir, offset, zoom });
+	Object.assignDefined(animatePropsRef.current, { vertical, dir, offset, /*zoom*/ });
 
 
 	if (animateProps && value !== undefined)
@@ -114,7 +97,7 @@ export function ValueSlider<TValue>({
 				key={newKey}
 
 				appear={!!oldKey}
-				timeout={$animationDurationMs}
+				timeout={$defaultAnimationDurationMs}
 
 				animateProps={animatePropsRef.current}
 

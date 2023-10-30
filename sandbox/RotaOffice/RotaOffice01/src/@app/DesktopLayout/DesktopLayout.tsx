@@ -30,7 +30,7 @@ export function DesktopLayout(props: { children?: ReactNode; })
 
 		<Focuser root cursor ghost click="unfocus">
 
-			<Div id="desktop-layout" fill flex>
+			<Div id="desktop-layout" fill flex hidden>
 
 				<DesktopLayout.Provider layout={bhv}>
 

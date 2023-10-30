@@ -40,6 +40,7 @@ export function Caret(props: CaretProps)
 		className="ff-caret-body"
 		style={bhv.getStyle()}
 		children={props.children && <div>{props.children}</div> || <div />}
+		//children={<div>{bhv!.ff?.id}</div>}
 	/>;
 
 }

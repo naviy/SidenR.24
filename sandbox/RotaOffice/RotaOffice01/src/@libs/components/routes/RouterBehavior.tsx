@@ -131,7 +131,7 @@ export class RouterBehavior extends Repaintable()
 
 		if (props.activeKey !== undefined)
 		{
-			this.#activeKey = typeof props.activeKey === "function" ? props.activeKey(this) : props.activeKey;
+			this.#setActiveKey(typeof props.activeKey === "function" ? props.activeKey(this) : props.activeKey);
 		}
 
 
@@ -380,7 +380,6 @@ export class RouterBehavior extends Repaintable()
 
 		if (!this.parentRoute?.activate())
 		{
-			$log("Router.repaint() " + this)
 			this.repaint();
 		}
 

@@ -18,6 +18,7 @@ export { RouteBehavior as Behavior } from "./RouteBehavior"
 export { Router } from "./Router"
 export { RouteFader as Fader } from "./RouteFader"
 export { RouteSlider as Slider } from "./RouteSlider"
+export { RouteSelectorModal as SelectorModal } from "./RouteSelectorModal"
 
 
 

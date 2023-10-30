@@ -1,6 +1,6 @@
-import { DesktopLayout } from "@app";
+import { AppThemes, DesktopLayout } from "@app";
 import { $log, Div, Focuser, HR, Route, Txt } from "@libs";
-import { Button } from "@mui/material";
+import { Button, createTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem, { type ListItemProps } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -35,17 +35,33 @@ let routes: ReactRouter.RouteObject[] = [{
 
 export function App()
 {
-
 	let element = ReactRouter.useRoutes(routes);
-
-
-	return <>
-
-		{element}
-
-	</>;
-
+	return element;
 }
+
+
+
+
+
+
+//===
+
+
+
+
+
+
+export const darkTheme = createTheme({
+	palette: {
+		mode: 'dark',
+		background: {
+			//paper: "#1a200e",
+			paper: "#222b13",
+		},
+	},
+});
+
+
 
 
 
@@ -65,6 +81,8 @@ function AppDesktop()
 		routes: [
 			Page03.route,
 			Page04.route,
+			Page04.route1,
+			Page04.route2,
 		],
 
 		defaultActiveKey: Page03.route.key,
@@ -75,9 +93,6 @@ function AppDesktop()
 	});
 
 
-	let route = router.activeRoute;
-
-
 
 	return (
 
@@ -85,63 +100,71 @@ function AppDesktop()
 
 			<Route.Router.Provider router={router}>
 
-
-				<DesktopLayout>
-
-
-					<DesktopLayout.Sider logo={<BigLogo />}>
-
-						<HR />
-
-						<List>
-							<MainMenuItem route={Page03.route} />
-							<MainMenuItem route={Page04.route} />
-						</List>
-
-					</DesktopLayout.Sider>
+				<AppThemes darkTheme={darkTheme}>
 
 
-					<DesktopLayout.Container>
+					<DesktopLayout>
 
 
-						<DesktopLayout.Header logo={<SmallLogo />}>
-
-							<Route.Fader router={router} flex flex1>
-
-								<DesktopLayout.Header.Icon>
-									<Route.Icon />
-								</DesktopLayout.Header.Icon>
-
-								<DesktopLayout.Header.Title>
-									<Route.Title />
-								</DesktopLayout.Header.Title>
-
-							</Route.Fader>
+						<Route.SelectorModal />
 
 
-							<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+						<DesktopLayout.Sider logo={<BigLogo />}>
 
-						</DesktopLayout.Header>
+							<HR />
 
+							<List>
+								<MainMenuItem route={Page03.route} />
+								<MainMenuItem route={Page04.route} />
+								<MainMenuItem route={Page04.route1} />
+								<MainMenuItem route={Page04.route2} />
+							</List>
 
-						<DesktopLayout.Main>
-
-							<Route.Fader router={router} fill>
-
-								<DesktopLayout.Content>
-									<Route.Content />
-								</DesktopLayout.Content>
-
-							</Route.Fader>
-
-						</DesktopLayout.Main>
+						</DesktopLayout.Sider>
 
 
-					</DesktopLayout.Container>
+						<DesktopLayout.Container>
 
 
-				</DesktopLayout>
+							<DesktopLayout.Header logo={<SmallLogo />}>
 
+								<Route.Slider router={router} flex flex1 vertical offset={32}>
+
+									<DesktopLayout.Header.Icon>
+										<Route.Icon />
+									</DesktopLayout.Header.Icon>
+
+									<DesktopLayout.Header.Title>
+										<Route.Title />
+									</DesktopLayout.Header.Title>
+
+								</Route.Slider>
+
+
+								<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+
+							</DesktopLayout.Header>
+
+
+							<DesktopLayout.Main>
+
+								<Route.Slider router={router} fill vertical offset={128}>
+
+									<DesktopLayout.Content>
+										<Route.Content />
+									</DesktopLayout.Content>
+
+								</Route.Slider>
+
+							</DesktopLayout.Main>
+
+
+						</DesktopLayout.Container>
+
+
+					</DesktopLayout>
+
+				</AppThemes>
 
 			</Route.Router.Provider>
 

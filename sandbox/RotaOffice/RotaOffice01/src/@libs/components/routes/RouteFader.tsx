@@ -55,10 +55,11 @@ export function RouteFader/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 			<FillFade
 
 				key={route.key}
-				in={route === activeRoute}
 
 				appear={false}
-				timeout={$defaultAnimationDurationMs*5}
+				timeout={$defaultAnimationDurationMs}
+
+				in={route === activeRoute}
 
 				flex={faderProps.flex}
 

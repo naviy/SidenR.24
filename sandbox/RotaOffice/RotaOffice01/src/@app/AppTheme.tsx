@@ -1,3 +1,4 @@
+import type { Theme } from "@emotion/react";
 import type { PaletteMode } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { createContext, useContext, type ReactNode } from "react";
@@ -16,8 +17,13 @@ import { createContext, useContext, type ReactNode } from "react";
 
 interface AppThemesProps
 {
-	default: PaletteMode;
-	navigation: PaletteMode;
+
+	default?: PaletteMode;
+	navigation?: PaletteMode;
+
+	lightTheme?: Theme;
+	darkTheme?: Theme;
+
 }
 
 
@@ -25,24 +31,26 @@ interface AppThemesProps
 
 
 
-const Context = createContext<AppThemesProps>({ default: 'light', navigation: 'dark' });
-
-
-
-
-
-export function AppThemes(props: Partial<AppThemesProps> & { children: ReactNode })
+export function AppThemes(props: AppThemesProps & { children: ReactNode })
 {
 
-	let parent = useContext(Context);
-	
+	let parent = useContext(AppThemes.Context);
 
-	return <Context.Provider
+
+	return <AppThemes.Context.Provider
+
 		value={{
+
 			default: props.default || parent.default,
 			navigation: props.navigation || parent.navigation,
+
+			lightTheme: props.lightTheme || parent.lightTheme,
+			darkTheme: props.darkTheme || parent.darkTheme,
+
 		}}
+
 		children={props.children}
+
 	/>;
 
 }
@@ -57,14 +65,43 @@ export module AppThemes
 
 
 
-	export const lightTheme = createTheme();
-	export const darkTheme = createTheme({ palette: { mode: 'dark' } });
+
+	//export const lightTheme = createTheme();
+
+	//export const darkTheme = createTheme({
+	//	palette: {
+	//		mode: 'dark',
+	//		background: {
+	//			paper: "#1a200e",
+	//		},
+
+	//	},
+	//});
 
 
 
-	export function byMode(mode: PaletteMode | null | undefined)
+	type AppThemesContext = Required<AppThemesProps>;
+
+
+	export const Context = createContext<AppThemesContext>({
+		default: 'light',
+		navigation: 'dark',
+		lightTheme: createTheme(),
+		darkTheme: createTheme({ palette: { mode: 'dark' } }),
+	});
+
+
+
+	export function use()
 	{
-		return !mode ? null : mode === 'dark' ? darkTheme : lightTheme;
+		return useContext(Context);
+	}
+
+
+
+	function byMode(ctx: AppThemesContext, mode: PaletteMode)
+	{
+		return mode === 'dark' ? ctx.darkTheme : ctx.lightTheme;
 	}
 
 
@@ -72,13 +109,23 @@ export module AppThemes
 
 	export function Dark(props: { children: ReactNode })
 	{
-		return <ThemeProvider theme={darkTheme} children={props.children} />;
+		const ctx = use();
+
+		return <ThemeProvider
+			theme={ctx.darkTheme}
+			children={props.children}
+		/>;
 	}
 
 
 	export function Light(props: { children: ReactNode })
 	{
-		return <ThemeProvider theme={lightTheme} children={props.children} />;
+		const ctx = use();
+
+		return <ThemeProvider
+			theme={ctx.lightTheme}
+			children={props.children}
+		/>;
 	}
 
 
@@ -86,20 +133,24 @@ export module AppThemes
 	export function Navigation(props: { children: ReactNode })
 	{
 
-		const ctx = useContext(Context);
+		const ctx = use();
 
-		return <ThemeProvider theme={byMode(ctx?.navigation) || darkTheme} children={props.children} />;
+		return <ThemeProvider
+			theme={byMode(ctx, ctx.navigation)}
+			children={props.children}
+		/>;
 
 	}
 
 
 	export function Default(props: { children: ReactNode })
 	{
+		const ctx = use();
 
-		const ctx = useContext(Context);
-
-		return <ThemeProvider theme={byMode(ctx?.default) || lightTheme} children={props.children} />;
-
+		return <ThemeProvider
+			theme={byMode(ctx, ctx.default)}
+			children={props.children}
+		/>;
 	}
 
 

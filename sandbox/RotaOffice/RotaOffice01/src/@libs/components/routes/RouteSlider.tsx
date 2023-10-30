@@ -1,4 +1,4 @@
-import { $defaultAnimationDurationMs, Div, type DivProps } from "../core";
+import { $defaultAnimationDurationMs, $log, Div, _$log, type DivProps } from "../core";
 import { FillSlide } from "../transitions";
 import { Children } from "./Route";
 import { Router } from "./Router";
@@ -22,7 +22,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 	vertical,
 	offset,
-	zoom,
+	//zoom,
 
 	mountOnEnter,
 	unmountOnExit,
@@ -37,12 +37,12 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 	vertical?: boolean;
 	offset?: string | number,
-	zoom?: boolean | number | null;
+	//zoom?: boolean | number | null;
 
 	mountOnEnter?: boolean;
 	unmountOnExit?: boolean;
 
-	expander?: boolean;
+	//expander?: boolean;
 
 	children?: Children/*<TRoute>*/;
 
@@ -70,14 +70,15 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 				appear={false}
 				timeout={$defaultAnimationDurationMs}
 
-				active={route === activeRoute}
-				dir={routerDir > 0}
+				in={route === activeRoute}
 
+				dir={routerDir > 0}
 				vertical={vertical}
 				offset={offset}
-				zoom={zoom}
+				//zoom={zoom}
 
 				flex={sliderProps.flex}
+				fill={sliderProps.fill}
 
 				mountOnEnter={mountOnEnter !== false}
 				unmountOnExit={unmountOnExit !== false}

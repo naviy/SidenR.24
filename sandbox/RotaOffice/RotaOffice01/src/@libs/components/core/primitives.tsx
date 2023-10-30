@@ -33,6 +33,7 @@ let primitiveClsPrefix: string = "";
 
 
 
+
 export interface PrimitiveBaseProps<T extends Element>
 {
 
