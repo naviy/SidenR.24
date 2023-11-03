@@ -79,22 +79,22 @@ function Rows05({ root }: { root?: boolean })
 
 		<Pane.Col rounded>
 
-			<Div fill style={{ borderRadius: "inherit", border: `2px solid ${bgColors[2]}` }} />
+			<PileListBackfill />
 
 			<Tenta.Placeholder.Collector
 				globalState="rows05"
 				root={root}
-				placeholders={[1, 2, 3, 4, 5, 6, 7]}
-				//placeholders={[1, 2, 3]}
+				//placeholders={[1, 2, 3, 4, 5, 6, 7]}
+				placeholders={[1, 2, 3]}
 			>
 
 				<Row05 id={1} />
 				<Row05 id={2} />
 				<Row05 id={3} />
-				<Row05 id={4} />
-				<Row05 id={5} />
-				<Row05 id={6} />
-				<Row05 id={7} />
+				{/*<Row05 id={4} />*/}
+				{/*<Row05 id={5} />*/}
+				{/*<Row05 id={6} />*/}
+				{/*<Row05 id={7} />*/}
 
 			</Tenta.Placeholder.Collector>
 
@@ -329,8 +329,8 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 								<Focuser
 									ref={tenta.ffRef}
 									name={`pile-row-body#${id}`}
-									padding={tenta.collapsed ? -2 : 0}
 									listener={tenta}
+									autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
 								>
 
 									<Pane.Row
@@ -362,7 +362,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 										<Pane.Col
 											start end
 											expanded={tenta.opened}
-											wrapperCls="py24 pl60 pr48"
+											wrapperCls="py24 pl60 pr36"
 											children={parts[1]}
 										/>
 
@@ -394,6 +394,22 @@ function usePileRowCaretProps()
 	let row = Pane.ContainerInfo.use();
 	return { borderRadius: row?.cssBorderRadius };
 }
+
+
+
+
+const PileListBackfill = styled("div")({
+
+	position: "absolute",
+	inset: 0,
+
+	borderRadius: "inherit",
+	border: `2px solid ${bgColors[2]}`,
+
+	//background: "#fafcff",
+	//boxShadow: "0 4px 24px -4px #c3c6c9, 0 1px 8px -1px #c3c6c9",
+
+});
 
 
 

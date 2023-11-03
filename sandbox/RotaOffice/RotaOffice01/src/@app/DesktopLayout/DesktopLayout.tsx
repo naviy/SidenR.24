@@ -28,7 +28,7 @@ export function DesktopLayout(props: { children?: ReactNode; })
 
 	return (
 
-		<Focuser root cursor ghost click="unfocus">
+		<Focuser root cursor ghost>
 
 			<Div id="desktop-layout" fill flex hidden>
 

@@ -1,4 +1,4 @@
-﻿export { }
+export { }
 
 
 
@@ -19,6 +19,8 @@ declare global
 
 	interface Array<T>
 	{
+
+		add(item: T): T;
 
 		clip(): Array<T> | null;
 
@@ -72,6 +74,14 @@ Array.mapRange = function(from: number, to: number, selector: (value: number, in
 
 
 
+
+
+
+Array.prototype.add = function (this: Array<any>, item: any)
+{
+	this.push(item);
+	return item;
+}
 
 
 

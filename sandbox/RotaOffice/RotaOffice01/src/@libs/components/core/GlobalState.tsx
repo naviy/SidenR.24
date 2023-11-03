@@ -76,7 +76,7 @@ export module GlobalState
 
 
 
-	export type Value = string | number | Date | null;
+	export type Value = string | number | Date | boolean | null;
 
 
 	export interface Node
@@ -198,11 +198,15 @@ export module GlobalState
 		TState extends GlobalState,
 		TProp extends keyof TState,
 	>(
-		state: TState,
+		state: TState | undefined,
 		propName: TProp,
 		defaultValue?: TState[TProp],
 	): TState[TProp] | undefined
 	{
+
+		if (!state)
+			return defaultValue;
+
 
 		let value = state![propName] as any;
 
@@ -221,7 +225,7 @@ export module GlobalState
 		TState extends GlobalState,
 		TProp extends keyof TState,
 	>(
-		state: TState,
+		state: TState | undefined,
 		propName: TProp,
 		value: TState[TProp],
 		defaultValue?: TState[TProp]
@@ -229,16 +233,23 @@ export module GlobalState
 	{
 
 		if (value === undefined)
+		{
 			return defaultValue;
-
-
-		if (value === defaultValue)
-		{
-			delete state[propName];
 		}
-		else
+
+
+		if (state)
 		{
-			state[propName] = value;
+
+			if (value === defaultValue)
+			{
+				delete state[propName];
+			}
+			else
+			{
+				state[propName] = value;
+			}
+
 		}
 
 
