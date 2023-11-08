@@ -201,6 +201,9 @@ export module Block
 	export function injectProps(children: ReactNode): ReactNode
 	{
 
+		return children;
+
+
 		let childrenArr = flattenChildren(children);
 
 

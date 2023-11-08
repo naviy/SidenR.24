@@ -1,4 +1,4 @@
-import { $log, Div, GlobalState, Pane, Route, Txt, VR } from '@libs';
+import { $log, Div, GlobalState, Pane, Route, Span, Txt, VR } from '@libs';
 
 import FestivalIcon from '@mui/icons-material/Festival';
 import Button from "@mui/material/Button";
@@ -7,10 +7,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
 import { useData } from "./db";
-import { Unit_Subordination, type Unit } from "./domain";
+import { Unit_Subordination, type Unit, DB } from "./domain";
 import { Pile } from "./piles";
 import { gsm } from "./semantics";
 import { Tenta } from './tentas';
+import { db } from "./data/_db";
 
 
 
@@ -45,7 +46,7 @@ export function Page04()
 
 			<GlobalState name="Rows05Pile">
 
-				<UnitsPile />
+				<UnitsPile start end />
 
 			</GlobalState>
 
@@ -74,7 +75,7 @@ export module Page04
 
 
 
-function UnitsPile()
+function UnitsPile(props: Pane.ColProps)
 {
 
 	let { db } = useData();
@@ -86,7 +87,7 @@ function UnitsPile()
 
 	return <>
 
-		<Pane.Col rounded>
+		<Pane.Col rounded {...props}>
 
 			<Pile.ListBackfill />
 
@@ -96,7 +97,7 @@ function UnitsPile()
 				placeholders={units.map(a => a.id)}
 			>
 
-				{units.map(a => <UnitRow key={a.id} r={a} />)}
+				{units.map((a, i, arr) => <UnitRow key={a.id} db={db} r={a} start={i === 0} end={i === arr.length - 1} />)}
 
 
 			</Tenta.Placeholder.Collector>
@@ -111,47 +112,17 @@ function UnitsPile()
 
 
 
-function UnitRow({ r, ...props }: Pile.Row1Props & { r: Unit })
+function UnitRow({ db, r, ...props }: Pile.Row1Props & { db: DB, r: Unit })
 {
-
-	let { db } = useData();
-
-
-	//$log("masters:",  r.masters)
-
-
-
-
 
 	return <Pile.Row1 id={r.id} {...props}>
 
-
 		<>
-			<Pane>
-
-				<ListItem>
-					<ListItemIcon><Div flex1 font48px textCenter pr8>{gsm.UnitType.$item(r.type)!.$icon}</Div></ListItemIcon>
-					<ListItemText
-						primary={<Txt.Button>{r.shortNamesBy(db).join(" ")}</Txt.Button>}
-						secondary={r.namesBy(db).join(" ")}
-					/>
-				</ListItem>
-			</Pane>
-
-			<Pane>
-				<Button onClick={() => $log(`unit #${r.id}:`, r)}>$LOG</Button>
-			</Pane>
-
+			<UnitRowBody db={db} r={r} start />
+			<UnitRowActions db={db} r={r} end />
 		</>
 
-		{(r.masters?.length || r.subordinates?.length) && <>
-
-			{r.masters?.length && <UnitMastersPile list={r.masters} />}
-
-			{r.subordinates?.length && <UnitSubordinationsPile list={r.subordinates} />}
-
-		</>}
-
+		<UnitRowContent db={db} r={r} />
 
 	</Pile.Row1>;
 
@@ -160,9 +131,67 @@ function UnitRow({ r, ...props }: Pile.Row1Props & { r: Unit })
 
 
 
+function UnitRowBody({ db, r, ...props }: { db: DB, r: Unit } & Pane.RowProps)
+{
+
+	let [name, ...masterNames] = r.allNamesBy(db);
 
 
-function UnitMastersPile({ list }: { list: Unit_Subordination[] })
+	return <Pane.Row {...props}>
+
+		<Pane flex1 start end>
+
+			<Div flex64px font54px textCenter pl8>{gsm.UnitType.$item(r.type)!.$icon}</Div>
+			<Div flex1 p12>
+				<Div fontLg><em>{name?.shortName}</em> {masterNames.map(a => a.shortName2).join(" ")}</Div>
+				<Div opacity7><em>{name?.fullName}</em> {masterNames.map(a => a.fullName2).join(" ")}</Div>
+			</Div>
+		</Pane>
+
+	</Pane.Row>
+
+}
+
+
+function UnitRowActions({ db, r, ...props }: { db: DB, r: Unit } & Pane.Props)
+{
+
+	return <>
+
+		<Pane flex0 {...props}>
+			<Button onClick={() => $log(`unit #${r.id}:`, r)}>$LOG</Button>
+		</Pane>
+
+	</>;
+
+}
+
+
+function UnitRowContent({ db, r }: { db: DB, r: Unit })
+{
+
+	let hasMasters = r.masters?.length;
+	let hasSubunits = r.subunits?.length
+
+	if (!hasMasters && !hasSubunits)
+		return null;
+
+
+	return <>
+
+		{hasMasters && <UnitMastersPile db={db} list={r.masters!} />}
+		{hasMasters && hasSubunits && <Div p12 />}
+		{hasSubunits && <UnitSubunitsPile db={db} list={r.subunits!} />}
+
+	</>
+
+}
+
+
+
+
+
+function UnitMastersPile({ db, list }: { db: DB, list: Unit_Subordination[] })
 {
 
 	return (
@@ -173,10 +202,14 @@ function UnitMastersPile({ list }: { list: Unit_Subordination[] })
 
 			<Tenta.Placeholder.Collector
 				globalState="unit-masters"
-				placeholders={list.map(a => a.id)}
+				placeholders={["$H", ...list.map(a => a.id)]}
 			>
 
-				{list.map(a => <UnitMasterRow key={a.id} r={a} />)}
+				<Pane p12 start m2 mb0>
+					<Span em>MASTERS</Span>
+				</Pane>
+
+				{list.map((a, i, arr) => <UnitMasterRow key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
 
 			</Tenta.Placeholder.Collector>
 
@@ -188,49 +221,28 @@ function UnitMastersPile({ list }: { list: Unit_Subordination[] })
 
 
 
-function UnitMasterRow({ r }: { r: Unit_Subordination })
+function UnitMasterRow({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Row1Props)
 {
 
-	return <Pile.Row1 id={r.id}>
-
+	return <Pile.Row1 id={r.id} {...props}>
 
 		<>
-			{/*<Pane p12>*/}
-			{/*	<div>*/}
-			{/*		<div>{r.shortName}</div>*/}
-			{/*		<div>{r.name}</div>*/}
-			{/*		<div>{r.fullName}</div>*/}
-			{/*	</div>*/}
-			{/*</Pane>*/}
 
-			<Pane flex2 p12>
+			<UnitRowBody db={db} r={r.master} start />
+
+			<Pane flex0 p12>
 				<div>
 					<div><Txt.Date>{r.dateFrom}</Txt.Date></div>
 					<div><Txt.Date>{r.dateTo}</Txt.Date></div>
 				</div>
 			</Pane>
 
-		</>
-
-
-		<>
-
-			<Pane.Col rounded>
-
-				<Pile.ListBackfill />
-
-				<Tenta.Placeholder.Collector
-					globalState="unit"
-					placeholders={[r.unit.id]}
-				>
-
-					<UnitRow r={r.unit} />
-
-				</Tenta.Placeholder.Collector>
-
-			</Pane.Col>
+			<UnitRowActions db={db} r={r.master} end />
 
 		</>
+
+
+		<UnitRowContent db={db} r={r.master} />
 
 
 	</Pile.Row1>;
@@ -240,7 +252,7 @@ function UnitMasterRow({ r }: { r: Unit_Subordination })
 
 
 
-function UnitSubordinationsPile({ list }: { list: Unit_Subordination[] })
+function UnitSubunitsPile({ db, list }: { db: DB; list: Unit_Subordination[] })
 {
 
 	return (
@@ -249,12 +261,18 @@ function UnitSubordinationsPile({ list }: { list: Unit_Subordination[] })
 
 			<Pile.ListBackfill />
 
+
 			<Tenta.Placeholder.Collector
 				globalState="unit-subordinations"
-				placeholders={list.map(a => a.id)}
+				placeholders={["$H", ...list.map(a => a.id)]}
 			>
 
-				{list.map(a => <UnitSubordinationRow key={a.id} r={a} />)}
+				<Pane p12 start m2 mb0>
+					<Span em>SUBUNITS</Span>
+				</Pane>
+
+
+				{list.map((a, i, arr) => <UnitSubunitRow key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
 
 			</Tenta.Placeholder.Collector>
 
@@ -266,54 +284,28 @@ function UnitSubordinationsPile({ list }: { list: Unit_Subordination[] })
 
 
 
-function UnitSubordinationRow({ r }: { r: Unit_Subordination })
+function UnitSubunitRow({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Row1Props)
 {
 
-	let { db } = useData();
-
-
-	return <Pile.Row1 id={r.id}>
-
+	return <Pile.Row1 id={r.id} {...props}>
 
 		<>
-			{/*<Pane p12>*/}
-			{/*	<div>*/}
-			{/*		<div>{r.shortName}</div>*/}
-			{/*		<div>{r.name}</div>*/}
-			{/*		<div>{r.fullName}</div>*/}
-			{/*	</div>*/}
-			{/*</Pane>*/}
 
-			<Pane flex2 p12>
+			<UnitRowBody db={db} r={r.unit} start />
+
+			<Pane flex0 p12>
 				<div>
 					<div><Txt.Date>{r.dateFrom}</Txt.Date></div>
 					<div><Txt.Date>{r.dateTo}</Txt.Date></div>
-
 				</div>
-
 			</Pane>
 
-		</>
-
-
-		<>
-
-			<Pane.Col rounded>
-
-				<Pile.ListBackfill />
-
-				<Tenta.Placeholder.Collector
-					globalState="unit"
-					placeholders={[r.unit.id]}
-				>
-
-					<UnitRow r={r.unit} />
-
-				</Tenta.Placeholder.Collector>
-
-			</Pane.Col>
+			<UnitRowActions db={db} r={r.unit} end />
 
 		</>
+
+
+		<UnitRowContent db={db} r={r.unit} />
 
 
 	</Pile.Row1>;

@@ -32,7 +32,7 @@ export class Unit extends Entity
 
 	master?: Unit_Subordination;
 	masters?: Unit_Subordination[];
-	subordinates?: Unit_Subordination[];
+	subunits?: Unit_Subordination[];
 
 
 	formationDate?: Date;
@@ -44,7 +44,7 @@ export class Unit extends Entity
 
 
 
-	mastersBy<TResult = Unit>(
+	allMastersBy<TResult = Unit>(
 		db: DB,
 		filter?: UnitMasterFilter,
 		selector?: (master: Unit_Subordination) => TResult
@@ -54,7 +54,7 @@ export class Unit extends Entity
 	}
 
 
-	#namesBy<TResult = Unit>(
+	allNamesBy<TResult = Unit_Name>(
 		db: DB,
 		filter?: UnitNameFilter,
 		selector?: (name: Unit_Name, index: number) => TResult
@@ -66,17 +66,17 @@ export class Unit extends Entity
 
 	shortNamesBy(db: DB, filter?: UnitNameFilter): string[]
 	{
-		return this.#namesBy(db, filter, (a, i) => !i ? a.shortName : a.shortName2);
+		return this.allNamesBy(db, filter, (a, i) => !i ? a.shortName : a.shortName2);
 	}
 
 	namesBy(db: DB, filter?: UnitNameFilter): string[]
 	{
-		return this.#namesBy(db, filter, (a, i) => !i ? a.name : a.name2);
+		return this.allNamesBy(db, filter, (a, i) => !i ? a.name : a.name2);
 	}
 
 	fullNamesBy(db: DB, filter?: UnitNameFilter): string[]
 	{
-		return this.#namesBy(db, filter, (a, i) => !i ? a.fullName : a.fullName2);
+		return this.allNamesBy(db, filter, (a, i) => !i ? a.fullName : a.fullName2);
 	}
 
 

@@ -119,6 +119,7 @@ export module Unit_Name
 
 
 				let date = filter?.date;
+				let skip = filter?.skip || 0;
 
 
 				let iterationCount = 0;
@@ -133,7 +134,8 @@ export module Unit_Name
 						break;
 
 
-					result.push(name);
+					if (iterationCount >= skip)
+						result.push(name);
 
 
 					let master = db.Unit_Subordination.byDate(name.unit.masters, date);
@@ -235,7 +237,8 @@ export module Unit_Name
 
 export interface UnitNameFilter
 {
-	date: Date;
+	date?: Date;
+	skip?: number;
 }
 
 

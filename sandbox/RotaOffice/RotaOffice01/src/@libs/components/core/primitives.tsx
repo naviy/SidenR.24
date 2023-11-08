@@ -1,6 +1,6 @@
 import { type GlobalProps } from "@emotion/react";
-import * as muiColors from "@mui/material/colors";
 import GlobalStyles from "@mui/material/GlobalStyles";
+import * as muiColors from "@mui/material/colors";
 import { styled, type CSSObject } from "@mui/material/styles";
 import clsx from "clsx";
 import * as React from "react";
@@ -115,6 +115,27 @@ type GapYs = { [P in Padding as `gapy${P}`]?: boolean; };
 
 
 
+const flexes24 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] as const;
+const flexesPx = Paddings;
+
+
+type Flex = typeof flexes24[number] | `${typeof flexesPx[number]}px`;
+
+type FlexProps = {
+	[P in Flex as `flex${P}`]?: boolean;
+};
+
+
+
+
+
+//===
+
+
+
+
+
+
 type Bg = (
 	"0" | "1" | "2" | "3" | "4" |
 	`blueGrey${keyof typeof muiColors.blueGrey}`
@@ -190,7 +211,7 @@ export const elevaltionShadows =
 type FontSize = (
 	"xxs" | "xs" | "sm" | "lg" | "xl" | "xxl" |
 	"1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x" |
-	"24px" | "32px" | "48px" | "64px"
+	"24px" | "32px" | "48px" | "54px" | "64px"
 );
 
 type FontSizeProps = { [P in Capitalize<FontSize> as `font${P}`]?: boolean; }
@@ -218,6 +239,7 @@ export const fontSizes: Record<FontSize, string> =
 	"24px": "24px",
 	"32px": "32px",
 	"48px": "48px",
+	"54px": "54px",
 	"64px": "64px",
 
 };
@@ -237,6 +259,7 @@ export const fontSizes: Record<FontSize, string> =
 export interface PrimitiveClassesProps extends
 	Ms, MXs, MYs, MLs, MRs, MTs, MBs,
 	Ps, PXs, PYs, PLs, PRs, PTs, PBs,
+	FlexProps,
 	Gaps, GapXs, GapYs,
 	BgProps, FontSizeProps, ElevationProps
 {
@@ -267,32 +290,6 @@ export interface PrimitiveClassesProps extends
 	flex?: boolean;
 	vflex?: boolean;
 	flexi?: boolean;
-
-	flex1?: boolean;
-	flex2?: boolean;
-	flex3?: boolean;
-	flex4?: boolean;
-	flex5?: boolean;
-	flex6?: boolean;
-	flex7?: boolean;
-	flex8?: boolean;
-	flex9?: boolean;
-	flex10?: boolean;
-	flex11?: boolean;
-	flex12?: boolean;
-	flex13?: boolean;
-	flex14?: boolean;
-	flex15?: boolean;
-	flex16?: boolean;
-	flex17?: boolean;
-	flex18?: boolean;
-	flex19?: boolean;
-	flex20?: boolean;
-	flex21?: boolean;
-	flex22?: boolean;
-	flex23?: boolean;
-	flex24?: boolean;
-
 
 	center?: boolean;
 	vcenter?: boolean;
@@ -473,7 +470,7 @@ export function GlobalStylesOfPrimitives(props: {
 	primitiveClsPrefix = props.prefix ? `${props.prefix}-` : "";
 
 
-	return <GlobalStyles styles={prefixedStyles({
+	let primitiveStyles = prefixedStyles({
 
 
 		".positionAbsolute, .absolute": { position: "absolute!important" },
@@ -527,9 +524,8 @@ export function GlobalStylesOfPrimitives(props: {
 			gap: "inherit",
 		},
 
-		...range("flex", 1, 24, 1, i => ({
-			flex: `${i}!important`,
-		})),
+		...rangeMP("flex", flexes24, i => ({ flex: `${i}!important` })),
+		...rangeMP(i => `flex${i}px`, flexesPx, i => ({ flex: `0 0 ${i}px!important` })),
 
 
 		center: {
@@ -719,7 +715,21 @@ export function GlobalStylesOfPrimitives(props: {
 		...rangeOP("e", elevaltionShadows, v => ({ boxShadow: v })),
 
 
-	})} />;
+	});
+
+
+
+	return <GlobalStyles styles={{
+
+		...primitiveStyles as any,
+
+		em: {
+			fontStyle: "normal",
+			fontWeight: 500,
+		},
+
+
+	}} />;
 
 
 
@@ -953,14 +963,18 @@ function range(cls: string, min: number, max: number, step: number, style: (i: n
 }
 
 
-function rangeMP(cls: string, values: ReadonlyArray<number>, style: (i: number) => CSSObject)
+function rangeMP(cls: string | ((i: number) => string), values: ReadonlyArray<number>, style: (i: number) => CSSObject)
 {
 
 	let styles: GlobalProps["styles"] = {};
 
+
+	let cls2 = typeof cls === "function" ? cls : ((i: number) => cls + i);
+
+
 	for (let i of values)
 	{
-		(styles as any)[cls + i] = style(i);
+		(styles as any)[cls2(i)] = style(i);
 	}
 
 	return styles;

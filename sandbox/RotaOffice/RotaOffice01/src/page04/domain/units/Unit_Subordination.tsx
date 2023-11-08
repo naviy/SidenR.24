@@ -196,7 +196,7 @@ export module Unit_Subordination
 				});
 
 
-				(master.subordinates ??= []).push(r);
+				(master.subunits ??= []).push(r);
 				(unit.masters ??= []).push(r);
 
 
