@@ -68,37 +68,6 @@ const primitiveBasePropNames: Array<keyof PrimitiveBaseProps<Element>> = [
 
 
 
-export type PrimitiveFontSize = (
-	"xxs" | "xs" | "sm" | "lg" | "xl" | "xxl" |
-	"1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x" |
-	"24px" | "32px" | "64px" | "48px"
-);
-
-
-
-export module PrimitiveFontSize
-{
-
-	export function toCssValue(size: PrimitiveFontSize | null | undefined, defaultSize?: string)
-	{
-		return (
-			!size ? defaultSize :
-				size === "xxs" ? "0.625em" :
-					size === "xs" ? ".75em" :
-						size === "sm" ? ".875em" :
-							size === "lg" ? "1.25em" :
-								size === "xl" ? "1.5em" :
-									size === "xxl" ? "2em" :
-										undefined
-		);
-
-	}
-
-}
-
-
-
-
 export const Margins = [
 	-1, -2, -3, -4, -5, -6, -7, -8, -10, -12, -16, -20, -21, -24, -30, -32, -36, -40, -48, -50, -60, -64, -80, -100, -150, -200,
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200
@@ -218,11 +187,58 @@ export const elevaltionShadows =
 
 
 
+type FontSize = (
+	"xxs" | "xs" | "sm" | "lg" | "xl" | "xxl" |
+	"1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x" |
+	"24px" | "32px" | "48px" | "64px"
+);
+
+type FontSizeProps = { [P in Capitalize<FontSize> as `font${P}`]?: boolean; }
+
+
+
+export const fontSizes: Record<FontSize, string> =
+{
+	"xxs": "0.625em",
+	"xs": ".75em",
+	"sm": ".875em",
+	"lg": "1.25em",
+	"xl": "1.5em",
+	"xxl": "2em",
+	"1x": "1em",
+	"2x": "2em",
+	"3x": "3em",
+	"4x": "4em",
+	"5x": "5em",
+	"6x": "6em",
+	"7x": "7em",
+	"8x": "8em",
+	"9x": "9em",
+	"10x": "10em",
+	"24px": "24px",
+	"32px": "32px",
+	"48px": "48px",
+	"64px": "64px",
+
+};
+
+
+
+
+
+
+//===
+
+
+
+
+
+
 export interface PrimitiveClassesProps extends
 	Ms, MXs, MYs, MLs, MRs, MTs, MBs,
 	Ps, PXs, PYs, PLs, PRs, PTs, PBs,
 	Gaps, GapXs, GapYs,
-	BgProps, ElevationProps
+	BgProps, FontSizeProps, ElevationProps
 {
 
 	//---
@@ -400,18 +416,6 @@ export interface PrimitiveClassesProps extends
 
 	italic?: boolean;
 	strike?: boolean;
-
-
-	size?: PrimitiveFontSize | null;
-
-	xxsmall?: boolean;
-	xsmall?: boolean;
-	small?: boolean;
-	smaller?: boolean;
-	larger?: boolean;
-	large?: boolean;
-	xlarge?: boolean;
-	xxlarge?: boolean;
 
 	lineHeight1?: boolean;
 	lineHeight15?: boolean;
@@ -645,42 +649,9 @@ export function GlobalStylesOfPrimitives(props: {
 		},
 
 
-		sizeXxs: { fontSize: "0.625em !important" },
-		sizeXs: { fontSize: ".75em !important" },
-		sizeSm: { fontSize: ".875em !important" },
-		sizeLg: { fontSize: "1.25em !important" },
-		sizeXl: { fontSize: "1.5em !important" },
-		sizeXxl: { fontSize: "2em !important" },
-		size1x: { fontSize: "1em !important" },
-		size2x: { fontSize: "2em !important" },
-		size3x: { fontSize: "3em !important" },
-		size4x: { fontSize: "4em !important" },
-		size5x: { fontSize: "5em !important" },
-		size6x: { fontSize: "6em !important" },
-		size7x: { fontSize: "7em !important" },
-		size8x: { fontSize: "8em !important" },
-		size9x: { fontSize: "9em !important" },
-		size10x: { fontSize: "10em !important" },
-		size24px: { fontSize: "24px !important" },
-		size32px: { fontSize: "32px !important" },
-		size48px: { fontSize: "48px !important" },
-		size64px: { fontSize: "64px !important" },
+		...rangeOP("font", fontSizes, v => ({ fontSize: v })),
 
-		//xxs: { fontSize: "0.625em !important" },
-		//xs: { fontSize: ".75em !important" },
-		//sm: { fontSize: ".875em !important" },
-		//lg: { fontSize: "1.25em !important" },
-		//xl: { fontSize: "1.5em !important" },
-		//xxl: { fontSize: "2em !important" },
 
-		xxsmall: { fontSize: ".625em!important" },
-		xsmall: { fontSize: ".75em!important" },
-		small: { fontSize: ".875em!important" },
-		smaller: { fontSize: "smaller!important" },
-		larger: { fontSize: "larger!important" },
-		large: { fontSize: "1.25em!important" },
-		xlarge: { fontSize: "1.5em!important" },
-		xxlarge: { fontSize: "2em!important" },
 
 		lineHeight1: { lineHeight: "1em!important" },
 		lineHeight15: { lineHeight: "1.5em!important" },

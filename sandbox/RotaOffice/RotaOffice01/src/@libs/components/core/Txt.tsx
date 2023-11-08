@@ -2,6 +2,9 @@ import MuiDivider from "@mui/material/Divider";
 import type { TypographyProps } from "@mui/material/Typography";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import moment from "moment";
+import { $log } from ".";
+import type { ReactNode } from "react";
 
 
 
@@ -62,10 +65,21 @@ export module Txt
 
 
 
-	function text(variant: TxtProps['variant'], { divider, ...props }: TxtProps)
+	function text(
+		variant: TxtProps['variant'] | undefined,
+		{ divider, ...props }: TxtProps,
+		children?: ReactNode,
+	)
 	{
 
-		let body = <Typography variant={variant} {...props} />;
+		props = {
+			variant,
+			...props,
+			children: children ?? props.children,
+		}
+
+
+		let body = <Typography {...props} />;
 
 
 		if (divider)
@@ -175,6 +189,32 @@ export module Txt
 	export function LI(props: TxtProps)
 	{
 		return <Typography component="li" {...props} />;
+	}
+
+
+
+
+
+
+	//===
+
+
+
+
+
+
+	export function Date({ children, ...props}: Omit<TxtProps, "children"> & {
+		children: Date | null | undefined;
+	})
+	{
+
+		let m = moment(children);
+
+
+		return text(undefined, props,
+			<><span className="em">{m.format("DD.MM")}</span>.{m.year()}</>
+		);
+
 	}
 
 

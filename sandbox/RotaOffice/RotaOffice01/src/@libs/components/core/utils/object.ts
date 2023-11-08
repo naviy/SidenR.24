@@ -13,17 +13,17 @@ declare global
 	interface ObjectConstructor
 	{
 
-		assignDefined<T extends {}, U>(target: T, source: U): T & U;
-		assignDefined<T extends {}, U1, U2>(target: T, source1: U1, source2: U2): T & U1 & U2;
-		assignDefined<T extends {}, U1, U2, U3>(target: T, source1: U1, source2: U2, source3: U3): T & U1 & U2 & U3;
-		assignDefined(target: object, ...sources: any[]): any;
+		assignDefineds<T extends {}, U>(target: T, source: U): T & U;
+		assignDefineds<T extends {}, U1, U2>(target: T, source1: U1, source2: U2): T & U1 & U2;
+		assignDefineds<T extends {}, U1, U2, U3>(target: T, source1: U1, source2: U2, source3: U3): T & U1 & U2 & U3;
+		assignDefineds(target: object, ...sources: any[]): any;
 
 		assignDefinedProps<T extends {}>(target: T, source: Readonly<Partial<T>>, ...props: Array<keyof T>): T;
 
-		assignDefinedToClone<T extends {}, U>(target: T, source: U): T & U;
-		assignDefinedToClone<T extends {}, U1, U2>(target: T, source1: U1, source2: U2): T & U1 & U2;
-		assignDefinedToClone<T extends {}, U1, U2, U3>(target: T, source1: U1, source2: U2, source3: U3): T & U1 & U2 & U3;
-		assignDefinedToClone(target: object, ...sources: any[]): any;
+		assignDefinedsToClone<T extends {}, U>(target: T, source: U): T & U;
+		assignDefinedsToClone<T extends {}, U1, U2>(target: T, source1: U1, source2: U2): T & U1 & U2;
+		assignDefinedsToClone<T extends {}, U1, U2, U3>(target: T, source1: U1, source2: U2, source3: U3): T & U1 & U2 & U3;
+		assignDefinedsToClone(target: object, ...sources: any[]): any;
 
 	}
 
@@ -43,7 +43,7 @@ declare global
 
 
 
-Object.assignDefined = function assignDefined(target: any, ...sources: any[]): any
+Object.assignDefineds = function assignDefineds(target: any, ...sources: any[]): any
 {
 
 	if (!target)
@@ -74,7 +74,7 @@ Object.assignDefined = function assignDefined(target: any, ...sources: any[]): a
 
 
 
-Object.assignDefinedProps = function assignDefinedProps<T extends {}>(
+Object.assignDefinedProps = function assignDefinedsProps<T extends {}>(
 	target: T,
 	source: Readonly<Partial<T>>,
 	...props: Array<keyof T>
@@ -107,7 +107,7 @@ Object.assignDefinedProps = function assignDefinedProps<T extends {}>(
 
 
 
-Object.assignDefinedToClone = function assignDefinedToClone(target: any, ...sources: any[]): any
+Object.assignDefinedsToClone = function assignDefinedsToClone(target: any, ...sources: any[]): any
 {
 
 	if (!target)

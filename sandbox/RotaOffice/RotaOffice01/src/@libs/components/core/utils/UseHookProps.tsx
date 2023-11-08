@@ -29,7 +29,7 @@ export module UseHookProps
 
 		if (newProps)
 		{
-			props = Object.assignDefinedToClone(props, newProps);
+			props = Object.assignDefinedsToClone(props, newProps);
 		}
 
 

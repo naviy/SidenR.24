@@ -30,7 +30,7 @@ export class Entity<TDbContext extends DbContext = DbContext>
 
 
 
-	db!: TDbContext;
+	//db!: TDbContext;
 	readonly id: Entity.Id;
 
 
@@ -56,7 +56,7 @@ export module Entity
 
 
 
-	const crypto = new Crypto();
+	const crypto = window["crypto"] as Crypto;
 
 
 	export function newId(): Id

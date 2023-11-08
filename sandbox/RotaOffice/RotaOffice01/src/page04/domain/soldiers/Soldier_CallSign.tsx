@@ -1,6 +1,6 @@
-import type { DB } from ".";
+import type { DB } from "..";
 import type { Soldier } from "./Soldier";
-import { Entity } from "./core";
+import { Entity } from "../../core/domain";
 
 
 
@@ -14,7 +14,7 @@ import { Entity } from "./core";
 
 
 
-export class SoldierCallSign extends Entity
+export class Soldier_CallSign extends Entity
 {
 
 	//---
@@ -39,7 +39,7 @@ export class SoldierCallSign extends Entity
 	static Service(db: DB)
 	{
 
-		const all: SoldierCallSign[] = [];
+		const all: Soldier_CallSign[] = [];
 
 		return {
 
@@ -48,7 +48,7 @@ export class SoldierCallSign extends Entity
 			add(soldier: Soldier, callSignFields: Entity.Fields<Soldier>)
 			{
 
-				let callSign = db.addTo(all, SoldierCallSign, callSignFields);
+				let callSign = db.addTo(all, Soldier_CallSign, callSignFields);
 
 
 				callSign.soldier = soldier;

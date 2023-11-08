@@ -82,7 +82,7 @@ export module HR
 	export function Stack({ children, ...props }: DividerProps)
 	{
 
-		return joinChildren(
+		return joinReactNode(
 
 			children,
 
@@ -121,7 +121,7 @@ export module VR
 	export function Stack({ children, ...props }: DividerProps)
 	{
 
-		return joinChildren(
+		return joinReactNode(
 
 			children,
 
@@ -162,11 +162,13 @@ const DividerRoot = styled(
 	{
 
 		if (m === undefined)
-			m = 0;
+			m = span ? 1 : 0;
 
 
 		if (span !== true && !m)
 			return {};
+
+
 
 
 		return {
@@ -210,7 +212,7 @@ const DividerRoot = styled(
 
 
 
-function joinChildren(children: ReactNode, separator: ReactElement) 
+export function joinReactNode(children: ReactNode, separator: ReactElement) 
 {
 
 	if (!children)
@@ -232,8 +234,14 @@ function joinChildren(children: ReactNode, separator: ReactElement)
 	{
 
 		index > 0 && result.push(
-			cloneElement(separator, { key: `separator-${index}` })
+			cloneElement(separator, { key: `$$separator-${index}` })
 		);
+
+
+		if (typeof child === "string")
+		{
+			child = <span key={index}>{child}</span>
+		}
 
 
 		result.push(child);

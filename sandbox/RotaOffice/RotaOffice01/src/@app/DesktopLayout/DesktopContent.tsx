@@ -1,4 +1,4 @@
-import { Div, Focuser } from "@libs";
+import { Div, Focuser, GlobalState } from "@libs";
 import type { ReactNode } from "react";
 
 
@@ -37,6 +37,7 @@ export function DesktopContent(props: {
 			</Focuser>
 
 		</Div>
+
 	);
 
 }

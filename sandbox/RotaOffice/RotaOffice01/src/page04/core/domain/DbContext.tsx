@@ -1,5 +1,5 @@
-import type { Entity } from ".";
-import type { Constructor } from "../../../@libs";
+import type { Constructor } from "@libs";
+import type { Entity } from "./Entity";
 
 
 
@@ -29,9 +29,9 @@ export class DbContext
 
 		let entity = new entityType();
 
-		fields && Object.assign(this, fields);
+		fields && Object.assign(entity, fields);
 
-		entity.db = this;
+		//entity.db = this;
 
 
 		all.push(entity);

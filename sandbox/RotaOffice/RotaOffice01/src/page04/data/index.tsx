@@ -1,4 +1,6 @@
-import * as data01 from "./data01";
+import { db } from "./_db";
+import * as data_00 from "./data_00";
+import * as data_01 from "./data_01";
 
 
 
@@ -6,7 +8,11 @@ import * as data01 from "./data01";
 export const data =
 {
 
-	...data01,
+	db,
+
+	data: {
+		...data_00,
+		...data_01,
+	},
 
 };
-

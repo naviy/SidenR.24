@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "RotaOffice01", "RotaOffice01\RotaOffice01.njsproj", "{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "RotaOffice01", "RotaOffice01\RotaOffice01.esproj", "{D1ED8067-6D5E-4A41-8260-66919A869956}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13112497-DD33-4D23-B0E8-0CA5CBEF1BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1ED8067-6D5E-4A41-8260-66919A869956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1ED8067-6D5E-4A41-8260-66919A869956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1ED8067-6D5E-4A41-8260-66919A869956}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D1ED8067-6D5E-4A41-8260-66919A869956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1ED8067-6D5E-4A41-8260-66919A869956}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1ED8067-6D5E-4A41-8260-66919A869956}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
-import { SoldierCallSign } from "./Soldier_CallSign";
-import { type DB } from "./_db";
-import { Entity } from "./core";
+import { Soldier_CallSign } from "./Soldier_CallSign";
+import { type DB } from "../_db";
+import { Entity } from "../../core/domain";
 
 
 
@@ -34,7 +34,7 @@ export class Soldier extends Entity
 	squad?: number;
 
 	callSign?: string;
-	callSigns?: SoldierCallSign[];
+	callSigns?: Soldier_CallSign[];
 
 
 
@@ -48,9 +48,6 @@ export class Soldier extends Entity
 		const all: Soldier[] = [];
 
 		return {
-
-
-			CallSign: SoldierCallSign.Service(db),
 
 
 			all,

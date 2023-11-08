@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import checker from 'vite-plugin-checker';
 import react from '@vitejs/plugin-react';
-import { viteSingleFile } from "vite-plugin-singlefile"
+//import { viteSingleFile } from "vite-plugin-singlefile"
 
 
 
@@ -25,5 +25,23 @@ export default defineConfig({
 	server: {
 		open: true,
 	},
+
+	build: {
+
+		//emptyOutDir: false,
+		sourcemap: true,
+		minify: false,
+
+		rollupOptions: {
+			treeshake: true,
+			output: {
+				entryFileNames: `assets/index.js`,
+				chunkFileNames: `assets/index-chunk.js`,
+				assetFileNames: `assets/[name].[ext]`,
+			},
+		},
+
+	},
+
 
 });

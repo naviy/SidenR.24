@@ -83,7 +83,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 				mountOnEnter={mountOnEnter !== false}
 				unmountOnExit={unmountOnExit !== false}
 
-				children={Children(route, children)}
+				children={Children({ route }, children)}
 
 			/>
 

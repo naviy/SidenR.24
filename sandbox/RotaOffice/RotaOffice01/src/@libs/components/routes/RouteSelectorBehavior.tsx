@@ -2,7 +2,7 @@ import { useEffect, type RefObject, useRef } from "react";
 import { Focuser } from "../flow-focuser";
 import type { RouterBehavior } from "./RouterBehavior";
 import type { RouteBehavior } from "./RouteBehavior";
-import { $log, Key, Repaintable, _$log } from "../core";
+import { Key, Repaintable } from "../core";
 
 
 
@@ -292,8 +292,6 @@ export class RouteSelectorBehavior extends Repaintable()
 
 	onKeyUp = (e: KeyboardEvent) =>
 	{
-
-		$log("onKeyUp ", e)
 
 		if ((this.visible || this.showTimerId) && !e.ctrlKey && !e.altKey && e.key === Key.Shift)
 		{

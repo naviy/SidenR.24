@@ -17,6 +17,7 @@ declare global
 
 
 
+
 	interface Array<T>
 	{
 
@@ -30,6 +31,8 @@ declare global
 		remove(item: T): boolean;
 		removeRange(items: T[]): boolean;
 		removeBy(item: (item: T, index?: number) => boolean): boolean;
+
+		mapDefineds<T2>(selector: (value: T, index: number, array: T[]) => T2 | undefined): Array<T2>;
 
 		mapMany<T2>(selector: (value: T, index: number, array: T[]) => T2[]): Array<T2>;
 
@@ -52,17 +55,21 @@ declare global
 
 
 
-Array.mapRange = function(from: number, to: number, selector: (value: number, index: number) => any)
+Array.mapRange = function mapRange(from: number, to: number, selector: (value: number, index: number) => any)
 {
+
 	let len = to - from + 1;
 	let result = Array(len);
-	
+
+
 	for (let i = 0; i < len; i++)
 	{
 		result[i] = selector(from + i, i);
 	}
-	
+
+
 	return result;
+
 }
 
 
@@ -77,7 +84,7 @@ Array.mapRange = function(from: number, to: number, selector: (value: number, in
 
 
 
-Array.prototype.add = function (this: Array<any>, item: any)
+Array.prototype.add = function add(this: Array<any>, item: any)
 {
 	this.push(item);
 	return item;
@@ -85,14 +92,14 @@ Array.prototype.add = function (this: Array<any>, item: any)
 
 
 
-Array.prototype.clip = function (this: Array<any>)
+Array.prototype.clip = function clip(this: Array<any>)
 {
 	return this.length ? this : null;
 }
 
 
 
-Array.prototype.register = function (this: Array<any>, item)
+Array.prototype.register = function register(this: Array<any>, item)
 {
 
 	if (item == null)
@@ -115,7 +122,7 @@ Array.prototype.register = function (this: Array<any>, item)
 
 
 
-Array.prototype.registerBy = function (this: Array<any>, match: (a: any, b: any) => boolean, item)
+Array.prototype.registerBy = function registerBy(this: Array<any>, match: (a: any, b: any) => boolean, item)
 {
 
 	if (item == null)
@@ -136,7 +143,7 @@ Array.prototype.registerBy = function (this: Array<any>, match: (a: any, b: any)
 
 
 
-Array.prototype.remove = function <T>(this: Array<T>, item: T)
+Array.prototype.remove = function remove<T>(this: Array<T>, item: T)
 {
 
 	if (item == null)
@@ -158,7 +165,7 @@ Array.prototype.remove = function <T>(this: Array<T>, item: T)
 
 
 
-Array.prototype.removeRange = function <T>(this: Array<T>, items: T[])
+Array.prototype.removeRange = function removeRange<T>(this: Array<T>, items: T[])
 {
 
 	if (!items?.length)
@@ -181,7 +188,7 @@ Array.prototype.removeRange = function <T>(this: Array<T>, items: T[])
 
 
 
-Array.prototype.removeBy = function <T>(this: Array<T>, item: (item: T, index?: number) => boolean)
+Array.prototype.removeBy = function removeBy<T>(this: Array<T>, item: (item: T, index?: number) => boolean)
 {
 
 	if (item == null)
@@ -213,7 +220,39 @@ Array.prototype.removeBy = function <T>(this: Array<T>, item: (item: T, index?: 
 
 
 
-Array.prototype.mapMany = function (this: Array<any>, selector: (value: any, index: number, array: any[]) => any[])
+Array.prototype.mapDefineds = function mapDefineds(
+	this: Array<any>,
+	selector: (value: any, index: number, array: any[]) => any
+)
+{
+
+	const result: any[] = [];
+
+	if (!selector)
+		return result;
+
+
+	let item: any;
+
+	for (let i = 0, len = this.length; i < len; ++i)
+	{
+
+		item = selector(this[i], i, this);
+
+		if (item !== undefined)
+			result.push(item);
+
+	}
+
+
+	return result;
+
+}
+
+
+
+
+Array.prototype.mapMany = function mapMany(this: Array<any>, selector: (value: any, index: number, array: any[]) => any[])
 {
 
 	const result: any[] = [];

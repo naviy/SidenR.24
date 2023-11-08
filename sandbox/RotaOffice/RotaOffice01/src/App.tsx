@@ -82,8 +82,8 @@ function AppDesktop()
 		routes: [
 			Page03.route,
 			Page04.route,
-			Page04.route1,
-			Page04.route2,
+			//Page04.route1,
+			//Page04.route2,
 		],
 
 		activeKey: location.pathname.substring(1) || Page03.route.key,
@@ -116,8 +116,8 @@ function AppDesktop()
 							<List>
 								<MainMenuItem route={Page03.route} />
 								<MainMenuItem route={Page04.route} />
-								<MainMenuItem route={Page04.route1} />
-								<MainMenuItem route={Page04.route2} />
+								{/*<MainMenuItem route={Page04.route1} />*/}
+								{/*<MainMenuItem route={Page04.route2} />*/}
 							</List>
 
 						</DesktopLayout.Sider>
@@ -151,7 +151,7 @@ function AppDesktop()
 								<Route.Slider router={router} fill vertical offset={64}>
 
 									<DesktopLayout.Content>
-										<Route.Content />
+										<Route.Content globalState />
 									</DesktopLayout.Content>
 
 								</Route.Slider>

@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { RouteBehavior, type RouteBehaviorProps } from "./RouteBehavior";
 import { Router } from "./Router";
+import { GlobalState } from "..";
 
 
 
@@ -111,8 +112,17 @@ export type Children/*<TRoute extends RouteBehavior = RouteBehavior>*/ = (
 
 
 
+export interface ChildrenProps
+{
+	route?: RouteBehavior | null;
+	globalState?: boolean | GlobalState;
+}
+
+
+
+
 export function Children(
-	route: RouteBehavior | null | undefined,
+	{ route, globalState }: ChildrenProps,
 	children?: Children
 )
 {
@@ -155,8 +165,20 @@ export function Children(
 	}
 
 
+	if (globalState === true)
+	{
+		body = <GlobalState name={route.key} children={body} />;
+	}
+	else if (typeof globalState === "object")
+	{
+		body = <GlobalState state={globalState} children={body} />;
+	}
+
 
 	body = <Provider route={route} children={body} />;
+
+
+
 
 
 	return body;
@@ -165,25 +187,25 @@ export function Children(
 
 
 
-export function Icon({ route }: { route?: RouteBehavior | null })
+export function Icon(props: ChildrenProps)
 {
-	return Children(route, "icon");
+	return Children(props, "icon");
 }
 
 
-export function Title({ route }: { route?: RouteBehavior | null })
+export function Title(props: ChildrenProps)
 {
-	return Children(route, "title");
+	return Children(props, "title");
 }
 
 
-export function IconTitle({ route }: { route?: RouteBehavior | null })
+export function IconTitle(props: ChildrenProps)
 {
-	return Children(route, r => <>{r.icon()}{r.title()}</>);
+	return Children(props, r => <>{r.icon()}{r.title()}</>);
 }
 
 
-export function Content({ route }: { route?: RouteBehavior | null })
+export function Content(props: ChildrenProps)
 {
-	return Children(route, "content");
+	return Children(props, "content");
 }

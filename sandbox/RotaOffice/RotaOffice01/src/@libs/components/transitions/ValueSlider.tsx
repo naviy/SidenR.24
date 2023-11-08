@@ -69,14 +69,14 @@ export function ValueSlider<TValue>({
 	let animatePropsRef = useRef<FillSlideAnimateProps>({});
 
 
-	Object.assignDefined(animatePropsRef.current, { vertical, dir, offset, /*zoom*/ });
+	Object.assignDefineds(animatePropsRef.current, { vertical, dir, offset, /*zoom*/ });
 
 
 	if (animateProps && value !== undefined)
 	{
 		let aprops = animateProps(value, oldValue);
 
-		aprops && Object.assignDefined(animatePropsRef.current, aprops);
+		aprops && Object.assignDefineds(animatePropsRef.current, aprops);
 
 		if (expander === undefined && aprops && aprops.expander !== undefined)
 		{
