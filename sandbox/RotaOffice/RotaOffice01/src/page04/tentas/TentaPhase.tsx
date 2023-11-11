@@ -46,11 +46,11 @@ export module TentaPhase
 	}
 
 
-	export function useProps<P>(propsByPhase: (phase: number) => Partial<P>): Partial<P> | undefined
-	{
-		let phase = useContext(Context);
-		return phase === undefined ? undefined : propsByPhase(phase);
-	}
+	//export function useProps<P>(propsByPhase: (phase: number) => Partial<P>): Partial<P> | undefined
+	//{
+	//	let phase = useContext(Context);
+	//	return phase === undefined ? undefined : propsByPhase(phase);
+	//}
 
 
 

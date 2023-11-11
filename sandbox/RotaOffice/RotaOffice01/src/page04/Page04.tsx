@@ -84,7 +84,6 @@ function UnitsPile(props: Pane.ColProps)
 	//let units = db.Unit.all.filter(a => a.type === UnitType.Squad);
 	let units = db.Unit.roots();
 
-
 	return <>
 
 		<Pane.Col rounded {...props}>
@@ -114,7 +113,6 @@ function UnitsPile(props: Pane.ColProps)
 
 function UnitRow({ db, r, ...props }: Pile.Row1Props & { db: DB, r: Unit })
 {
-
 	return <Pile.Row1 id={r.id} {...props}>
 
 		<>
@@ -179,9 +177,13 @@ function UnitRowContent({ db, r }: { db: DB, r: Unit })
 
 	return <>
 
-		{hasMasters && <UnitMastersPile db={db} list={r.masters!} />}
-		{hasMasters && hasSubunits && <Div p12 />}
-		{hasSubunits && <UnitSubunitsPile db={db} list={r.subunits!} />}
+		{hasMasters && <Pile.TailCol expanded="opened">
+			<UnitMastersPile db={db} list={r.masters!} />
+		</Pile.TailCol>}
+
+		{hasSubunits && <Pile.TailCol expanded="opened">
+			<UnitSubunitsPile db={db} list={r.subunits!} />
+		</Pile.TailCol>}
 
 	</>
 
@@ -272,7 +274,7 @@ function UnitSubunitsPile({ db, list }: { db: DB; list: Unit_Subordination[] })
 				</Pane>
 
 
-				{list.map((a, i, arr) => <UnitSubunitRow key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
+				{list.map((a, i, arr) => <UnitSubunitNode key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
 
 			</Tenta.Placeholder.Collector>
 
@@ -284,7 +286,7 @@ function UnitSubunitsPile({ db, list }: { db: DB; list: Unit_Subordination[] })
 
 
 
-function UnitSubunitRow({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Row1Props)
+function UnitSubunitNode({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Row1Props)
 {
 
 	return <Pile.Row1 id={r.id} {...props}>

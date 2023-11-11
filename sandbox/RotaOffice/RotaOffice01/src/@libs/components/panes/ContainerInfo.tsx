@@ -16,7 +16,7 @@ import type { ContainerProps } from "./ContainerProps";
 
 export interface ContainerInfo 
 {
-	type?: "row" | "col";
+	layout?: "row" | "col";
 
 	debug?: boolean;
 
@@ -76,7 +76,7 @@ export module ContainerInfo
 
 
 	export const propNames: (keyof ContainerInfo)[] = [
-		"type",
+		"layout",
 		"debug",
 		"start", "end",
 		//"ml", "mr", "mt", "mb",
@@ -184,8 +184,8 @@ export module ContainerInfo
 	{
 
 		let { rounded, start, end, } = props;
-		let inRow = parentInfo.type === "row";
-		let inCol = parentInfo.type === "col";
+		let inRow = parentInfo.layout === "row";
+		let inCol = parentInfo.layout === "col";
 
 		//$log("ContainerInfo.build()");
 		//_$log("start:", start);

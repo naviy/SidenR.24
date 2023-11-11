@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { $defaultAnimationDurationMs, $log, _$log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { BgColor as PaneBgColor } from "./BgColor";
 import { Block } from "./Block";
 import { Container } from "./Container";
@@ -27,8 +27,8 @@ export function Pane(props: Pane.Props)
 
 	let { start, end, } = props;
 
-	let inRow = containerInfo.type === "row";
-	let inCol = containerInfo.type === "col";
+	let inRow = containerInfo.layout === "row";
+	let inCol = containerInfo.layout === "col";
 
 
 
@@ -62,7 +62,7 @@ export function Pane(props: Pane.Props)
 	//}
 
 	let sizes = Block.getBoxSizes(
-		containerInfo.type,
+		containerInfo.layout,
 		props,
 	);
 
@@ -158,7 +158,7 @@ export module Pane
 	export const Row = Container.Row;
 
 
-	export const injectProps = Block.injectProps;
+	//export const injectProps = Block.injectProps;
 
 
 

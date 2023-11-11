@@ -1,3 +1,17 @@
+import { createContext, useContext, type ReactNode } from "react";
+
+
+
+
+
+
+//===
+
+
+
+
+
+
 export type TentaStage = "collapsed" | "expanded" | "opened";
 
 
@@ -11,11 +25,48 @@ export module TentaStage
 
 
 
+
 	export const Default: TentaStage = "collapsed";
 
 
 
+
 	//---
+
+
+
+
+	export const Context = createContext<TentaStage | undefined>(undefined);
+
+
+
+	export function Provider(props: { stage: TentaStage; children: ReactNode; })
+	{
+		return <Context.Provider
+			value={props.stage}
+			children={props.children}
+		/>;
+	}
+
+
+
+	export function use()
+	{
+		return useContext(Context);
+	}
+
+
+	//export function useProps<P>(propsByPhase: (stage: TentaStage) => Partial<P>): Partial<P> | undefined
+	//{
+	//	let stage = useContext(Context);
+	//	return stage === undefined ? undefined : propsByPhase(stage);
+	//}
+
+
+
+
+	//---
+
 
 
 
@@ -72,7 +123,9 @@ export module TentaStage
 
 
 
+
 	//---
+
 
 
 
@@ -83,6 +136,7 @@ export module TentaStage
 	{
 		return props.opened ? "opened" : props.expanded ? "expanded" : "collapsed";
 	}
+
 
 
 

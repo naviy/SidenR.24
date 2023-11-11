@@ -198,44 +198,44 @@ export module Block
 
 
 
-	export function injectProps(children: ReactNode): ReactNode
-	{
+	//export function injectProps(children: ReactNode): ReactNode
+	//{
 
-		return children;
-
-
-		let childrenArr = flattenChildren(children);
+	//	return children;
 
 
-		let startChild = _.find(childrenArr, isBlockElement) as ReactElement<Block.Props> | undefined;
-		let endChild = _.findLast(childrenArr, isBlockElement) as ReactElement<Block.Props> | undefined;
-
-		if (startChild?.props.start !== undefined)
-			startChild = undefined;
-
-		if (endChild?.props.end !== undefined)
-			endChild = undefined;
+	//	let childrenArr = flattenChildren(children);
 
 
-		if (!startChild && !endChild)
-		{
-			return children;
-		}
+	//	let startChild = _.find(childrenArr, isBlockElement) as ReactElement<Block.Props> | undefined;
+	//	let endChild = _.findLast(childrenArr, isBlockElement) as ReactElement<Block.Props> | undefined;
+
+	//	if (startChild?.props.start !== undefined)
+	//		startChild = undefined;
+
+	//	if (endChild?.props.end !== undefined)
+	//		endChild = undefined;
 
 
-		childrenArr = childrenArr.map(child =>
-			child === startChild || child === endChild
-				? React.cloneElement(child as any, {
-					...child === startChild && { start: true },
-					...child === endChild && { end: true },
-				})
-				: child
-		);
+	//	if (!startChild && !endChild)
+	//	{
+	//		return children;
+	//	}
 
 
-		return childrenArr;
+	//	childrenArr = childrenArr.map(child =>
+	//		child === startChild || child === endChild
+	//			? React.cloneElement(child as any, {
+	//				...child === startChild && { start: true },
+	//				...child === endChild && { end: true },
+	//			})
+	//			: child
+	//	);
 
-	}
+
+	//	return childrenArr;
+
+	//}
 
 
 	//export function injectProps(children: ReactNode): ReactNode

@@ -14,6 +14,11 @@ import { Block } from "./Block";
 
 
 
+export type ContainerLayout = "row" | "col";
+
+
+
+
 
 export interface ContainerProps<P extends ContainerProps = any> extends Block.Props, ExpanderBaseProps, UseHookProps<P>
 {
@@ -22,6 +27,8 @@ export interface ContainerProps<P extends ContainerProps = any> extends Block.Pr
 
 	id?: string;
 	debug?: boolean;
+
+	layout?: ContainerLayout;
 
 	rounded?: boolean;
 
@@ -61,7 +68,9 @@ export module ContainerProps
 
 
 	export const propNames: Array<keyof (ContainerProps & PrimitiveProps)> = [
+
 		"debug",
+		"layout",
 		"rounded",
 		"noPP",
 		"pp", "ppx", "ppy", "ppl", "ppr", "ppt", "ppb",
@@ -71,6 +80,7 @@ export module ContainerProps
 		...Block.propNames,
 		...ExpanderBaseProps.propNames,
 		...UseHookProps.propNames,
+
 	];
 
 

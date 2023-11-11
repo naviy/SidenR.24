@@ -5,7 +5,7 @@ import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, crea
 import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
-import { ContainerProps } from "./ContainerProps";
+import { ContainerProps, type ContainerLayout } from "./ContainerProps";
 
 
 
@@ -54,7 +54,7 @@ export module Container
 
 
 	export function renderProvider(
-		type: undefined | "row" | "col",
+		layout: ContainerLayout | undefined,
 		props: Partial<ContainerProps> & PrimitiveProps<HTMLDivElement>,
 		addClassName?: string
 	)
@@ -78,7 +78,7 @@ export module Container
 		let preExpanding = false;
 
 		let sizes = Block.getBoxSizes(
-			parentInfo.type,
+			parentInfo.layout,
 			props,
 		);
 
@@ -109,7 +109,7 @@ export module Container
 			props,
 			parentInfo,
 			{
-				type: type ?? parentInfo.type,
+				layout: props.layout || layout || parentInfo.layout,
 				//...PrimitiveProps.getMargins(props),
 				...PrimitiveProps.getPaddings(props),
 				gap: gap === "inherit" ? parentInfo.gap || 0 : gap || 0,
@@ -131,7 +131,7 @@ export module Container
 		if (flexExpander)
 		{
 
-			body = flexExpander.childrenShouldBeRendered && Block.injectProps(Values.one(body));
+			body = flexExpander.childrenShouldBeRendered && /*Block.injectProps(*/Values.one(body)/*)*/;
 
 			expanderProps = {
 				expandMode: "flex",
@@ -142,7 +142,7 @@ export module Container
 		else if (expander)
 		{
 
-			body = expander.childrenShouldBeRendered && Block.injectProps(Values.one(body));
+			body = expander.childrenShouldBeRendered && /*Block.injectProps(*/Values.one(body)/*)*/;
 
 			body = <div ref={expander.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
 
@@ -154,7 +154,7 @@ export module Container
 		}
 		else
 		{
-			body = Block.injectProps(Values.one(body));
+			body = /*Block.injectProps(*/Values.one(body)/*)*/;
 		}
 
 
@@ -162,13 +162,13 @@ export module Container
 		if (v.debug)
 		{
 			body = <>
-				<DebugBox type={type!}>
+				<DebugBox layout={layout!}>
 					<div>
-						<b>{v.type}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
+						<b>{v.layout}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
 						{props.start && " start"}{props.end && " end"}
 						<div
 							className="gaps"
-							//style={{ borderWidth: `${v.gapt ? 2 : .5}px ${v.gapr ? 2 : .5}px ${v.gapb ? 2 : .5}px ${v.gapl ? 2 : .5}px`, }}
+						//style={{ borderWidth: `${v.gapt ? 2 : .5}px ${v.gapr ? 2 : .5}px ${v.gapb ? 2 : .5}px ${v.gapl ? 2 : .5}px`, }}
 						>
 							gap: {v.gap}
 						</div>
@@ -301,51 +301,53 @@ export module Container
 			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
 
 		};
+
 	});
 
 
 
 	export const DebugBox = styled(
 		"div",
-		{ shouldForwardProp: p => p !== "type", }
-	)<{ type: "row" | "col" }>(
-		({ type }) =>
-		{
+		{ shouldForwardProp: p => p !== "layout", }
+	)<{
+		layout: ContainerLayout
+	}>(({ layout }) =>
+	{
 
-			let color = type === "row" ? "rgba(30,30,160, .5)" : "rgba(30,100,30, .5)";
+		let color = layout === "row" ? "rgba(30,30,160, .5)" : "rgba(30,100,30, .5)";
 
-			return {
+		return {
+			position: "absolute",
+			inset: "-1px",
+			overflow: "hidden",
+			border: `2px solid ${color}`,
+			borderRadius: "inherit",
+			//zIndex: 1,
+
+			"> div": {
 				position: "absolute",
-				inset: "-1px",
-				overflow: "hidden",
-				border: `2px solid ${color}`,
-				borderRadius: "inherit",
-				//zIndex: 1,
+				top: 0,
+				left: 0,
+				fontSize: "8px",
+				padding: "0px 8px 2px 6px",
+				background: color,
+				color: "white",
+				borderBottomRightRadius: 3,
 
-				"> div": {
-					position: "absolute",
-					top: 0,
-					left: 0,
-					fontSize: "8px",
-					padding: "0px 8px 2px 6px",
-					background: color,
-					color: "white",
-					borderBottomRightRadius: 3,
+				whiteSpace: "nowrap",
 
-					whiteSpace: "nowrap",
+				".gaps": {
+					display: "inline-block",
+					border: "0px solid white",
+					padding: '0 2px',
+					margin: `1px 0 1px 8px`,
+					fontSize: '8px',
+					lineHeight: `10px`,
+				},
+			}
+		};
 
-					".gaps": {
-						display: "inline-block",
-						border: "0px solid white",
-						padding: '0 2px',
-						margin: `1px 0 1px 8px`,
-						fontSize: '8px',
-						lineHeight: `10px`,
-					},
-				}
-			};
-		}
-	);
+	});
 
 
 
