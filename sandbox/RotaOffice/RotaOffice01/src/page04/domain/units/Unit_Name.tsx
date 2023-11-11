@@ -166,8 +166,8 @@ export module Unit_Name
 			add(
 				unit: Unit,
 
-				names: [string, string, string],
-				names2: [string, string, string],
+				names: [string, string, string?],
+				names2?: [string, string, string?],
 
 				fields?: Pick<
 					Unit_Name,
@@ -181,11 +181,11 @@ export module Unit_Name
 
 					shortName: names[0],
 					name: names[1],
-					fullName: names[2],
+					fullName: names[2] || names[1],
 
-					shortName2: names2[0],
-					name2: names2[1],
-					fullName2: names2[2],
+					shortName2: names2?.[0] || names[0],
+					name2: names2?.[1] || names[1],
+					fullName2: names2?.[2] || names2?.[1] || names[2] || names[1],
 
 					dateFrom: db.today,
 

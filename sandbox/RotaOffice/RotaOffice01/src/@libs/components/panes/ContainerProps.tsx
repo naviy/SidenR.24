@@ -72,7 +72,7 @@ export module ContainerProps
 		"debug",
 		"layout",
 		"rounded",
-		"noPP",
+		"noPP", "ppStart",
 		"pp", "ppx", "ppy", "ppl", "ppr", "ppt", "ppb",
 		"pp0", "ppx0", "ppy0", "ppl0", "ppr0", "ppt0", "ppb0",
 		"wrapperCls",

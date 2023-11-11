@@ -1,4 +1,4 @@
-import { GlobalState, Repaintable, useNew } from "@libs";
+import { GlobalState, Repaintable, useNew as useNew_ } from "@libs";
 import type React from "react";
 import { createContext, useContext, type ReactNode } from "react";
 import type { TentaBase, TentaGlobalState } from "./TentaBase";
@@ -25,10 +25,18 @@ export module TentaPlaceholder
 
 
 
-	export function use(id: React.Key)
+	export function use(
+		id: React.Key | undefined,
+		collector?: CollectorBehavior | null
+	): Behavior | null
 	{
 
-		let collector = useContext(CollectorContext)?.collector;
+		if (id === undefined)
+			return null;
+
+		if (collector === undefined)
+			collector = useContext(CollectorContext)?.collector;
+
 
 		if (!collector)
 			return null;
@@ -213,20 +221,51 @@ export module TentaPlaceholder
 
 
 
+	export function Collector(props: Collector.Config & {
+		children: ReactNode;
+	}): JSX.Element;
 	export function Collector(props: {
-		root?: boolean;
-		globalState?: string | GlobalState;
-		placeholders: DefaultProps[];
+		bhv: CollectorBehavior;
+		children: ReactNode;
+	}): JSX.Element;
+	export function Collector(props: Partial<Collector.Config> & {
+		bhv?: CollectorBehavior
 		children: ReactNode;
 	})
 	{
-		let bhv = useNew(CollectorBehavior).use(props);
+
+		let bhv = props.bhv as CollectorBehavior;
+
+		if (bhv === undefined)
+			bhv = Collector.useNew(props as Collector.Config);
 
 		return <CollectorContext.Provider
 			value={{ collector: bhv }}
 			children={props.children}
 		/>;
+
 	}
+
+
+
+	export module Collector
+	{
+
+		export interface Config
+		{
+			root?: boolean;
+			globalState?: string | GlobalState;
+			placeholders: DefaultProps[];
+		}
+
+
+		export function useNew(cfg: Config)
+		{
+			return useNew_(CollectorBehavior).use(cfg);
+		}
+
+	}
+
 
 
 	export function NoCollector(props: { children: ReactNode })
@@ -260,11 +299,7 @@ export module TentaPlaceholder
 
 
 
-		use(cfg: Repaintable.UseConfig & {
-			root?: boolean;
-			placeholders: DefaultProps[];
-			globalState?: string | GlobalState;
-		})
+		use(cfg: Repaintable.UseConfig & Collector.Config)
 		{
 
 			Repaintable.use(this, cfg);

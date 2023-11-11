@@ -522,6 +522,7 @@ export function GlobalStylesOfPrimitives(props: {
 			justifyContent: "inherit",
 			alignItems: "inherit",
 			gap: "inherit",
+			borderRadius: "inherit",
 		},
 
 		...rangeMP("flex", flexes24, i => ({ flex: `${i}!important` })),

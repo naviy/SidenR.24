@@ -123,8 +123,8 @@ export module Unit
 
 				type: UnitType,
 
-				names: [string, string, string],
-				names2: [string, string, string],
+				names: [string, string, string?],
+				names2?: [string, string, string?],
 
 
 				fields?: Pick<Unit, "formationDate" | "disbandingDate">

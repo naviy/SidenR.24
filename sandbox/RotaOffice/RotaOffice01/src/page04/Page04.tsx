@@ -1,17 +1,13 @@
-import { $log, Div, GlobalState, Pane, Route, Span, Txt, VR } from '@libs';
+import { $log, Div, GlobalState, Pane, Route, Span, Txt } from '@libs';
 
 import FestivalIcon from '@mui/icons-material/Festival';
 import Button from "@mui/material/Button";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 
 import { useData } from "./db";
-import { Unit_Subordination, type Unit, DB } from "./domain";
+import { DB, Unit_Subordination, type Unit } from "./domain";
 import { Pile } from "./piles";
 import { gsm } from "./semantics";
 import { Tenta } from './tentas';
-import { db } from "./data/_db";
 
 
 
@@ -96,7 +92,7 @@ function UnitsPile(props: Pane.ColProps)
 				placeholders={units.map(a => a.id)}
 			>
 
-				{units.map((a, i, arr) => <UnitRow key={a.id} db={db} r={a} start={i === 0} end={i === arr.length - 1} />)}
+				{units.map(a => <UnitNode key={a.id} db={db} r={a} />)}
 
 
 			</Tenta.Placeholder.Collector>
@@ -111,25 +107,25 @@ function UnitsPile(props: Pane.ColProps)
 
 
 
-function UnitRow({ db, r, ...props }: Pile.Row1Props & { db: DB, r: Unit })
+function UnitNode({ db, r, ...props }: Pile.Node1Props & { db: DB, r: Unit })
 {
-	return <Pile.Row1 id={r.id} {...props}>
+	return <Pile.Node1 id={r.id} {...props}>
 
 		<>
-			<UnitRowBody db={db} r={r} start />
-			<UnitRowActions db={db} r={r} end />
+			<UnitBody db={db} r={r} start />
+			<UnitActions db={db} r={r} end />
 		</>
 
-		<UnitRowContent db={db} r={r} />
+		<UnitTail db={db} r={r} />
 
-	</Pile.Row1>;
+	</Pile.Node1>;
 
 }
 
 
 
 
-function UnitRowBody({ db, r, ...props }: { db: DB, r: Unit } & Pane.RowProps)
+function UnitBody({ db, r, ...props }: { db: DB, r: Unit } & Pane.RowProps)
 {
 
 	let [name, ...masterNames] = r.allNamesBy(db);
@@ -151,7 +147,7 @@ function UnitRowBody({ db, r, ...props }: { db: DB, r: Unit } & Pane.RowProps)
 }
 
 
-function UnitRowActions({ db, r, ...props }: { db: DB, r: Unit } & Pane.Props)
+function UnitActions({ db, r, ...props }: { db: DB, r: Unit } & Pane.Props)
 {
 
 	return <>
@@ -165,7 +161,7 @@ function UnitRowActions({ db, r, ...props }: { db: DB, r: Unit } & Pane.Props)
 }
 
 
-function UnitRowContent({ db, r }: { db: DB, r: Unit })
+function UnitTail({ db, r }: { db: DB, r: Unit })
 {
 
 	let hasMasters = r.masters?.length;
@@ -175,15 +171,17 @@ function UnitRowContent({ db, r }: { db: DB, r: Unit })
 		return null;
 
 
+
+	//{hasMasters && <Pile.Col expanded="opened" indent="opened" >
+	//	<UnitMastersNode db={db} list={r.masters!} />
+	//</Pile.Col>}
+
+
 	return <>
 
-		{hasMasters && <Pile.TailCol expanded="opened">
-			<UnitMastersPile db={db} list={r.masters!} />
-		</Pile.TailCol>}
 
-		{hasSubunits && <Pile.TailCol expanded="opened">
-			<UnitSubunitsPile db={db} list={r.subunits!} />
-		</Pile.TailCol>}
+
+		{hasSubunits && <UnitSubunitsNode db={db} list={r.subunits!} />}
 
 	</>
 
@@ -193,7 +191,7 @@ function UnitRowContent({ db, r }: { db: DB, r: Unit })
 
 
 
-function UnitMastersPile({ db, list }: { db: DB, list: Unit_Subordination[] })
+function UnitMastersNode({ db, list }: { db: DB, list: Unit_Subordination[] })
 {
 
 	return (
@@ -211,7 +209,7 @@ function UnitMastersPile({ db, list }: { db: DB, list: Unit_Subordination[] })
 					<Span em>MASTERS</Span>
 				</Pane>
 
-				{list.map((a, i, arr) => <UnitMasterRow key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
+				{list.map((a, i, arr) => <UnitMasterNode key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
 
 			</Tenta.Placeholder.Collector>
 
@@ -223,14 +221,14 @@ function UnitMastersPile({ db, list }: { db: DB, list: Unit_Subordination[] })
 
 
 
-function UnitMasterRow({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Row1Props)
+function UnitMasterNode({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Node1Props)
 {
 
-	return <Pile.Row1 id={r.id} {...props}>
+	return <Pile.Node1 id={r.id} {...props}>
 
 		<>
 
-			<UnitRowBody db={db} r={r.master} start />
+			<UnitBody db={db} r={r.master} start />
 
 			<Pane flex0 p12>
 				<div>
@@ -239,61 +237,69 @@ function UnitMasterRow({ db, r, ...props }: { db: DB, r: Unit_Subordination } & 
 				</div>
 			</Pane>
 
-			<UnitRowActions db={db} r={r.master} end />
+			<UnitActions db={db} r={r.master} end />
 
 		</>
 
 
-		<UnitRowContent db={db} r={r.master} />
+		<UnitTail db={db} r={r.master} />
 
 
-	</Pile.Row1>;
+	</Pile.Node1>;
 
 }
 
 
 
 
-function UnitSubunitsPile({ db, list }: { db: DB; list: Unit_Subordination[] })
+function UnitSubunitsNode({ db, list }: { db: DB; list: Unit_Subordination[] })
 {
 
 	return (
 
-		<Pane.Col rounded>
+		<Pile.Col collapsed="collapsed" indent="opened" start end>
 
-			<Pile.ListBackfill />
+			<Pile.Node1 start end linkLine="opened">
 
-
-			<Tenta.Placeholder.Collector
-				globalState="unit-subordinations"
-				placeholders={["$H", ...list.map(a => a.id)]}
-			>
-
-				<Pane p12 start m2 mb0>
-					<Span em>SUBUNITS</Span>
+				<Pane p12 start end>
+					<Span em>SUBUNITS ({list.length})</Span>
 				</Pane>
 
+				<Pile.Col collapsed="collapsed" indent="opened" start end>
+					<Div flexi relative>
+						<Pile.ListBackfill />
+						<Nodes />
+					</Div>
+				</Pile.Col>
 
-				{list.map((a, i, arr) => <UnitSubunitNode key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
+			</Pile.Node1>
 
-			</Tenta.Placeholder.Collector>
-
-		</Pane.Col>
+		</Pile.Col>
 
 	);
+
+
+	function Nodes()
+	{
+		return <Tenta.Placeholder.Collector
+			globalState="unit-subordinations"
+			placeholders={list.map(a => a.id)}
+			children={list.map(a => <UnitSubunitNode key={a.id} db={db} r={a} />)}
+		/>
+	}
 
 }
 
 
 
-function UnitSubunitNode({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Row1Props)
+function UnitSubunitNode({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Node1Props)
 {
 
-	return <Pile.Row1 id={r.id} {...props}>
+	return <Pile.Node1 id={r.id} {...props} linkLine="opened">
 
 		<>
 
-			<UnitRowBody db={db} r={r.unit} start />
+			<UnitBody db={db} r={r.unit} start />
 
 			<Pane flex0 p12>
 				<div>
@@ -302,14 +308,14 @@ function UnitSubunitNode({ db, r, ...props }: { db: DB, r: Unit_Subordination } 
 				</div>
 			</Pane>
 
-			<UnitRowActions db={db} r={r.unit} end />
+			<UnitActions db={db} r={r.unit} end />
 
 		</>
 
 
-		<UnitRowContent db={db} r={r.unit} />
+		<UnitTail db={db} r={r.unit} />
 
 
-	</Pile.Row1>;
+	</Pile.Node1>;
 
 }

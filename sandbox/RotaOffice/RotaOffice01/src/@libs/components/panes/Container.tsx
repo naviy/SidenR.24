@@ -6,6 +6,7 @@ import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
 import { ContainerProps, type ContainerLayout } from "./ContainerProps";
+import { Margin } from "@mui/icons-material";
 
 
 
@@ -144,7 +145,7 @@ export module Container
 
 			body = expander.childrenShouldBeRendered && /*Block.injectProps(*/Values.one(body)/*)*/;
 
-			body = <div ref={expander.wrapperRef} className={clsx("flexi", props.wrapperCls)} children={body} />;
+			body = <div ref={expander.wrapperRef} className={clsx("pane-expander flexi relative", props.wrapperCls)} children={body} />;
 
 			expanderProps = {
 				expandMode: "height",
@@ -299,6 +300,12 @@ export module Container
 				willChange: "flex",
 			},
 			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
+
+			">.pane-expander": {
+				padding: 0,
+				margin: 0,
+				transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
+			}
 
 		};
 
