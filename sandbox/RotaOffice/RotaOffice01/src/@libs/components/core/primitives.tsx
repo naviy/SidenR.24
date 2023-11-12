@@ -151,9 +151,12 @@ export const bgColors = {
 
 	[0]: "#ffffff",
 	[1]: "#f0f2f5",
-	[2]: muiColors.blueGrey[100],
-	[3]: muiColors.blueGrey[200],
-	[4]: muiColors.blueGrey[300],
+	[2]: muiColors.blueGrey[200],
+	[3]: muiColors.blueGrey[400],
+	[4]: muiColors.blueGrey[500],
+	//[2]: muiColors.blueGrey[100],
+	//[3]: muiColors.blueGrey[200],
+	//[4]: muiColors.blueGrey[300],
 
 	...rangeOP("blueGrey", muiColors.blueGrey, v => v),
 

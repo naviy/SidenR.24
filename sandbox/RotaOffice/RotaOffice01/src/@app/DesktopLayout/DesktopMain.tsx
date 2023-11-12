@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Div, Focuser } from "@libs";
 import { DesktopLayout } from ".";
 import { AppThemes } from "../AppTheme";
+import { green } from "@mui/material/colors";
 
 
 
@@ -68,7 +69,9 @@ const MainRoot = styled(
 		//overflow: "auto scroll",
 
 		backgroundColor: theme.palette.mode === "light"
-			? "#f3f6f9"
+			//? "#f3f9f6"
+			? "#ecffe0"
+			//? green[50]
 			: theme.palette.grey[900]
 		,
 

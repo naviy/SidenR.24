@@ -2847,11 +2847,11 @@ export class Focuser extends Component<FocuserProps>
 
 	focusParentIfCan(focusProps?: FocusActionProps | null)
 	{
-		$log("focusParentIfCan")
+
 		let parent = this.parentBy();
+
 		if (!parent?.canFocus())
 			return null;
-		_$log("parent:", parent)
 
 		return parent.focus(focusProps) || null;
 

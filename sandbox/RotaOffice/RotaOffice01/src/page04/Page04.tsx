@@ -2,6 +2,7 @@ import { $log, Div, GlobalState, Pane, Route, Span, Txt } from '@libs';
 
 import FestivalIcon from '@mui/icons-material/Festival';
 import Button from "@mui/material/Button";
+import Badge from '@mui/material/Badge';
 
 import { useData } from "./db";
 import { DB, Unit_Subordination, type Unit } from "./domain";
@@ -164,23 +165,16 @@ function UnitActions({ db, r, ...props }: { db: DB, r: Unit } & Pane.Props)
 function UnitTail({ db, r }: { db: DB, r: Unit })
 {
 
-	let hasMasters = r.masters?.length;
-	let hasSubunits = r.subunits?.length
+	let hasMasters = !!r.masters?.length;
+	let hasSubunits = !!r.subunits?.length
 
 	if (!hasMasters && !hasSubunits)
 		return null;
 
 
-
-	//{hasMasters && <Pile.Col expanded="opened" indent="opened" >
-	//	<UnitMastersNode db={db} list={r.masters!} />
-	//</Pile.Col>}
-
-
 	return <>
 
-
-
+		{hasMasters && <UnitMastersNode db={db} list={r.masters!} noLast={hasSubunits} />}
 		{hasSubunits && <UnitSubunitsNode db={db} list={r.subunits!} />}
 
 	</>
@@ -191,31 +185,47 @@ function UnitTail({ db, r }: { db: DB, r: Unit })
 
 
 
-function UnitMastersNode({ db, list }: { db: DB, list: Unit_Subordination[] })
+function UnitMastersNode({
+	db, list, noLast
+}: {
+	db: DB;
+	list: Unit_Subordination[];
+	noLast: boolean;
+})
 {
 
 	return (
 
-		<Pane.Col rounded>
+		<Pile.Col expanded="opened" indent="opened" start end wrapperCls="pb0">
 
-			<Pile.ListBackfill />
+			<Pile.Node1 start end linkLine="opened" linkToNext={noLast}>
 
-			<Tenta.Placeholder.Collector
-				globalState="unit-masters"
-				placeholders={["$H", ...list.map(a => a.id)]}
-			>
-
-				<Pane p12 start m2 mb0>
-					<Span em>MASTERS</Span>
+				<Pane p12 start end>					
+					<Span em upperCase opacity7>{gsm.Unit.hasMasters.$One}</Span>&nbsp;у&nbsp;<em>{list.length}</em><Span>&nbsp;{gsm.Unit.$noun6(list.length)}</Span>
 				</Pane>
 
-				{list.map((a, i, arr) => <UnitMasterNode key={a.id} db={db} r={a} start={false} end={i === arr.length - 1} />)}
+				<Pile.Col expanded="opened" indent="opened" start end>
+					<Div flexi relative>
+						<Pile.ListBackfill />
+						<Nodes />
+					</Div>
+				</Pile.Col>
 
-			</Tenta.Placeholder.Collector>
+			</Pile.Node1>
 
-		</Pane.Col>
+		</Pile.Col>
 
 	);
+
+
+	function Nodes()
+	{
+		return <Tenta.Placeholder.Collector
+			globalState="unit-masters"
+			placeholders={list.map(a => a.id)}
+			children={list.map(a => <UnitMasterNode key={a.id} db={db} r={a} />)}
+		/>
+	}
 
 }
 
@@ -224,7 +234,7 @@ function UnitMastersNode({ db, list }: { db: DB, list: Unit_Subordination[] })
 function UnitMasterNode({ db, r, ...props }: { db: DB, r: Unit_Subordination } & Pile.Node1Props)
 {
 
-	return <Pile.Node1 id={r.id} {...props}>
+	return <Pile.Node1 id={r.id} {...props} linkLine="opened">
 
 		<>
 
@@ -257,15 +267,15 @@ function UnitSubunitsNode({ db, list }: { db: DB; list: Unit_Subordination[] })
 
 	return (
 
-		<Pile.Col collapsed="collapsed" indent="opened" start end>
+		<Pile.Col expanded="opened" indent="opened" start end>
 
 			<Pile.Node1 start end linkLine="opened">
 
 				<Pane p12 start end>
-					<Span em>SUBUNITS ({list.length})</Span>
+					<Span em>{gsm.Unit.hasSubunits.$Many} {list.length} {gsm.Unit.$noun(list.length)}</Span>
 				</Pane>
 
-				<Pile.Col collapsed="collapsed" indent="opened" start end>
+				<Pile.Col expanded="opened" indent="opened" start end wrapperCls="pb0">
 					<Div flexi relative>
 						<Pile.ListBackfill />
 						<Nodes />

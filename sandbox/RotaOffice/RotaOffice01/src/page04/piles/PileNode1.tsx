@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import React, { type ReactNode } from "react";
 import { Tenta, TentaPhase, TentaStage } from "../tentas";
 import * as _ from "lodash";
+import { clsx } from "clsx";
 
 
 
@@ -30,9 +31,11 @@ export function PileNode1({
 
 	id,
 
-	linkLine,
 	noFirst,
 	noLast,
+
+	linkLine,
+	linkToNext,
 
 	...rowProps
 
@@ -40,9 +43,11 @@ export function PileNode1({
 
 	id?: React.Key;
 
-	linkLine?: TentaPhaseValue;
 	noFirst?: boolean;
 	noLast?: boolean;
+
+	linkLine?: TentaPhaseValue;
+	linkToNext?: boolean;
 
 	children: ReactNode | [ReactNode, ReactNode];
 
@@ -57,14 +62,16 @@ export function PileNode1({
 	let tenta = useNew(Tenta.Behavior1).use({ placeholder });
 
 
-	let topStage = placeholder?.prior ? null : tenta.stage;
-	let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
-
 	let isFirst = !noFirst && !placeholder?.prior;  // || placeholder.prior.opened;
 	let isLast = !noLast && !placeholder?.next;	    // || placeholder.next.opened;
 
+
+	let topStage = placeholder?.prior ? null : tenta.stage;
+	let btmStage = isLast ? "collapsed" : TentaStage.max(tenta.stage, placeholder?.next?.stage);
+
+
 	let start = tenta.opened || isFirst;
-	let end = tenta.opened || isLast;   
+	let end = tenta.opened || isLast;
 
 	let byParent = TentaPhaseValue.useConvert({ linkLine });
 
@@ -89,24 +96,21 @@ export function PileNode1({
 						<Div relative>
 
 
-							<PileNodeLinkLine
-								width={linkLine2 ? 36 : 0}
-								thickness={tenta.opened ? 2 : tenta.expanded ? 2 : 2}
-							>
+							<PileNodeLinkLine width={linkLine2 ? 36 : 0}>
 
 								{isFirst && <div className="line-to-root" />}
 								<div className="angle" />
-								{!isLast && <div className="line-to-next" />}
+								{(!isLast || linkToNext) && <div className="line-to-next" />}
 
 							</PileNodeLinkLine>
 
 
-							<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
+							<Focuser ref={tenta.rootFfRef} name={`pile-node#${id}`} ghost focusable>
 
 
 								<Pane.Col
 									//debug
-									id={`pile-row#${id}`}
+									id={`pile-node#${id}`}
 
 									rounded={tenta.opened}
 
@@ -150,6 +154,9 @@ export function PileNode1({
 											mx={tenta.opened ? -24 : tenta.expanded ? -12 : 0}
 											ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
 											ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
+											//mx={tenta.opened ? -24 : tenta.expanded ? 0 : 0}
+											//ppx0={tenta.priorPhase === 2 ? 24 : tenta.priorPhase === 1 ? 0 : 0}
+											//ppx={tenta.phase === 2 ? 24 : tenta.phase === 1 ? 0 : 0}
 
 
 											gap1
@@ -410,8 +417,8 @@ export function PileCol(props: PileColProps)
 
 	return <Pane.Col
 		expanded={props2?.expanded ?? (props2?.collapsed !== undefined && !props2.collapsed)}
-		wrapperCls={props2?.indent ? "py24 pl36 pr12" : undefined}
 		{...colProps}
+		wrapperCls={clsx(props2?.indent && "py24 pl36 pr12", colProps.wrapperCls)}
 	/>;
 
 }
@@ -454,7 +461,7 @@ const PileNodeLinkLine = styled(
 		top: 0,
 		height: 24,
 
-		border: `${thickness || 2}px solid ${bgColors[3]}`,
+		border: `${thickness || 3}px solid ${bgColors[3]}`,
 		borderTopWidth: 0,
 		borderRightWidth: 0,
 		borderBottomLeftRadius: 12,
@@ -466,13 +473,13 @@ const PileNodeLinkLine = styled(
 		right: 0,
 		top: -24,
 		height: 24,
-		borderLeft: `${thickness || 2}px solid ${bgColors[3]}`,
+		borderLeft: `${thickness || 3}px solid ${bgColors[3]}`,
 	},
 
 	"> .line-to-next": {
 		position: "absolute",
 		inset: 0,
-		borderLeft: `${thickness || 2}px solid ${bgColors[3]}`,
+		borderLeft: `${thickness || 3}px solid ${bgColors[3]}`,
 	},
 
 }));

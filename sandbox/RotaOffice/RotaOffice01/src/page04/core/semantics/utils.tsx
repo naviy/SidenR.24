@@ -1,4 +1,4 @@
-export function noun(num: number, one: string, two: string, five?: string)
+export function noun(num: number, one: string | null | undefined, two: string | null | undefined, five: string | null | undefined)
 {
 
 	if (!five)
@@ -23,7 +23,7 @@ export function noun(num: number, one: string, two: string, five?: string)
 
 
 
-export function verb(num: number, one: string, two: string, five: string) 
+export function verb(num: number, one: string | null | undefined, two: string | null | undefined, five: string | null | undefined) 
 {
 
 	if (num > 1000000)
