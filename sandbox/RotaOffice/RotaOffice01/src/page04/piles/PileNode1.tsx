@@ -170,7 +170,9 @@ export function PileNode1({
 											<Focuser.Caret
 												use={usePileRowCaretProps}
 											//color={props.start ? "green" : props.end ? "red" : undefined }
-											/>
+											>
+												<Focuser.Caret.LineIndicator1 value={tenta.phase} max={tenta.expandedPhase} max2={tenta.openedPhase} />
+											</Focuser.Caret>
 
 											{parts[0]}
 

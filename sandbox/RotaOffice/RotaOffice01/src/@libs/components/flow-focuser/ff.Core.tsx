@@ -1225,7 +1225,7 @@ export function Core()
 
 				borderStyle: "solid",
 
-				opacity: 0,
+				opacity: "var(--opacity,0)",
 				borderRadius: 3,
 				borderWidth: 2,
 
@@ -1233,10 +1233,13 @@ export function Core()
 
 				transition: `var(--transition, all ${$defaultAnimationDurationMs}ms linear)`,
 
-
 				"> div": {
+					position: "absolute",
+					inset: 0,
 					borderRadius: "inherit",
-					transition: `opacity ${$defaultAnimationDurationMs}ms linear`,
+					overflow: "hidden",
+					opacity: "var(--opacity,0)",
+					transition: `opacity ${$defaultAnimationDurationMs}ms linear ${2.5 * $defaultAnimationDurationMs}ms`,
 				},
 
 				"&.shake-1": {
@@ -1285,6 +1288,28 @@ export function Core()
 				"20%": { transform: "skewX(0deg)" },
 				"100%": { transform: "skewX(0deg)" },
 			},
+
+
+			".ff-caret-lineBreak-indicator-1": {
+
+				position: "absolute",
+				top: 0,
+
+				height: "var(--height)",
+				left: "var(--left)",
+				width: "var(--width)",
+
+				background: `rgba(var(--color), .5)`,
+				//background: `rgb(var(--color))`,
+				border: `1px solid rgb(var(--color))`,
+				//borderTop: 'none',
+				borderRadius: `0 0 var(--height) var(--height)`,
+				//borderRadius: `0 0 ${value < max2 ? height : 0}px ${value > 0 ? height : 0}px`,
+
+				transition: `all 225ms ease-out`,
+
+			},
+
 
 
 		}} />

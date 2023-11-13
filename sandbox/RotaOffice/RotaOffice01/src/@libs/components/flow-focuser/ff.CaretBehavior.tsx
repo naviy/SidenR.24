@@ -230,26 +230,16 @@ export class CaretBehavior extends Repaintable()
 		return {
 
 			inset,
-			opacity: focused ? 1 : undefined,
+			"--opacity": focused ? 1 : undefined,
 			borderRadius: focused ? borderRadius : undefined,
 			borderWidth: focused ? borderWidth : undefined,
 
-			"--color": hex2rgb(color),
+			"--color": MuiColor.hex2rgb(color),
 
 			"--transition": this._priorPosition || this.ffIsPrior && currentFocuser() ? `none` : undefined,
 
 		} as CSSProperties;
 
-
-
-		function hex2rgb(hex: string)
-		{
-			const r = parseInt(hex.slice(1, 3), 16);
-			const g = parseInt(hex.slice(3, 5), 16);
-			const b = parseInt(hex.slice(5, 7), 16);
-
-			return `${r},${g},${b}`;
-		}
 
 	}
 

@@ -223,6 +223,17 @@ export module ContainerInfo
 		v.brbl = !!(rounded || parentInfo.brbl && (inRow && start || inCol && end));
 		//__$log("v.brtl:", v.brtl);
 
+
+		//let br2 = Block.bigBorderRadius;
+
+		//v.cssBorderRadius = [
+		//	v.brtl ? `${br2 + v.pl!}px` : "0",
+		//	v.brtr ? `${br2 + v.pr!}px` : "0",
+		//	v.brbr ? `${br2 + v.pl!}px` : "0",
+		//	v.brbl ? `${br2 + v.pr!}px` : "0",
+		//].join(" ");
+		
+
 		let br2 = Block.bigBorderRadius;
 		let br0 = Block.smallBorderRadius;
 
@@ -232,7 +243,6 @@ export module ContainerInfo
 			v.brbr ? `${br2 + v.pl!}px` : !parentInfo.gap && (inRow && !end || inCol && !end) ? "0" : `${br0 + v.pl!}px`,
 			v.brbl ? `${br2 + v.pr!}px` : !parentInfo.gap && (inRow && !start || inCol && !end) ? "0" : `${br0 + v.pr!}px`,
 		].join(" ");
-		//__$log("cssBorderRadius:", v.cssBorderRadius);
 		
 
 		return v;

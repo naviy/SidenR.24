@@ -6,7 +6,6 @@ import { Expander, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
 import { ContainerProps, type ContainerLayout } from "./ContainerProps";
-import { Margin } from "@mui/icons-material";
 
 
 

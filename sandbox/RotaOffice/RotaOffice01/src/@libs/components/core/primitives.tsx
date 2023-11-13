@@ -114,6 +114,42 @@ type GapYs = { [P in Padding as `gapy${P}`]?: boolean; };
 
 
 
+export const widths = Paddings;
+
+
+type Width = typeof widths[number];
+
+type WidthProps = {
+	//!!! width?: Width
+} & {
+	[P in Width as `width${P}`]?: boolean;
+};
+
+
+
+
+
+export const heights = Paddings;
+
+
+type Height = typeof heights[number];
+
+type HeightProps = {
+	//!!! height?: Height
+} & {
+	[P in Height as `height${P}`]?: boolean;
+};
+
+
+
+
+
+//===
+
+
+
+
+
 
 const flexes24 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] as const;
 const flexesPx = Paddings;
@@ -176,7 +212,7 @@ export const bgColors = {
 
 type Elevation = "0" | "L1" | "L1b" | "L2" | "L3" | "L4" | "L5" | "D1" | "D2" | "D3" | "D4" | "D5";
 
-type ElevationProps = { [P in Capitalize<Elevation> as `e${P}`]?: boolean; }
+type ElevationProps = { [P in Capitalize<Elevation> as `e${P}`]?: boolean; } & { e?: Elevation; }
 
 
 
@@ -258,13 +294,37 @@ export const fontSizes: Record<FontSize, string> =
 
 
 
+export const rotateAngles = [0, 45, 90, 135, 180, 225, 270, 315, 360] as const;
+
+
+type Rotate = typeof rotateAngles[number];
+
+type RotateProps = {
+	rotate?: Rotate
+} & {
+	[P in Rotate as `rotate{P}`]?: boolean;
+};
+
+
+
+
+
+
+//===
+
+
+
+
+
 
 export interface PrimitiveClassesProps extends
 	Ms, MXs, MYs, MLs, MRs, MTs, MBs,
 	Ps, PXs, PYs, PLs, PRs, PTs, PBs,
+	WidthProps, HeightProps, 
 	FlexProps,
 	Gaps, GapXs, GapYs,
-	BgProps, FontSizeProps, ElevationProps
+	BgProps, FontSizeProps, ElevationProps,
+	RotateProps
 {
 
 	//---
@@ -447,12 +507,6 @@ export interface PrimitiveClassesProps extends
 	animated?: boolean;
 
 
-	//---
-
-
-	/** elevation */
-	e?: Elevation;
-
 
 	//---
 
@@ -502,6 +556,10 @@ export function GlobalStylesOfPrimitives(props: {
 		...rangeMP("pr", Paddings, i => ({ paddingRight: `${i}px!important` })),
 		...rangeMP("pt", Paddings, i => ({ paddingTop: `${i}px!important` })),
 		...rangeMP("pb", Paddings, i => ({ paddingBottom: `${i}px!important` })),
+
+		...rangeMP("width", widths, i => ({ width: `${i}px!important` })),
+		...rangeMP("height", heights, i => ({ height: `${i}px!important` })),
+
 
 		gapi: { gap: "inherit" },
 		...rangeMP("gap", Paddings, i => ({ gap: `${i}px!important` })),
@@ -717,6 +775,8 @@ export function GlobalStylesOfPrimitives(props: {
 		...rangeOP("bg", bgColors, v => ({ background: v })),
 
 		...rangeOP("e", elevaltionShadows, v => ({ boxShadow: v })),
+
+		...rangeMP("rotate", rotateAngles, i => ({ transform: `rotate(${i}deg)!important` })),
 
 
 	});

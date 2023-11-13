@@ -50,9 +50,9 @@ export module TentaStage
 
 
 
-	export function use()
+	export function use(value?: TentaStage)
 	{
-		return useContext(Context);
+		return value !== undefined ? value : useContext(Context);
 	}
 
 

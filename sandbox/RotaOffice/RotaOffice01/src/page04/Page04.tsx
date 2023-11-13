@@ -136,7 +136,9 @@ function UnitBody({ db, r, ...props }: { db: DB, r: Unit } & Pane.RowProps)
 
 		<Pane flex1 start end>
 
-			<Div flex64px font54px textCenter pl8>{gsm.UnitType.$item(r.type)!.$icon}</Div>
+			<Pile.PhaseIcon />
+
+			<Div flex64px font54px vcenter textCenter pl8>{gsm.UnitType.$item(r.type)!.$icon}</Div>
 			<Div flex1 p12>
 				<Div fontLg><em>{name?.shortName}</em> {masterNames.map(a => a.shortName2).join(" ")}</Div>
 				<Div opacity7><em>{name?.fullName}</em> {masterNames.map(a => a.fullName2).join(" ")}</Div>
@@ -200,7 +202,8 @@ function UnitMastersNode({
 
 			<Pile.Node1 start end linkLine="opened" linkToNext={noLast}>
 
-				<Pane p12 start end>					
+				<Pane p12 start end>
+					<Pile.PhaseIcon />
 					<Span em upperCase opacity7>{gsm.Unit.hasMasters.$One}</Span>&nbsp;у&nbsp;<em>{list.length}</em><Span>&nbsp;{gsm.Unit.$noun6(list.length)}</Span>
 				</Pane>
 
@@ -272,6 +275,7 @@ function UnitSubunitsNode({ db, list }: { db: DB; list: Unit_Subordination[] })
 			<Pile.Node1 start end linkLine="opened">
 
 				<Pane p12 start end>
+					<Pile.PhaseIcon />
 					<Span em>{gsm.Unit.hasSubunits.$Many} {list.length} {gsm.Unit.$noun(list.length)}</Span>
 				</Pane>
 

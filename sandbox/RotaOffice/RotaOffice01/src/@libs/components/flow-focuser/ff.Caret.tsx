@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
-import { MuiColor, UseHookProps, useNew } from "../core";
+import type { CSSProperties, ReactNode } from "react";
+import { MuiColor, UseHookProps, Values, useNew } from "../core";
 import { CaretBehavior } from "./ff.CaretBehavior";
 import { Focuser } from "./ff.Focuser";
+import { alpha, useTheme } from "@mui/material/styles";
 
 
 
@@ -39,9 +40,10 @@ export function Caret(props: CaretProps)
 		ref={bhv.setBodyEl}
 		className="ff-caret-body"
 		style={bhv.getStyle()}
-		children={props.children && <div>{props.children}</div> || <div />}
-		//children={<div>{bhv!.ff?.id}</div>}
+		children={props.children && <div>{props.children}</div>}
+	//children={<div>{bhv!.ff?.id}</div>}
 	/>;
+
 
 }
 
@@ -73,145 +75,78 @@ export module Caret
 
 
 
-	//interface RootProps
-	//{
-	//	color: MuiColor;
-	//	borderRadius: Focuser.BorderRadius;
-	//	borderWidth: Focuser.BorderWidth;
+	export function LineIndicator1(props: {
 
-	//}
+		color?: MuiColor;
+		height?: number;
 
+		value: number;
+		max: number;
+		max2: number | null | undefined;
 
+		disabled?: boolean;
 
+	})
+	{
 
-	//export const Body = styled(
-	//	"div",
-	//	{
-	//		name: "focuser-caret-body",
-	//		shouldForwardProp: p => p !== "color" && p !== "borderRadius" && p !== "borderWidth" && p !== "animation" && p !== "inset" && p !== "opacity"
-	//	}
-	//)<
-	//	RootProps & {
-	//		padding?: number | [number, number, number, number];
-	//		inset: string;
-	//		animation?: boolean;
-	//		opacity: number;
-	//	}
-	//>(
-	//	props =>
-	//	{
-
-	//		let color = MuiColor(props.theme, props.color || props.theme.palette.primary.main)!;
+		let theme = useTheme()
+		let ff = Focuser.use();
 
 
-	//		let borderRadius_ = props.borderRadius;
-
-	//		let borderRadius = (
-	//			borderRadius_ === undefined ? defaultBorderRadius :
-	//				borderRadius_ === null ? `0` :
-	//					borderRadius_ === "inherit" ? "inherit" :
-	//						typeof borderRadius_ === "string" ? borderRadius_ :
-	//							(Values
-	//								.manyn(borderRadius_, a => a === undefined ? defaultBorderRadius : a === null ? "0" : `${a}px`)
-	//								.join(" ")
-	//							)
-	//		);
+		let color = (props.disabled || ff?.disabled
+			? '80,80,80'
+			: MuiColor.hex2rgb(MuiColor(theme, props.color || ff?.color || Focuser.defaultColor))
+		);
 
 
-	//		let borderWidth = (Values
-	//			.manyn(props.borderWidth, a => a === undefined ? `${defaultBorderWidth}px` : a === null ? "0" : `${a}px`)
-	//			.join(" ")
-	//		);
+		let { value, max, max2 } = props;
+
+		if (max2 == null)
+			max2 = max;
 
 
-	//		//let margin = (Values
-	//		//	.manyn(props.borderWidth, a => a === undefined ? `-${defaultBorderWidth}px` : a === null ? "0" : `-${a}px`)
-	//		//	.join(" ")
-	//		//);
-	//		/*			let margin = " ";*/
+		let hasMax2 = max2 > max;
+
+		let f1 = Math.min(value, max) / (max + 1);
+
+		let f2 = value <= max ? 0 : (
+			Math.min(value - max - 1, max2 - max) / (max2 - max)
+		);
 
 
-	//		return {
+		let w1 = hasMax2 ? 66 : 100;
 
-	//			//position: "absolute",
-	//			//zIndex: 999999,
-	//			//pointerEvents: "none",
-
-	//			inset: props.inset,
-	//			opacity: props.opacity,
-	//			color,
-
-	//			borderColor: color,
-	//			borderStyle: "solid",
-	//			borderRadius,
-	//			borderWidth,
-	//			//margin,
-
-	//			//boxShadow: `2px 2px 24px ${alpha(color, .4)}${bordererMask}`,
-	//			//boxShadow: `0px 7px 8px -4px ${alpha(color, .2)}, 0px 12px 17px 2px ${alpha(color, .14)},0px 5px 22px 4px ${alpha(color, .12)}${bordererMask}`,
-	//			boxShadow: `0px 7px 8px -4px ${alpha(color, .25)}, 0px 12px 17px 2px ${alpha(color, .18)}, 0px 5px 22px 4px ${alpha(color, .16)}${bordererMask}`,
-	//			//boxShadow: `0px 7px 8px -4px ${alpha(color, .2)}, 0px 12px 17px 2px ${alpha(color, .14)}, 0px 5px 22px 4px ${alpha(color, .12)${bordererMask}`,
-
-	//			transition: (!props.animation
-	//				? `none`
-	//				: `all ${$defaultAnimationDurationMs}ms linear, border ${$defaultAnimationDurationMs}ms linear, box-shadow ${$defaultAnimationDurationMs}ms linear`
-	//			),
+		let leftPc = value <= max ? w1 * f1 : w1 + (100 - w1) * f2;
+		let widthPc = Math.max(2, value <= max ? w1 / (max + 1) : (100 - w1) / (max2! - max));
 
 
-	//			//">div": {
-	//			//	borderRadius: "inherit",
-	//			//	//opacity: props.opacity,
-	//			//	transition: `opacity ${$defaultAnimationDurationMs}ms linear`,
-	//			//},
+		let left = `${Math.round(leftPc * 100) / 100}%`;
 
-	//			//"&.shake-1": {
-	//			//	animationDuration: ".5s",
-	//			//	animationTimingFunction: "ease-in-out",
-	//			//	animationName: "ff-shake-1",
-	//			//},
-	//			//"&.shake-2": {
-	//			//	animationDuration: ".5s",
-	//			//	animationTimingFunction: "ease-in-out",
-	//			//	animationName: "ff-shake-2",
-	//			//},
-	//			//"&.shake-3": {
-	//			//	animationDuration: ".5s",
-	//			//	animationTimingFunction: "ease-in-out",
-	//			//	animationName: "ff-shake-3",
-	//			//},
+		if (value <= 0)
+			left = `calc(${left} - 1px)`;
 
 
-	//			//"@keyframes ff-shake-1": {
-	//			//	"0%": { transform: "translateY(0)" },
-	//			//	"6.5%": { transform: "translateY(-2px) rotateY(-9deg)" },
-	//			//	"18.5%": { transform: "translateY(2px) rotateY(7deg)" },
-	//			//	"31.5%": { transform: "translateY(-1px) rotateY(-5deg)" },
-	//			//	"43.5%": { transform: "translateY(1px) rotateY(3deg)" },
-	//			//	"50%": { transform: "translateY(0)" },
-	//			//},
+		let width = `${Math.round(widthPc * 100) / 100}%`;
 
-	//			//"@keyframes ff-shake-2": {
-	//			//	"0%": { transform: "translateX(0)" },
-	//			//	"6.5%": { transform: "translateX(-6px) rotateY(-9deg)" },
-	//			//	"18.5%": { transform: "translateX(5px) rotateY(7deg)" },
-	//			//	"31.5%": { transform: "translateX(-3px) rotateY(-5deg)" },
-	//			//	"43.5%": { transform: "translateX(2px) rotateY(3deg)" },
-	//			//	"50%": { transform: "translateX(0)" },
-	//			//},
+		if (value >= max2)
+			width = `calc(${width} + 1px)`;
 
-	//			//"@keyframes ff-shake-3": {
-	//			//	"0%": { transform: "skew(-10deg)" },
-	//			//	"5%": { transform: "skewX(10deg)" },
-	//			//	"10%": { transform: "skewX(-10deg)" },
-	//			//	"15%": { transform: "skewX(10deg)" },
-	//			//	"20%": { transform: "skewX(0deg)" },
-	//			//	"100%": { transform: "skewX(0deg)" },
-	//			//},
 
-	//		};
+		const height = props.height ?? 4;
 
-	//	}
-	//);
+
+
+		return <div className="ff-caret-lineBreak-indicator-1" style={{
+
+			"--color": color,
+			"--height": `${height}px`,
+			"--left": left,
+			"--width": width,
+
+		} as any} />;
+
+
+	}
 
 
 
