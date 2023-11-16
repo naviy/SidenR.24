@@ -1,9 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
-import { BgColor as PaneBgColor } from "./BgColor";
+import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { Block } from "./Block";
-import { Container } from "./Container";
-import { ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
+import * as Container from "./Container";
+import { ContainerInfo, ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
 
 
 
@@ -17,49 +16,26 @@ import { ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
 
 
 
-export function Pane(props: Pane.Props)
+export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 {
 
 	//__$log("Pane");
 	props = UseHookProps.use(props);
 
 	let containerInfo = ContainerInfo_.use() || {};
-	//let parentInfo:ContainerInfo_ = {};
-
-	let { start, end, } = props;
-
-	let inRow = containerInfo.layout === "row";
-	let inCol = containerInfo.layout === "col";
 
 
-
-	let { noPP, preExpanding, gap, } = containerInfo;
-
-	let ppl = !noPP && (!inRow || start) && (preExpanding ? containerInfo.ppl0 : containerInfo.ppl) || 0;
-	let ppr = !noPP && (!inRow || end) && (preExpanding ? containerInfo.ppr0 : containerInfo.ppr) || 0;
-	let ppt = !noPP && (!inCol || start) && (preExpanding ? containerInfo.ppt0 : containerInfo.ppt) || 0;
-	let ppb = !noPP && (!inCol || end) && (preExpanding ? containerInfo.ppb0 : containerInfo.ppb) || 0;
+	let v = ContainerInfo.init(
+		props,
+		containerInfo,
+		{}
+	);
 
 
 	let sizes = Block.getBoxSizes(
-		containerInfo.layout,
+		containerInfo?.layout || "col",
 		props,
 	);
-
-	sizes = Block.sumBoxSizes(sizes, { width: ppl + ppr, height: ppt + ppb });
-
-
-	let br = containerInfo.rounded;// props.borderRadius !== undefined ? props.borderRadius : cprops.rounded/*borderRadius*/;
-	let br2 = br === true || br === undefined ? `${Block.bigBorderRadius}px` : br === false || br === null ? undefined : `${br}px`;
-
-	let br0 = `${Block.smallBorderRadius}px`;
-
-	let borderRadius = br2 && ([
-		containerInfo.brtl && (inRow && start || inCol && start) ? br2 : !gap && (inRow && !start || inCol && !start) ? "0" : br0,
-		containerInfo.brtr && (inRow && end || inCol && start) ? br2 : !gap && (inRow && !end || inCol && !start) ? "0" : br0,
-		containerInfo.brbr && (inRow && end || inCol && end) ? br2 : !gap && (inRow && !end || inCol && !end) ? "0" : br0,
-		containerInfo.brbl && (inRow && start || inCol && end) ? br2 : !gap && (inRow && !start || inCol && !end) ? "0" : br0,
-	].join(" "));
 
 
 
@@ -86,13 +62,14 @@ export function Pane(props: Pane.Props)
 	}
 
 
+	$log("v.rCss:", v.rCss);
+
 	body = createPrimitive(
 		Pane.Root as any,
 		{
 			debug: containerInfo.debug,
 			//bgcolor: props.bgcolor,
-			borderRadius,
-			ppl, ppr, ppt, ppb,
+			borderRadius: v.rCss,
 			...sizes,
 			children: body,
 		},
@@ -128,9 +105,6 @@ export module Pane
 	export type ContainerInfo = ContainerInfo_;
 	export const ContainerInfo = ContainerInfo_;
 
-	export type BgColor = PaneBgColor;
-	export const BgColor = PaneBgColor;
-
 	export type ColProps = Container.ColProps;
 	export type DivProps = Container.DivProps;
 	export type RowProps = Container.RowProps;
@@ -148,17 +122,23 @@ export module Pane
 
 
 
-	export interface Props extends Block.Props, PrimitiveProps<HTMLDivElement>, UseHookProps<Props>
+	export interface Props extends Block.Props, UseHookProps<Props>
 	{
 		id?: string;
 	}
 
 
 
-	export const propNames: Array<keyof Props> = [
-		...Block.propNames,
-		...UseHookProps.propNames,
-	];
+	export const propNames_: Record<keyof Props, true> =
+	{
+		id: true,
+		...Block.propNames_,
+		...UseHookProps.propNames_,
+	};
+
+
+	export const propNames = Object.keys(propNames_) as Array<keyof Props>;
+
 
 
 
@@ -166,17 +146,11 @@ export module Pane
 
 
 
+
 	interface RootProps
 	{
 		debug?: boolean;
-
-		//bgcolor?: Pane.BgColor;
 		borderRadius: string;
-
-		ppl: string;
-		ppr: string;
-		ppt: string;
-		ppb: string;
 
 		flex?: number | string;
 
@@ -191,15 +165,18 @@ export module Pane
 	}
 
 
-	const rootPropNames: Array<keyof RootProps> = [
-		"debug",
-		//"bgcolor",
-		"borderRadius", //"borderWidth",
-		"ppl", "ppr", "ppt", "ppb",
-		"flex",
-		"width", "minWidth", "maxWidth",
-		"height", "minHeight", "maxHeight",
-	];
+	const rootPropNames: Record<keyof RootProps, true> =
+	{
+		debug: true,
+		borderRadius: true,
+		flex: true,
+		width: true,
+		minWidth: true,
+		maxWidth: true,
+		height: true,
+		minHeight: true,
+		maxHeight: true,
+	};
 
 
 
@@ -208,25 +185,28 @@ export module Pane
 		"div",
 		{
 			shouldForwardProp: p =>
-				p !== "isFlex" && rootPropNames.indexOf(p as any) < 0
+				p !== "isFlex" && !(rootPropNames  as any)[p]
 			,
 		}
 	)<RootProps>((props) =>
 	{
 
-		let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
+		//let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
 
 		return {
 
 			display: "flex",
 			position: "relative",
 
+			background: props.theme.palette.background.paper,
 			//background: Pane.BgColor(props.theme, props.bgcolor),
 			borderRadius: props.borderRadius,
 			//borderWidth: props.borderWidth,
 
-			border: `${ppColor} solid 0px`,
-			borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
+			border: "1px solid black",
+
+			//border: `${ppColor} solid 0px`,
+			//borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
 
 			boxSizing: 'border-box',
 

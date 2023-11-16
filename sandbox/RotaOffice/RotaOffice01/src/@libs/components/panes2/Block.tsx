@@ -18,8 +18,6 @@ export module Block
 	export interface Props 
 	{
 
-		//bgcolor?: PaneBgColor;
-
 		start?: boolean;
 		end?: boolean;
 
@@ -43,10 +41,23 @@ export module Block
 
 
 
-	export const propNames: Array<keyof Props> = [
-		"start", "end",
-		"l", "min", "max", "width", "minWidth", "maxWidth", "height", "minHeight", "maxHeight",
-	];
+	export const propNames_: Record<keyof Props, true> =
+	{
+
+		start: true,
+		end: true,
+
+		l: true,
+		min: true,
+		max: true,
+		width: true,
+		minWidth: true,
+		maxWidth: true,
+		height: true,
+		minHeight: true,
+		maxHeight: true,
+
+	} as const;
 
 
 
@@ -72,15 +83,15 @@ export module Block
 
 
 	export function getBoxSizes(
-		containerType: "row" | "col" | undefined,
+		layout: "row" | "col",
 		props: Props,
 	): BoxSizes
 	{
 
 		let { l, min, max, width, minWidth, maxWidth, height, minHeight, maxHeight, } = props;
 
-		let inRow = containerType === "row";
-		let inCol = containerType === "col";
+		let inRow = layout === "row";
+		let inCol = layout === "col";
 
 
 		width = (

@@ -32,9 +32,7 @@ export interface ExpanderBaseProps
 	onCollapsed?: () => void;
 	onExpanding?: () => void;
 	onExpanded?: () => void;
-
-	children?: ReactNode;
-
+	
 }
 
 
@@ -42,6 +40,22 @@ export interface ExpanderBaseProps
 
 export module ExpanderBaseProps
 {
+
+	export const propNames_: Record<keyof ExpanderBaseProps, true> =
+	{
+
+		expanded: true,
+		noreexpand: true,
+		forceRender: true,
+		timeout: true,
+
+		onExpanedChange: true,
+		onCollapsed: true,
+		onExpanding: true,
+		onExpanded: true,
+
+	};
+
 
 	export const propNames: Array<keyof ExpanderBaseProps> = [
 		"expanded",

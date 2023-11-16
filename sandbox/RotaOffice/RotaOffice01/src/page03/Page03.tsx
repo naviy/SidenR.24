@@ -18,47 +18,42 @@ import FestivalIcon from '@mui/icons-material/Festival';
 
 
 
-const pageRoute = Route.create({
-	key: "page03",
-	icon: <FestivalIcon />,
-	title: "Page 03",
-	content: () => <Page03 />,
-});
-
-
-
-
-
-
-export function Page03()
-{
-
-	return <>
-
-		<GlobalState name="page03">
-
-			<Div mx200 m100>
-
-				<GlobalState name="Rows05Pile">
-
-					<Rows05 root />
-
-				</GlobalState>
-
-			</Div>
-
-		</GlobalState>
-
-	</>;
-
-}
-
-
-
-
 export module Page03
 {
-	export const route = pageRoute;
+
+
+	export const route = Route.create({
+		key: "page03",
+		icon: <FestivalIcon />,
+		title: "Page 03",
+		content: () => <Content />,
+	});
+
+
+	export function Content()
+	{
+
+		return <>
+
+			<GlobalState name="page03">
+
+				<Div mx200 m100>
+
+					<GlobalState name="Rows05Pile">
+
+						<Rows05 root />
+
+					</GlobalState>
+
+				</Div>
+
+			</GlobalState>
+
+		</>;
+
+	}
+
+
 }
 
 
@@ -85,7 +80,7 @@ function Rows05({ root }: { root?: boolean })
 				globalState="rows05"
 				root={root}
 				placeholders={[1, 2, 3, 4, 5, 6, 7]}
-				//placeholders={[1, 2, 3]}
+			//placeholders={[1, 2, 3]}
 			>
 
 				<Row05 id={1} />
