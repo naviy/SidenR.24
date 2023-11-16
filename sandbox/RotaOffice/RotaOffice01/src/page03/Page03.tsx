@@ -77,7 +77,7 @@ function Rows05({ root }: { root?: boolean })
 {
 	return <>
 
-		<Pane.Col rounded>
+		<Pane.Col rounded start end>
 
 			<PileListBackfill />
 
@@ -115,9 +115,9 @@ function Row05(props: PileRowProps)
 		<RowBody id={props.id}>
 
 			<>
-				<Pane id="pane-1" p12><span>111 1111 11111 111111</span></Pane>
+				<Pane start id="pane-1" p12><span>111 1111 11111 111111</span></Pane>
 				<Pane p12>222 2222 22222 222222</Pane>
-				<Pane p12 textRight>333 3333 33333 333333</Pane>
+				<Pane end p12 textRight>333 3333 33333 333333</Pane>
 			</>
 
 			<>

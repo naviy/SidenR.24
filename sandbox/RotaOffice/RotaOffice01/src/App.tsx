@@ -1,5 +1,5 @@
 import { AppThemes, DesktopLayout } from "@app";
-import { $log, Div, Focuser, HR, Route, Txt } from "@libs";
+import { $log, Div, HR, Route, Txt } from "@libs";
 import { Button, createTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem, { type ListItemProps } from "@mui/material/ListItem";
@@ -11,7 +11,7 @@ import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
 import { Page03 } from './page03';
-import { Page04 } from './page04';
+import { Page04, Page041, Page042 } from './page04';
 
 
 
@@ -82,8 +82,8 @@ function AppDesktop()
 		routes: [
 			Page03.route,
 			Page04.route,
-			//Page04.route1,
-			//Page04.route2,
+			Page041.route,
+			Page042.route,
 		],
 
 		activeKey: location.pathname.substring(1) || Page03.route.key,
@@ -116,6 +116,8 @@ function AppDesktop()
 							<List>
 								<MainMenuItem route={Page03.route} />
 								<MainMenuItem route={Page04.route} />
+								<MainMenuItem route={Page041.route} />
+								<MainMenuItem route={Page042.route} />
 								{/*<MainMenuItem route={Page04.route1} />*/}
 								{/*<MainMenuItem route={Page04.route2} />*/}
 							</List>

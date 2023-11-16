@@ -16,8 +16,21 @@ import { Tenta, TentaPhase, TentaStage } from "../tentas";
 
 
 
-export interface PileNode1Props extends Omit<Pane.RowProps, "id" | "children">
+export interface PileNode2Props extends Omit<Pane.RowProps, "id" | "children" | "start" | "end">
 {
+
+	id?: React.Key;
+
+	start?: Tenta.PhaseTarget;
+	end?: Tenta.PhaseTarget;
+
+	rowStart?: Tenta.PhaseTarget;
+	rowEnd?: Tenta.PhaseTarget;
+
+	linkLine?: Tenta.PhaseTarget;
+	linkToNext?: boolean;
+
+	maxPhase?: TentaPhase;
 
 }
 
@@ -26,12 +39,14 @@ export interface PileNode1Props extends Omit<Pane.RowProps, "id" | "children">
 
 
 
-export function PileNode1({
+export function PileNode2({
 
 	id,
 
-	noFirst,
-	noLast,
+	start,
+	end,
+	rowStart,
+	rowEnd,
 
 	linkLine,
 	linkToNext,
@@ -40,17 +55,7 @@ export function PileNode1({
 
 	...rowProps
 
-}: PileNode1Props & {
-
-	id?: React.Key;
-
-	noFirst?: boolean;
-	noLast?: boolean;
-
-	linkLine?: Tenta.PhaseTarget;
-	linkToNext?: boolean;
-
-	maxPhase?: TentaPhase;
+}: PileNode2Props & {
 
 	children: JSX.Element | [JSX.Element, JSX.Element];
 
@@ -65,18 +70,23 @@ export function PileNode1({
 	let tenta = useNew(Tenta.Behavior1).use({ maxPhase, placeholder });
 
 
-	let isFirst = !noFirst && !placeholder?.prior;  // || placeholder.prior.opened;
-	let isLast = !noLast && !placeholder?.next;	    // || placeholder.next.opened;
+	let isFirst = !placeholder?.prior || placeholder.prior.opened;
+	let isLast = !placeholder?.next || placeholder.next.opened;
 
 
 	let topStage = placeholder?.prior ? null : tenta.stage;
 	let btmStage = isLast ? "collapsed" : TentaStage.max(tenta.stage, placeholder?.next?.stage);
 
 
-	let start = tenta.opened || isFirst;
-	let end = tenta.opened || isLast;
 
-	let byParent = Tenta.PhaseTarget.useConvert({ linkLine });
+	let byParent = Tenta.PhaseTarget.useConvert({ linkLine, start, end });
+
+	let start2 = byParent.start ?? (tenta.opened || isFirst);
+	let end2 = byParent.end ?? (tenta.opened || isLast);
+
+	let rowStart2 = Tenta.PhaseTarget.convert(rowStart, tenta) ?? true;
+	let rowEnd2 = Tenta.PhaseTarget.convert(rowEnd, tenta) ?? true;
+
 
 	let linkLine2 = byParent?.linkLine ?? (!placeholder || !placeholder.collector.root);
 
@@ -117,22 +127,11 @@ export function PileNode1({
 
 									rounded={tenta.opened}
 
-									start={start}
-									end={end}
+									start={start2}
+									end={end2}
 
 									{...rowProps}
 
-									//elevation={btmStage !== "collapsed" ? 1 : undefined}
-
-
-									//{...tenta.expanded && { e: "L1", mx: -12, }}
-									//{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
-
-									//ppStart
-									//ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
-									//ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
-
-									//mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
 									mb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 24 : 0}
 
 									cursorPointer
@@ -142,31 +141,26 @@ export function PileNode1({
 
 									<Focuser
 										ref={tenta.ffRef}
-										name={`pile-row-body#${id}`}
+										name={`pile-node-body${id ? '#' + id : ''}`}
 										listener={tenta}
 										autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
 									>
 
 										<Pane.Row
-											start end
-											bg={tenta.opened ? "4" : tenta.expanded ? "3" : "2"}
+											start={rowStart2}
+											end={rowEnd2}
+
+											bg={tenta.expanded ? "4" : tenta.expanded ? "3" : "2"}
 
 											rounded={tenta.opened}
 
 											ppStart
-											mx={tenta.opened ? -24 : tenta.expanded ? -12 : 0}
-											ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
-											ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
-											//mx={tenta.opened ? -24 : tenta.expanded ? 0 : 0}
-											//ppx0={tenta.priorPhase === 2 ? 24 : tenta.priorPhase === 1 ? 0 : 0}
-											//ppx={tenta.phase === 2 ? 24 : tenta.phase === 1 ? 0 : 0}
-
 
 											gap1
 											px2
-											pt={tenta.opened ? 2 : tenta.expanded ? 2 : start ? 2 : 1}
-											pb={tenta.opened ? 2 : tenta.expanded ? 2 : end ? 2 : btmStage !== "collapsed" ? 1 : 0}
-											e={tenta.opened ? "L2" : tenta.expanded ? "L1b" : end || btmStage !== "collapsed" ? "L1b" : "0"}
+											pt={tenta.opened ? 2 : tenta.expanded ? 2 : start2 && rowStart2 ? 2 : 1}
+											pb={tenta.opened ? 2 : tenta.expanded ? 2 : end2 && rowEnd2 ? 2 : btmStage !== "collapsed" ? 1 : 0}
+											e={tenta.opened ? "L2" : tenta.expanded ? "L1b" : end2 || btmStage !== "collapsed" ? "L1b" : "0"}
 										>
 
 
@@ -210,8 +204,6 @@ export function PileNode1({
 	);
 
 }
-
-
 
 
 

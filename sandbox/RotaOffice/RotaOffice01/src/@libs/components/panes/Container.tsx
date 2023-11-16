@@ -165,7 +165,7 @@ export module Container
 				<DebugBox layout={layout!}>
 					<div>
 						<b>{v.layout}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
-						{props.start && " start"}{props.end && " end"}
+						{props.rounded && " rounded"}{props.start && " start"}{props.end && " end"}
 						<div
 							className="gaps"
 						//style={{ borderWidth: `${v.gapt ? 2 : .5}px ${v.gapr ? 2 : .5}px ${v.gapb ? 2 : .5}px ${v.gapl ? 2 : .5}px`, }}
@@ -252,6 +252,7 @@ export module Container
 	export const Root = styled(
 		"div",
 		{
+			name: "pane-container",
 			shouldForwardProp: p =>
 				p !== "expandMode" &&
 				p !== "isFlex" &&

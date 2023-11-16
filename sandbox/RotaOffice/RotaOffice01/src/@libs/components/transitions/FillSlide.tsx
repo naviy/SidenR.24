@@ -63,6 +63,8 @@ export function FillSlide({
 
 			nodeRef={nodeRef}
 
+			timeout={$defaultAnimationDurationMs}
+
 			{...transitionProps as any}
 
 		>

@@ -1,7 +1,5 @@
-import _ from "lodash";
-import React, { type ReactElement, type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import type { BgColor as PaneBgColor } from "./BgColor";
-import { isBlockElement } from "./isBlockElement";
 
 
 

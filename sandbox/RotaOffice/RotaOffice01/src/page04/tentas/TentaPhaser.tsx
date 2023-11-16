@@ -230,8 +230,12 @@ export module TentaPhaser
 
 	export interface UseConfig extends TentaBase.UseConfig
 	{
+
+		readonly maxPhase?: TentaPhase;
+
 		readonly defaultPhase?: TentaPhase;
 		readonly defaultStage?: TentaStage;
+
 	}
 
 
@@ -239,6 +243,18 @@ export module TentaPhaser
 
 	export function use(me: TentaPhaser, cfg?: UseConfig)
 	{
+
+
+		if (cfg?.maxPhase != null)
+		{
+			me.maxPhase = cfg.maxPhase;
+
+			if (me.expandedPhase > me.expandedPhase)
+				me.expandedPhase = me.expandedPhase;
+
+			if (me.openedPhase > me.maxPhase)
+				me.openedPhase = me.maxPhase;
+		}
 
 
 		if (me.phase != null)

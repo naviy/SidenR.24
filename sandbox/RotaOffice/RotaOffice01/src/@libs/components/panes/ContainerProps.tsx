@@ -53,8 +53,8 @@ export interface ContainerProps<P extends ContainerProps = any> extends Block.Pr
 	ppt0?: number;
 	ppb0?: number;
 
-	pg?: number;
-	png?: number;
+	//pg?: number;
+	//png?: number;
 
 	children?: ReactNode;
 

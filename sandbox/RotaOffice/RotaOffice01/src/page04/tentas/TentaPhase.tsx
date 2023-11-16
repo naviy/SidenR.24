@@ -40,9 +40,9 @@ export module TentaPhase
 
 
 
-	export function use()
+	export function use(value?: TentaPhase): number | undefined
 	{
-		return useContext(Context);
+		return value !== undefined ? value : useContext(Context);
 	}
 
 
