@@ -63,27 +63,28 @@ function Rows01()
 	let [exp, toggleExp] = useReducer(a => !a, false);
 
 
-	return <>
-		<Pane p12 mb24 onClick={toggleExp} cursorPointer>
+	return <Pane.Col start end b="md"  r="md">
+
+		<Pane start end p12 mb24 onClick={toggleExp} cursorPointer>
 			<Checkbox checked={exp} />
 		</Pane>
 
 
-		<Pane.Col start end b="2" r="3">
+		<Pane.Col start end>
 
-			<Pane.Row start end={exp} r="" b="1">
+			<Pane.Row start end={exp} r="" b="sm">
 				<Pane.Row start end={exp}>
-					<Pane.Col start>
-						<Pane start end={!exp} p12>111.111</Pane>
+					<Pane start p12>11111</Pane>
+					<Pane.Col end>
+						<Pane start end={!exp} p12>222.111</Pane>
 						<Pane.Col end expanded={exp} >
-							<Pane start p12>111.222</Pane>
-							<Pane end p12>111.333</Pane>
+							<Pane start p12>222.222</Pane>
+							<Pane end p12>222.333</Pane>
 						</Pane.Col>
 					</Pane.Col>
-					<Pane end p12>22222</Pane>
 				</Pane.Row>
 				<Pane.Col start={exp} end ml24={exp}>
-					<Pane.Ghost start end r="0">
+					<Pane.Ghost start end r="">
 						<Pane start p12>111</Pane>
 						<Pane p12>222</Pane>
 						<Pane end p12>333</Pane>
@@ -92,8 +93,8 @@ function Rows01()
 			</Pane.Row>
 
 
-			<Pane.Row pl48={exp} pt24={exp} start={exp} end r="" b={exp ? "2" : "1"}>
-				<Pane.Ghost start end r={exp ? "1" : 0}>
+			<Pane.Row pl48={exp} pt24={exp} start={exp} end r="" b={exp ? "md" : "sm"}>
+				<Pane.Ghost start end r={exp ? "sm" : 0}>
 					<Pane start end={exp} p12>11111</Pane>
 					<Pane start={exp} end={exp} ml4={exp} p12>22222</Pane>
 					<Pane start={exp} ml4={exp} end p12>33333</Pane>
@@ -102,6 +103,6 @@ function Rows01()
 
 		</Pane.Col>
 
-	</>;
+	</Pane.Col>;
 
 }

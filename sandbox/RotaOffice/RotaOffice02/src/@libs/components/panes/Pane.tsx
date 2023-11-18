@@ -52,30 +52,30 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	if (containerInfo?.debug)
 	{
 		body = <>
-			<Pane.DebugBox>
+			<DebugBox>
 				<div>
 					<b>pane{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
 					{props.start && " start"}{props.end && " end"}
 				</div>
-			</Pane.DebugBox>
+			</DebugBox>
 			{body}
 		</>;
 	}
 
 
 	body = createPrimitive(
-		Pane.Root as any,
+		Root as any,
 		{
 			debug: containerInfo?.debug,
 			//bgcolor: props.bgcolor,
-			r: PaneRadius.toCss(v.rtl, v.rtr, v.rbr, v.rbl),
-			bt: PaneBorder.toCss(v.bt),
-			br: PaneBorder.toCss(v.br),
-			bb: PaneBorder.toCss(v.bb),
-			bl: PaneBorder.toCss(v.bl),
+			r: PaneRadius.css(v.rtl, v.rtr, v.rbr, v.rbl),
+			bt: PaneBorder.css(v.bt),
+			br: PaneBorder.css(v.br),
+			bb: PaneBorder.css(v.bb),
+			bl: PaneBorder.css(v.bl),
 			...sizes,
 			children: body,
-		} as Pane.RootProps,
+		} as RootProps,
 		props,
 		Pane.propNames
 	);
@@ -147,147 +147,159 @@ export module Pane
 	//---
 
 
-
-
-	export interface RootProps
-	{
-		debug?: boolean;
-
-		r: string;
-		bt: string | undefined;
-		br: string | undefined;
-		bb: string | undefined;
-		bl: string | undefined;
-
-		flex?: number | string;
-
-		width?: number | string;
-		minWidth?: number | string;
-		maxWidth?: number | string;
-
-		height?: number | string;
-		minHeight?: number | string;
-		maxHeight?: number | string;
-
-	}
-
-
-	const rootPropNames: PropNames<RootProps> =
-	{
-		debug: true,
-		r: true,
-		bt: true,
-		br: true,
-		bb: true,
-		bl: true,
-		flex: true,
-		width: true,
-		minWidth: true,
-		maxWidth: true,
-		height: true,
-		minHeight: true,
-		maxHeight: true,
-	};
+}
 
 
 
 
-	export const Root = styled(
-		"div",
-		{
-			shouldForwardProp: p =>
-				p !== "isFlex" && !(rootPropNames as any)[p]
-			,
-		}
-	)<RootProps>((props) =>
-	{
-
-		//let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
-
-		const defaultBorder = "0 solid transparent" as const;
 
 
-		return {
-
-			display: "flex",
-			position: "relative",
-
-			background: props.theme.palette.background.paper,
-			//background: Pane.BgColor(props.theme, props.bgcolor),
-			borderRadius: props.r,
-			//borderWidth: props.borderWidth,
-
-			borderTop: props.bt || defaultBorder,
-			borderRight: props.br || defaultBorder,
-			borderBottom: props.bb || defaultBorder,
-			borderLeft: props.bl || defaultBorder,
-
-			//border: `${ppColor} solid 0px`,
-			//borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
-
-			boxSizing: 'border-box',
-
-			flex: props.flex,
-
-			width: props.width,
-			minWidth: props.minWidth,
-			maxWidth: props.maxWidth,
-
-			height: props.height,
-			minHeight: props.minHeight,
-			maxHeight: props.maxHeight,
-
-			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
-
-			userSelect: "none",
-
-			"> *": {
-				userSelect: "text",
-			},
-
-		};
-	});
+//===
 
 
 
 
-	//---
 
 
+export interface RootProps
+{
+	debug?: boolean;
 
+	r: string;
+	bt: string | undefined;
+	br: string | undefined;
+	bb: string | undefined;
+	bl: string | undefined;
 
-	export const DebugBox = styled("div")(() =>
-	{
+	flex?: number | string;
 
-		let color = "rgba(100,30,30, .5)";
+	width?: number | string;
+	minWidth?: number | string;
+	maxWidth?: number | string;
 
-		return {
-			position: "absolute",
-			inset: "-1px",
-			overflow: "hidden",
-			border: `2px solid ${color}`,
-			borderRadius: "inherit",
-
-			"> div": {
-				position: "absolute",
-				top: 0,
-				left: 0,
-				fontSize: "8px",
-				padding: "0px 8px 2px 6px",
-				background: color,
-				color: "white",
-				borderBottomRightRadius: 3,
-
-				whiteSpace: "nowrap",
-
-			}
-		};
-	});
-
-
-
-
-	//---
-
+	height?: number | string;
+	minHeight?: number | string;
+	maxHeight?: number | string;
 
 }
+
+
+
+const rootPropNames: PropNames<RootProps> =
+{
+	debug: true,
+	r: true,
+	bt: true,
+	br: true,
+	bb: true,
+	bl: true,
+	flex: true,
+	width: true,
+	minWidth: true,
+	maxWidth: true,
+	height: true,
+	minHeight: true,
+	maxHeight: true,
+};
+
+
+
+
+
+
+export const Root = styled(
+	"div",
+	{
+		shouldForwardProp: p =>
+			p !== "isFlex" && !(rootPropNames as any)[p]
+		,
+	}
+)<RootProps>((props) =>
+{
+
+	//let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
+
+	const defaultBorder = "0 solid transparent" as const;
+
+
+	return {
+
+		display: "flex",
+		position: "relative",
+
+		background: props.theme.palette.background.paper,
+		//background: Pane.BgColor(props.theme, props.bgcolor),
+		borderRadius: props.r,
+		//borderWidth: props.borderWidth,
+
+		borderTop: props.bt || defaultBorder,
+		borderRight: props.br || defaultBorder,
+		borderBottom: props.bb || defaultBorder,
+		borderLeft: props.bl || defaultBorder,
+
+		//border: `${ppColor} solid 0px`,
+		//borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
+
+		boxSizing: 'border-box',
+
+		flex: props.flex,
+
+		width: props.width,
+		minWidth: props.minWidth,
+		maxWidth: props.maxWidth,
+
+		height: props.height,
+		minHeight: props.minHeight,
+		maxHeight: props.maxHeight,
+
+		transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+
+		userSelect: "none",
+
+		"> *": {
+			userSelect: "text",
+		},
+
+	};
+});
+
+
+
+
+
+
+//===
+
+
+
+
+
+
+export const DebugBox = styled("div")(() =>
+{
+
+	let color = "rgba(100,30,30, .5)";
+
+	return {
+		position: "absolute",
+		inset: "-1px",
+		overflow: "hidden",
+		border: `1px dotted ${color}`,
+		borderRadius: "inherit",
+
+		"> div": {
+			position: "absolute",
+			top: 0,
+			left: 0,
+			fontSize: "8px",
+			padding: "0px 8px 2px 6px",
+			background: color,
+			color: "white",
+			borderBottomRightRadius: 3,
+
+			whiteSpace: "nowrap",
+
+		}
+	};
+
+});

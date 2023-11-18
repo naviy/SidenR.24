@@ -5,6 +5,7 @@ import React, { useReducer, type ReactNode } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
 import FestivalIcon from '@mui/icons-material/Festival';
+import { Phase } from "./tentas/Tenta";
 
 
 
@@ -72,7 +73,7 @@ function Rows05({ root }: { root?: boolean })
 {
 	return <>
 
-		<Pane.Col start end b="3" r="2">
+		<Pane.Col start end b="md" r="md">
 
 			<PileListBackfill />
 
@@ -150,7 +151,7 @@ function Row05(props: PileRowProps)
 
 
 		<>
-			{/*<Rows05 />*/}
+			<Rows05 />
 		</>
 
 
@@ -176,12 +177,11 @@ function Row05(props: PileRowProps)
 	}
 
 
-	function RowBody(props: { id: React.Key; children: ReactNode })
+	function RowBody(props: { id: React.Key; children: [JSX.Element, JSX.Element, JSX.Element, JSX.Element, JSX.Element, JSX.Element] })
 	{
 
 		let phase = Tenta.Phase.use();
-
-		let parts = React.Children.toArray(props.children);
+		let parts = props.children;
 
 		//$log("RowRim", props.id)
 
@@ -197,10 +197,10 @@ function Row05(props: PileRowProps)
 				<Pane.Row
 					end
 					id={`row05-expander #${props.id}`}
-					//expanded={phase === 1}
+					expanded={phase === 1}
 					wrapperCls="pt1"
 					gap1
-					//noreexpand
+				//noreexpand
 				>
 					{parts[1]}
 				</Pane.Row>
@@ -302,7 +302,6 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 						<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
 
 							<Pane.Col
-								//debug
 								id={`pile-row#${id}`}
 
 								start={start}
@@ -310,23 +309,12 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 								{...rowProps}
 
-								//elevation={btmStage !== "collapsed" ? 1 : undefined}
+								b="sm"
+								r=""
+								debug={tenta.phase > 0}
 
-
-								{...tenta.expanded && { e: "L1", mx: -12, }}
-								{...tenta.opened && { rounded: true, e: "0", mx: -24, }}
-
-								//ppStart
-								//ppx0={tenta.priorPhase === 1 ? 12 : tenta.priorPhase === 2 ? 24 : 0}
-								//ppx={tenta.phase === 1 ? 12 : tenta.phase === 2 ? 24 : 0}
-
-								//mt={topStage === "expanded" ? 8 : topStage === "opened" ? 8 : 0}
 								mb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 40 : 0}
-
-								cursorPointer
 							>
-
-								{/*<TentaItemsBackfill />*/}
 
 								<Focuser
 									ref={tenta.ffRef}
@@ -337,18 +325,12 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 									<Pane.Row
 										start end
-										bg={tenta.opened ? "4" : tenta.expanded ? "3" : "2"}
-										gap1
-										px2
-										pt={tenta.opened ? 2 : tenta.expanded ? 2 : start ? 2 : 1}
-										pb={tenta.opened ? 2 : tenta.expanded ? 2 : end ? 2 : btmStage !== "collapsed" ? 1 : 0}
-										e={tenta.opened ? "L2" : tenta.expanded ? "L1b" : end || btmStage !== "collapsed" ? "L1b" : "0"}
+										cursorPointer
 									>
 
 
 										<Focuser.Caret
 											use={usePileRowCaretProps}
-										//color={props.start ? "green" : props.end ? "red" : undefined }
 										/>
 
 										{parts[0]}
@@ -363,7 +345,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 										<Pane.Col
 											start end
-											//expanded={tenta.opened}
+											expanded={tenta.opened}
 											wrapperCls="py24 pl60 pr36"
 											children={parts[1]}
 										/>
@@ -394,7 +376,7 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 function usePileRowCaretProps()
 {
 	let row = Pane.ContainerInfo.use();
-	return { borderRadius: row && Pane.Radius.toCss(row.rtl, row.rtr, row.rbr, row.rbl, 2) };
+	return { borderRadius: row && Pane.Radius.css(row.rtl, row.rtr, row.rbr, row.rbl, 2) };
 }
 
 

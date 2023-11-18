@@ -121,20 +121,23 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 
 
 
-		protected async phaseChanged()
+		protected phaseChanged()
 		{
 
 			this.onPhaseChanged?.(this);
 
-			//await this.repaint();
 
-
-			if (this.placeholder && this.placeholder.stage !== this.stage)
+			if (this.placeholder)
 			{
-				this.placeholder?.set({ stage: this.stage });
+				if (this.placeholder.stage !== this.stage)
+				{
+					this.placeholder?.set({ stage: this.stage });
+				}
 			}
-			//this.prior?.repaintListRow?.();
-			//this.next?.repaintListRow?.();
+			else
+			{
+				this.repaint();
+			}
 
 		}
 
@@ -227,8 +230,12 @@ export module TentaPhaser
 
 	export interface UseConfig extends TentaBase.UseConfig
 	{
+
+		readonly maxPhase?: TentaPhase;
+
 		readonly defaultPhase?: TentaPhase;
 		readonly defaultStage?: TentaStage;
+
 	}
 
 
@@ -236,6 +243,18 @@ export module TentaPhaser
 
 	export function use(me: TentaPhaser, cfg?: UseConfig)
 	{
+
+
+		if (cfg?.maxPhase != null)
+		{
+			me.maxPhase = cfg.maxPhase;
+
+			if (me.expandedPhase > me.expandedPhase)
+				me.expandedPhase = me.expandedPhase;
+
+			if (me.openedPhase > me.maxPhase)
+				me.openedPhase = me.maxPhase;
+		}
 
 
 		if (me.phase != null)

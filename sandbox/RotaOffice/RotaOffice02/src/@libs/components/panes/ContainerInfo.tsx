@@ -163,7 +163,10 @@ export module ContainerInfo
 
 		if (!parentInfo)
 		{
+			v.b = props.b || "" as PaneBorder;
 			v.bt = v.br = v.bb = v.bl = props.b || "";
+
+			v.r = props.r || 0 as PaneRadius;
 			v.rtl = v.rtr = v.rbr = v.rbl = props.r || 0;
 		}
 		else

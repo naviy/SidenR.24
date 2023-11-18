@@ -12,6 +12,7 @@ import { Block } from "./Block";
 
 
 
+
 export type ContainerLayout = "row" | "col";
 
 
@@ -68,23 +69,50 @@ export module ContainerBaseProps
 
 
 
-export type PaneBorder = "" | "0" | "1" | "2" | "3";
+export type PaneBorder = "" | "xs" | "sm" | "md" | "lg";
 
 
 
 export module PaneBorder
 {
 
-	const css = {
-		"1": `1px solid ${blueGrey[200]}`,
-		"2": `2px solid ${blueGrey[400]}`,
-		"3": `2px solid ${blueGrey[500]}`,
+
+	export const styles: Partial<Record<PaneBorder, { width: number, color: string, css?: string }>> =
+	{
+		"xs": { width: 1, color: blueGrey[100] },
+		"sm": { width: 1, color: blueGrey[200] },
+		"md": { width: 2, color: blueGrey[400] },
+		"lg": { width: 2, color: blueGrey[500] },
+	} as const;
+
+
+
+	export function width(b: PaneBorder): number | undefined
+	{
+		let style = (styles)[b] || undefined;
+
+		if (!style)
+			return undefined;
+
+		return style.width;
 	}
 
 
-	export function toCss(b: PaneBorder): string | undefined
+
+	export function css(b: PaneBorder): string | undefined
 	{
-		return (css as any)[b] || undefined;
+		let style = (styles)[b] || undefined;
+
+		if (!style)
+			return undefined;
+
+		if (!style.css)
+		{
+			return style.css = `${style.width}px solid ${style.color}`;
+		}
+
+
+		return style.css;
 	}
 
 
@@ -102,18 +130,19 @@ export module PaneBorder
 
 
 
-export type PaneRadius = "" | "0" | "1" | "2" | "3" | "4" | number;
+export type PaneRadius = "" | "xs" | "sm" | "md" | "lg" | number;
 
 
 
 export module PaneRadius
 {
 
-	const px = {
-		"1": 3,
-		"2": 6,
-		"3": 12,
-		"4": 24,
+
+	const px: Partial<Record<PaneRadius, number>> = {
+		"xs": 3,
+		"sm": 6,
+		"md": 12,
+		"lg": 24,
 	}
 
 
@@ -123,9 +152,11 @@ export module PaneRadius
 		return rr + (add || 0);
 	}
 
-	export function toCss(rtl: PaneRadius, rtr: PaneRadius, rbr: PaneRadius, rbl: PaneRadius, add?: number | null)
+
+	export function css(rtl: PaneRadius, rtr: PaneRadius, rbr: PaneRadius, rbl: PaneRadius, add?: number | null)
 	{
 		return `${toPx(rtl, add)}px ${toPx(rtr, add)}px ${toPx(rbr, add)}px ${toPx(rbl, add)}px`;
 	}
+
 
 }

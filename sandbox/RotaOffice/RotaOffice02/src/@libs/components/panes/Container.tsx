@@ -5,7 +5,7 @@ import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, crea
 import { Expander, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
-import { ContainerBaseProps, type ContainerLayout } from "./ContainerProps";
+import { ContainerBaseProps, PaneRadius, type ContainerLayout, PaneBorder } from "./ContainerProps";
 
 
 
@@ -66,11 +66,11 @@ export module ContainerProps
 {
 
 	export const propNames: PropNames<ContainerProps<any>> =
-	{
-		...ContainerBaseProps.propNames,
-		...ExpanderBaseProps.propNames,
-		...UseHookProps.propNames,
-	} as const;
+		{
+			...ContainerBaseProps.propNames,
+			...ExpanderBaseProps.propNames,
+			...UseHookProps.propNames,
+		} as const;
 
 }
 
@@ -111,7 +111,7 @@ export function Row(props: RowProps)
 
 export function renderProvider(
 	layout: ContainerLayout | null | undefined,
-	props: Partial<ContainerBaseProps> & PrimitiveProps<HTMLDivElement> & ExpanderBaseProps & UseHookProps<Partial<ContainerBaseProps> & PrimitiveProps<HTMLDivElement> & ExpanderBaseProps>,
+	props: ContainerProps<any> & PrimitiveProps<HTMLDivElement>,
 	addClassName?: string
 )
 {
@@ -209,16 +209,23 @@ export function renderProvider(
 	if (v.debug)
 	{
 		body = <>
-			<DebugBox layout={layout!}>
+			<DebugBox
+				layout={layout!}
+				r={PaneRadius.css(v.rtl, v.rtr, v.rbr, v.rbl)}
+				bt={v.bt}
+				br={v.br}
+				bb={v.bb}
+				bl={v.bl}
+			>
 				<div>
 					<b>{v.layout}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
-					{props.start && " start"}{props.end && " end"}
+					<em>b: {v.b}</em>{props.start && " start"}{props.end && " end"}
 				</div>
 			</DebugBox>
 			{body}
 		</>;
 
-		addClassName = clsx(addClassName, "m4 pt16");
+		addClassName = clsx(addClassName, "m8 pt16");
 	}
 
 
@@ -234,15 +241,16 @@ export function renderProvider(
 			timeout: props.timeout,
 			className: addClassName,
 
+			r: PaneRadius.css(v.rtl, v.rtr, v.rbr, v.rbl),
+
 			...expanderProps,
 
 			children: body,
 
-		},
+		} as RootProps,
 		props,
 		ContainerProps.propNames
 	);
-
 
 
 
@@ -259,7 +267,13 @@ export function renderProvider(
 
 
 
-//---
+
+
+
+//===
+
+
+
 
 
 
@@ -278,11 +292,11 @@ export interface RootProps
 	minHeight?: number | string;
 	maxHeight?: number | string;
 
+	r: string;
+
 	timeout?: number;
 
 }
-
-
 
 
 
@@ -301,9 +315,12 @@ const rootPropNames: PropNames<RootProps> =
 	minHeight: true,
 	maxHeight: true,
 
+	r: true,
+
 	timeout: true,
 
 };
+
 
 
 
@@ -334,6 +351,8 @@ export const Root = styled(
 		minHeight: props.minHeight,
 		maxHeight: props.maxHeight,
 
+		borderRadius: props.r,
+
 		...props.expandMode === "height" && {
 			flex: undefined,
 			display: "block",
@@ -357,25 +376,72 @@ export const Root = styled(
 
 
 
-export const DebugBox = styled(
-	"div",
-	{ shouldForwardProp: p => p !== "layout", }
-)<{
-	layout: ContainerLayout
-}>(({ layout }) =>
+
+
+
+//===
+
+
+
+
+
+
+export interface DebugBoxProps
 {
 
-	let color = layout === "row" ? "rgba(30,30,160, .5)" : "rgba(30,100,30, .5)";
+	layout: ContainerLayout;
+
+	r: string;
+	bt: PaneBorder;
+	br: PaneBorder;
+	bb: PaneBorder;
+	bl: PaneBorder;
+
+}
+
+
+
+const debugPropNames: PropNames<DebugBoxProps> =
+{
+	layout: true,
+	r: true,
+	bt: true,
+	br: true,
+	bb: true,
+	bl: true,
+};
+
+
+
+
+
+export const DebugBox = styled(
+	"div",
+	{
+		shouldForwardProp: p => !(debugPropNames as any)[p],
+	}
+)<DebugBoxProps>((props) =>
+{
+
+	let color = props.layout === "row" ? "rgba(30,30,160,.5)" : "rgba(30,100,30,.5)";
+
 
 	return {
+
 		position: "absolute",
-		inset: "-1px",
+		inset: "-2px",
 		overflow: "hidden",
-		border: `2px solid ${color}`,
-		borderRadius: "inherit",
+
+		borderRadius: props.r,
+		borderTop: border(props.bt),
+		borderRight: border(props.br),
+		borderBottom: border(props.bb),
+		borderLeft: border(props.bl),
+
 		//zIndex: 1,
 
 		"> div": {
+
 			position: "absolute",
 			top: 0,
 			left: 0,
@@ -395,7 +461,20 @@ export const DebugBox = styled(
 				fontSize: '8px',
 				lineHeight: `10px`,
 			},
+
 		}
+
 	};
+
+
+
+	function border(b: PaneBorder)
+	{
+
+		let style = PaneBorder.styles[b];
+
+		return style ? `${2 * style.width}px solid ${color}` : `1px dotted ${color}`;
+	}
+
 
 });
