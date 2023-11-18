@@ -28,25 +28,22 @@ export interface ContainerInfo
 
 	// Border
 
-	bOff?: PaneBorder;
-	bOn?: PaneBorder;
+	b?: PaneBorder;
 
-	bt?: boolean;
-	br?: boolean;
-	bb?: boolean;
-	bl?: boolean;
+	bt: PaneBorder;
+	br: PaneBorder;
+	bb: PaneBorder;
+	bl: PaneBorder;
 
 
-	// Border
+	// [Border] Radius
 
-	rI?: PaneRadius;
-	rO?: PaneRadius;
+	r?: PaneRadius;
 
-	rtl?: boolean;
-	rtr?: boolean;
-	rbl?: boolean;
-	rbr?: boolean;
-	rCss?: string;
+	rtl: PaneRadius;
+	rtr: PaneRadius;
+	rbl: PaneRadius;
+	rbr: PaneRadius;
 
 }
 
@@ -58,7 +55,9 @@ export interface ContainerInfo
 export module ContainerInfo
 {
 
+
 	//---
+
 
 
 
@@ -72,23 +71,19 @@ export module ContainerInfo
 		end: true,
 		rounded: true,
 
-		bOn: true,
-		bOff: true,
+		b: true,
 
 		bt: true,
 		br: true,
 		bb: true,
 		bl: true,
 
-		rO: true,
-		rI: true,
+		r: true,
 
 		rtl: true,
 		rtr: true,
 		rbr: true,
 		rbl: true,
-
-		rCss: true,
 
 	};
 
@@ -103,7 +98,9 @@ export module ContainerInfo
 
 
 
+
 	//---
+
 
 
 
@@ -143,21 +140,17 @@ export module ContainerInfo
 
 
 
+
 	export function init(
 		props: Partial<ContainerProps>,
-		parentInfo: ContainerInfo|null,
-		v: ContainerInfo,
+		parentInfo: ContainerInfo | null,
+		v: Partial<ContainerInfo>,
 	): ContainerInfo
 	{
 		//_$log("props", props)
 
 
 		v.debug = !!(props.debug ?? parentInfo?.debug);
-
-		v.bOn = (props.borderOn ?? parentInfo?.bOn) || 0;
-		v.bOff = (props.borderOff ?? parentInfo?.bOff) || 0;
-		v.rO = (parentInfo?.rI) || 0;
-		v.rI = (props.radius ?? parentInfo?.rI) || 0;
 
 
 		let { start, end, } = props;
@@ -168,27 +161,40 @@ export module ContainerInfo
 		v.end = end;
 
 
-		$log("id:", props.id);
-		_$log("v:", v);
-		_$log("inRow:", inRow);
-		_$log("inCol:", inCol);
+		if (!parentInfo)
+		{
+			v.bt = v.br = v.bb = v.bl = props.b || "";
+			v.rtl = v.rtr = v.rbr = v.rbl = props.r || 0;
+		}
+		else
+		{
 
-		v.rtl = parentInfo?.rtl !== false && (inRow && start || inCol && start);
-		v.rtr = parentInfo?.rtr !== false && (inRow && end || inCol && start);
-		v.rbr = parentInfo?.rbr !== false && (inRow && end || inCol && end);
-		v.rbl = parentInfo?.rbl !== false && (inRow && start || inCol && end);
-		_$log("v:", v);
+			let b = v.b = (props.b ?? parentInfo.b) || "" as PaneBorder;
 
-		v.rCss = PaneRadius.toCss(v.rI!, v.rO!, v.rtl, v.rtr, v.rbr, v.rbl);
-		_$log("rCss:", v.rCss);
+			v.bl = inRow && start || inCol ? parentInfo.bl : b;
+			v.br = inRow && end || inCol ? parentInfo.br : inRow && !end ? "" : b;
+			v.bt = inRow || inCol && start ? parentInfo.bt : b;
+			v.bb = inRow || inCol && end ? parentInfo.bb : inCol && !end ? "" : b;
 
 
-		return v;
+			let r = v.r = (props.r ?? parentInfo.r) || 0 as PaneRadius;
+
+			v.rtl = inRow && start || inCol && start ? parentInfo.rtl : r;
+			v.rtr = inRow && end || inCol && start ? parentInfo.rtr : r;
+			v.rbr = inRow && end || inCol && end ? parentInfo.rbr : r;
+			v.rbl = inRow && start || inCol && end ? parentInfo.rbl : r;
+
+		}
+
+
+		return v as ContainerInfo;
 
 	}
 
 
 
+
 	//---
+
 
 }

@@ -221,7 +221,7 @@ export module Pane
 			display: "flex",
 			position: "relative",
 
-			//background: Pane.BgColor(props.theme, props.bgcolor),
+			background: "white",
 			borderRadius: props.borderRadius,
 			//borderWidth: props.borderWidth,
 

@@ -1,3 +1,4 @@
+import { blueGrey } from "@mui/material/colors";
 import { Block } from "./Block";
 
 
@@ -13,13 +14,10 @@ import { Block } from "./Block";
 
 export type ContainerLayout = "row" | "col";
 
-export type PaneBorder = 0 | 1 | 2;
 
 
 
-
-
-export interface ContainerProps<P extends ContainerProps = any> extends Block.Props//, ExpanderBaseProps, UseHookProps<P>
+export interface ContainerProps/*<P extends ContainerProps = any>*/ extends Block.Props//, ExpanderBaseProps, UseHookProps<P>
 {
 
 	id?: string;
@@ -27,10 +25,8 @@ export interface ContainerProps<P extends ContainerProps = any> extends Block.Pr
 
 	layout?: ContainerLayout;
 
-	borderOn?: PaneBorder;
-	borderOff?: PaneBorder;
-
-	radius?: PaneRadius;
+	b?: PaneBorder;
+	r?: PaneRadius;
 
 	wrapperCls?: string | null;
 
@@ -50,10 +46,8 @@ export module ContainerProps
 		debug: true,
 		layout: true,
 
-		borderOn: true,
-		borderOff: true,
-
-		radius: true,
+		b: true,
+		r: true,
 
 		wrapperCls: true,
 
@@ -83,28 +77,63 @@ export module ContainerProps
 
 
 
-export type PaneRadius = 0 | 1 | 2;
+export type PaneBorder = "" | "0" | "1" | "2" | "3";
+
+
+
+export module PaneBorder
+{
+
+	const css = {
+		"1": `1px solid ${blueGrey[200]}`,
+		"2": `2px solid ${blueGrey[400]}`,
+		"3": `2px solid ${blueGrey[500]}`,
+	}
+
+
+	export function toCss(b: PaneBorder): string|undefined
+	{
+		return (css as any)[b] || undefined;
+	}
+
+
+}
+
+
+
+
+
+
+//===
+
+
+
+
+
+
+export type PaneRadius = "" | "0" | "1" | "2" | "3" | "4" | number;
 
 
 
 export module PaneRadius
 {
 
-	export function toPx(r: PaneRadius)
-	{
-		return r === 1 ? 6 : r === 2 ? 12 : 0;
+	const px = {
+		"1": 3,
+		"2": 6,
+		"3": 12,
+		"4": 24,
 	}
 
-	export function toCss(
-		rOff: PaneRadius,
-		rOn: PaneRadius,
-		rtl: boolean | undefined,
-		rtr: boolean | undefined,
-		rbr: boolean | undefined,
-		rbl: boolean | undefined
-	)
+
+	export function toPx(r: PaneRadius): number
 	{
-		return `${toPx(rtl ? rOn : rOff)}px ${toPx(rtr ? rOn : rOff)}px ${toPx(rbr ? rOn : rOff)}px ${toPx(rbl ? rOn : rOff)}px`;
+		return typeof r === "number" ? r : (px as any)[r] || 0;
+	}
+
+	export function toCss(rtl: PaneRadius, rtr: PaneRadius, rbr: PaneRadius, rbl: PaneRadius)
+	{
+		return `${toPx(rtl)}px ${toPx(rtr)}px ${toPx(rbr)}px ${toPx(rbl)}px`;
 	}
 
 }

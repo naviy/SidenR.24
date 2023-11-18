@@ -1,11 +1,12 @@
 import { $defaultAnimationDurationMs, Div, Expander, Focuser, GlobalState, Route, bgColors, useNew } from '@libs';
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import React, { useReducer, type ReactNode } from "react";
+import React, { useReducer, type ReactNode, useState } from "react";
 import { Tenta } from './tentas';
 import { TentaStage } from "./tentas/TentaStage";
 import FestivalIcon from '@mui/icons-material/Festival';
-import { Pane } from "../@libs/components/panes2";
+import { Pane2 as Pane } from "../@libs/components/panes2";
+import Checkbox from "@mui/material/Checkbox";
 
 
 
@@ -66,16 +67,40 @@ export module Page031
 function Rows01()
 {
 
+	let [exp, toggleExp] = useReducer(a => !a, false);
+
 	return <>
+		<Pane p12 mb24 onClick={toggleExp} cursorPointer>
+			<Checkbox checked={exp} />
+		</Pane>
 
-		<Pane.Row id="row01" start end radius={2}>
 
-			<Pane.Row id="row01" start end radius={1}>
-				<Pane id="pane01" start end p12>11111</Pane>
-				<Pane end p12>22222</Pane>
+		<Pane.Col start end b="2" r="3">
+
+			<Pane.Row start end={exp} r="" b="1">
+				<Pane.Row start end={exp}>
+					<Pane start p12>11111</Pane>
+					<Pane end p12>22222</Pane>
+				</Pane.Row>
+				<Pane.Col start={exp} end ml24={exp}>
+					<Pane.Provider start end r="0">
+						<Pane start p12>111</Pane>
+						<Pane p12>222</Pane>
+						<Pane end p12>333</Pane>
+					</Pane.Provider>
+				</Pane.Col>
 			</Pane.Row>
 
-		</Pane.Row>
+
+			<Pane.Row pl48={exp} pt24={exp} start={exp} end r="" b={exp ? "2" : "1"}>
+				<Pane.Provider start end r={exp ? "1" : 0}>
+					<Pane start end={exp} p12>11111</Pane>
+					<Pane start={exp} end={exp} ml4={exp} p12>22222</Pane>
+					<Pane start={exp} ml4={exp} end p12>33333</Pane>
+				</Pane.Provider>
+			</Pane.Row>
+
+		</Pane.Col>
 
 	</>;
 

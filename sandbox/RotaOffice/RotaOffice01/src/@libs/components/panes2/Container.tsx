@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import clsx from "clsx";
-import React, { useRef } from "react";
+import React, { useRef, type ReactNode } from "react";
 import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { Expander, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
@@ -19,9 +19,9 @@ import { ContainerProps, type ContainerLayout } from "./ContainerProps";
 
 
 
-export interface DivProps extends ContainerProps<DivProps>, PrimitiveProps<HTMLDivElement> { }
-export interface ColProps extends ContainerProps<ColProps>, PrimitiveProps<HTMLDivElement> { }
-export interface RowProps extends ContainerProps<RowProps>, PrimitiveProps<HTMLDivElement> { }
+export interface DivProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
+export interface ColProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
+export interface RowProps extends ContainerProps, PrimitiveProps<HTMLDivElement> { }
 
 
 export function Div(props: DivProps)
@@ -39,6 +39,30 @@ export function Row(props: RowProps)
 	return renderProvider("row", props, "flex");
 }
 
+export function Provider(props: ContainerProps & { children?: ReactNode })
+{
+	let parentInfo = ContainerInfo.use();
+
+	let v = ContainerInfo.init(
+		props,
+		parentInfo,
+		{
+			layout: props.layout || parentInfo?.layout || "col",
+		},
+	);
+
+
+	v = ContainerInfo.useValue(v, props.id);
+
+	return <ContainerInfo.Context.Provider
+		value={v}
+		children={props.children}
+	/>;
+
+
+
+}
+
 
 
 
@@ -52,7 +76,7 @@ export function Row(props: RowProps)
 
 
 export function renderProvider(
-	layout: ContainerLayout | undefined,
+	layout: ContainerLayout | null | undefined,
 	props: Partial<ContainerProps> & PrimitiveProps<HTMLDivElement> & ExpanderBaseProps & UseHookProps<Partial<ContainerProps> & PrimitiveProps<HTMLDivElement> & ExpanderBaseProps>,
 	addClassName?: string
 )
@@ -115,7 +139,7 @@ export function renderProvider(
 	let body = props.children;
 
 
-	let expanderProps: Partial<RootProps> = {};
+	let expanderProps: Partial<RootProps> & React.HTMLProps<HTMLDivElement> = {};
 
 	if (flexExpander)
 	{
@@ -173,8 +197,6 @@ export function renderProvider(
 
 			...sizes,
 
-			borderRadius: v.rCss,
-
 			timeout: props.timeout,
 			className: addClassName,
 
@@ -207,7 +229,7 @@ export function renderProvider(
 
 
 
-export interface RootProps extends React.HTMLProps<HTMLDivElement>
+export interface RootProps
 {
 
 	expandMode?: "height" | "flex";
@@ -222,11 +244,32 @@ export interface RootProps extends React.HTMLProps<HTMLDivElement>
 	minHeight?: number | string;
 	maxHeight?: number | string;
 
-	borderRadius?: string;
-
 	timeout?: number;
 
 }
+
+
+
+
+
+const rootPropNames: Record<keyof RootProps, true> =
+{
+
+	expandMode: true,
+
+	flex: true,
+
+	width: true,
+	minWidth: true,
+	maxWidth: true,
+
+	height: true,
+	minHeight: true,
+	maxHeight: true,
+
+	timeout: true,
+
+};
 
 
 
@@ -234,19 +277,7 @@ export const Root = styled(
 	"div",
 	{
 		name: "pane-container",
-		shouldForwardProp: p =>
-			p !== "expandMode" &&
-			p !== "isFlex" &&
-			p !== "flex" &&
-			p !== "width" &&
-			p !== "minWidth" &&
-			p !== "maxWidth" &&
-			p !== "height" &&
-			p !== "minHeight" &&
-			p !== "maxHeight" &&
-			p !== "borderRadius" &&
-			p !== "timeout"
-		,
+		shouldForwardProp: p => !(rootPropNames as any)[p],
 	}
 )<RootProps>((props) =>
 {
@@ -260,8 +291,6 @@ export const Root = styled(
 		boxSizing: "border-box",
 
 		flex: props.flex,
-
-		borderRadius: props.borderRadius || "0",
 
 		width: props.width,
 		minWidth: props.minWidth,

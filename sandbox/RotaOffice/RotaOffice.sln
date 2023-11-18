@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "RotaOffice01", "RotaOffice01\RotaOffice01.esproj", "{D1ED8067-6D5E-4A41-8260-66919A869956}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "RotaOffice02", "RotaOffice02\RotaOffice02.esproj", "{D6A665F7-E675-4847-9BF0-1D4600E517AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,12 @@ Global
 		{D1ED8067-6D5E-4A41-8260-66919A869956}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1ED8067-6D5E-4A41-8260-66919A869956}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D1ED8067-6D5E-4A41-8260-66919A869956}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D6A665F7-E675-4847-9BF0-1D4600E517AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A665F7-E675-4847-9BF0-1D4600E517AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A665F7-E675-4847-9BF0-1D4600E517AF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D6A665F7-E675-4847-9BF0-1D4600E517AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A665F7-E675-4847-9BF0-1D4600E517AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A665F7-E675-4847-9BF0-1D4600E517AF}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

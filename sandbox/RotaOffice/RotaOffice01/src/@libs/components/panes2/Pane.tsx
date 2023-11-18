@@ -3,6 +3,7 @@ import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, Use
 import { Block } from "./Block";
 import * as Container from "./Container";
 import { ContainerInfo, ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
+import { PaneBorder, PaneRadius } from "./ContainerProps";
 
 
 
@@ -16,13 +17,13 @@ import { ContainerInfo, ContainerInfo as ContainerInfo_ } from "./ContainerInfo"
 
 
 
-export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
+export function Pane2(props: Pane2.Props & PrimitiveProps<HTMLDivElement>)
 {
 
 	//__$log("Pane");
 	props = UseHookProps.use(props);
 
-	let containerInfo = ContainerInfo_.use() || {};
+	let containerInfo = ContainerInfo_.use();
 
 
 	let v = ContainerInfo.init(
@@ -48,33 +49,35 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	}
 
 
-	if (containerInfo.debug)
+	if (containerInfo?.debug)
 	{
 		body = <>
-			<Pane.DebugBox>
+			<Pane2.DebugBox>
 				<div>
 					<b>pane{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
 					{props.start && " start"}{props.end && " end"}
 				</div>
-			</Pane.DebugBox>
+			</Pane2.DebugBox>
 			{body}
 		</>;
 	}
 
 
-	$log("v.rCss:", v.rCss);
-
 	body = createPrimitive(
-		Pane.Root as any,
+		Pane2.Root as any,
 		{
-			debug: containerInfo.debug,
+			debug: containerInfo?.debug,
 			//bgcolor: props.bgcolor,
-			borderRadius: v.rCss,
+			r: PaneRadius.toCss(v.rtl, v.rtr, v.rbr, v.rbl),
+			bt: PaneBorder.toCss(v.bt),
+			br: PaneBorder.toCss(v.br),
+			bb: PaneBorder.toCss(v.bb),
+			bl: PaneBorder.toCss(v.bl),
 			...sizes,
 			children: body,
-		},
+		} as Pane2.RootProps,
 		props,
-		Pane.propNames
+		Pane2.propNames
 	);
 
 
@@ -93,7 +96,7 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 
 
 
-export module Pane
+export module Pane2
 {
 
 
@@ -109,16 +112,16 @@ export module Pane
 	export type DivProps = Container.DivProps;
 	export type RowProps = Container.RowProps;
 
+	export const Provider = Container.Provider;
 	export const Col = Container.Col;
 	export const Div = Container.Div;
 	export const Row = Container.Row;
 
 
-	//export const injectProps = Block.injectProps;
-
 
 
 	//---
+
 
 
 
@@ -147,10 +150,15 @@ export module Pane
 
 
 
-	interface RootProps
+	export interface RootProps
 	{
 		debug?: boolean;
-		borderRadius: string;
+
+		r: string;
+		bt: string | undefined;
+		br: string | undefined;
+		bb: string | undefined;
+		bl: string | undefined;
 
 		flex?: number | string;
 
@@ -168,7 +176,11 @@ export module Pane
 	const rootPropNames: Record<keyof RootProps, true> =
 	{
 		debug: true,
-		borderRadius: true,
+		r: true,
+		bt: true,
+		br: true,
+		bb: true,
+		bl: true,
 		flex: true,
 		width: true,
 		minWidth: true,
@@ -185,13 +197,16 @@ export module Pane
 		"div",
 		{
 			shouldForwardProp: p =>
-				p !== "isFlex" && !(rootPropNames  as any)[p]
+				p !== "isFlex" && !(rootPropNames as any)[p]
 			,
 		}
 	)<RootProps>((props) =>
 	{
 
 		//let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
+
+		const defaultBorder = "0 solid transparent" as const;
+
 
 		return {
 
@@ -200,10 +215,13 @@ export module Pane
 
 			background: props.theme.palette.background.paper,
 			//background: Pane.BgColor(props.theme, props.bgcolor),
-			borderRadius: props.borderRadius,
+			borderRadius: props.r,
 			//borderWidth: props.borderWidth,
 
-			border: "1px solid black",
+			borderTop: props.bt || defaultBorder,
+			borderRight: props.br || defaultBorder,
+			borderBottom: props.bb || defaultBorder,
+			borderLeft: props.bl || defaultBorder,
 
 			//border: `${ppColor} solid 0px`,
 			//borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
@@ -222,10 +240,10 @@ export module Pane
 
 			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
-			userSelect: "none", 
+			userSelect: "none",
 
 			"> *": {
-				userSelect: "text", 
+				userSelect: "text",
 			},
 
 		};

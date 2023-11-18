@@ -435,7 +435,7 @@ export interface PrimitiveClassesProps extends
 	//---
 
 
-	border?: "blue" | "green" | "red";
+	//border?: "blue" | "green" | "red";
 	borderBlue?: boolean;
 	borderGreen?: boolean;
 	borderRed?: boolean;
@@ -972,7 +972,7 @@ export function primitivePropsToClassName(
 
 		if (typeof value === "boolean")
 		{
-			classes.push(`${prefix}${prop}`);
+			value && classes.push(`${prefix}${prop}`);
 		}
 
 		else if (typeof value === "string")
