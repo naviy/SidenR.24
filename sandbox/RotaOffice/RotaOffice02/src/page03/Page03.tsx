@@ -42,7 +42,11 @@ export module Page03
 
 					<GlobalState name="Rows05Pile">
 
-						<Rows05 root />
+						<Pane.Col start end b="md" r="md">
+							<Pane.Col start end b="sm" r="">
+								<Rows05 root />
+							</Pane.Col>
+						</Pane.Col>
 
 					</GlobalState>
 
@@ -73,7 +77,7 @@ function Rows05({ root }: { root?: boolean })
 {
 	return <>
 
-		<Pane.Col start end b="md" r="md">
+		<Pane.Col start end>
 
 			<PileListBackfill />
 
@@ -117,9 +121,9 @@ function Row05(props: PileRowProps)
 			</>
 
 			<>
-				<Pane p12 vcenter>111 1111 11111 111111</Pane>
+				<Pane start p12 vcenter>111 1111 11111 111111</Pane>
 				<Pane p12 vcenter>222 2222 22222 222222</Pane>
-				<Pane p12 vcenter textRight>
+				<Pane end p12 vcenter textRight>
 					<div>
 						333 3333 33333 333333
 						<Cell3 />
@@ -143,7 +147,7 @@ function Row05(props: PileRowProps)
 			</Pane.Col>
 
 			<>
-				<Pane p12 vcenter>222 2222 22222 222222</Pane>
+				<Pane start p12 vcenter>222 2222 22222 222222</Pane>
 				<Pane end p12 textRight vcenter>333 3333 33333 333333</Pane>
 			</>
 
@@ -198,7 +202,6 @@ function Row05(props: PileRowProps)
 					end
 					id={`row05-expander #${props.id}`}
 					expanded={phase === 1}
-					wrapperCls="pt1"
 					gap1
 				//noreexpand
 				>
@@ -268,8 +271,12 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 	let isFirst = !placeholder?.prior;
 	let isLast = !placeholder?.next;
-	let start = tenta.opened || isFirst;// || placeholder.prior.opened;
-	let end = tenta.opened || isLast;// || placeholder.next.opened;
+	//let start = tenta.opened || isFirst;// || placeholder.prior.opened;
+	//let end = tenta.opened || isLast;// || placeholder.next.opened;
+
+
+	let linkLine = !placeholder || !placeholder.collector.root;
+	let linkToNext = false;
 
 
 	let parts = React.Children.toArray(rowProps.children);
@@ -288,30 +295,25 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 
 					<Div relative>
 
-						{(!placeholder || !placeholder.collector.root) &&
-							<TentaItemsLinkLine
-								width={36}
-								thickness={tenta.opened ? 2 : tenta.expanded ? 2 : 2}
-							>
-								{isFirst && <div className="line-to-root" />}
-								<div className="angle" />
-								{!isLast && <div className="line-to-next" />}
-							</TentaItemsLinkLine>
-						}
+						<PileNodeLinkLine width={linkLine ? 36 : 0}>
+
+							{isFirst && <div className="line-to-root" />}
+							<div className="angle" />
+							{(!isLast || linkToNext) && <div className="line-to-next" />}
+
+						</PileNodeLinkLine>
 
 						<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
 
 							<Pane.Col
 								id={`pile-row#${id}`}
 
-								start={start}
-								end={end}
+								start={!tenta.collapsed || isFirst || !placeholder!.prior!.collapsed}
+								end={!tenta.collapsed || isLast || !placeholder!.next!.collapsed}
 
 								{...rowProps}
 
-								b="sm"
-								r=""
-								debug={tenta.phase > 0}
+								//debug={tenta.phase > 0}
 
 								mb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 40 : 0}
 							>
@@ -324,8 +326,12 @@ function PileRow({ id, ...rowProps }: PileRowProps)
 								>
 
 									<Pane.Row
-										start end
+										start
+										end
 										cursorPointer
+										b="sm"
+										r=""
+
 									>
 
 
@@ -385,20 +391,19 @@ function usePileRowCaretProps()
 const PileListBackfill = styled("div")({
 
 	position: "absolute",
-	inset: 0,
+	inset: 1,
 
 	borderRadius: "inherit",
-	border: `2px solid ${bgColors[2]}`,
+	border: `2px dotted ${bgColors[2]}`,
 
-	//background: "#fafcff",
-	//boxShadow: "0 4px 24px -4px #c3c6c9, 0 1px 8px -1px #c3c6c9",
+	background: "rgba(255,255,255,.33)",
 
 });
 
 
 
 
-const TentaItemsLinkLine = styled(
+const PileNodeLinkLine = styled(
 	"div",
 	{ shouldForwardProp: p => p !== "width" && p !== "thickness" }
 )<{
@@ -412,6 +417,7 @@ const TentaItemsLinkLine = styled(
 	top: 0,
 	bottom: 0,
 	width,
+	opacity: width ? 1 : 0,
 
 	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
@@ -423,7 +429,7 @@ const TentaItemsLinkLine = styled(
 		top: 0,
 		height: 24,
 
-		border: `${thickness || 2}px solid ${bgColors[3]}`,
+		border: `${thickness || 3}px solid ${bgColors[3]}`,
 		borderTopWidth: 0,
 		borderRightWidth: 0,
 		borderBottomLeftRadius: 12,
@@ -435,13 +441,13 @@ const TentaItemsLinkLine = styled(
 		right: 0,
 		top: -24,
 		height: 24,
-		borderLeft: `${thickness || 2}px solid ${bgColors[3]}`,
+		borderLeft: `${thickness || 3}px solid ${bgColors[3]}`,
 	},
 
 	"> .line-to-next": {
 		position: "absolute",
 		inset: 0,
-		borderLeft: `${thickness || 2}px solid ${bgColors[3]}`,
+		borderLeft: `${thickness || 3}px solid ${bgColors[3]}`,
 	},
 
 }));
