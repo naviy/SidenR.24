@@ -41,7 +41,7 @@ export module Page032
 
 					<GlobalState name="Rows05Pile">
 
-						<Pane.Col start end b="lg" r="lg">
+						<Pane.Col start end b="2-200" r="lg">
 							<Pane.Ghost start end b="sm" r="">
 								<Rows05 root />
 							</Pane.Ghost>
@@ -104,12 +104,12 @@ function Rows05({ root }: { root?: boolean })
 
 
 
-function Row05(props: PileRowProps)
+function Row05(props: PileNode1Props)
 {
 	//$log("Row05.id:", props.id)
 
 
-	return <PileNode {...props}>
+	return <PileNode1 {...props}>
 
 		<RowBody id={props.id}>
 
@@ -159,7 +159,7 @@ function Row05(props: PileRowProps)
 		</>
 
 
-	</PileNode>;
+	</PileNode1>;
 
 
 
@@ -201,7 +201,7 @@ function Row05(props: PileRowProps)
 				<Pane.Row
 					end
 					id={`row05-expander #${props.id}`}
-					expanded={phase === 1}					
+					expanded={phase === 1}
 				//noreexpand
 				>
 					{parts[1]}
@@ -246,7 +246,7 @@ function Row05(props: PileRowProps)
 
 
 
-interface PileRowProps extends Omit<Pane.RowProps, 'id'>
+interface PileNode1Props extends Omit<Pane.RowProps, "id" | "children">
 {
 	id: React.Key;
 }
@@ -254,120 +254,125 @@ interface PileRowProps extends Omit<Pane.RowProps, 'id'>
 
 
 
-function PileNode({ id, ...rowProps }: PileRowProps)
+function PileNode1({ id, ...rowProps }: PileNode1Props & {
+	children: [JSX.Element, JSX.Element]
+})
 {
 
-	let placeholder = Tenta.Placeholder.use(id);
+	//let placeholder = Tenta.Placeholder.use(id);
 
-	let tenta = useNew(Tenta.Behavior1).use({ placeholder });
+	let tenta = useNew(Tenta.Behavior1).use({ id });
 
 
-	let topStage = TentaStage.max(tenta.stage, placeholder?.prior?.stage);
-	let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
+	//let topStage = TentaStage.max(tenta.stage, placeholder?.prior?.stage);
+	//let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
 
-	let isFirst = !placeholder?.prior;
-	let isLast = !placeholder?.next;
+	//let isFirst = !placeholder?.prior;
+	//let isLast = !placeholder?.next;
+
+
+	let { isFirst, isLast, topStage, btmStage, placeholder } = tenta;
 
 
 	let linkLine = !placeholder || !placeholder.collector.root;
 	let linkToNext = false;
 
 
-	let parts = React.Children.toArray(rowProps.children);
-
-
+	let parts = rowProps.children;
 
 	return (
 
 
-		<GlobalState state={placeholder?.globalState}>
+		<GlobalState state={tenta.placeholder?.globalState}>
 
 			<Tenta.Phase.Provider phase={tenta.phase}>
+				<Tenta.Stage.Provider stage={tenta.stage}>
 
-				<Tenta.Placeholder.NoCollector>
+					<Tenta.Placeholder.NoCollector>
 
-					<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
+						<Focuser ref={tenta.rootFfRef} name={`pile-row#${id}`} ghost focusable>
 
-						<Div
-							relative
-							pb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 24 : 0}
-							animated
-						>
-
-
-							<PileNodeLinkLine width={linkLine ? 36 : 0}>
-
-								{isFirst && <div className="line-to-root" />}
-								<div className="angle" />
-								{(!isLast || linkToNext) && <div className="line-to-next" />}
-
-							</PileNodeLinkLine>
-
-
-							<Pane.Ghost
-								id={`pile-row#${id}`}
-
-								start={!tenta.collapsed || isFirst || !placeholder!.prior!.collapsed}
-								end={!tenta.collapsed || isLast || !placeholder!.next!.collapsed}
-
-
-								{...rowProps}
-
-							//debug={tenta.phase > 0}
+							<Div
+								relative
+								pb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 24 : 0}
+								animated
 							>
 
-								<Focuser
-									ref={tenta.ffRef}
-									name={`pile-row-body#${id}`}
-									listener={tenta}
-									autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
+
+								<PileNodeLinkLine width={linkLine ? 36 : 0}>
+
+									{isFirst && <div className="line-to-root" />}
+									<div className="angle" />
+									{(!isLast || linkToNext) && <div className="line-to-next" />}
+
+								</PileNodeLinkLine>
+
+
+								<Pane.Ghost
+									id={`pile-row#${id}`}
+
+									start={!tenta.collapsed || isFirst || !placeholder!.prior!.collapsed}
+									end={!tenta.collapsed || isLast || !placeholder!.next!.collapsed}
+
+
+									{...rowProps}
+
+								//debug={tenta.phase > 0}
 								>
 
-									<Pane.Row
-										start
-										end
-										bl={tenta.expanded ? "lg" : undefined}
-										br={!tenta.collapsed ? "lg" : undefined}
-										bt={!isFirst && tenta.expanded ? undefined : !isFirst && tenta.collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
-										bb={!isLast && tenta.expanded ? undefined : !isLast && tenta.collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
-										rt={tenta.collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : tenta.expanded && !isFirst ? "sm" : undefined}
-										rb={tenta.collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : tenta.expanded && !isLast ? "sm" : undefined}
-
-										e={tenta.opened ? "L2" : tenta.expanded ? "0" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
-
+									<Focuser
+										ref={tenta.ffRef}
+										name={`pile-row-body#${id}`}
+										listener={tenta}
+										autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
 									>
 
-										<Focuser.Caret use={usePileRowCaretProps} />
+										<Pane.Row
+											start
+											end
+											bl={!tenta.collapsed ? "lg" : undefined}
+											br={!tenta.collapsed ? "lg" : undefined}
+											bt={!tenta.collapsed ? "lg" : !isFirst && tenta.collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
+											bb={!tenta.collapsed ? "lg" : !isLast && tenta.collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
+											rt={tenta.collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : tenta.expanded && !isFirst ? "sm" : undefined}
+											rb={tenta.collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : tenta.expanded && !isLast ? "sm" : undefined}
 
-										{parts[0]}
+											e={tenta.opened ? "L1" : tenta.expanded ? "L2" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
 
-									</Pane.Row>
+										>
 
-								</Focuser>
+											<Focuser.Caret use={usePileRowCaretProps} />
 
-								{parts[1] &&
+											{parts[0]}
 
-									<Focuser ref={tenta.itemsFfRef} ghost>
-
-										<Pane.Col
-											start end
-											expanded={tenta.opened}
-											wrapperCls="pt24 pl60 pr36"
-											children={parts[1]}
-										/>
+										</Pane.Row>
 
 									</Focuser>
-								}
 
-							</Pane.Ghost>
+									{parts[1] &&
+
+										<Focuser ref={tenta.itemsFfRef} ghost>
+
+											<Pane.Col
+												start end
+												expanded={tenta.opened}
+												wrapperCls="pt24 pl60 pr36"
+												children={parts[1]}
+											/>
+
+										</Focuser>
+									}
+
+								</Pane.Ghost>
 
 
-						</Div>
+							</Div>
 
-					</Focuser>
+						</Focuser>
 
-				</Tenta.Placeholder.NoCollector>
+					</Tenta.Placeholder.NoCollector>
 
+				</Tenta.Stage.Provider>
 			</Tenta.Phase.Provider>
 
 		</GlobalState>

@@ -28,18 +28,18 @@ export module TentaPlaceholder
 	export function use(
 		id: React.Key | undefined,
 		collector?: CollectorBehavior | null
-	): Behavior | null
+	): Behavior | undefined
 	{
 
 		if (id === undefined)
-			return null;
+			return undefined;
 
 		if (collector === undefined)
 			collector = useContext(CollectorContext)?.collector;
 
 
 		if (!collector)
-			return null;
+			return undefined;
 
 
 		let exist = collector.byId(id);

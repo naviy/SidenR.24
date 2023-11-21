@@ -1,6 +1,6 @@
 import { GlobalState, type Constructor } from '@libs';
-import type { TentaPlaceholder } from "./TentaPlaceholder";
-import type { TentaStage } from "./TentaStage";
+import { TentaPlaceholder } from "./TentaPlaceholder";
+import { TentaStage } from "./TentaStage";
 
 
 
@@ -33,6 +33,9 @@ export interface TentaBase
 	placeholder?: TentaPlaceholder.Behavior;
 
 	disabled: boolean;
+
+	isFirst: boolean;
+	isLast: boolean;
 
 
 	getGlobalProp<TProp extends keyof TentaGlobalState>(
@@ -68,6 +71,9 @@ export function TentaBase<TBase extends Constructor>(Base: TBase)
 		placeholder?: TentaPlaceholder.Behavior;
 
 		disabled = false;
+
+		get isFirst(){ return !this.placeholder?.prior;  }
+		get isLast(){ return !this.placeholder?.next;  }
 
 
 
@@ -114,6 +120,8 @@ export module TentaBase
 	export interface UseConfig
 	{
 
+		readonly id?: React.Key | undefined;
+
 		readonly placeholder?: TentaPlaceholder.Behavior | null;
 
 	}
@@ -122,9 +130,27 @@ export module TentaBase
 	export function use(me: TentaBase, cfg?: UseConfig)
 	{
 
-		me.placeholder = cfg?.placeholder || undefined;
-		me.placeholder?.useTenta(me);
+		if (!cfg)
+			return;
 
+
+		let { placeholder } = cfg;
+
+		if (placeholder !== undefined)
+		{
+			placeholder = me.placeholder = cfg.placeholder || undefined;
+		}
+		else if (cfg.id !== undefined)
+		{
+			placeholder = me.placeholder = TentaPlaceholder.use(cfg.id);
+		}
+
+
+		if (!placeholder)
+			return;
+
+
+		placeholder.useTenta(me);
 
 	}
 

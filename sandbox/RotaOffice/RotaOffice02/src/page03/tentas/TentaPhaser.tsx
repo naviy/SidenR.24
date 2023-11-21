@@ -27,6 +27,8 @@ export interface TentaPhaser extends TentaBase, Repaintable
 	//defaultPhase?: TentaPhase;
 
 	stage: TentaStage;
+	topStage: TentaStage;
+	btmStage: TentaStage
 
 	collapsed: boolean;
 	expanded: boolean;
@@ -70,6 +72,9 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 
 
 		get stage(): TentaStage { return TentaStage.byProps(this); }
+		get topStage() { return TentaStage.max(this.stage, this.placeholder?.prior?.stage); }
+		get btmStage() { return TentaStage.max(this.stage, this.placeholder?.next?.stage); }
+
 
 		set stage(value: TentaStage)
 		{

@@ -43,7 +43,7 @@ export function GlobalState(props: {
 
 	if (state === undefined && name === undefined)
 	{
-		return props.children
+		return props.children;
 	}
 
 
