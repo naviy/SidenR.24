@@ -204,6 +204,7 @@ export class CaretBehavior extends Repaintable()
 
 		let inset = this.getInset();
 
+
 		let borderRadius_ = this._priorBorderRadius ?? ff.borderRadius;
 
 		let borderRadius = (
@@ -230,9 +231,9 @@ export class CaretBehavior extends Repaintable()
 		return {
 
 			inset,
-			"--opacity": focused ? 1 : undefined,
+			"--opacity": focused || this.props.debug ? 1 : undefined,
 			borderRadius: focused ? borderRadius : undefined,
-			borderWidth: focused ? borderWidth : undefined,
+			borderWidth: focused ? borderWidth : this.props.debug ? 1 : undefined,
 
 			"--color": MuiColor.hex2rgb(color),
 

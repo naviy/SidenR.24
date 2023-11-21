@@ -216,20 +216,26 @@ export const bgColors = {
 
 
 
-type Elevation = "0" | "L1" | "L1b" | "L2" | "L3" | "L4" | "L5" | "D1" | "D2" | "D3" | "D4" | "D5";
+type Elevation = "0" | "L1" | "L1b" | "L2" | "L2t" | "L2b" | "L3" | "L3t" | "L3b" | "L4" | "L5" | "D1" | "D2" | "D3" | "D4" | "D5";
 
 type ElevationProps = { [P in Capitalize<Elevation> as `e${P}`]?: boolean; } & { e?: Elevation; }
 
 
 
-export const elevaltionShadows =
+export const elevaltionShadows: Record<Elevation, string> =
 {
 	"0": "none",
 
 	"L1": "0 1px 4px 0 rgba(0, 0, 0, 0.165)",
 	"L1b": "4px 8px 4px -8px rgba(0, 0, 0, 0.165);",
 	"L2": "0 2px 2px 0 rgba(0, 0, 0, 0.1), 0 6px 10px 0 rgba(0, 0, 0, 0.15)",
+	"L2t": "0 -2px 2px -2px rgba(0, 0, 0, 0.1), 0 -6px 10px -6px rgba(0, 0, 0, 0.15)",
+	"L2b": "0 2px 2px -2px rgba(0, 0, 0, 0.1), 0 6px 10px -6px rgba(0, 0, 0, 0.15)",
+
 	"L3": "0 11px 7px 0 rgba(0, 0, 0, 0.195), 0 13px 25px 0 rgba(0, 0, 0, 0.15)",
+	"L3t": "0 -11px 7px -5px rgba(0, 0, 0, 0.15), 0 -13px 25px 0 rgba(0, 0, 0, 0.11)",
+	"L3b": "0 11px 7px -5px rgba(0, 0, 0, 0.15), 0 13px 25px 0 rgba(0, 0, 0, 0.11)",
+
 	"L4": "0 14px 12px 0 rgba(0, 0, 0, 0.085), 0 20px 40px 0 rgba(0, 0, 0, 0.15)",
 	"L5": "0 17px 17px 0 rgba(0, 0, 0, 0.075), 0 27px 55px 0 rgba(0, 0, 0, 0.15)",
 

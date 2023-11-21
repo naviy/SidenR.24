@@ -19,6 +19,8 @@ import { alpha, useTheme } from "@mui/material/styles";
 export interface CaretProps extends UseHookProps<CaretProps>
 {
 
+	debug?: boolean;
+
 	color?: MuiColor;
 	borderRadius?: Focuser.BorderRadius;
 	borderWidth?: Focuser.BorderWidth;

@@ -22,7 +22,7 @@ import
 } from ".";
 
 
-import { Caret, findInDirection } from ".";
+import { Caret as Caret_, findInDirection } from ".";
 import { CaretBehavior } from "./ff.CaretBehavior";
 
 
@@ -421,9 +421,6 @@ export class Focuser extends Component<FocuserProps>
 		return useContext(FocuserContext);
 	}
 
-
-
-	static Caret = Caret;
 
 
 	//static Borderer = Borderer;
@@ -4681,6 +4678,9 @@ export module Focuser
 
 
 
+	export import Caret = Caret_;
+
+
 	export type BorderRadius = (
 		null /* 0 */ |
 		undefined |
@@ -4698,7 +4698,6 @@ export module Focuser
 	export type Listener = IFocuserListener;
 
 	export const Tasks = Task;
-
 
 
 }

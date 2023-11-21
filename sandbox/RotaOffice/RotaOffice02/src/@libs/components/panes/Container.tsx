@@ -133,7 +133,7 @@ export function renderProvider(
 	let flexExpander: FlexExpanderBehavior | undefined = undefined;
 	let preExpanding = false;
 
-	let sizes = Block.getBoxSizes(
+	let { isFlex, ...sizes } = Block.getBoxSizes(
 		parentInfo?.layout || "col",
 		props,
 	);
@@ -142,7 +142,7 @@ export function renderProvider(
 	if (props.expanded !== undefined)
 	{
 
-		if (sizes.isFlex)
+		if (isFlex)
 		{
 			flexExpander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
 			preExpanding = flexExpander.expanded && flexExpander.collapsed;
@@ -470,10 +470,9 @@ export const DebugBox = styled(
 
 	function border(b: PaneBorder)
 	{
+		let width = PaneBorder.width(b);
 
-		let style = PaneBorder.styles[b];
-
-		return style ? `${2 * style.width}px solid ${color}` : `1px dotted ${color}`;
+		return width !== undefined ? `${2 * width}px solid ${color}` : `1px dotted ${color}`;
 	}
 
 

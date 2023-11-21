@@ -11,8 +11,8 @@ import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
 import { Page03 } from './page03';
-//import { Page04, Page041, Page042 } from './page04';
 import { Page031 } from "./page03/Page031";
+import { Page032 } from "./page03/Page032";
 
 
 
@@ -83,6 +83,7 @@ function AppDesktop()
 		routes: [
 			Page03.route,
 			Page031.route,
+			Page032.route,
 			//Page04.route,
 			//Page041.route,
 			//Page042.route,
@@ -118,6 +119,7 @@ function AppDesktop()
 							<List>
 								<MainMenuItem route={Page03.route} />
 								<MainMenuItem route={Page031.route} />
+								<MainMenuItem route={Page032.route} />
 								{/*<MainMenuItem route={Page04.route} />*/}
 								{/*<MainMenuItem route={Page041.route} />*/}
 								{/*<MainMenuItem route={Page042.route} />*/}

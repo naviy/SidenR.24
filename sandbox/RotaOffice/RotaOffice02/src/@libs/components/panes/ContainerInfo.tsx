@@ -26,8 +26,7 @@ export interface ContainerInfo
 	rounded?: boolean;
 
 
-	// Border
-
+	/** border */
 	b?: PaneBorder;
 
 	bt: PaneBorder;
@@ -36,8 +35,7 @@ export interface ContainerInfo
 	bl: PaneBorder;
 
 
-	// [Border] Radius
-
+	/** border radius */
 	r?: PaneRadius;
 
 	rtl: PaneRadius;
@@ -174,18 +172,18 @@ export module ContainerInfo
 
 			let b = v.b = (props.b ?? parentInfo.b) || "" as PaneBorder;
 
-			v.bl = inRow && start || inCol ? parentInfo.bl : b;
-			v.br = inRow && end || inCol ? parentInfo.br : inRow && !end ? "" : b;
-			v.bt = inRow || inCol && start ? parentInfo.bt : b;
-			v.bb = inRow || inCol && end ? parentInfo.bb : inCol && !end ? "" : b;
+			v.bl = props.bl ?? (inRow && start || inCol ? parentInfo.bl : b);
+			v.br = props.br ?? (inRow && end || inCol ? parentInfo.br : inRow && !end ? "" : b);
+			v.bt = props.bt ?? (inRow || inCol && start ? parentInfo.bt : b);
+			v.bb = props.bb ?? (inRow || inCol && end ? parentInfo.bb : inCol && !end ? "" : b);
 
 
 			let r = v.r = (props.r ?? parentInfo.r) || 0 as PaneRadius;
 
-			v.rtl = inRow && start || inCol && start ? parentInfo.rtl : r;
-			v.rtr = inRow && end || inCol && start ? parentInfo.rtr : r;
-			v.rbr = inRow && end || inCol && end ? parentInfo.rbr : r;
-			v.rbl = inRow && start || inCol && end ? parentInfo.rbl : r;
+			v.rtl = props.rtl ?? props.rt ?? (inRow && start || inCol && start ? parentInfo.rtl : r);
+			v.rtr = props.rtr ?? props.rt ?? (inRow && end || inCol && start ? parentInfo.rtr : r);
+			v.rbr = props.rbr ?? props.rb ?? (inRow && end || inCol && end ? parentInfo.rbr : r);
+			v.rbl = props.rbl ?? props.rb ?? (inRow && start || inCol && end ? parentInfo.rbl : r);
 
 		}
 

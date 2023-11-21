@@ -26,8 +26,25 @@ export interface ContainerBaseProps extends Block.Props
 
 	layout?: ContainerLayout;
 
+
+	/** border */
 	b?: PaneBorder;
+
+	bt?: PaneBorder;
+	br?: PaneBorder;
+	bb?: PaneBorder;
+	bl?: PaneBorder;
+
+
+	/** border radius */
 	r?: PaneRadius;
+
+	rt?: PaneRadius;
+	rtl?: PaneRadius;
+	rtr?: PaneRadius;
+	rb?: PaneRadius;
+	rbl?: PaneRadius;
+	rbr?: PaneRadius;
 
 	wrapperCls?: string | null;
 
@@ -47,7 +64,20 @@ export module ContainerBaseProps
 		layout: true,
 
 		b: true,
+
+		bt: true,
+		br: true,
+		bb: true,
+		bl: true,
+
 		r: true,
+
+		rt: true,
+		rtl: true,
+		rtr: true,
+		rb: true,
+		rbr: true,
+		rbl: true,
 
 		wrapperCls: true,
 
@@ -69,7 +99,13 @@ export module ContainerBaseProps
 
 
 
-export type PaneBorder = "" | "xs" | "sm" | "md" | "lg";
+export type PaneBorder = (
+	"" |
+	"xs" | "sm" | "md" | "lg" | "xl" |
+	"1-100" | "1-200" | "1-300" | "1-400" | "1-500" | "1-600" |
+	"2-100" | "2-200" | "2-300" | "2-400" | "2-500" | "2-600"
+);
+
 
 
 
@@ -77,19 +113,34 @@ export module PaneBorder
 {
 
 
-	export const styles: Partial<Record<PaneBorder, { width: number, color: string, css?: string }>> =
+	export const styles: Record<Exclude<PaneBorder, "">, { width: number, color: string, css?: string }> =
 	{
 		"xs": { width: 1, color: blueGrey[100] },
 		"sm": { width: 1, color: blueGrey[200] },
-		"md": { width: 2, color: blueGrey[400] },
-		"lg": { width: 2, color: blueGrey[500] },
-	} as const;
+		"md": { width: 1, color: blueGrey[400] },
+		"lg": { width: 2, color: blueGrey[400] },
+		"xl": { width: 2, color: blueGrey[500] },
+
+		"1-100": { width: 1, color: blueGrey[100] },
+		"1-200": { width: 1, color: blueGrey[200] },
+		"1-300": { width: 1, color: blueGrey[300] },
+		"1-400": { width: 1, color: blueGrey[400] },
+		"1-500": { width: 1, color: blueGrey[500] },
+		"1-600": { width: 1, color: blueGrey[600] },
+
+		"2-100": { width: 2, color: blueGrey[100] },
+		"2-200": { width: 2, color: blueGrey[200] },
+		"2-300": { width: 2, color: blueGrey[300] },
+		"2-400": { width: 2, color: blueGrey[400] },
+		"2-500": { width: 2, color: blueGrey[500] },
+		"2-600": { width: 2, color: blueGrey[600] },
+	};
 
 
 
 	export function width(b: PaneBorder): number | undefined
 	{
-		let style = (styles)[b] || undefined;
+		let style = (styles as any)[b] || undefined;
 
 		if (!style)
 			return undefined;
@@ -101,7 +152,7 @@ export module PaneBorder
 
 	export function css(b: PaneBorder): string | undefined
 	{
-		let style = (styles)[b] || undefined;
+		let style = (styles as any)[b] || undefined;
 
 		if (!style)
 			return undefined;
@@ -130,7 +181,8 @@ export module PaneBorder
 
 
 
-export type PaneRadius = "" | "xs" | "sm" | "md" | "lg" | number;
+export type PaneRadius = "" | "xs" | "sm" | "md" | "lg" | "xl" | number;
+
 
 
 
@@ -141,8 +193,9 @@ export module PaneRadius
 	const px: Partial<Record<PaneRadius, number>> = {
 		"xs": 3,
 		"sm": 6,
-		"md": 12,
-		"lg": 24,
+		"md": 9,
+		"lg": 12,
+		"xl": 24,
 	}
 
 

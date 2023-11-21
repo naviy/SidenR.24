@@ -18,14 +18,14 @@ import { TentaStage } from "./tentas/TentaStage";
 
 
 
-export module Page03
+export module Page032
 {
 
 
 	export const route = Route.create({
-		key: "page03",
+		key: "page032",
 		icon: <FestivalIcon />,
-		title: "Page 03",
+		title: "Page 032",
 		content: () => <Content />,
 	});
 
@@ -141,7 +141,7 @@ function Row05(props: PileRowProps)
 				<Pane l={1} center vcenter>zzz zzz zzzz</Pane>
 			</>
 
-			<Pane.Col gap1 flex1>
+			<Pane.Col flex1>
 				<Pane l={1} center vcenter>bbb bbb bbbb</Pane>
 				<Pane l={1} center vcenter>ccc ccc cccc</Pane>
 			</Pane.Col>
@@ -201,8 +201,7 @@ function Row05(props: PileRowProps)
 				<Pane.Row
 					end
 					id={`row05-expander #${props.id}`}
-					expanded={phase === 1}
-					gap1
+					expanded={phase === 1}					
 				//noreexpand
 				>
 					{parts[1]}
@@ -210,7 +209,7 @@ function Row05(props: PileRowProps)
 
 			</Pane.Col>
 
-			<Pane.Row id="row05-bottom" end gap1>
+			<Pane.Row id="row05-bottom" end>
 
 				{/*<Pane.Col gapi l={120}>*/}
 				{/*	<TransitionGroup>*/}
@@ -263,6 +262,7 @@ function PileNode({ id, ...rowProps }: PileRowProps)
 	let tenta = useNew(Tenta.Behavior1).use({ placeholder });
 
 
+	let topStage = TentaStage.max(tenta.stage, placeholder?.prior?.stage);
 	let btmStage = TentaStage.max(tenta.stage, placeholder?.next?.stage);
 
 	let isFirst = !placeholder?.prior;
@@ -326,10 +326,14 @@ function PileNode({ id, ...rowProps }: PileRowProps)
 									<Pane.Row
 										start
 										end
-										bt={!isFirst && tenta.expanded || !isFirst && tenta.collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
-										bb={!isLast && tenta.expanded || !isLast && tenta.collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
+										bl={tenta.expanded ? "lg" : undefined}
+										br={!tenta.collapsed ? "lg" : undefined}
+										bt={!isFirst && tenta.expanded ? undefined : !isFirst && tenta.collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
+										bb={!isLast && tenta.expanded ? undefined : !isLast && tenta.collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
 										rt={tenta.collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : tenta.expanded && !isFirst ? "sm" : undefined}
 										rb={tenta.collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : tenta.expanded && !isLast ? "sm" : undefined}
+
+										e={tenta.opened ? "L2" : tenta.expanded ? "0" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
 
 									>
 

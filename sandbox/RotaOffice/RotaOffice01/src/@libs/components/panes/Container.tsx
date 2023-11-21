@@ -77,7 +77,7 @@ export module Container
 		let flexExpander: FlexExpanderBehavior | undefined = undefined;
 		let preExpanding = false;
 
-		let sizes = Block.getBoxSizes(
+		let { isFlex, ...sizes } = Block.getBoxSizes(
 			parentInfo.layout,
 			props,
 		);
@@ -86,7 +86,7 @@ export module Container
 		if (props.expanded !== undefined)
 		{
 
-			if (sizes.isFlex)
+			if (isFlex)
 			{
 				flexExpander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
 				preExpanding = flexExpander.expanded && flexExpander.collapsed;
