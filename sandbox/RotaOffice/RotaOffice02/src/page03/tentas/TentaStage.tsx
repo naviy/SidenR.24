@@ -1,4 +1,3 @@
-import { createContext, useContext, type ReactNode } from "react";
 
 
 
@@ -36,30 +35,23 @@ export module TentaStage
 
 
 
-	export const Context = createContext<TentaStage | undefined>(undefined);
+	//export const Context = createContext<TentaStage | undefined>(undefined);
 
 
 
-	export function Provider(props: { stage: TentaStage; children: ReactNode; })
-	{
-		return <Context.Provider
-			value={props.stage}
-			children={props.children}
-		/>;
-	}
-
-
-
-	export function use(value?: TentaStage): TentaStage | undefined
-	{
-		return value !== undefined ? value : useContext(Context);
-	}
-
-
-	//export function useProps<P>(propsByPhase: (stage: TentaStage) => Partial<P>): Partial<P> | undefined
+	//export function Provider(props: { stage: TentaStage; children: ReactNode; })
 	//{
-	//	let stage = useContext(Context);
-	//	return stage === undefined ? undefined : propsByPhase(stage);
+	//	return <Context.Provider
+	//		value={props.stage}
+	//		children={props.children}
+	//	/>;
+	//}
+
+
+
+	//export function use(value?: TentaStage): TentaStage | undefined
+	//{
+	//	return value !== undefined ? value : useContext(Context);
 	//}
 
 

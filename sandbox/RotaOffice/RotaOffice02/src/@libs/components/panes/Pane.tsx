@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { $defaultAnimationDurationMs, $log, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
+import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookProps } from "../core";
 import { Block } from "./Block";
 import * as Container from "./Container";
 import { ContainerInfo, ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
@@ -47,6 +47,15 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	{
 		body = <span>{body}</span>;
 	}
+
+
+	//if (props.ff)
+	//{
+	//	body = <>
+	//		<Focuser.Caret use={Pane.useCaretProps} />
+	//		{body}
+	//	</>;
+	//}
 
 
 	if (containerInfo?.debug)
@@ -130,16 +139,38 @@ export module Pane
 	export interface Props extends Block.Props, UseHookProps<Props>
 	{
 		id?: string;
+
+		//ff?: boolean;
+
 	}
 
 
 
 	export const propNames: PropNames<Props> =
 	{
+
 		id: true,
+
+		//ff: true,
+
 		...Block.propNames,
 		...UseHookProps.propNames,
+
 	};
+
+
+
+
+	//---
+
+
+
+
+	//export function useCaretProps()
+	//{
+	//	let row = Pane.ContainerInfo.use();
+	//	return { borderRadius: row && Pane.Radius.css(row.rtl, row.rtr, row.rbr, row.rbl) };
+	//}
 
 
 

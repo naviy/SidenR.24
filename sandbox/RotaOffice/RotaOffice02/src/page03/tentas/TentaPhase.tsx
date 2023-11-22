@@ -1,4 +1,3 @@
-import { createContext, useContext, type ReactNode } from "react";
 
 
 
@@ -26,24 +25,24 @@ export module TentaPhase
 
 
 
-	export const Context = createContext<number | undefined>(undefined);
+	//export const Context = createContext<number | undefined>(undefined);
 
 
 
-	export function Provider(props: { phase: number; children: ReactNode; })
-	{
-		return <Context.Provider
-			value={props.phase}
-			children={props.children}
-		/>;
-	}
+	//export function Provider(props: { phase: number; children: ReactNode; })
+	//{
+	//	return <Context.Provider
+	//		value={props.phase}
+	//		children={props.children}
+	//	/>;
+	//}
 
 
 
-	export function use(value?: TentaPhase): number | undefined
-	{
-		return value !== undefined ? value : useContext(Context);
-	}
+	//export function use(value?: TentaPhase): number | undefined
+	//{
+	//	return value !== undefined ? value : useContext(Context);
+	//}
 
 
 	//export function useProps<P>(propsByPhase: (phase: number) => Partial<P>): Partial<P> | undefined
@@ -60,25 +59,25 @@ export module TentaPhase
 
 
 
-	export module expanded
-	{
+	//export module expanded
+	//{
 
 
-		export function equal1()
-		{
-			let phase = use();
-			return { expanded: phase === 1 };
-		}
+	//	export function equal1()
+	//	{
+	//		let phase = use();
+	//		return { expanded: phase === 1 };
+	//	}
 
 
-		export function notEqual1()
-		{
-			let phase = use();
-			return { expanded: phase !== 1 };
-		}
+	//	export function notEqual1()
+	//	{
+	//		let phase = use();
+	//		return { expanded: phase !== 1 };
+	//	}
 
 
-	}
+	//}
 
 
 

@@ -1,6 +1,7 @@
 import { GlobalState, type Constructor } from '@libs';
 import { TentaPlaceholder } from "./TentaPlaceholder";
 import { TentaStage } from "./TentaStage";
+import type { TentaPhase } from ".";
 
 
 
@@ -31,6 +32,9 @@ export interface TentaBase
 {
 
 	placeholder?: TentaPlaceholder.Behavior;
+
+	phase?: TentaPhase;
+	stage?: TentaStage
 
 	disabled: boolean;
 

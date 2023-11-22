@@ -57,7 +57,7 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 		//---
 
 
-		phase!: TentaPhase;
+		override phase!: TentaPhase;
 		priorPhase?: TentaPhase;
 		expandedPhase: TentaPhase = 1;
 		openedPhase: TentaPhase = 2;
@@ -71,12 +71,12 @@ export function TentaPhaser<TBase extends Constructor<TentaBase & Repaintable>>(
 		get opened() { return this.phase >= this.openedPhase; }
 
 
-		get stage(): TentaStage { return TentaStage.byProps(this); }
+		override get stage(): TentaStage { return TentaStage.byProps(this); }
 		get topStage() { return TentaStage.max(this.stage, this.placeholder?.prior?.stage); }
 		get btmStage() { return TentaStage.max(this.stage, this.placeholder?.next?.stage); }
 
 
-		set stage(value: TentaStage)
+		override set stage(value: TentaStage)
 		{
 			if (this.phase != null && this.stage === value)
 				return;

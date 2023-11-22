@@ -10,7 +10,6 @@ import { useState } from "react";
 import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
-import { Page03 } from './page03';
 import { Page031 } from "./page03/Page031";
 import { Page032 } from "./page03/Page032";
 
@@ -81,7 +80,6 @@ function AppDesktop()
 	let router = Route.Router.useNew({
 
 		routes: [
-			Page03.route,
 			Page031.route,
 			Page032.route,
 			//Page04.route,
@@ -89,7 +87,7 @@ function AppDesktop()
 			//Page042.route,
 		],
 
-		activeKey: location.pathname.substring(1) || Page03.route.key,
+		activeKey: location.pathname.substring(1) || Page032.route.key,
 
 		onActivating: (route) => { navigate("/" + route.key) },
 
@@ -117,7 +115,6 @@ function AppDesktop()
 							<HR />
 
 							<List>
-								<MainMenuItem route={Page03.route} />
 								<MainMenuItem route={Page031.route} />
 								<MainMenuItem route={Page032.route} />
 								{/*<MainMenuItem route={Page04.route} />*/}
