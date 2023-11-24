@@ -1,8 +1,6 @@
 import { Focuser, Repaintable } from "@libs";
 import { createRef } from "react";
-import { TentaBase } from "./TentaBase";
-import { TentaFocusable } from "./TentaFocusable";
-import { TentaPhaser } from "./TentaPhaser";
+import { Tenta } from "../../tentas";
 
 
 
@@ -16,34 +14,29 @@ import { TentaPhaser } from "./TentaPhaser";
 
 
 
-export interface TentaBehavior1UseConfig extends
+export interface PileNode1UseConfig extends
 	Repaintable.UseConfig,
-	TentaBase.UseConfig,
-	TentaPhaser.UseConfig,
-	TentaFocusable.UseConfig
+	Tenta.Base.UseConfig,
+	Tenta.Focusable.UseConfig
 {
-	//id: React.Key;
 }
 
 
 
 
-export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaintable.Async())))
+export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base(Repaintable.Async()))
 {
 
 	//---
 
 
 
-	use(cfg: TentaBehavior1UseConfig)
+	use(cfg: PileNode1UseConfig)
 	{
 
-		//this.id = cfg.id;
-
 		Repaintable.use(this, cfg);
-		TentaBase.use(this, cfg);
-		TentaPhaser.use(this, cfg);
-		TentaFocusable.use(this, cfg);
+		Tenta.Base.use(this, cfg);
+		Tenta.Focusable.use(this, cfg);
 
 
 		return this;
@@ -108,36 +101,16 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 
 	//---
 
-
-
-	protected override async onLeftClick()
-	{
-
-		if (!this.focused)
-		{
-			await this.focus();
-			return;
-		}
-
-
-		if (await this.expand())
-			return;
-
-
-		if (await this.scrollIntoViewTop())
-			return;
-
-
-		await this.shake();
-
-	}
-
-
+	
 
 	protected override async onRightKey()
 	{
 
 		if (await this.expand())
+			return;
+
+
+		if (this.parent && await this.parent.expand())
 			return;
 
 
@@ -152,7 +125,6 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 		await this.shake();
 
 	}
-
 
 
 
@@ -192,19 +164,8 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 	}
 
 
-	override async onExit()
-	{
 
-		if (await this.collapse())
-		{
-			await this.scrollIntoView();
-		}
-		else
-		{
-			await this.unfocus();
-		}
-
-	}
+	//---
 
 
 
@@ -218,6 +179,46 @@ export class TentaBehavior1 extends TentaFocusable(TentaPhaser(TentaBase(Repaint
 		else
 		{
 			await this.focusParent() || await this.shake(3);
+		}
+
+	}
+
+
+
+	protected override async onLeftClick()
+	{
+
+		if (!this.focused)
+		{
+			await this.focus();
+			return;
+		}
+
+
+		if (await this.expand())
+			return;
+
+
+		if (await this.scrollIntoViewTop())
+			return;
+
+
+		await this.shake();
+
+	}
+
+
+
+	override async onExit()
+	{
+
+		if (await this.collapse())
+		{
+			await this.scrollIntoView();
+		}
+		else
+		{
+			await this.unfocus();
 		}
 
 	}

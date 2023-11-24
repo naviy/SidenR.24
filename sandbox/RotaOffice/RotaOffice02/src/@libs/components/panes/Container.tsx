@@ -6,6 +6,7 @@ import { Expander, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } f
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
 import { ContainerBaseProps, PaneRadius, type ContainerLayout, PaneBorder } from "./ContainerProps";
+import { Focuser } from "..";
 
 
 
@@ -173,6 +174,17 @@ export function renderProvider(
 	let body = props.children;
 
 
+
+	if (props.ff)
+	{
+		body = <>
+			<Focuser.Caret use={usePaneCaretProps} />
+			{body}
+		</>;
+	}
+
+
+
 	let expanderProps: Partial<RootProps> & React.HTMLProps<HTMLDivElement> = {};
 
 	if (flexExpander)
@@ -219,7 +231,8 @@ export function renderProvider(
 			>
 				<div>
 					<b>{v.layout}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
-					<em>b: {v.b}</em>{props.start && " start"}{props.end && " end"}
+					{props.start && " start"}{props.end && " end"}
+					<em>&nbsp; &nbsp; &nbsp;b: {v.b}</em>
 				</div>
 			</DebugBox>
 			{body}
@@ -262,6 +275,19 @@ export function renderProvider(
 
 
 	return body;
+
+}
+
+
+
+function usePaneCaretProps(): Focuser.CaretProps
+{
+
+	let row = ContainerInfo.use();
+
+	return {
+		borderRadius: row && PaneRadius.css(row.rtl, row.rtr, row.rbr, row.rbl, { min: 4 })
+	};
 
 }
 

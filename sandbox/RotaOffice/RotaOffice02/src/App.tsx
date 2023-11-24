@@ -12,6 +12,7 @@ import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
 import { Page031 } from "./page03/Page031";
 import { Page032 } from "./page03/Page032";
+import { Page033 } from "./page03/Page033";
 
 
 
@@ -82,12 +83,13 @@ function AppDesktop()
 		routes: [
 			Page031.route,
 			Page032.route,
+			Page033.route,
 			//Page04.route,
 			//Page041.route,
 			//Page042.route,
 		],
 
-		activeKey: location.pathname.substring(1) || Page032.route.key,
+		activeKey: location.pathname.substring(1) || Page033.route.key,
 
 		onActivating: (route) => { navigate("/" + route.key) },
 
@@ -117,9 +119,7 @@ function AppDesktop()
 							<List>
 								<MainMenuItem route={Page031.route} />
 								<MainMenuItem route={Page032.route} />
-								{/*<MainMenuItem route={Page04.route} />*/}
-								{/*<MainMenuItem route={Page041.route} />*/}
-								{/*<MainMenuItem route={Page042.route} />*/}
+								<MainMenuItem route={Page033.route} />
 							</List>
 
 						</DesktopLayout.Sider>

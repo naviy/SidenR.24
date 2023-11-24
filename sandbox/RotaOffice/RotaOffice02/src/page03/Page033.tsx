@@ -4,6 +4,8 @@ import Button from "@mui/material/Button";
 import { useReducer } from "react";
 import { Pile, PileNode1, type PileNode1Props } from "./piles";
 import { Tenta } from './tentas';
+import { PileNode2 } from "./piles/nodes1/PileNode2";
+import { PileNode3, type PileNode3Props } from "./piles/nodes1/PileNode3";
 
 
 
@@ -17,14 +19,14 @@ import { Tenta } from './tentas';
 
 
 
-export module Page032
+export module Page033
 {
 
 
 	export const route = Route.create({
-		key: "page032",
+		key: "page033",
 		icon: <PageIcon />,
-		title: "Page 032",
+		title: "Page 033",
 		content: () => <Content />,
 	});
 
@@ -40,7 +42,7 @@ export module Page032
 
 					<GlobalState name="Rows05Pile">
 
-						<Pane.Col start end b="2-200" r="lg">
+						<Pane.Col start end b="md" r="lg">
 							<Pane.Ghost start end b="sm" r="">
 								<Rows05 root />
 							</Pane.Ghost>
@@ -108,7 +110,7 @@ function Row05(props: PileNode1Props)
 	//$log("Row05.id:", props.id)
 
 
-	return <PileNode1 {...props}>
+	return <PileNode2 {...props}>
 
 		<RowBody id={props.id}>
 
@@ -156,11 +158,11 @@ function Row05(props: PileNode1Props)
 
 
 		<>
-			<Rows05 />
+			<Row06 id={props.id + "_06"} />
 		</>
 
 
-	</PileNode1>;
+	</PileNode2>;
 
 
 
@@ -237,6 +239,39 @@ function Row05(props: PileNode1Props)
 
 	}
 
+
+}
+
+
+
+
+function Row06(props: PileNode3Props)
+{
+	//$log("Row05.id:", props.id)
+
+
+	return <>
+
+		<PileNode3 {...props}>
+
+			<>
+				<Pane.Ghost start end b="">
+					<Pane start p12 vcenter>
+						<Pile.PhaseIcon />
+						<em>CATAGORY 111</em>
+					</Pane>
+					<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
+				</Pane.Ghost>
+
+			</>
+
+			<>
+				<Rows05 />
+			</>
+
+		</PileNode3>
+
+	</>;
 
 }
 

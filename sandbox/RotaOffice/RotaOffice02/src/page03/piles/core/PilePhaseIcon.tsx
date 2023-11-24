@@ -19,7 +19,7 @@ export function PilePhaseIcon({ stage }: { stage?: Tenta.Stage })
 
 	if (stage === undefined)
 	{
-		stage = Tenta.use()?.stage;
+		stage = Tenta.useByPhase()?.stage;
 	}
 
 

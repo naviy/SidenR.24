@@ -1,6 +1,8 @@
 import { Div, Focuser, Pane, useNew } from '@libs';
 import { PileNode1Behavior } from "./PileNode1_Behavior";
 import { Pile } from "../core";
+import { PileNodeRow1 } from "./PileNodeRow1";
+import { PileNodeTail1 } from "./PileNodeTail1";
 
 
 
@@ -14,7 +16,7 @@ import { Pile } from "../core";
 
 
 
-export interface PileNode1Props extends Omit<Pane.RowProps, "id" | "children">
+export interface PileNode2Props extends Omit<Pane.RowProps, "id" | "children">
 {
 	id: React.Key;
 	linkToNext?: boolean;
@@ -23,18 +25,18 @@ export interface PileNode1Props extends Omit<Pane.RowProps, "id" | "children">
 
 
 
-export function PileNode1({
+export function PileNode2({
 	id,
 	linkToNext,
 	...rowProps
-}: PileNode1Props & {
+}: PileNode2Props & {
 	children: [JSX.Element, JSX.Element]
 })
 {
 
 	let tenta = useNew(PileNode1Behavior).use({ id });
 
-	let { isFirst, isLast, topStage, btmStage, placeholder } = tenta;
+	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage, placeholder } = tenta;
 
 	let parts = rowProps.children;
 
@@ -70,20 +72,20 @@ export function PileNode1({
 						>
 
 							<Pane.Row
+
 								start
-								end
-								bl={!tenta.collapsed ? "lg" : undefined}
-								br={!tenta.collapsed ? "lg" : undefined}
-								bt={!tenta.collapsed ? "lg" : !isFirst && tenta.collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
-								bb={!tenta.collapsed ? "lg" : !isLast && tenta.collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
-								rt={tenta.collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : tenta.expanded && !isFirst ? "sm" : undefined}
-								rb={tenta.collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : tenta.expanded && !isLast ? "sm" : undefined}
+								end={!tenta.expanded}
 
-								e={tenta.opened ? "L1" : tenta.expanded ? "L2" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
+								//bl={!collapsed ? "lg" : undefined}
+								//br={!collapsed ? "lg" : undefined}
+								//bt={!collapsed ? "lg" : !isFirst && collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
+								//bb={!collapsed ? "lg" : !isLast && collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
+								//rt={collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : expanded && !isFirst ? "sm" : undefined}
+								//rb={collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : expanded && !isLast ? "sm" : undefined}
 
+								//e={opened ? "L1" : expanded ? "L2" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
+								ff
 							>
-
-								<Focuser.Caret />
 
 								{parts[0]}
 
@@ -95,10 +97,11 @@ export function PileNode1({
 
 							<Focuser ref={tenta.itemsFfRef} ghost>
 
-								<Pile.TailCol
-									start end
-									expanded={tenta.opened}
-									indent
+								<PileNodeTail1
+									start={tenta.opened}
+									//end={tenta.opened}
+									expanded={!tenta.collapsed}
+									indent={tenta.opened}
 									children={parts[1]}
 								/>
 

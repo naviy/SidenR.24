@@ -21,8 +21,14 @@ export type ContainerLayout = "row" | "col";
 export interface ContainerBaseProps extends Block.Props
 {
 
+	//---
+
+
 	id?: string;
-	debug?: boolean;
+
+
+	//---
+
 
 	layout?: ContainerLayout;
 
@@ -46,7 +52,17 @@ export interface ContainerBaseProps extends Block.Props
 	rbl?: PaneRadius;
 	rbr?: PaneRadius;
 
+
+	//---
+
+
+	debug?: boolean;
+	ff?: boolean;
+
 	wrapperCls?: string | null;
+
+
+	//---
 
 }
 
@@ -60,7 +76,7 @@ export module ContainerBaseProps
 	{
 
 		id: true,
-		debug: true,
+
 		layout: true,
 
 		b: true,
@@ -79,6 +95,8 @@ export module ContainerBaseProps
 		rbr: true,
 		rbl: true,
 
+		debug: true,
+		ff: true,
 		wrapperCls: true,
 
 		...Block.propNames,
@@ -117,7 +135,7 @@ export module PaneBorder
 	{
 		"xs": { width: 1, color: blueGrey[100] },
 		"sm": { width: 1, color: blueGrey[200] },
-		"md": { width: 1, color: blueGrey[400] },
+		"md": { width: 2, color: blueGrey[200] },
 		"lg": { width: 2, color: blueGrey[400] },
 		"xl": { width: 2, color: blueGrey[500] },
 
@@ -199,16 +217,37 @@ export module PaneRadius
 	}
 
 
-	export function toPx(r: PaneRadius, add?: number | null): number
+	interface ConvertConfig
 	{
-		let rr = typeof r === "number" ? r : (px as any)[r] || 0;
-		return rr + (add || 0);
+		add?: number | null;
+		min?: number | null;
 	}
 
 
-	export function css(rtl: PaneRadius, rtr: PaneRadius, rbr: PaneRadius, rbl: PaneRadius, add?: number | null)
+	export function toPx(r: PaneRadius, cfg?: ConvertConfig): number
 	{
-		return `${toPx(rtl, add)}px ${toPx(rtr, add)}px ${toPx(rbr, add)}px ${toPx(rbl, add)}px`;
+
+		let rr = typeof r === "number" ? r : (px as any)[r] || 0;
+
+
+		if (!cfg)
+			return rr;
+
+
+		if (cfg.add)
+			rr += cfg.add;
+
+		if (cfg.min != undefined && rr < cfg.min)
+			rr = cfg.min;
+
+		return rr;
+
+	}
+
+
+	export function css(rtl: PaneRadius, rtr: PaneRadius, rbr: PaneRadius, rbl: PaneRadius, cfg?: ConvertConfig)
+	{
+		return `${toPx(rtl, cfg)}px ${toPx(rtr, cfg)}px ${toPx(rbr, cfg)}px ${toPx(rbl, cfg)}px`;
 	}
 
 

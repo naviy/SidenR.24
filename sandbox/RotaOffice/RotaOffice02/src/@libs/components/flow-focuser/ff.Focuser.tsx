@@ -1,8 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-
-
-
-
 import { Component, useContext, type ReactNode, type RefObject } from "react";
 import ReactDOM from "react-dom";
 
@@ -10,20 +5,12 @@ import { $defaultAnimationDurationMs, $log, __$log, Div, MuiColor, SpaWaitingMas
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
 
-import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from ".";
 
-import
-{
-	$min_priority,
-	coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext,
-	focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers,
-	Core,
-	unfocus
-} from ".";
-
-
-import { Caret as Caret_, findInDirection } from ".";
+import { Caret as Caret_, type CaretProps as CaretProps_,  } from "./ff.Caret";
 import { CaretBehavior } from "./ff.CaretBehavior";
+import { anchorPropsToString, type AnchorProps, type AnchorPart, type Anchor } from "./ff.Anchor";
+import { $min_priority, Core, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext, focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus } from "./ff.Core";
+import { findInDirection } from "./ff.Navigation";
 
 
 
@@ -4678,6 +4665,7 @@ export module Focuser
 
 
 
+	export type CaretProps = CaretProps_;
 	export import Caret = Caret_;
 
 

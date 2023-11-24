@@ -2,6 +2,7 @@ import { $defaultAnimationDurationMs } from '@libs';
 import { styled } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
 import { Tenta } from "../../tentas";
+import { createContext, useContext, type ReactNode } from "react";
 
 
 
@@ -14,30 +15,38 @@ import { Tenta } from "../../tentas";
 
 
 
-
 export function PileNodeLinkLine(props: {
 	tenta: Tenta.Base;
-	visible?: boolean;
+	//visible?: boolean;
 	width?: number;
 	lineToParent?: boolean;
 	lineToNext?: boolean;
 })
 {
 
-	let { tenta, width = 36, visible } = props;
+	let { tenta, width, /*visible*/ } = props;
 
 
-	visible ??= !tenta.placeholder?.collector.root;
+	if (width === undefined)
+	{
+		let options = PileNodeLinkLine.useOptions();
+		width = options.width;
+	}
+
+
+	//visible ??= !tenta.placeholder?.collector.root;
 
 
 	return (
-		<PileNodeLinkLine.Root width={visible ? width : 0}>
+
+		<PileNodeLinkLine.Root width={/*visible ?*/ width /*: 0*/}>
 
 			{(props.lineToParent ?? tenta.isFirst) && <div className="line-to-parent" />}
 			<div className="angle" />
 			{(props.lineToNext ?? !tenta.isLast) && <div className="line-to-next" />}
 
 		</PileNodeLinkLine.Root>
+
 	);
 
 }
@@ -48,6 +57,37 @@ export function PileNodeLinkLine(props: {
 
 export module PileNodeLinkLine
 {
+
+
+	//---
+
+
+
+
+	const OptionsContext = createContext(0);
+
+
+
+	export function useOptions()
+	{
+		return { width: useContext(OptionsContext) };
+	}
+
+
+	export function OptionsProvider(props: { width: number; children: ReactNode })
+	{
+		return <OptionsContext.Provider
+			value={props.width}
+			children={props.children}
+		/>;
+	}
+
+
+
+
+	//---
+
+
 
 
 	export const Root = styled(
@@ -107,6 +147,11 @@ export module PileNodeLinkLine
 		};
 
 	});
+
+
+
+
+	//---
 
 
 }

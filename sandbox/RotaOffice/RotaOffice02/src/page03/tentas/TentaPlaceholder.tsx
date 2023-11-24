@@ -286,7 +286,7 @@ export module TentaPlaceholder
 
 
 
-		root!: boolean;
+		//root!: boolean;
 
 		placeholders!: Behavior[];
 
@@ -311,7 +311,7 @@ export module TentaPlaceholder
 			}
 
 
-			this.root = cfg?.root || false;
+			//this.root = cfg?.root || false;
 
 			this.usePlaceholders(cfg.placeholders);
 
