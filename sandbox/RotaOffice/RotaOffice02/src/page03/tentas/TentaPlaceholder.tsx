@@ -1,8 +1,9 @@
-import { GlobalState, Repaintable, useNew as useNew_ } from "@libs";
+import { GlobalState, Repaintable, useNew } from "@libs";
 import type React from "react";
 import { createContext, useContext, type ReactNode } from "react";
 import type { TentaBase, TentaGlobalState } from "./TentaBase";
 import { TentaStage } from "./TentaStage";
+import { use as useTenta } from "./Tenta";
 
 
 
@@ -59,6 +60,7 @@ export module TentaPlaceholder
 
 
 
+
 	//---
 
 
@@ -70,10 +72,12 @@ export module TentaPlaceholder
 	}
 
 
+
 	export type DefaultProps = React.Key | {
 		readonly id: React.Key;
 		readonly defaultStage?: TentaStage;
 	};
+
 
 	export function DefaultProps(props: DefaultProps)
 	{
@@ -82,6 +86,7 @@ export module TentaPlaceholder
 
 		return { id: props };
 	}
+
 
 
 
@@ -221,48 +226,36 @@ export module TentaPlaceholder
 
 
 
-	export function Collector(props: Collector.Config & {
-		children: ReactNode;
-	}): JSX.Element;
-	export function Collector(props: {
-		bhv: CollectorBehavior;
-		children: ReactNode;
-	}): JSX.Element;
-	export function Collector(props: Partial<Collector.Config> & {
-		bhv?: CollectorBehavior
-		children: ReactNode;
-	})
+	export function Collector(
+		props: CollectorConfig & {
+			children: ReactNode;
+		}
+	): JSX.Element;
+
+	export function Collector(
+		props: {
+			bhv: CollectorBehavior;
+			children: ReactNode;
+		}
+	): JSX.Element;
+
+	export function Collector(
+		props: Partial<CollectorConfig> & {
+			bhv?: CollectorBehavior
+			children: ReactNode;
+		}
+	)
 	{
 
 		let bhv = props.bhv as CollectorBehavior;
 
 		if (bhv === undefined)
-			bhv = Collector.useNew(props as Collector.Config);
+			bhv = useNew(CollectorBehavior).use(props as CollectorConfig);
 
 		return <CollectorContext.Provider
 			value={{ collector: bhv }}
 			children={props.children}
 		/>;
-
-	}
-
-
-
-	export module Collector
-	{
-
-		export interface Config
-		{
-			root?: boolean;
-			globalState?: string | GlobalState;
-			placeholders: DefaultProps[];
-		}
-
-
-		export function useNew(cfg: Config)
-		{
-			return useNew_(CollectorBehavior).use(cfg);
-		}
 
 	}
 
@@ -279,17 +272,52 @@ export module TentaPlaceholder
 
 
 
+
+
+	export interface CollectorConfig
+	{
+		id?: React.Key;
+		//root?: boolean;
+		globalState?: string | GlobalState | null | false;
+		placeholders: DefaultProps[];
+	}
+
+
+
+
+	export interface CollectorPlaceholder
+	{
+
+		id: React.Key;
+
+		collector?: CollectorBehavior;
+
+		prior?: CollectorPlaceholder | null;
+		next?: CollectorPlaceholder | null;
+
+	}
+
+
+
+
+
+
 	export class CollectorBehavior extends Repaintable()
 	{
 
 		//---
 
 
-
+		static instanceCount = 0;
+		iid = ++CollectorBehavior.instanceCount;
 		//root!: boolean;
 
-		placeholders!: Behavior[];
+		id?: React.Key;
 
+		tenta?: TentaBase | null;
+		placeholder?: CollectorPlaceholder;
+
+		placeholders!: Behavior[];
 
 		globalState?: GlobalState;
 
@@ -299,15 +327,23 @@ export module TentaPlaceholder
 
 
 
-		use(cfg: Repaintable.UseConfig & Collector.Config)
+		use(cfg: Repaintable.UseConfig & CollectorConfig)
 		{
 
 			Repaintable.use(this, cfg);
 
 
-			if (cfg?.globalState !== undefined)
+			cfg.id && this.#useTenta(cfg.id);
+
+
+			if (cfg.globalState !== undefined)
 			{
-				this.globalState = GlobalState.use(cfg.globalState);
+				if (cfg.globalState)
+					this.globalState = GlobalState.use(cfg.globalState);
+			}
+			else if (typeof cfg.id === "string")
+			{
+				this.globalState = GlobalState.use(cfg.id);
 			}
 
 
@@ -317,6 +353,26 @@ export module TentaPlaceholder
 
 
 			return this;
+
+		}
+
+
+
+		#useTenta(id: React.Key)
+		{
+
+			this.id = id;
+
+			let tenta = this.tenta = useTenta();
+
+			if (!tenta)
+				return;
+
+
+			let colPlh = this.placeholder = tenta.collectorPlaceholders?.find(a => a.id === id);
+
+			if (colPlh)
+				colPlh.collector = this;
 
 		}
 
@@ -370,6 +426,37 @@ export module TentaPlaceholder
 		indexById(id: React.Key)
 		{
 			return this.placeholders.findIndex(a => a.id === id);
+		}
+
+
+
+		//---
+
+
+
+		firstPlaceholder()
+		{
+			return this.placeholders[0] || null;
+		}
+
+
+		lastPlaceholder()
+		{
+			return this.placeholders.at(-1) || null;
+		}
+
+
+		firstTenta(): TentaBase | null
+		{
+			return this.firstPlaceholder()?.tenta || null;
+		}
+
+
+		lastTenta(): TentaBase | null
+		{
+			let tenta = this.lastPlaceholder()?.tenta;
+
+			return tenta?.last() || tenta || null;
 		}
 
 

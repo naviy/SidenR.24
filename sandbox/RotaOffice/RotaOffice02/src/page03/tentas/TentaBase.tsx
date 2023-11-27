@@ -1,9 +1,9 @@
-import { GlobalState, type Constructor, Repaintable } from '@libs';
-import { TentaPlaceholder } from "./TentaPlaceholder";
-import { TentaStage } from "./TentaStage";
-import type { TentaPhase } from "./TentaPhase";
+import { GlobalState, Repaintable, type Constructor } from '@libs';
 import type React from "react";
 import { Tenta } from ".";
+import type { TentaPhase } from "./TentaPhase";
+import { TentaPlaceholder } from "./TentaPlaceholder";
+import { TentaStage } from "./TentaStage";
 
 
 
@@ -33,27 +33,26 @@ export interface TentaGlobalState extends GlobalState
 export interface TentaBase extends Repaintable
 {
 
+	//---
+
+
+	iid: number;
+
 	id?: React.Key;
 
 	parent: TentaBase | null;
 
 	placeholder?: TentaPlaceholder.Behavior;
+
+	collectorPlaceholders?: TentaPlaceholder.CollectorPlaceholder[];
+
 	isFirst: boolean;
 	isLast: boolean;
 
 	disabled: boolean;
 
-	getGlobalProp<TProp extends keyof TentaGlobalState>(
-		propName: TProp,
-		defaultValue?: TentaGlobalState[TProp]
-	): TentaGlobalState[TProp] | undefined;
 
-
-	setGlobalProp<TProp extends keyof TentaGlobalState>(
-		propName: TProp,
-		value: TentaGlobalState[TProp],
-		defaultValue?: TentaGlobalState[TProp]
-	): TentaGlobalState[TProp] | undefined;
+	//---
 
 
 	phase: TentaPhase;
@@ -72,12 +71,57 @@ export interface TentaBase extends Repaintable
 	expanded: boolean;
 	opened: boolean;
 
+
+	//---
+
+
 	canCollapse(): boolean;
 	canExpand(): boolean;
 
 	collapse(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): Promise<boolean>;
 	expand(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): Promise<boolean>;
 
+
+	//---
+
+
+	firstCollector(): TentaPlaceholder.CollectorBehavior | null;
+	priorCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null;
+	priorCollector(): TentaPlaceholder.CollectorBehavior | null;
+	nextCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null;
+	nextCollector(): TentaPlaceholder.CollectorBehavior | null;
+	lastCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null;
+	lastCollector(): TentaPlaceholder.CollectorBehavior | null;
+
+	priorSibling(): TentaBase | null;
+	nextSibling(): TentaBase | null;
+
+	first(): TentaBase | null;
+	firstOrMe(): TentaBase | null;
+	last(): TentaBase | null;
+	lastOrMe(): TentaBase | null;
+
+	prior(): TentaBase | null;
+	next(): TentaBase | null;
+
+
+	//---
+
+
+	getGlobalProp<TProp extends keyof TentaGlobalState>(
+		propName: TProp,
+		defaultValue?: TentaGlobalState[TProp]
+	): TentaGlobalState[TProp] | undefined;
+
+
+	setGlobalProp<TProp extends keyof TentaGlobalState>(
+		propName: TProp,
+		value: TentaGlobalState[TProp],
+		defaultValue?: TentaGlobalState[TProp]
+	): TentaGlobalState[TProp] | undefined;
+
+
+	//---
 
 }
 
@@ -97,17 +141,27 @@ export function TentaBase<TBase extends Constructor<Repaintable>>(Base: TBase)
 		//---
 
 
+		iid = ++TentaBase.instanceCount;
 
 		id?: React.Key;
 
 		parent!: TentaBase | null;
+		level!: number;
 
 		placeholder?: TentaPlaceholder.Behavior;
 
-		disabled = false;
+		collectorPlaceholders?: TentaPlaceholder.CollectorPlaceholder[];
 
 		get isFirst() { return !this.placeholder?.prior; }
 		get isLast() { return !this.placeholder?.next; }
+
+
+
+		//---
+
+
+
+		disabled = false;
 
 
 
@@ -152,30 +206,6 @@ export function TentaBase<TBase extends Constructor<Repaintable>>(Base: TBase)
 
 
 		onPhaseChanged?: (tenta: any) => void;
-
-
-
-		//---
-
-
-
-		getGlobalProp<TProp extends keyof TentaGlobalState>(
-			propName: TProp,
-			defaultValue?: TentaGlobalState[TProp]
-		): TentaGlobalState[TProp] | undefined
-		{
-			return GlobalState.get(this.placeholder?.globalState, propName, defaultValue);
-		}
-
-
-		setGlobalProp<TProp extends keyof TentaGlobalState>(
-			propName: TProp,
-			value: TentaGlobalState[TProp],
-			defaultValue?: TentaGlobalState[TProp]
-		): TentaGlobalState[TProp] | undefined
-		{
-			return GlobalState.set(this.placeholder?.globalState, propName, value, defaultValue);
-		}
 
 
 
@@ -298,6 +328,160 @@ export function TentaBase<TBase extends Constructor<Repaintable>>(Base: TBase)
 
 		//---
 
+
+
+		firstCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		{
+			return this.collectorPlaceholders?.[0] || null;
+		}
+
+		firstCollector(): TentaPlaceholder.CollectorBehavior | null
+		{
+			return this.firstCollectorPlaceholder()?.collector || null;
+		}
+
+
+		priorCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		{
+			return this.placeholder?.collector.placeholder?.prior || null;
+		}
+
+		priorCollector(): TentaPlaceholder.CollectorBehavior | null
+		{
+			return this.priorCollectorPlaceholder()?.collector || null;
+		}
+
+
+		nextCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		{
+			return this.placeholder?.collector.placeholder?.next || null;
+		}
+
+		nextCollector(): TentaPlaceholder.CollectorBehavior | null
+		{
+			return this.nextCollectorPlaceholder()?.collector || null;
+		}
+
+
+		lastCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		{
+			return this.collectorPlaceholders?.at(-1) || null;
+		}
+
+		lastCollector(): TentaPlaceholder.CollectorBehavior | null
+		{
+			return this.lastCollectorPlaceholder()?.collector || null;
+		}
+
+
+
+		priorSibling(): TentaBase | null
+		{
+			return this.placeholder?.prior?.tenta || null;
+		}
+
+
+		nextSibling(): TentaBase | null
+		{
+			return this.placeholder?.next?.tenta || null;
+		}
+
+
+
+		first(): TentaBase | null
+		{
+			return this.firstCollector()?.firstTenta() || null;
+		}
+
+		firstOrMe(): TentaBase | null
+		{
+			return this.first() || this;
+		}
+
+		last(): TentaBase | null
+		{
+			return this.lastCollector()?.lastTenta() || null;
+		}
+
+		lastOrMe(): TentaBase | null
+		{
+			return this.last() || this;
+		}
+
+
+		prior(): TentaBase | null
+		{
+			return (
+				this.priorSibling()?.lastOrMe() ||
+				this.priorCollector()?.lastTenta() ||
+				this.parent ||
+				null
+			);
+		}
+
+
+		next(): TentaBase | null
+		{
+
+			let next = (
+				this.first() ||
+				this.nextSibling() ||
+				this.nextCollector()?.firstTenta() ||
+				this.parent?.nextSibling() ||
+				null
+			);
+
+			if (next)
+				return next;
+
+
+			let parent = this.parent;
+
+			while (parent)
+			{
+
+				next = parent.nextSibling();
+
+				if (next)
+					return next;
+
+				parent = parent.parent;
+
+			}
+
+
+			return null;
+
+		}
+
+
+
+		//---
+
+
+
+		getGlobalProp<TProp extends keyof TentaGlobalState>(
+			propName: TProp,
+			defaultValue?: TentaGlobalState[TProp]
+		): TentaGlobalState[TProp] | undefined
+		{
+			return GlobalState.get(this.placeholder?.globalState, propName, defaultValue);
+		}
+
+
+		setGlobalProp<TProp extends keyof TentaGlobalState>(
+			propName: TProp,
+			value: TentaGlobalState[TProp],
+			defaultValue?: TentaGlobalState[TProp]
+		): TentaGlobalState[TProp] | undefined
+		{
+			return GlobalState.set(this.placeholder?.globalState, propName, value, defaultValue);
+		}
+
+
+
+		//---
+
 	};
 
 }
@@ -315,12 +499,22 @@ export module TentaBase
 
 
 
+	export let instanceCount = 0;
+
+
+
+	//---
+
+
+
 	export interface UseConfig
 	{
 
 		readonly id?: React.Key;
 
 		readonly placeholder?: TentaPlaceholder.Behavior | null;
+
+		readonly collectors?: React.Key[];
 
 		readonly maxPhase?: TentaPhase;
 
@@ -337,6 +531,8 @@ export module TentaBase
 
 		me.id = cfg?.id;
 		me.parent = Tenta.use();
+
+		cfg?.collectors && useCollectors(me, cfg.collectors);
 
 		usePlaceholder(me, cfg);
 		usePhase(me, cfg);
@@ -365,6 +561,27 @@ export module TentaBase
 
 
 		placeholder?.useTenta(me);
+
+	}
+
+
+
+	function useCollectors(me: TentaBase, collectorIds: React.Key[])
+	{
+
+		me.collectorPlaceholders = mergePlaceholders(me.collectorPlaceholders);
+
+		me.collectorPlaceholders.forEach((a, i, all) =>
+		{
+			a.prior = all[i - 1] || null;
+			a.next = all[i + 1] || null;
+		});
+
+
+		function mergePlaceholders(olds?: TentaPlaceholder.CollectorPlaceholder[])
+		{
+			return collectorIds.map(id => olds?.find(o => o.id === id) ?? { id });
+		}
 
 	}
 

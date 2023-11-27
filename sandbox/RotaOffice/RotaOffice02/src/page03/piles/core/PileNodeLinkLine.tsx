@@ -39,7 +39,7 @@ export function PileNodeLinkLine(props: {
 
 	return (
 
-		<PileNodeLinkLine.Root width={/*visible ?*/ width /*: 0*/}>
+		<PileNodeLinkLine.Root width={Math.max(0, width - 4)}>
 
 			{(props.lineToParent ?? tenta.isFirst) && <div className="line-to-parent" />}
 			<div className="angle" />

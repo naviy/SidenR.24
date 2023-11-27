@@ -2,10 +2,10 @@ import { Div, Expander, FillFade, GlobalState, Pane, Route, TransitionGroup } fr
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useReducer } from "react";
-import { Pile, PileNode1, type PileNode1Props } from "./piles";
-import { Tenta } from './tentas';
+import { Pile, type PileNode1Props } from "./piles";
 import { PileNode2 } from "./piles/nodes1/PileNode2";
-import { PileNode3, type PileNode3Props } from "./piles/nodes1/PileNode3";
+import { PileNode3 } from "./piles/nodes1/PileNode3";
+import { Tenta } from './tentas';
 
 
 
@@ -44,7 +44,7 @@ export module Page033
 
 						<Pane.Col start end b="md" r="lg">
 							<Pane.Ghost start end b="sm" r="">
-								<Rows05 root />
+								<Rows05 />
 							</Pane.Ghost>
 						</Pane.Col>
 
@@ -73,7 +73,7 @@ export module Page033
 
 
 
-function Rows05({ root }: { root?: boolean })
+function Rows05()
 {
 	return <>
 
@@ -81,22 +81,21 @@ function Rows05({ root }: { root?: boolean })
 
 			<Pile.ListBackfill />
 
-			<Tenta.Placeholder.Collector
-				globalState="rows05"
-				root={root}
-				placeholders={[1, 2, 3, 4, 5, 6, 7]}
-			//placeholders={[1, 2, 3]}
+			<Tenta.Placeholders
+				id="rows05"
+				//placeholders={[1, 2, 3, 4, 5, 6, 7]}
+				placeholders={[1, 2,]}
 			>
 
 				<Row05 id={1} />
 				<Row05 id={2} />
-				<Row05 id={3} />
-				<Row05 id={4} />
-				<Row05 id={5} />
-				<Row05 id={6} />
-				<Row05 id={7} />
+				{/*<Row05 id={3} />*/}
+				{/*<Row05 id={4} />*/}
+				{/*<Row05 id={5} />*/}
+				{/*<Row05 id={6} />*/}
+				{/*<Row05 id={7} />*/}
 
-			</Tenta.Placeholder.Collector>
+			</Tenta.Placeholders>
 
 		</Pane.Col>
 
@@ -110,16 +109,16 @@ function Row05(props: PileNode1Props)
 	//$log("Row05.id:", props.id)
 
 
-	return <PileNode2 {...props}>
+	return <PileNode2 collectors={["ctg1", "ctg2"]} {...props}>
 
 		<RowBody id={props.id}>
 
 			<>
-				<Pane start p12 vcenter>
+				<Pane start p12>
 					<Pile.PhaseIcon />
 					<span>111 1111 11111 111111</span>
 				</Pane>
-				<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
+				<Pane end p12 textRight>222 2222 22222 222222</Pane>
 			</>
 
 			<>
@@ -135,7 +134,7 @@ function Row05(props: PileNode1Props)
 			</>
 
 			<>
-				<Pane l={1} start end center vcenter>aaa aaa aaaa</Pane>
+				<Pane l={1}start end center p12 >aaa aaa</Pane>
 			</>
 
 			<>
@@ -158,7 +157,8 @@ function Row05(props: PileNode1Props)
 
 
 		<>
-			<Row06 id={props.id + "_06"} />
+			<Catagory1Node />
+			<Catagory2Node />
 		</>
 
 
@@ -245,35 +245,77 @@ function Row05(props: PileNode1Props)
 
 
 
-function Row06(props: PileNode3Props)
+function Catagory1Node()
 {
-	//$log("Row05.id:", props.id)
-
 
 	return <>
 
-		<PileNode3 {...props}>
+		<Tenta.Placeholders id="ctg1" placeholders={["header"]}>
 
-			<>
-				<Pane.Ghost start end b="">
-					<Pane start p12 vcenter>
-						<Pile.PhaseIcon />
-						<em>CATAGORY 111</em>
-					</Pane>
-					<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
-				</Pane.Ghost>
+			<PileNode3 id="header" collectors={["rows05"]}>
 
-			</>
+				<>
+					<Pane.Ghost start end b="">
+						<Pane start p12 vcenter>
+							<Pile.PhaseIcon />
+							<em>CATAGORY 111</em>
+						</Pane>
+						<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
+					</Pane.Ghost>
 
-			<>
-				<Rows05 />
-			</>
+				</>
 
-		</PileNode3>
+				<>
+					<Rows05 />
+				</>
+
+			</PileNode3>
+
+		</Tenta.Placeholders>
 
 	</>;
 
 }
+
+
+
+
+function Catagory2Node()
+{
+
+	return <>
+
+		<Tenta.Placeholders id="ctg2" placeholders={["header"]}>
+
+			<PileNode3 id="header" collectors={["rows05"]}>
+
+				<>
+					<Pane.Ghost start end b="">
+						<Pane start p12 vcenter>
+							<Pile.PhaseIcon />
+							<em>CATAGORY 2222</em>
+						</Pane>
+						<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
+					</Pane.Ghost>
+
+				</>
+
+				<>
+					<Rows05 />
+				</>
+
+			</PileNode3>
+
+		</Tenta.Placeholders>
+
+	</>;
+
+}
+
+
+
+
+
 
 
 

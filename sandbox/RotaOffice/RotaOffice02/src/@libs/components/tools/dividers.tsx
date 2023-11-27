@@ -169,8 +169,6 @@ const DividerRoot = styled(
 			return {};
 
 
-
-
 		return {
 
 			display: span ? 'inline' : 'block',

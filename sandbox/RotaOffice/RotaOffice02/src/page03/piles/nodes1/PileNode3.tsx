@@ -1,7 +1,6 @@
 import { Div, Focuser, Pane, useNew } from '@libs';
-import { PileNode1Behavior } from "./PileNode1_Behavior";
 import { Pile } from "../core";
-import { PileNodeRow1 } from "./PileNodeRow1";
+import { PileNode1Behavior } from "./PileNode1_Behavior";
 import { PileNodeTail1 } from "./PileNodeTail1";
 import { Tenta } from "../../tentas";
 
@@ -19,8 +18,9 @@ import { Tenta } from "../../tentas";
 
 export interface PileNode3Props extends Omit<Pane.RowProps, "id" | "children">
 {
-	id: React.Key;
-	linkToNext?: boolean;
+	readonly id: React.Key;
+	readonly collectors?: React.Key[];
+	readonly linkToNext?: boolean;
 }
 
 
@@ -28,6 +28,7 @@ export interface PileNode3Props extends Omit<Pane.RowProps, "id" | "children">
 
 export function PileNode3({
 	id,
+	collectors,
 	linkToNext,
 	...rowProps
 }: PileNode3Props & {
@@ -35,7 +36,7 @@ export function PileNode3({
 })
 {
 
-	let tenta = useNew(PileNode1Behavior).use({ id });
+	let tenta = useNew(PileNode1Behavior).use({ id, collectors });
 
 	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage, placeholder } = tenta;
 
@@ -89,7 +90,16 @@ export function PileNode3({
 								ff
 							>
 
-								{parts[0]}
+								{/*{parts[0]}*/}
+								<Pane.Col start end>
+									<Pane.Row start end>
+										{parts[0]}
+										<Div pl4 fill><b>#{tenta.iid}</b></Div>
+									</Pane.Row>
+									<Div pl48>
+										<Tenta.Details tenta={tenta} />
+									</Div>
+								</Pane.Col>
 
 							</Pane.Row>
 
@@ -105,6 +115,7 @@ export function PileNode3({
 									start={tenta.opened}
 									expanded={!tenta.collapsed}
 									indent={tenta.opened}
+									cellIndent
 									children={parts[1]}
 								/>
 

@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { TentaBase } from "./TentaBase";
+import { TentaPlaceholder } from "./TentaPlaceholder";
+
 
 
 
@@ -18,7 +20,11 @@ export { type TentaStage as Stage } from "./TentaStage";
 export { TentaBase as Base } from "./TentaBase";
 export { TentaFocusable as Focusable } from "./TentaFocusable";
 
-export { TentaPlaceholder as Placeholder } from "./TentaPlaceholder";
+export import Placeholder = TentaPlaceholder;
+export import Placeholders = TentaPlaceholder.Collector;
+
+
+export { TentaDetails as Details } from "./TentaDetails";
 
 
 

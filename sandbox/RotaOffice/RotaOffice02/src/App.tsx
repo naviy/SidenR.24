@@ -1,5 +1,5 @@
 import { AppThemes, DesktopLayout } from "@app";
-import { $log, Div, HR, Route, Txt } from "@libs";
+import { $log, Div, HR, Route, Txt, useForceUpdate } from "@libs";
 import { Button, createTheme } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem, { type ListItemProps } from "@mui/material/ListItem";
@@ -13,6 +13,7 @@ import { GlobalState } from "./@libs/components/core/GlobalState";
 import { Page031 } from "./page03/Page031";
 import { Page032 } from "./page03/Page032";
 import { Page033 } from "./page03/Page033";
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 
 
@@ -72,6 +73,9 @@ function AppDesktop()
 {
 
 	let [globalState] = useState(() => ({}));
+
+
+	let forceUpdate = useForceUpdate();
 
 
 	let location = ReactRouter.useLocation();
@@ -144,6 +148,7 @@ function AppDesktop()
 
 
 								<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+								<Button onClick={forceUpdate}><RefreshIcon /></Button>
 
 							</DesktopLayout.Header>
 

@@ -81,7 +81,6 @@ function Rows05({ root }: { root?: boolean })
 
 			<Tenta.Placeholder.Collector
 				globalState="rows05"
-				root={root}
 				placeholders={[1, 2, 3, 4, 5, 6, 7]}
 			//placeholders={[1, 2, 3]}
 			>
@@ -113,11 +112,11 @@ function Row05(props: PileNode1Props)
 		<RowBody id={props.id}>
 
 			<>
-				<Pane start p12 vcenter>
+				<Pane start p12>
 					<Pile.PhaseIcon />
 					<span>111 1111 11111 111111</span>
 				</Pane>
-				<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
+				<Pane end p12 textRight>222 2222 22222 222222</Pane>
 			</>
 
 			<>
@@ -133,7 +132,7 @@ function Row05(props: PileNode1Props)
 			</>
 
 			<>
-				<Pane l={1} start end center vcenter>aaa aaa aaaa</Pane>
+				<Pane l={1} start end p12 center>aaa aaa aaaa</Pane>
 			</>
 
 			<>

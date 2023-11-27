@@ -75,34 +75,34 @@ const primitiveBasePropNames: PropNames<PrimitiveBaseProps<Element>> =
 
 
 export const Margins = [
-	-1, -2, -3, -4, -5, -6, -7, -8, -10, -12, -16, -20, -21, -24, -30, -32, -36, -40, -48, -50, -60, -64, -80, -100, -150, -200,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200
+	-1, -2, -3, -4, -5, -6, -7, -8, -10, -12, -16, -20, -21, -24, -30, -32, -36, -40, -48, -50, -60, -64, -80, -100, -150, -200, -250, -300,
+	0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200, 250, 300
 ] as const;
 
 export type Margin = typeof Margins[number];
 
 
-type Ms = { [P in Margin as `m${P}`]?: boolean; };
-type MXs = { [P in Margin as `mx${P}`]?: boolean; };
-type MYs = { [P in Margin as `my${P}`]?: boolean; };
-type MLs = { [P in Margin as `ml${P}`]?: boolean; };
-type MRs = { [P in Margin as `mr${P}`]?: boolean; };
-type MTs = { [P in Margin as `mt${P}`]?: boolean; };
-type MBs = { [P in Margin as `mb${P}`]?: boolean; };
+type Ms = { [P in Margin as `m${P}`]?: boolean; } & { m?: Margin; };
+type MXs = { [P in Margin as `mx${P}`]?: boolean; } & { mx?: Margin; };
+type MYs = { [P in Margin as `my${P}`]?: boolean; } & { my?: Margin; };
+type MLs = { [P in Margin as `ml${P}`]?: boolean; } & { ml?: Margin; };
+type MRs = { [P in Margin as `mr${P}`]?: boolean; } & { mr?: Margin; };
+type MTs = { [P in Margin as `mt${P}`]?: boolean; } & { mt?: Margin; };
+type MBs = { [P in Margin as `mb${P}`]?: boolean; } & { mb?: Margin; };
 
 
-export const Paddings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200] as const;
+export const Paddings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200, 250, 300] as const;
 
 export type Padding = typeof Paddings[number];
 
 
-type Ps = { [P in Padding as `p${P}`]?: boolean; };
-type PXs = { [P in Padding as `px${P}`]?: boolean; };
-type PYs = { [P in Padding as `py${P}`]?: boolean; };
-type PLs = { [P in Padding as `pl${P}`]?: boolean; };
-type PRs = { [P in Padding as `pr${P}`]?: boolean; };
-type PTs = { [P in Padding as `pt${P}`]?: boolean; };
-type PBs = { [P in Padding as `pb${P}`]?: boolean; };
+type Ps = { [P in Padding as `p${P}`]?: boolean; } & { p?: Padding; };;
+type PXs = { [P in Padding as `px${P}`]?: boolean; } & { px?: Padding; };
+type PYs = { [P in Padding as `py${P}`]?: boolean; } & { py?: Padding; };
+type PLs = { [P in Padding as `pl${P}`]?: boolean; } & { pl?: Padding; };
+type PRs = { [P in Padding as `pr${P}`]?: boolean; } & { pr?: Padding; };
+type PTs = { [P in Padding as `pt${P}`]?: boolean; } & { pt?: Padding; };
+type PBs = { [P in Padding as `pb${P}`]?: boolean; } & { pb?: Padding; };
 
 
 type Gaps = { [P in Padding as `gap${P}`]?: boolean; };
@@ -371,6 +371,9 @@ export interface PrimitiveClassesProps extends
 	middle?: boolean;
 	right?: boolean;
 
+	alignItemsStart?: boolean;
+	alignItemsCenter?: boolean;
+	alignItemsEnd?: boolean;
 
 	hidden?: boolean;
 	hiddenX?: boolean;
@@ -403,14 +406,6 @@ export interface PrimitiveClassesProps extends
 	mr?: Margin;
 	mt?: Margin;
 	mb?: Margin;
-
-	p?: Padding;
-	px?: Padding;
-	py?: Padding;
-	pl?: Padding;
-	pr?: Padding;
-	pt?: Padding;
-	pb?: Padding;
 
 	gap?: Padding;
 	gapi?: boolean;
@@ -517,6 +512,10 @@ export interface PrimitiveClassesProps extends
 	noselect?: boolean;
 
 	animated?: boolean;
+
+
+	//---
+
 
 
 
@@ -628,6 +627,9 @@ export function GlobalStylesOfPrimitives(props: {
 			justifyContent: "flex-end",
 		},
 
+		alignItemsStart: { alignItems: "start!important" },
+		alignItemsCenter: { alignItems: "center!important" },
+		alignItemsEnd: { alignItems: "end!important" },
 
 		hidden: { overflow: "hidden" },
 		hiddenX: { overflowX: "hidden" },
@@ -791,6 +793,28 @@ export function GlobalStylesOfPrimitives(props: {
 		...rangeMP("rotate", rotateAngles, i => ({ transform: `rotate(${i}deg)!important` })),
 
 
+		// Table
+
+		"table.details": {
+
+			margin: "12px 0 0 24px",
+			lineHeight: 1.2,
+
+			caption: {
+				textAlign: "left",
+				fontWeight: 500,
+			},
+
+			th: {
+				textAlign: "left",
+				fontWeight: 400,
+				opacity: .6,
+				paddingRight: 8
+			},
+
+		},
+
+
 	});
 
 
@@ -802,6 +826,16 @@ export function GlobalStylesOfPrimitives(props: {
 		em: {
 			fontStyle: "normal",
 			fontWeight: 500,
+		},
+
+		strong: {
+			fontWeight: 500,
+		},
+
+
+		var: {
+			fontStyle: "normal",
+			opacity: .6,
 		},
 
 
@@ -1426,7 +1460,6 @@ export const Div = forwardRef((props: DivProps, ref: React.Ref<HTMLDivElement>) 
 export interface SpanProps extends PrimitiveProps<HTMLSpanElement> { }
 
 
-
 export const Span = forwardRef((props: SpanProps, ref: React.Ref<HTMLSpanElement>) =>
 {
 	return createPrimitive("span", { ref }, props);
@@ -1443,13 +1476,54 @@ export const Em = forwardRef((props: SpanProps, ref: React.Ref<HTMLSpanElement>)
 
 
 
-export interface TableProps extends PrimitiveProps<HTMLTableElement> { }
-
+export interface TableProps extends PrimitiveProps<HTMLTableElement>
+{
+	details?: boolean;
+}
 
 
 export const Table = forwardRef((props: TableProps, ref: React.Ref<HTMLTableElement>) =>
 {
 	return createPrimitive("table", { ref }, props);
+});
+
+
+
+
+export interface TableColProps extends PrimitiveProps<HTMLTableColElement> { }
+
+
+export const Col = forwardRef((props: TableColProps, ref: React.Ref<HTMLTableColElement>) =>
+{
+	return createPrimitive("col", { ref }, props);
+});
+
+
+
+
+export interface TableRowProps extends PrimitiveProps<HTMLTableRowElement> { }
+
+
+export const Tr = forwardRef((props: TableRowProps, ref: React.Ref<HTMLTableRowElement>) =>
+{
+	return createPrimitive("tr", { ref }, props);
+});
+
+
+
+
+export interface TableCellProps extends PrimitiveProps<HTMLTableCellElement> { }
+
+
+export const Th = forwardRef((props: TableCellProps, ref: React.Ref<HTMLTableCellElement>) =>
+{
+	return createPrimitive("th", { ref }, props);
+});
+
+
+export const Td = forwardRef((props: TableCellProps, ref: React.Ref<HTMLTableCellElement>) =>
+{
+	return createPrimitive("td", { ref }, props);
 });
 
 
