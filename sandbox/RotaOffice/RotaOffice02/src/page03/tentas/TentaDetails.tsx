@@ -3,6 +3,7 @@ import Link from "@mui/material/Link";
 import type { ReactNode } from "react";
 import type { TentaBase } from "./TentaBase";
 import type { TentaPlaceholder } from "./TentaPlaceholder";
+import type { TentaPlaceholderCollector } from "./TentaPlaceholderCollector";
 
 
 
@@ -124,7 +125,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 	}: {
 		indent?: number;
 		label: ReactNode;
-		r: TentaPlaceholder.CollectorPlaceholder | null | undefined;
+		r: TentaPlaceholderCollector.CollectorPlaceholder | null | undefined;
 	})
 	{
 		return <Row indent={indent}>
@@ -134,7 +135,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 	}
 
 
-	function CollectorPlaceholderSpan({ r }: { r: TentaPlaceholder.CollectorPlaceholder | null | undefined })
+	function CollectorPlaceholderSpan({ r }: { r: TentaPlaceholderCollector.CollectorPlaceholder | null | undefined })
 	{
 		if (!r)
 			return <Span opacity3>{r + ""}</Span>;

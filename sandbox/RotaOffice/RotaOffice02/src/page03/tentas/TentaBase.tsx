@@ -4,6 +4,7 @@ import { Tenta } from ".";
 import type { TentaPhase } from "./TentaPhase";
 import { TentaPlaceholder } from "./TentaPlaceholder";
 import { TentaStage } from "./TentaStage";
+import type { TentaPlaceholderCollector } from "./TentaPlaceholderCollector";
 
 
 
@@ -42,9 +43,9 @@ export interface TentaBase extends Repaintable
 
 	parent: TentaBase | null;
 
-	placeholder?: TentaPlaceholder.Behavior;
+	placeholder?: TentaPlaceholder;
 
-	collectorPlaceholders?: TentaPlaceholder.CollectorPlaceholder[];
+	collectorPlaceholders?: TentaPlaceholderCollector.CollectorPlaceholder[];
 
 	isFirst: boolean;
 	isLast: boolean;
@@ -85,13 +86,13 @@ export interface TentaBase extends Repaintable
 	//---
 
 
-	firstCollector(): TentaPlaceholder.CollectorBehavior | null;
-	priorCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null;
-	priorCollector(): TentaPlaceholder.CollectorBehavior | null;
-	nextCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null;
-	nextCollector(): TentaPlaceholder.CollectorBehavior | null;
-	lastCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null;
-	lastCollector(): TentaPlaceholder.CollectorBehavior | null;
+	firstCollector(): TentaPlaceholderCollector | null;
+	priorCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null;
+	priorCollector(): TentaPlaceholderCollector | null;
+	nextCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null;
+	nextCollector(): TentaPlaceholderCollector | null;
+	lastCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null;
+	lastCollector(): TentaPlaceholderCollector | null;
 
 	priorSibling(): TentaBase | null;
 	nextSibling(): TentaBase | null;
@@ -148,9 +149,9 @@ export function TentaBase<TBase extends Constructor<Repaintable>>(Base: TBase)
 		parent!: TentaBase | null;
 		level!: number;
 
-		placeholder?: TentaPlaceholder.Behavior;
+		placeholder?: TentaPlaceholder;
 
-		collectorPlaceholders?: TentaPlaceholder.CollectorPlaceholder[];
+		collectorPlaceholders?: TentaPlaceholderCollector.CollectorPlaceholder[];
 
 		get isFirst() { return !this.placeholder?.prior; }
 		get isLast() { return !this.placeholder?.next; }
@@ -330,45 +331,45 @@ export function TentaBase<TBase extends Constructor<Repaintable>>(Base: TBase)
 
 
 
-		firstCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		firstCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null
 		{
 			return this.collectorPlaceholders?.[0] || null;
 		}
 
-		firstCollector(): TentaPlaceholder.CollectorBehavior | null
+		firstCollector(): TentaPlaceholderCollector | null
 		{
 			return this.firstCollectorPlaceholder()?.collector || null;
 		}
 
 
-		priorCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		priorCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null
 		{
 			return this.placeholder?.collector.placeholder?.prior || null;
 		}
 
-		priorCollector(): TentaPlaceholder.CollectorBehavior | null
+		priorCollector(): TentaPlaceholderCollector | null
 		{
 			return this.priorCollectorPlaceholder()?.collector || null;
 		}
 
 
-		nextCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		nextCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null
 		{
 			return this.placeholder?.collector.placeholder?.next || null;
 		}
 
-		nextCollector(): TentaPlaceholder.CollectorBehavior | null
+		nextCollector(): TentaPlaceholderCollector | null
 		{
 			return this.nextCollectorPlaceholder()?.collector || null;
 		}
 
 
-		lastCollectorPlaceholder(): TentaPlaceholder.CollectorPlaceholder | null
+		lastCollectorPlaceholder(): TentaPlaceholderCollector.CollectorPlaceholder | null
 		{
 			return this.collectorPlaceholders?.at(-1) || null;
 		}
 
-		lastCollector(): TentaPlaceholder.CollectorBehavior | null
+		lastCollector(): TentaPlaceholderCollector | null
 		{
 			return this.lastCollectorPlaceholder()?.collector || null;
 		}
@@ -512,7 +513,7 @@ export module TentaBase
 
 		readonly id?: React.Key;
 
-		readonly placeholder?: TentaPlaceholder.Behavior | null;
+		readonly placeholder?: TentaPlaceholder | null;
 
 		readonly collectors?: React.Key[];
 
@@ -578,7 +579,7 @@ export module TentaBase
 		});
 
 
-		function mergePlaceholders(olds?: TentaPlaceholder.CollectorPlaceholder[])
+		function mergePlaceholders(olds?: TentaPlaceholderCollector.CollectorPlaceholder[])
 		{
 			return collectorIds.map(id => olds?.find(o => o.id === id) ?? { id });
 		}

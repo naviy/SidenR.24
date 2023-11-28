@@ -31,11 +31,11 @@ export function PileNode({
 			<Tenta.Provider tenta={tenta}>
 				<Tenta.ByPhaseProvider tenta={tenta}>
 
-					<Tenta.Placeholder.NoCollector>
+					<Tenta.PlaceholderCollector.NoProvider>
 
 						{children}
 
-					</Tenta.Placeholder.NoCollector>
+					</Tenta.PlaceholderCollector.NoProvider>
 
 				</Tenta.ByPhaseProvider>
 			</Tenta.Provider>

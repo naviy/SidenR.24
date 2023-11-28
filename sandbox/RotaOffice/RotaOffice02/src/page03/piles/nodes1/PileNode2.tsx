@@ -151,7 +151,7 @@ export module PileNode2
 
 
 
-	export function getMargin(phr: Tenta.Placeholder.Behavior): number
+	export function getMargin(phr: Tenta.Placeholder): number
 	{
 		let { stage } = phr;
 		return stage === "opened" ? 24 : stage === "expanded" ? 12 : 0;
