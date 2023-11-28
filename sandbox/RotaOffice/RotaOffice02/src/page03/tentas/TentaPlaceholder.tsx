@@ -73,18 +73,41 @@ export module TentaPlaceholder
 
 
 
-	export type DefaultProps = React.Key | {
-		readonly id: React.Key;
-		readonly defaultStage?: TentaStage;
+	export type DefaultProps = {
+
+		nodeCtr: Behavior["nodeCtr"];
+
+		id: React.Key;
+
+		defaultStage?: TentaStage;
+
 	};
 
 
-	export function DefaultProps(props: DefaultProps)
-	{
-		if (typeof props === "object")
-			return props;
+	export type DefaultPropsAlias = DefaultProps | [
 
-		return { id: props };
+		nodeCtr: Behavior["nodeCtr"],
+
+		id: React.Key,
+
+		cfg?: Omit<DefaultProps, "id" | "nodeCtr">
+
+	];
+
+
+
+	export function DefaultProps(props: DefaultPropsAlias): DefaultProps
+	{
+		if (Array.isArray(props))
+		{
+			return {
+				nodeCtr: props[0],
+				id: props[1],
+				...props[2],
+			};
+		}
+
+		return props;
 	}
 
 
@@ -100,10 +123,12 @@ export module TentaPlaceholder
 
 		constructor(
 			public collector: CollectorBehavior,
-			public id: React.Key,
-			public stage: TentaStage,
+			props: DefaultProps
 		)
 		{
+			this.id=props.id;
+			this.nodeCtr = props.nodeCtr;
+			this.stage = props.defaultStage || TentaStage.Default;
 			//$log("create Placeholder")
 		}
 
@@ -119,6 +144,12 @@ export module TentaPlaceholder
 		//---
 
 
+
+		id: React.Key;
+		stage: TentaStage;
+		nodeCtr: {
+			getMargin(phr: TentaPlaceholder.Behavior): number;
+		};
 
 		tenta?: TentaBase;
 
@@ -279,7 +310,7 @@ export module TentaPlaceholder
 		id?: React.Key;
 		//root?: boolean;
 		globalState?: string | GlobalState | null | false;
-		placeholders: DefaultProps[];
+		placeholders: DefaultPropsAlias[];
 	}
 
 
@@ -378,7 +409,7 @@ export module TentaPlaceholder
 
 
 
-		usePlaceholders(news: DefaultProps[])
+		usePlaceholders(news: DefaultPropsAlias[])
 		{
 
 			let me = this;
@@ -397,14 +428,14 @@ export module TentaPlaceholder
 
 
 
-			function mergePlaceholders(olds: Behavior[], news: DefaultProps[])
+			function mergePlaceholders(olds: Behavior[], news: DefaultPropsAlias[])
 			{
 				return news.map(nn =>
 				{
 					let n = DefaultProps(nn);
 					return (
 						olds?.find(o => o.id === n.id)
-						?? new Behavior(me, n.id, n.defaultStage || TentaStage.Default)
+						?? new Behavior(me, n)
 					);
 				});
 

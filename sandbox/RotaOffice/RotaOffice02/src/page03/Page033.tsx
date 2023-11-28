@@ -75,6 +75,9 @@ export module Page033
 
 function Rows05()
 {
+
+	let qqq: Tenta.Placeholder.DefaultProps
+
 	return <>
 
 		<Pane.Col start end>
@@ -84,7 +87,7 @@ function Rows05()
 			<Tenta.Placeholders
 				id="rows05"
 				//placeholders={[1, 2, 3, 4, 5, 6, 7]}
-				placeholders={[1, 2,]}
+				placeholders={[[PileNode2, 1], [PileNode2, 2],]}
 			>
 
 				<Row05 id={1} />
@@ -109,7 +112,7 @@ function Row05(props: PileNode1Props)
 	//$log("Row05.id:", props.id)
 
 
-	return <PileNode2 collectors={["ctg1", "ctg2"]} {...props}>
+	return <PileNode2 collectors={["subnodes"]} {...props}>
 
 		<RowBody id={props.id}>
 
@@ -134,7 +137,7 @@ function Row05(props: PileNode1Props)
 			</>
 
 			<>
-				<Pane l={1}start end center p12 >aaa aaa</Pane>
+				<Pane l={1} start end center p12 >aaa aaa</Pane>
 			</>
 
 			<>
@@ -157,8 +160,10 @@ function Row05(props: PileNode1Props)
 
 
 		<>
-			<Catagory1Node />
-			<Catagory2Node />
+			<Tenta.Placeholders id="subnodes" placeholders={[[PileNode3, "ctg1"], [PileNode3, "ctg2"]]}>
+				<Catagory1Node id="ctg1" />
+				<Catagory2Node id="ctg2" />
+			</Tenta.Placeholders>
 		</>
 
 
@@ -245,70 +250,62 @@ function Row05(props: PileNode1Props)
 
 
 
-function Catagory1Node()
+function Catagory1Node(props: PileNode3.Props)
 {
 
-	return <>
+	return (
 
-		<Tenta.Placeholders id="ctg1" placeholders={["header"]}>
+		<PileNode3 {...props} collectors={["rows05"]}>
 
-			<PileNode3 id="header" collectors={["rows05"]}>
+			<>
+				<Pane.Ghost start end b="">
+					<Pane start p12 vcenter>
+						<Pile.PhaseIcon />
+						<em>CATAGORY 111</em>
+					</Pane>
+					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
+				</Pane.Ghost>
 
-				<>
-					<Pane.Ghost start end b="">
-						<Pane start p12 vcenter>
-							<Pile.PhaseIcon />
-							<em>CATAGORY 111</em>
-						</Pane>
-						<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
-					</Pane.Ghost>
+			</>
 
-				</>
+			<>
+				<Rows05 />
+			</>
 
-				<>
-					<Rows05 />
-				</>
+		</PileNode3>
 
-			</PileNode3>
-
-		</Tenta.Placeholders>
-
-	</>;
+	);
 
 }
 
 
 
 
-function Catagory2Node()
+function Catagory2Node(props: PileNode3.Props)
 {
 
-	return <>
+	return (
 
-		<Tenta.Placeholders id="ctg2" placeholders={["header"]}>
+		<PileNode3 {...props} collectors={["rows05"]}>
 
-			<PileNode3 id="header" collectors={["rows05"]}>
+			<>
+				<Pane.Ghost start end b="">
+					<Pane start p12 vcenter>
+						<Pile.PhaseIcon />
+						<em>CATAGORY 2222</em>
+					</Pane>
+					<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
+				</Pane.Ghost>
 
-				<>
-					<Pane.Ghost start end b="">
-						<Pane start p12 vcenter>
-							<Pile.PhaseIcon />
-							<em>CATAGORY 2222</em>
-						</Pane>
-						<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
-					</Pane.Ghost>
+			</>
 
-				</>
+			<>
+				<Rows05 />
+			</>
 
-				<>
-					<Rows05 />
-				</>
+		</PileNode3>
 
-			</PileNode3>
-
-		</Tenta.Placeholders>
-
-	</>;
+	);
 
 }
 

@@ -1,8 +1,8 @@
 import { Div, Focuser, Pane, useNew } from '@libs';
+import { Tenta } from "../../tentas";
 import { Pile } from "../core";
 import { PileNode1Behavior } from "./PileNode1_Behavior";
 import { PileNodeTail1 } from "./PileNodeTail1";
-import { Tenta } from "../../tentas";
 
 
 
@@ -16,7 +16,7 @@ import { Tenta } from "../../tentas";
 
 
 
-export interface PileNode3Props extends Omit<Pane.RowProps, "id" | "children">
+interface PileNode3Props extends Omit<Pane.RowProps, "id" | "children">
 {
 	readonly id: React.Key;
 	readonly collectors?: React.Key[];
@@ -38,7 +38,7 @@ export function PileNode3({
 
 	let tenta = useNew(PileNode1Behavior).use({ id, collectors });
 
-	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage, placeholder } = tenta;
+	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage, placeholder, prior, next } = tenta;
 
 	let parts = rowProps.children;
 
@@ -132,5 +132,32 @@ export function PileNode3({
 		</Pile.Node>
 
 	);
+
+}
+
+
+
+
+
+
+export module PileNode3
+{
+
+	//---
+
+
+
+	export type Props = PileNode3Props;
+
+
+
+	export function getMargin(phr: Tenta.Placeholder.Behavior): number
+	{
+		let { stage } = phr;
+		return stage === "opened" ? 24 : 0;
+	}
+
+
+	//---
 
 }

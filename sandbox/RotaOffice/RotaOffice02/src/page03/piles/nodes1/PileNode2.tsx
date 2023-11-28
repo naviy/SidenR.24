@@ -134,3 +134,30 @@ export function PileNode2({
 	);
 
 }
+
+
+
+
+
+
+export module PileNode2
+{
+
+	//---
+
+
+
+	export type Props = PileNode2Props;
+
+
+
+	export function getMargin(phr: Tenta.Placeholder.Behavior): number
+	{
+		let { stage } = phr;
+		return stage === "opened" ? 24 : stage === "expanded" ? 12 : 0;
+	}
+
+
+	//---
+
+}
