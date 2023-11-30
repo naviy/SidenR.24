@@ -32,7 +32,7 @@ export interface TentaFocusable extends TentaBase
 
 
 
-export function TentaFocusable<TBase extends Constructor<TentaBase>>(Base: TBase) 
+export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: TBase) 
 {
 	return class TentaFocusableClass extends Base
 		implements TentaFocusable, Focuser.Listener

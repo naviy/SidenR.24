@@ -24,7 +24,7 @@ export interface PileNode1UseConfig extends
 
 
 
-export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base(Repaintable.Async()))
+export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base)
 {
 
 	//---

@@ -4762,7 +4762,7 @@ function vScroll(scroller: HTMLElement | null | undefined, /*el: HTMLElement | n
 
 function scrollToTop(container: Element, top: number)
 {
-	//container.scrollTo({ top, behavior: "smooth" });
+	container.scrollTo({ top, behavior: "smooth" });
 	//scroller.animateScroll(top, container);
 
 }
