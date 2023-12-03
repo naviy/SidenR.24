@@ -2,7 +2,7 @@ import { ErrorBoundary } from "@app";
 import { Div, Focuser, Pane } from '@libs';
 import { Tenta } from "../../tentas";
 import { Pile } from "../core";
-import { PileNode1Behavior } from "./PileNode1_Behavior";
+import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
 
 
@@ -17,10 +17,9 @@ import { PileNodeTail1 } from "./PileNodeTail1";
 
 
 
-interface PileNode3Props extends Omit<Pane.RowProps, "id" | "children">
+interface PileNode3Props extends Omit<Pane.RowProps, /*"id" |*/ "children">
 {
-	readonly id: React.Key;
-	readonly collectors?: React.Key[];
+	readonly tenta: PileNode3.Tenta;
 	readonly linkToNext?: boolean;
 }
 
@@ -28,8 +27,7 @@ interface PileNode3Props extends Omit<Pane.RowProps, "id" | "children">
 
 
 export function PileNode3({
-	id,
-	collectors,
+	tenta,
 	linkToNext,
 	...rowProps
 }: PileNode3Props & {
@@ -37,9 +35,10 @@ export function PileNode3({
 })
 {
 
-	let tenta = Tenta.useById(PileNode1Behavior, id);
+	//let tenta = Tenta.useById(PileNode1Tenta, id);
 
-	tenta.use({ collectors });
+	//tenta.use({ collectors });
+	tenta.use();
 
 	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage, prior, next } = tenta;
 
@@ -51,7 +50,12 @@ export function PileNode3({
 
 		<Pile.Node tenta={tenta}>
 
-			<Focuser ref={tenta.rootFfRef} name={`pile-node#${id}`} ghost focusable>
+			<Focuser
+				ref={tenta.rootFfRef}
+				//name={`pile-node#${id}`}
+				ghost
+				focusable
+			>
 
 				<Div
 					relative
@@ -72,7 +76,7 @@ export function PileNode3({
 
 						<Focuser
 							ref={tenta.ffRef}
-							name={`pile-row-body#${id}`}
+							//name={`pile-row-body#${id}`}
 							listener={tenta}
 							autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
 						>
@@ -157,22 +161,31 @@ export module PileNode3
 	export type Props = PileNode3Props;
 
 
-
-	export const newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
+	export class Tenta extends PileNode1Tenta
 	{
-		return new PileNode1Behavior(collector, props)
-	};
+		override collectorIsVisible()
+		{
+			return this.expanded;
+		}
+	}
 
 
 
-	export const getMargin: Tenta.Descriptor["getMargin"] = tenta =>
-	{
+	//export const newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
+	//{
+	//	return new PileNode1Tenta(collector, props)
+	//};
 
-		let { stage } = tenta;
 
-		return stage === "opened" ? [24, 1] : null;
 
-	};
+	//export const getMargin: Tenta.Descriptor["getMargin"] = tenta =>
+	//{
+
+	//	let { stage } = tenta;
+
+	//	return stage === "opened" ? [24, 1] : null;
+
+	//};
 
 
 

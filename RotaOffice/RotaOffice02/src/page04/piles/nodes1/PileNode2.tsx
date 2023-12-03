@@ -1,9 +1,8 @@
-import { Div, Focuser, Pane } from '@libs';
-import { Tenta } from "../../tentas";
-import { Pile } from "../core";
-import { PileNode1Behavior } from "./PileNode1_Behavior";
-import { PileNodeTail1 } from "./PileNodeTail1";
 import { ErrorBoundary } from "@app";
+import { $log, Div, Focuser, Pane } from '@libs';
+import { Pile } from "../core";
+import { PileNode1Tenta } from "./PileNode1_Tenta";
+import { PileNodeTail1 } from "./PileNodeTail1";
 
 
 
@@ -17,10 +16,11 @@ import { ErrorBoundary } from "@app";
 
 
 
-export interface PileNode2Props extends Omit<Pane.RowProps, "id" | "children">
+export interface PileNode2Props extends Omit<Pane.RowProps, /*"id" | */"children">
 {
-	readonly id: React.Key;
-	readonly collectors?: React.Key[];
+	readonly tenta: PileNode2.Tenta;
+	//readonly id: React.Key;
+	//readonly collectors?: React.Key[];
 	readonly linkToNext?: boolean;
 }
 
@@ -28,8 +28,9 @@ export interface PileNode2Props extends Omit<Pane.RowProps, "id" | "children">
 
 
 export function PileNode2({
-	id,
-	collectors,
+	tenta,
+	//id,
+	//collectors,
 	linkToNext,
 	...rowProps
 }: PileNode2Props & {
@@ -37,13 +38,16 @@ export function PileNode2({
 })
 {
 
-	let tenta = Tenta.useById(PileNode1Behavior, id);
+	//let tenta = Tenta.useById(PileNode1Tenta, id);
 
-	tenta.use({ collectors });
+	//tenta.use({ collectors });
+	tenta.use();
 
-	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage } = tenta;
+	let { phase, collapsed, expanded, opened, isFirst, isLast, topStage, btmStage } = tenta;
 
 	let parts = rowProps.children;
+
+	$log("phase:", phase);
 
 
 	return (
@@ -51,7 +55,12 @@ export function PileNode2({
 
 		<Pile.Node tenta={tenta}>
 
-			<Focuser ref={tenta.rootFfRef} name={`pile-node#${id}`} ghost focusable>
+			<Focuser
+				ref={tenta.rootFfRef}
+				//name={`pile-node#${tenta.iid}`}
+				ghost
+				focusable
+			>
 
 				<Div
 					relative
@@ -71,7 +80,7 @@ export function PileNode2({
 
 						<Focuser
 							ref={tenta.ffRef}
-							name={`pile-row-body#${id}`}
+							//name={`pile-row-body#${tenta.iid}`}
 							listener={tenta}
 							autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
 						>
@@ -157,25 +166,34 @@ export module PileNode2
 
 
 
-	export const newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
+	export class Tenta extends PileNode1Tenta
 	{
-		return new PileNode1Behavior(collector, props)
-	};
+		override collectorIsVisible()
+		{
+			return this.expanded;
+		}
+	}
+
+
+	//export const newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
+	//{
+	//	return new PileNode1Tenta(collector, props)
+	//};
 
 
 
-	export const getMargin: Tenta.Descriptor["getMargin"] = tenta =>
-	{
+	//export const getMargin: Tenta.Descriptor["getMargin"] = tenta =>
+	//{
 
-		let { stage } = tenta;
+	//	let { stage } = tenta;
 
-		return (
-			stage === "opened" ? [24, 1] :
-				stage === "expanded" ? [12, 0] :
-					null
-		);
+	//	return (
+	//		stage === "opened" ? [24, 1] :
+	//			stage === "expanded" ? [12, 0] :
+	//				null
+	//	);
 
-	};
+	//};
 
 
 

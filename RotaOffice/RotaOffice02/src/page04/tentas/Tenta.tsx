@@ -22,10 +22,10 @@ export { TentaBase as Base, isTenta } from "./TentaBase";
 export { TentaFocusable as Focusable } from "./TentaFocusable";
 
 export import Collector = TentaCollector;
-export import Providers = TentaCollector.Provider;
+export import Collection = TentaCollector.Provider;
 export import NoProviders = TentaCollector.NoProvider;
 
-export { TentaDescriptor as Descriptor } from "./TentaDescriptor";
+//export { TentaDescriptor as Descriptor } from "./TentaDescriptor";
 
 
 export { TentaDetails as Details } from "./TentaDetails";
@@ -64,39 +64,39 @@ export function use(): TentaBase | null | undefined
 
 
 
-export function useById<TTenta extends TentaBase = TentaBase>(
-	tentaClass: Constructor<TTenta>,
-	id: React.Key,
-	collector?: TentaCollector | null
-): TTenta
-{
+//export function useById<TTenta extends TentaBase = TentaBase>(
+//	tentaClass: Constructor<TTenta>,
+//	id: React.Key,
+//	collector?: TentaCollector | null
+//): TTenta
+//{
 
-	if (collector === undefined)
-	{
-		collector = TentaCollector.use();
-	}
-
-
-	if (collector == null)
-	{
-		throw Error(`Не найден collector для tenta#${id}`);
-
-	}
+//	if (collector === undefined)
+//	{
+//		collector = TentaCollector.use();
+//	}
 
 
-	let tenta = collector.byId(id) || null;
+//	if (collector == null)
+//	{
+//		throw Error(`Не найден collector для tenta#${id}`);
 
-	if (!tenta)
-		throw Error(`Не найден tenta#${id} в collector#${collector.id}`);
-
-
-	if (!(tenta instanceof tentaClass))
-		throw Error(`В collector#${collector.id} найден tenta#${id} класса ${tenta.constructor.name}, а требуется класс ${tentaClass.name}`);
+//	}
 
 
-	return tenta as TTenta;
+//	let tenta = collector.byId(id) || null;
 
-}
+//	if (!tenta)
+//		throw Error(`Не найден tenta#${id} в collector#${collector.id}`);
+
+
+//	if (!(tenta instanceof tentaClass))
+//		throw Error(`В collector#${collector.id} найден tenta#${id} класса ${tenta.constructor.name}, а требуется класс ${tentaClass.name}`);
+
+
+//	return tenta as TTenta;
+
+//}
 
 
 

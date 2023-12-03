@@ -1,10 +1,8 @@
-import { GlobalState, Repaintable, useNew } from "@libs";
+import { GlobalState, Repaintable } from "@libs";
 import type React from "react";
-import { createContext, useContext, type ReactNode, useRef } from "react";
+import { createContext, useContext, useRef, type ReactNode } from "react";
 import { use as useTenta } from "./Tenta";
-import { TentaInitProps, type TentaBase } from "./TentaBase";
-import type { TentaStage } from "./TentaStage";
-import type { TentaDescriptor } from "./TentaDescriptor";
+import { /*TentaInitProps,*/ type TentaBase } from "./TentaBase";
 
 
 
@@ -27,7 +25,8 @@ export class TentaCollector extends Repaintable()
 
 	constructor(
 		public id: React.Key,
-		public tenta?: TentaBase | null
+		public tenta?: TentaBase | null,
+		public tentasGetter?: () => TentaBase[] | null | undefined,
 	)
 	{
 		super();
@@ -45,7 +44,7 @@ export class TentaCollector extends Repaintable()
 	#priorSibling?: TentaCollector | null;
 	#nextSibling?: TentaCollector | null;
 
-	tentas?: TentaBase[];
+	tentas?: TentaBase[] | null;
 
 	globalState?: GlobalState;
 
@@ -74,7 +73,7 @@ export class TentaCollector extends Repaintable()
 
 		//this.root = cfg?.root || false;
 
-		this.useTentas(cfg.tentas);
+		//this.useTentas(cfg.tentas);
 
 
 		return this;
@@ -83,40 +82,40 @@ export class TentaCollector extends Repaintable()
 
 
 
-	useTentas(news: TentaInitProps.Alias[])
-	{
+	//useTentas(news: TentaInitProps.Alias[])
+	//{
 
-		let me = this;
-
-
-		this.tentas = mergeTentas(this.tentas, news);
+	//	let me = this;
 
 
-		this.tentas.forEach((a, i, all) =>
-		{
-			a.setSiblings(all[i - 1], all[i + 1]);
-
-			this.globalState && a.setGlobalState(
-				GlobalState.node(this.globalState, `tenta${a.id}`)
-			);
-		});
+	//	this.tentas = mergeTentas(this.tentas, news);
 
 
+	//	this.tentas.forEach((a, i, all) =>
+	//	{
+	//		a.setSiblings(all[i - 1], all[i + 1]);
 
-		function mergeTentas(olds: TentaBase[] | undefined, news: TentaInitProps.Alias[])
-		{
-			return news.map(nn =>
-			{
-				let n = TentaInitProps(nn);
-				return (
-					olds?.find(o => o.id === n.id)
-					?? n.descriptor.newTenta(me, n)
-				);
-			});
+	//		this.globalState && a.setGlobalState(
+	//			GlobalState.node(this.globalState, `tenta${a.id}`)
+	//		);
+	//	});
 
-		}
 
-	}
+
+	//	function mergeTentas(olds: TentaBase[] | undefined, news: TentaInitProps.Alias[])
+	//	{
+	//		return news.map(nn =>
+	//		{
+	//			let n = TentaInitProps(nn);
+	//			return (
+	//				olds?.find(o => o.id === n.id)
+	//				?? n.descriptor.newTenta(me, n)
+	//			);
+	//		});
+
+	//	}
+
+	//}
 
 
 
@@ -131,15 +130,15 @@ export class TentaCollector extends Repaintable()
 	}
 
 
-	byId(id: React.Key)
-	{
-		return this.tentas?.find(a => a.id === id);
-	}
+	//byId(id: React.Key)
+	//{
+	//	return this.tentas?.find(a => a.id === id);
+	//}
 
-	indexById(id: React.Key)
-	{
-		return this.tentas?.findIndex(a => a.id === id);
-	}
+	//indexById(id: React.Key)
+	//{
+	//	return this.tentas?.findIndex(a => a.id === id);
+	//}
 
 
 
@@ -232,7 +231,7 @@ export module TentaCollector
 			collector = tenta.collectorById(id);
 
 			if (!collector)
-				throw Error(`Не найден collector#${id} в tenta#${tenta.id}`);
+				throw Error(`Не найден collector#${id} в tenta ${tenta.constructor.name}#${tenta.iid}`);
 		}
 
 
@@ -245,14 +244,14 @@ export module TentaCollector
 	export function Provider(
 		props: CollectorConfig & {
 			id: React.Key;
-			children: ReactNode;
+			children?: ReactNode;
 		}
 	): JSX.Element;
 
 	export function Provider(
 		props: {
 			bhv: TentaCollector;
-			children: ReactNode;
+			children?: ReactNode;
 		}
 	): JSX.Element;
 
@@ -260,7 +259,7 @@ export module TentaCollector
 		props: Partial<CollectorConfig> & {
 			bhv?: TentaCollector | null
 			id?: React.Key;
-			children: ReactNode;
+			children?: ReactNode;
 		}
 	)
 	{
@@ -276,10 +275,23 @@ export module TentaCollector
 		bhv?.use(props as CollectorConfig);
 
 
-		return <CollectorContext.Provider
+
+		let body = props.children;
+
+
+		if (bhv && body === undefined)
+		{
+			body = bhv.tentas?.map(a => a.render());
+		}
+
+
+		body = <CollectorContext.Provider
 			value={{ collector: bhv }}
-			children={props.children}
+			children={body}
 		/>;
+
+
+		return body;
 
 	}
 
@@ -302,7 +314,7 @@ export module TentaCollector
 	export interface CollectorConfig
 	{
 		globalState?: string | GlobalState | null | false;
-		tentas: TentaInitProps.Alias[];
+		//tentas: TentaInitProps.Alias[];
 	}
 
 

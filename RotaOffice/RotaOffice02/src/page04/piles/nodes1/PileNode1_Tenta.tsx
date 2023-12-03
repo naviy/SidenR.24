@@ -24,14 +24,14 @@ export interface PileNode1UseConfig extends
 
 
 
-export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base)
+export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 {
 
 	//---
 
 
 
-	override use(cfg: PileNode1UseConfig)
+	override use(cfg?: PileNode1UseConfig)
 	{
 
 		super.use(cfg);
@@ -48,7 +48,7 @@ export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base)
 
 
 
-	declare onPhaseChanged?: (tenta: this) => void;
+	//declare onPhaseChanged?: (tenta: this) => void;
 
 
 	rootFfRef = createRef<Focuser>();
@@ -248,5 +248,15 @@ export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base)
 
 
 	//---
+
+}
+
+
+
+
+
+
+export module PileNode1Tenta
+{
 
 }

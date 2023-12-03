@@ -1,9 +1,9 @@
 import { GlobalState, Repaintable } from '@libs';
 import type React from "react";
 import { TentaCollector } from "./TentaCollector";
-import type { TentaDescriptor } from "./TentaDescriptor";
 import type { TentaPhase } from "./TentaPhase";
 import { TentaStage } from "./TentaStage";
+import type { ReactNode } from "react";
 
 
 
@@ -17,51 +17,47 @@ import { TentaStage } from "./TentaStage";
 
 
 
-export type TentaInitProps = {
+//export type TentaInitProps = {
 
-	descriptor: TentaDescriptor;
+//	//descriptor: TentaDescriptor;
 
-	id: React.Key;
+//	id: React.Key;
 
-	defaultStage?: TentaStage;
+//	defaultStage?: TentaStage;
 
-};
-
-
-export function TentaInitProps(props: TentaInitProps.Alias): TentaInitProps
-{
-	if (Array.isArray(props))
-	{
-		return {
-			descriptor: props[0],
-			id: props[1],
-			...props[2],
-		};
-	}
-
-	return props;
-}
+//};
 
 
+//export function TentaInitProps(props: TentaInitProps.Alias): TentaInitProps
+//{
+//	if (Array.isArray(props))
+//	{
+//		return {
+//			descriptor: props[0],
+//			id: props[1],
+//			...props[2],
+//		};
+//	}
 
-export module TentaInitProps
-{
-
-	export type Alias = TentaInitProps | [
-
-		descriptor: TentaDescriptor,
-
-		id: React.Key,
-
-		cfg?: Omit<TentaInitProps, "id" | "descriptor">
-
-	];
+//	return props;
+//}
 
 
 
+//export module TentaInitProps
+//{
 
+//	export type Alias = TentaInitProps | [
 
-}
+//		//descriptor: TentaDescriptor,
+
+//		id: React.Key,
+
+//		cfg?: Omit<TentaInitProps, "id" | "descriptor">
+
+//	];
+
+//}
 
 
 
@@ -106,14 +102,16 @@ export class TentaBase extends Repaintable()
 
 
 	constructor(
-		public collector: TentaCollector,
-		props: TentaInitProps
+		//props: TentaInitProps
+		public id: React.Key,
 	)
 	{
 		super();
 
-		this.id = props.id;
-		this.descriptor = props.descriptor;
+		//this.id = props.id;
+		//this.descriptor = props.descriptor;
+
+		this.initPhase(this);
 
 	}
 
@@ -128,11 +126,11 @@ export class TentaBase extends Repaintable()
 	//---
 
 
-	id: React.Key;
-	descriptor: TentaDescriptor;
+	collector?: TentaCollector | null;
+	//descriptor: TentaDescriptor;
 
 	//parent!: TentaBase | null;
-	get parent(): TentaBase | null { return this.collector.tenta || null; }
+	get parent(): TentaBase | null { return this.collector?.tenta || null; }
 
 	#priorSibling?: TentaBase | null;
 	#nextSibling?: TentaBase | null;
@@ -163,9 +161,9 @@ export class TentaBase extends Repaintable()
 	openedPhase: TentaPhase = 2;
 	maxPhase: TentaPhase = 2;
 
-	//defaultPhase?: TentaPhase;
-
-
+	defaultPhase?: TentaPhase;
+	defaultStage?: TentaStage;
+	
 	get collapsed() { return !this.phase; }
 	get expanded() { return this.phase >= this.expandedPhase && this.phase < this.openedPhase; }
 	get opened() { return this.phase >= this.openedPhase; }
@@ -193,7 +191,7 @@ export class TentaBase extends Repaintable()
 	canExpand() { return this.phase < this.maxPhase; }
 
 
-	onPhaseChanged?: (tenta: any) => void;
+	//onPhaseChanged?: (tenta: any) => void;
 
 
 
@@ -207,10 +205,10 @@ export class TentaBase extends Repaintable()
 		Repaintable.use(this, cfg);
 
 
-		cfg?.collectors && this.#useCollectors(cfg.collectors);
+		//cfg?.collectors && this.#useCollectors(cfg.collectors);
 
 		//this.#usePlaceholder(cfg);
-		this.#usePhase(cfg);
+		//this.initPhase(cfg);
 
 
 		return this;
@@ -244,25 +242,64 @@ export class TentaBase extends Repaintable()
 
 
 
-	#useCollectors(collectorIds: React.Key[])
+	//#useCollectors(collectorIds: React.Key[])
+	//{
+
+	//	this.collectors = collectorIds.map(id =>
+	//	{
+	//		let col = this.collectors?.find(o => o.id === id) ?? new TentaCollector(id, this);
+	//		return col;
+	//	});;
+
+	//	this.#recalcCollectors();
+	//}
+
+
+
+	addCollector(id: React.Key, tentaGetter: () => TentaBase[])
 	{
 
-		this.collectors = collectorIds.map(id =>
-		{
-			let col = this.collectors?.find(o => o.id === id) ?? new TentaCollector(id, this);
-			return col;
-		});;
+		let col = new TentaCollector(id, this, tentaGetter);
 
-		this.collectors.forEach((a, i, all) =>
+
+		if (!this.collectors)
 		{
-			a.setSiblings(all[i - 1], all[i + 1]);
-		});
+			this.collectors = [col];
+		}
+		else
+		{
+			this.collectors.push(col);
+		}
+
+
+		this.#recalcCollectors();
 
 	}
 
 
+	#recalcCollectors()
+	{
+		this.collectors?.forEach((col, i, all) =>
+		{
 
-	#usePhase(cfg?: TentaBase.UseConfig)
+			col.setSiblings(all[i - 1], all[i + 1]);
+			col.tentas = this.collectorIsVisible(col) ? col?.tentasGetter?.() : undefined;
+
+		});
+	}
+
+
+	collectorIsVisible(collector: TentaCollector)
+	{
+		return this.opened;
+	}
+
+
+	initPhase(cfg?: {
+		readonly maxPhase?: TentaPhase;
+		readonly defaultPhase?: TentaPhase;
+		readonly defaultStage?: TentaStage;
+	})
 	{
 
 		if (cfg?.maxPhase != null)
@@ -341,6 +378,25 @@ export class TentaBase extends Repaintable()
 
 
 
+	getGlobalProp<TProp extends keyof TentaGlobalState>(
+		propName: TProp,
+		defaultValue?: TentaGlobalState[TProp]
+	): TentaGlobalState[TProp] | undefined
+	{
+		return GlobalState.get(this.globalState, propName, defaultValue);
+	}
+
+
+	setGlobalProp<TProp extends keyof TentaGlobalState>(
+		propName: TProp,
+		value: TentaGlobalState[TProp],
+		defaultValue?: TentaGlobalState[TProp]
+	): TentaGlobalState[TProp] | undefined
+	{
+		return GlobalState.set(this.globalState, propName, value, defaultValue);
+	}
+
+
 	//---
 
 
@@ -373,8 +429,10 @@ export class TentaBase extends Repaintable()
 	protected phaseChanged()
 	{
 
-		this.onPhaseChanged?.(this);
+		//this.onPhaseChanged?.(this);
 
+
+		this.#recalcCollectors();
 
 		this.#saveToGlobalState();
 
@@ -593,29 +651,9 @@ export class TentaBase extends Repaintable()
 	//	let prior = this.priorSiblingPlaceholder();
 	//	let priorSiblingLast = this.priorSibling()?.last();
 	//}
-
-
-
-	//---
-
-
-
-	getGlobalProp<TProp extends keyof TentaGlobalState>(
-		propName: TProp,
-		defaultValue?: TentaGlobalState[TProp]
-	): TentaGlobalState[TProp] | undefined
+	render(): ReactNode
 	{
-		return GlobalState.get(this.globalState, propName, defaultValue);
-	}
-
-
-	setGlobalProp<TProp extends keyof TentaGlobalState>(
-		propName: TProp,
-		value: TentaGlobalState[TProp],
-		defaultValue?: TentaGlobalState[TProp]
-	): TentaGlobalState[TProp] | undefined
-	{
-		return GlobalState.set(this.globalState, propName, value, defaultValue);
+		return null;
 	}
 
 
@@ -648,12 +686,12 @@ export module TentaBase
 	export interface UseConfig extends Repaintable.UseConfig
 	{
 
-		readonly collectors?: React.Key[];
+		//readonly collectors?: React.Key[];
 
-		readonly maxPhase?: TentaPhase;
+		//readonly maxPhase?: TentaPhase;
 
-		readonly defaultPhase?: TentaPhase;
-		readonly defaultStage?: TentaStage;
+		//readonly defaultPhase?: TentaPhase;
+		//readonly defaultStage?: TentaStage;
 
 	}
 
