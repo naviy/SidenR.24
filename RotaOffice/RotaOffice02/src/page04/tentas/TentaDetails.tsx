@@ -2,8 +2,7 @@ import { $log, Div, Span, Table, Th, VR } from "@libs";
 import Link from "@mui/material/Link";
 import type { ReactNode } from "react";
 import { isTenta, type TentaBase } from "./TentaBase";
-import type { TentaPlaceholder } from "./TentaPlaceholder";
-import type { TentaPlaceholderCollector } from "./TentaPlaceholderCollector";
+import type { TentaCollector } from "./TentaCollector";
 
 
 
@@ -32,8 +31,8 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 						<Row>
 							<em>collectors</em>
 							<VR.Stack span>
-								{tenta.collectorPlaceholders?.map((a, i) =>
-									<CollectorPlaceholderSpan key={i} r={a} />
+								{tenta.collectors?.map((a, i) =>
+									<CollectorSpan key={i} r={a} />
 								)}
 							</VR.Stack>
 						</Row>
@@ -50,8 +49,8 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 					<caption>prior: <TentaSpan r={tenta.prior()} /></caption>
 					<tbody>
 						<TentaRow label="priorSibling" r={tenta.priorSibling()} />
-						<CollectorPlaceholderRow label="priorCollector" r={tenta.priorCollectorPlaceholder()} />
-						<TentaRow indent={2} label="last" r={tenta.priorCollector()?.lastTenta()} />
+						<CollectorRow label="priorCollector" r={tenta.priorCollector()} />
+						<TentaRow indent={2} label="last" r={tenta.priorCollector()?.last()} />
 						<TentaRow label="parent" r={tenta.parent} />
 					</tbody>
 				</Table>
@@ -62,8 +61,8 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 					<caption>next: <TentaSpan r={tenta.next()} /></caption>
 					<tbody>
 						<TentaRow label="nextSibling" r={tenta.nextSibling()} />
-						<CollectorPlaceholderRow label="nextCollector" r={tenta.nextCollectorPlaceholder()} />
-						<TentaRow indent={2} label="first" r={tenta.nextCollector()?.firstTenta()} />
+						<CollectorRow label="nextCollector" r={tenta.nextCollector()} />
+						<TentaRow indent={2} label="first" r={tenta.nextCollector()?.first()} />
 						<TentaRow label="parent" r={tenta.parent} />
 						<TentaRow indent={2} label="nextSibling" r={tenta.parent?.nextSibling()} />
 					</tbody>
@@ -74,10 +73,10 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 				<Table details>
 					<caption>margin: <MarginSpan r={tenta} /></caption>
 					<tbody>
-						<MarginRow label="me" r={tenta.placeholder} />
-						<MarginRow label="priorSibling" r={tenta.priorSiblingPlaceholder()} />
+						<MarginRow label="me" r={tenta} />
+						<MarginRow label="priorSibling" r={tenta.priorSibling()} />
 						<MarginRow indent={2} label="last" r={tenta.priorSibling()?.last()} />
-						<MarginRow label="nextSibling" r={tenta.nextSiblingPlaceholder()} />
+						<MarginRow label="nextSibling" r={tenta.nextSibling()} />
 					</tbody>
 				</Table>
 			</Div>
@@ -110,7 +109,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 	}: {
 		indent?: number;
 		label: ReactNode;
-		r: TentaBase | TentaPlaceholder | null | undefined;
+		r: TentaBase | null | undefined;
 	})
 	{
 		return <Row indent={indent}>
@@ -120,18 +119,20 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 	}
 
 
-	function MarginSpan({ r }: { r: TentaBase | TentaPlaceholder | null | undefined; })
+	function MarginSpan({ r }: { r: TentaBase | null | undefined; })
 	{
-
-		let m = !r ? null : isTenta(r) ? r.placeholder?.getMargin() : r.getMargin();
-
-		if (!m)
-			return <Span opacity3>{m}</Span>;
+		return null;
 
 
-		return <Link onClick={() => $log("margin:", r)}>
-			{m.top}-{m.bottom} / {m.tailTop}-{m.tailBottom}
-		</Link>;
+		//let m = r?.getMargin();
+
+		//if (!m)
+		//	return <Span opacity3>{m}</Span>;
+
+
+		//return <Link onClick={() => $log("margin:", r)}>
+		//	{m.top}-{m.bottom} / {m.tailTop}-{m.tailBottom}
+		//</Link>;
 
 	}
 
@@ -165,30 +166,30 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 	}
 
 
-	function CollectorPlaceholderRow({
+	function CollectorRow({
 		indent = 1,
 		label,
 		r,
 	}: {
 		indent?: number;
 		label: ReactNode;
-		r: TentaPlaceholderCollector.CollectorPlaceholder | null | undefined;
+		r: TentaCollector | null | undefined;
 	})
 	{
 		return <Row indent={indent}>
 			{label}
-			<CollectorPlaceholderSpan r={r} />
+			<CollectorSpan r={r} />
 		</Row>;
 	}
 
 
-	function CollectorPlaceholderSpan({ r }: { r: TentaPlaceholderCollector.CollectorPlaceholder | null | undefined })
+	function CollectorSpan({ r }: { r: TentaCollector | null | undefined })
 	{
 		if (!r)
 			return <Span opacity3>{r + ""}</Span>;
 
 		return <Link onClick={() => $log("collector:", r)}>
-			{r.id + ""}{r.collector ? "#" + r.collector.iid : ""}
+			{r.id + ""}{"#" + r.iid}
 		</Link>;
 	}
 

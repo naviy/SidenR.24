@@ -2,7 +2,8 @@ import { Div, Expander, FillFade, GlobalState, Pane, Route, TransitionGroup } fr
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useReducer } from "react";
-import { Pile, type PileNode1Props } from "./piles";
+import { ErrorBoundary } from "../@app";
+import { Pile } from "./piles";
 import { PileNode2 } from "./piles/nodes1/PileNode2";
 import { PileNode3 } from "./piles/nodes1/PileNode3";
 import { Tenta } from './tentas';
@@ -76,18 +77,15 @@ export module Page04
 function Rows05()
 {
 
-	let qqq: Tenta.Placeholder.DefaultProps
-
 	return <>
 
 		<Pane.Col start end>
 
 			<Pile.ListBackfill />
 
-			<Tenta.Placeholders
+			<Tenta.Providers
 				id="rows05"
-				//placeholders={[1, 2, 3, 4, 5, 6, 7]}
-				placeholders={[[PileNode2, 1], [PileNode2, 2],]}
+				tentas={[[PileNode2, 1], [PileNode2, 2],]}
 			>
 
 				<Row05 id={1} />
@@ -98,7 +96,7 @@ function Rows05()
 				{/*<Row05 id={6} />*/}
 				{/*<Row05 id={7} />*/}
 
-			</Tenta.Placeholders>
+			</Tenta.Providers>
 
 		</Pane.Col>
 
@@ -107,7 +105,7 @@ function Rows05()
 
 
 
-function Row05(props: PileNode1Props)
+function Row05(props: PileNode2.Props)
 {
 	//$log("Row05.id:", props.id)
 
@@ -160,10 +158,10 @@ function Row05(props: PileNode1Props)
 
 
 		<>
-			<Tenta.Placeholders id="subnodes" placeholders={[[PileNode3, "ctg1"], [PileNode3, "ctg2"]]}>
+			<Tenta.Providers id="subnodes" tentas={[[PileNode3, "ctg1"], [PileNode3, "ctg2"]]}>
 				<Catagory1Node id="ctg1" />
 				<Catagory2Node id="ctg2" />
-			</Tenta.Placeholders>
+			</Tenta.Providers>
 		</>
 
 
@@ -220,21 +218,21 @@ function Row05(props: PileNode1Props)
 
 			<Pane.Row id="row05-bottom" end>
 
-				<Pane.Col start l={120}>
-					<TransitionGroup>
-						{phase !== 1 && <FillFade>{parts[2]}</FillFade>}
-						{phase === 1 && <FillFade>{parts[3]}</FillFade>}
-					</TransitionGroup>
-				</Pane.Col>
+				{/*<Pane.Col start l={120}>*/}
+				{/*	<TransitionGroup>*/}
+				{/*		{phase !== 1 && <FillFade>{parts[2]}</FillFade>}*/}
+				{/*		{phase === 1 && <FillFade>{parts[3]}</FillFade>}*/}
+				{/*	</TransitionGroup>*/}
+				{/*</Pane.Col>*/}
 
-				<Pane.Col l={120}>
-					<Pane.Row start end={phase !== 1}>
-						{parts[2]}
-					</Pane.Row>
-					<Pane.Col end l={2} expanded={phase === 1}>
-						{parts[4]}
-					</Pane.Col>
-				</Pane.Col>
+				{/*<Pane.Col l={120}>*/}
+				{/*	<Pane.Row start end={phase !== 1}>*/}
+				{/*		{parts[2]}*/}
+				{/*	</Pane.Row>*/}
+				{/*	<Pane.Col end l={2} expanded={phase === 1}>*/}
+				{/*		{parts[4]}*/}
+				{/*	</Pane.Col>*/}
+				{/*</Pane.Col>*/}
 
 				{parts[5]}
 

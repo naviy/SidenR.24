@@ -1,3 +1,4 @@
+import { ErrorBoundary } from "@app";
 import { Pane } from '@libs';
 import clsx from "clsx";
 import { Pile } from "../core";
@@ -35,6 +36,9 @@ export function PileNodeTail1({
 
 
 	return (
+
+		<ErrorBoundary>
+
 		<Pane.Col
 			start end
 			{...colProps}
@@ -47,6 +51,8 @@ export function PileNodeTail1({
 
 			</Pile.Node.LinkLine.OptionsProvider>
 		</Pane.Col>
+
+		</ErrorBoundary>
 	);
 
 }

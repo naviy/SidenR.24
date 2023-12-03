@@ -26,16 +26,16 @@ export function PileNode({
 
 	return (
 
-		<GlobalState state={tenta.placeholder?.globalState}>
+		<GlobalState state={tenta.globalState}>
 
 			<Tenta.Provider tenta={tenta}>
 				<Tenta.ByPhaseProvider tenta={tenta}>
 
-					<Tenta.PlaceholderCollector.NoProvider>
+					<Tenta.Collector.NoProvider>
 
 						{children}
 
-					</Tenta.PlaceholderCollector.NoProvider>
+					</Tenta.Collector.NoProvider>
 
 				</Tenta.ByPhaseProvider>
 			</Tenta.Provider>

@@ -12,7 +12,7 @@ export function DesktopContainer(props: { children?: ReactNode; })
 
 		<AppThemes.Navigation>
 
-			<Root>{props.children}</Root>
+			<DesktopContainer.Root>{props.children}</DesktopContainer.Root>
 
 		</AppThemes.Navigation>
 
@@ -23,19 +23,28 @@ export function DesktopContainer(props: { children?: ReactNode; })
 
 
 
-const Root = styled(
-	"div",
-	{ name: "desktop-container" }
-)(
-	({ theme }) => ({
 
-		flex: 1,
-		display: "flex",
-		flexDirection: "column",
-		position: "relative",
+export module DesktopContainer
+{
 
-		background: theme.palette.background.paper,
 
-	})
-);
 
+	export const Root = styled(
+		"div",
+		{ name: "desktop-container" }
+	)(
+		({ theme }) => ({
+
+			flex: 1,
+			display: "flex",
+			flexDirection: "column",
+			position: "relative",
+
+			background: theme.palette.background.paper,
+
+		})
+	);
+
+
+
+}

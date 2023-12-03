@@ -1,4 +1,5 @@
-import type { TentaPlaceholder } from "./TentaPlaceholder";
+import type { TentaBase, TentaInitProps } from "./TentaBase";
+import type { TentaCollector } from "./TentaCollector";
 
 
 
@@ -15,7 +16,8 @@ import type { TentaPlaceholder } from "./TentaPlaceholder";
 export interface TentaDescriptor
 {
 
-	getMargin: (phr: TentaPlaceholder) => TentaDescriptor.MarginAlias
+	newTenta: (collector: TentaCollector, props: TentaInitProps) => TentaBase;
+	getMargin: (tenta: TentaBase) => TentaDescriptor.MarginAlias
 
 }
 

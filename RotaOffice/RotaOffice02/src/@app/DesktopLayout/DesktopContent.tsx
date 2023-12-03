@@ -1,5 +1,6 @@
-import { Div, Focuser, GlobalState } from "@libs";
+import { Div, Focuser } from "@libs";
 import type { ReactNode } from "react";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 
 
@@ -24,17 +25,21 @@ export function DesktopContent(props: {
 
 		<Div fill scrollY>
 
-			<Focuser cursor ghost click="unfocus">
+			<ErrorBoundary>
 
-				<Div relative>
+				<Focuser cursor ghost click="unfocus">
 
-					{props.children}
+					<Div relative>
 
-					<div style={{ height: "80vh" }} />
+						{props.children}
 
-				</Div>
+						<div style={{ height: "80vh" }} />
 
-			</Focuser>
+					</Div>
+
+				</Focuser>
+
+			</ErrorBoundary>
 
 		</Div>
 
@@ -43,3 +48,11 @@ export function DesktopContent(props: {
 }
 
 
+
+
+
+
+export module DesktopContent
+{
+
+}

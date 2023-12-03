@@ -1,8 +1,9 @@
-import { Div, Focuser, Pane, useNew } from '@libs';
+import { Div, Focuser, Pane } from '@libs';
 import { Tenta } from "../../tentas";
 import { Pile } from "../core";
 import { PileNode1Behavior } from "./PileNode1_Behavior";
 import { PileNodeTail1 } from "./PileNodeTail1";
+import { ErrorBoundary } from "@app";
 
 
 
@@ -36,9 +37,11 @@ export function PileNode2({
 })
 {
 
-	let tenta = useNew(PileNode1Behavior).use({ id, collectors });
+	let tenta = Tenta.useById(PileNode1Behavior, id);
 
-	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage, placeholder } = tenta;
+	tenta.use({ collectors });
+
+	let { collapsed, expanded, opened, isFirst, isLast, topStage, btmStage } = tenta;
 
 	let parts = rowProps.children;
 
@@ -61,8 +64,8 @@ export function PileNode2({
 
 
 					<Pane.Ghost
-						start={!tenta.collapsed || isFirst || !placeholder!.prior!.collapsed}
-						end={!tenta.collapsed || isLast || !placeholder!.next!.collapsed}
+						start={!tenta.collapsed || isFirst || !tenta.prior()?.collapsed}
+						end={!tenta.collapsed || isLast || !tenta.next()?.collapsed}
 						{...rowProps}
 					>
 
@@ -89,17 +92,20 @@ export function PileNode2({
 								ff
 							>
 
+								<ErrorBoundary>
 
-								{/*{parts[0]}*/}
-								<Pane.Col start end>
-									<Pane.Row start end>
-										{parts[0]}
-										<Div pl4 fill><b>#{tenta.iid}</b></Div>
-									</Pane.Row>
-									<Div pl48>
-										<Tenta.Details tenta={tenta} />
-									</Div>
-								</Pane.Col>
+									{parts[0]}
+									{/*<Pane.Col start end>*/}
+									{/*	<Pane.Row start end>*/}
+									{/*		{parts[0]}*/}
+									{/*		<Div pl4 fill><b>#{tenta.iid}</b></Div>*/}
+									{/*	</Pane.Row>*/}
+									{/*	<Div pl48>*/}
+									{/*		<Tenta.Details tenta={tenta} />*/}
+									{/*	</Div>*/}
+									{/*</Pane.Col>*/}
+
+								</ErrorBoundary>
 
 							</Pane.Row>
 
@@ -151,10 +157,17 @@ export module PileNode2
 
 
 
-	export const getMargin: Tenta.Descriptor["getMargin"] = phr =>
+	export const newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
+	{
+		return new PileNode1Behavior(collector, props)
+	};
+
+
+
+	export const getMargin: Tenta.Descriptor["getMargin"] = tenta =>
 	{
 
-		let { stage } = phr;
+		let { stage } = tenta;
 
 		return (
 			stage === "opened" ? [24, 1] :
@@ -162,10 +175,11 @@ export module PileNode2
 					null
 		);
 
-	}
+	};
 
 
 
 	//---
 
 }
+//let qqq: Tenta.Descriptor = PileNode2;

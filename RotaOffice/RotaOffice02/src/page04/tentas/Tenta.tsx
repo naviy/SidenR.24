@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
+import type { Constructor } from "../../@libs";
 import type { TentaBase } from "./TentaBase";
-import { TentaPlaceholder } from "./TentaPlaceholder";
-import { TentaPlaceholderCollector } from "./TentaPlaceholderCollector";
+import { TentaCollector } from "./TentaCollector";
 
 
 
@@ -21,9 +21,9 @@ export { type TentaStage as Stage } from "./TentaStage";
 export { TentaBase as Base, isTenta } from "./TentaBase";
 export { TentaFocusable as Focusable } from "./TentaFocusable";
 
-export import Placeholder = TentaPlaceholder;
-export import PlaceholderCollector = TentaPlaceholderCollector;
-export import Placeholders = TentaPlaceholderCollector.Provider;
+export import Collector = TentaCollector;
+export import Providers = TentaCollector.Provider;
+export import NoProviders = TentaCollector.NoProvider;
 
 export { TentaDescriptor as Descriptor } from "./TentaDescriptor";
 
@@ -42,7 +42,7 @@ export { TentaDetails as Details } from "./TentaDetails";
 
 
 
-const Context = createContext<TentaBase | null>(null);
+const Context = createContext<TentaBase | null | undefined>(undefined);
 
 
 
@@ -57,9 +57,45 @@ export function Provider(props: { tenta: TentaBase; children: ReactNode })
 
 
 
-export function use(): TentaBase | null
+export function use(): TentaBase | null | undefined
 {
 	return useContext(Context);
+}
+
+
+
+export function useById<TTenta extends TentaBase = TentaBase>(
+	tentaClass: Constructor<TTenta>,
+	id: React.Key,
+	collector?: TentaCollector | null
+): TTenta
+{
+
+	if (collector === undefined)
+	{
+		collector = TentaCollector.use();
+	}
+
+
+	if (collector == null)
+	{
+		throw Error(`Не найден collector для tenta#${id}`);
+
+	}
+
+
+	let tenta = collector.byId(id) || null;
+
+	if (!tenta)
+		throw Error(`Не найден tenta#${id} в collector#${collector.id}`);
+
+
+	if (!(tenta instanceof tentaClass))
+		throw Error(`В collector#${collector.id} найден tenta#${id} класса ${tenta.constructor.name}, а требуется класс ${tentaClass.name}`);
+
+
+	return tenta as TTenta;
+
 }
 
 

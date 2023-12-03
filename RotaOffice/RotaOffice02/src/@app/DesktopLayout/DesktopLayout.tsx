@@ -61,11 +61,11 @@ export module DesktopLayout
 	export var defaultSiderWidth = 300;
 
 
-	export const Sider = DesktopSider;
-	export const Container = DesktopContainer;
-	export const Header = DesktopHeader;
-	export const Main = DesktopMain;
-	export const Content = DesktopContent;
+	export import Sider = DesktopSider;
+	export import Container = DesktopContainer;
+	export import Header = DesktopHeader;
+	export import Main = DesktopMain;
+	export import Content = DesktopContent;
 
 
 

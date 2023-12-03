@@ -497,6 +497,7 @@ export interface PrimitiveClassesProps extends
 
 	wrap?: boolean;
 	nowrap?: boolean;
+	pre?: boolean;
 	ellipsis?: boolean;
 
 
@@ -754,6 +755,11 @@ export function GlobalStylesOfPrimitives(props: {
 				whiteSpace: "nowrap !important",
 			},
 		},
+
+		pre: {
+			whiteSpace: "pre !important",
+		},
+
 
 		ellipsis: {
 			textOverflow: "ellipsis",

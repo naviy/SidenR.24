@@ -31,13 +31,12 @@ export class PileNode1Behavior extends Tenta.Focusable(Tenta.Base)
 
 
 
-	use(cfg: PileNode1UseConfig)
+	override use(cfg: PileNode1UseConfig)
 	{
 
-		Repaintable.use(this, cfg);
-		Tenta.Base.use(this, cfg);
-		Tenta.Focusable.use(this, cfg);
+		super.use(cfg);
 
+		Tenta.Focusable.use(this, cfg);
 
 		return this;
 
