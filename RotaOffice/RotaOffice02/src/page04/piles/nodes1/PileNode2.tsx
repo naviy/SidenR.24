@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, Focuser, Pane, _$log, __$log } from '@libs';
+import { $log, Div, Focuser, Pane, _$log, __$log, ___$log } from '@libs';
 import { Pile } from "../core";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -20,8 +20,6 @@ import { Tenta } from "../../tentas";
 export interface PileNode2Props extends Omit<Pane.RowProps, /*"id" | */"children">
 {
 	readonly tenta: PileNode2.Tenta;
-	//readonly id: React.Key;
-	//readonly collectors?: React.Key[];
 	readonly linkToNext?: boolean;
 }
 
@@ -30,8 +28,6 @@ export interface PileNode2Props extends Omit<Pane.RowProps, /*"id" | */"children
 
 export function PileNode2({
 	tenta,
-	//id,
-	//collectors,
 	linkToNext,
 	...rowProps
 }: PileNode2Props & {
@@ -39,31 +35,22 @@ export function PileNode2({
 })
 {
 
-	_$log("PileNode2() for " + tenta)
+	//_$log("PileNode for " + tenta)
 
-	//let tenta = Tenta.useById(PileNode1Tenta, id);
-
-	//tenta.use({ collectors });
 	tenta.use();
-
-	let { collapsed, expanded, opened, isFirst, isLast, } = tenta;
 
 	let parts = rowProps.children;
 
-	//__$log("phase:", tenta.phase);
-	//__$log("stage:", tenta.stage);
-	//__$log("isFirst:", tenta.isFirst);
-	//__$log("isLast:", tenta.isLast);
-
-
-	//let topIsSeparated = tenta.topIsSeparated();
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
+	let tailIsVisible = tenta.tailIsVisible();
+	let tailIsSeparated = tenta.tailIsSeparated();
 
-	//__$log("topIsSeparated:", topIsSeparated);
-	__$log("topMargin:", topMargin);
-	__$log("btmMargin:", btmMargin);
-	//__$log("btmStage:", btmStage);
+	//__$log("topMargin:", topMargin);
+	//__$log("btmMargin:", btmMargin);
+	//___$log("next.bodyTopMargin:", tenta.next()?.bodyTopMargin());
+	//___$log("parentTailBtmMargin:", tenta.parentTailBtmMargin());
+
 
 	return (
 
@@ -72,83 +59,85 @@ export function PileNode2({
 
 			<Focuser
 				ref={tenta.rootFfRef}
-				//name={`pile-node#${tenta.iid}`}
+				//name={`pile-node#${id}`}
 				ghost
 				focusable
 			>
 
 				<Div
 					relative
-					pb={tenta.tailIsVisibleAndSeparated() ? undefined : btmMargin * 12 as any}
 					animated
 				>
 
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
+					<Pile.ListBackfill visible={tenta.collector?.isVisibleAndSeparated() !== false} />
 
-					<Pane.Col
-						start={!!topMargin}
-						end={!!btmMargin}
-						rt={topMargin >= 2 ? "lg" : topMargin === 1 ? "sm" : undefined}
-						rb={btmMargin >= 2 ? "lg" : btmMargin === 1 ? "sm" : undefined}
-						bt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : undefined}
-						bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : undefined}
-						{...rowProps}
+					<Focuser
+						ref={tenta.ffRef}
+						//name={`pile-row-body#${id}`}
+						listener={tenta}
+						autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
 					>
 
-						<Pile.ListBackfill visible={tenta.collector?.isVisibleAndSeparated() !== false} />
+						<Pane.Row
+							//debug
+							start
+							end={!tailIsVisible || tailIsSeparated}
 
-						<Focuser
-							ref={tenta.ffRef}
-							//name={`pile-row-body#${tenta.iid}`}
-							listener={tenta}
-							autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
+
+							rt={topMargin >= 2 ? "lg" : topMargin === 1 ? "sm" : ""}
+							bt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : "sm"}
+
+							rb={btmMargin >= 2 ? "lg" : btmMargin === 1 ? "sm" : ""}
+							bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
+
+							mb={btmMargin * 12 as any}
+
+
+							{...rowProps}
+
+
+							//bl={!collapsed ? "lg" : undefined}
+							//br={!collapsed ? "lg" : undefined}
+							//bt={!collapsed ? "lg" : !isFirst && collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
+							//bb={!collapsed ? "lg" : !isLast && collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
+							//rt={collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : expanded && !isFirst ? "sm" : undefined}
+							//rb={collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : expanded && !isLast ? "sm" : undefined}
+
+							//e={opened ? "L1" : expanded ? "L2" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
+							ff
 						>
 
-							<Pane.Row
+							<ErrorBoundary>
+								{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, parts[0]) : parts[0]}
+							</ErrorBoundary>
 
-								start
-								end={!!btmMargin || tenta.tailIsSeparated()}
+						</Pane.Row>
 
-								//bl={!collapsed ? "lg" : undefined}
-								//br={!collapsed ? "lg" : undefined}
-								//bt={!collapsed ? "lg" : !isFirst && collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
-								//bb={!collapsed ? "lg" : !isLast && collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
-								//rt={collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : expanded && !isFirst ? "sm" : undefined}
-								//rb={collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : expanded && !isLast ? "sm" : undefined}
+					</Focuser>
 
-								//e={opened ? "L1" : expanded ? "L2" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
-								ff
-							>
 
-								<ErrorBoundary>
-									{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, parts[0]) : parts[0]}
-								</ErrorBoundary>
+					{parts[1] &&
 
-							</Pane.Row>
+						<Focuser ref={tenta.itemsFfRef} ghost>
+
+							<PileNodeTail1
+								//debug
+								//id={"tail3 of " + tenta}
+								start={tailIsSeparated}
+								expanded={tailIsVisible}
+								indent={tailIsSeparated}
+								rt={tailIsSeparated ? "lg" : undefined}
+								rb={tailIsSeparated ? "lg" : undefined}
+								bt={tailIsSeparated ? "md" : undefined}
+								bb={tailIsSeparated ? "md" : undefined}
+								cellIndent
+								children={parts[1]}
+							/>
 
 						</Focuser>
-
-						{parts[1] &&
-
-							<Focuser ref={tenta.itemsFfRef} ghost>
-
-								<PileNodeTail1
-									//id={"tail2 of " + tenta}
-									start={tenta.tailIsSeparated()}
-									expanded={tenta.tailIsVisible()}
-									indent={tenta.tailIsSeparated()}
-									rt={tenta.tailIsSeparated() ? "lg" : undefined}
-									rb={tenta.tailIsSeparated() ? "lg" : undefined}
-									bt={tenta.tailIsSeparated() ? "md" : undefined}
-									bb={tenta.tailIsSeparated() ? "md" : undefined}
-									children={parts[1]}
-								/>
-
-							</Focuser>
-						}
-
-					</Pane.Col>
+					}
 
 
 				</Div>

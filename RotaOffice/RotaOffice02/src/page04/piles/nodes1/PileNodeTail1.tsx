@@ -43,7 +43,7 @@ export function PileNodeTail1({
 				start end
 				noreexpand
 				{...colProps}
-				wrapperCls={clsx(indent && "pt24 pl36 pr12", colProps.wrapperCls)}
+				wrapperCls={clsx(indent && "pl36 pr12 pb24", colProps.wrapperCls)}
 				//border2 borderGreen
 			>
 				<Pile.Node.LinkLine.OptionsProvider width={indent ? 24 : 0}>

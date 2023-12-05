@@ -26,7 +26,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 		<Div flex alignItemsStart>
 
 
-			<Div flex200px>
+			<Div flex250px>
 				<Table details>
 					<caption>me: #{tenta.iid}</caption>
 					<tbody>
@@ -48,12 +48,11 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 			</Div>
 
 
-			<Div flex200px>
+			<Div flex250px>
 				<Table details>
 					<caption>topMargin: {tenta.topMargin()}</caption>
 					<tbody>
-						<BoolRow label="bodyIsSeparated" r={tenta.bodyIsSeparated()} />
-						<Row label="stageIndex" r={tenta.stageIndex} />
+						<Row label="bodyTopMargin" r={tenta.bodyTopMargin()} />
 						<TentaRow label="prior" r={tenta.prior()} />
 						<Row indent label="btmMargin" r={tenta.prior()?.btmMargin()} />
 					</tbody>
@@ -61,7 +60,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 			</Div>
 
 
-			<Div flex200px>
+			<Div flex250px>
 				<Table details>
 					<caption>btmMargin: {tenta.btmMargin()}</caption>
 					<tbody>
@@ -76,7 +75,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 			</Div>
 
 
-			<Div flex200px>
+			<Div flex250px>
 				<Table details>
 					<caption>prior: <TentaSpan r={tenta.prior()} /></caption>
 					<tbody>
@@ -89,7 +88,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 				</Table>
 			</Div>
 
-			<Div flex200px>
+			<Div flex250px>
 				<Table details>
 					<caption>next: <TentaSpan r={tenta.next()} /></caption>
 					<tbody>
