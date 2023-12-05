@@ -1,4 +1,4 @@
-import { type ReactNode, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 
 import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
 
@@ -15,6 +15,8 @@ import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintabl
 
 export interface ExpanderBaseProps
 {
+
+	id?: string;
 
 	/** default = true */
 	expanded?: boolean;
@@ -43,6 +45,8 @@ export module ExpanderBaseProps
 
 	export const propNames: PropNames<ExpanderBaseProps> =
 	{
+
+		id: false,
 
 		expanded: true,
 		noreexpand: true,
@@ -147,7 +151,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	componentDidMount()
 	{
-
+		//____$log("Expander.componentDidMount()"+ this.props.id)
 		this.expanded ? this.setExpanded() : this.setCollapsed();
 
 		this._priorMaxSize = this.getMaxSize();
@@ -158,6 +162,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	async componentDidUpdate(prevProps: Props)
 	{
+		//____$log("Expander.componentDidUpdate()"+ this.props.id)
 
 		let props = this.props;
 
@@ -178,6 +183,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 			if (!props.noreexpand)
 			{
+				//_____$log("reexpand");
 				await this.reexpand();
 			}
 

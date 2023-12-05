@@ -102,6 +102,28 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 	
 
+	toolsIsVisible = false;
+
+
+	toggleTools()
+	{
+		this.toolsIsVisible = !this.toolsIsVisible;
+		this.repaint();
+	}
+
+
+
+	//---
+
+
+
+	protected override async onSpaceKey()
+	{
+		this.toggleTools()
+	}
+
+
+
 	protected override async onRightKey()
 	{
 

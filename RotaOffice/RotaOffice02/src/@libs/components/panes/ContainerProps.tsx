@@ -46,9 +46,9 @@ export interface ContainerBaseProps extends Block.Props
 	r?: PaneRadius;
 
 	rt?: PaneRadius;
+	rb?: PaneRadius;
 	rtl?: PaneRadius;
 	rtr?: PaneRadius;
-	rb?: PaneRadius;
 	rbl?: PaneRadius;
 	rbr?: PaneRadius;
 

@@ -26,7 +26,7 @@ export const PileListBackfill = styled(
 	position: "absolute",
 	inset: 1,
 
-	borderRadius: "inherit",
+	borderRadius: 12,
 	border: `2px dotted ${blueGrey[200]}`,
 
 	background: "rgba(255,255,255,.33)",

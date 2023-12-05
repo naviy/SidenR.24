@@ -132,18 +132,29 @@ export function _$log(...args: any[])
 	return $log('    ', ...args);
 }
 
-
-
 export function __$log(...args: any[])
 {
 	return $log('        ', ...args);
 }
 
-
-
 export function ___$log(...args: any[])
 {
 	return $log('            ', ...args);
+}
+
+export function ____$log(...args: any[])
+{
+	return $log('                ', ...args);
+}
+
+export function _____$log(...args: any[])
+{
+	return $log('                    ', ...args);
+}
+
+export function ______$log(...args: any[])
+{
+	return $log('                        ', ...args);
 }
 
 

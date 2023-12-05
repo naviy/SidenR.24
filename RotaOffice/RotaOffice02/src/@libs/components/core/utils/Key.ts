@@ -10,15 +10,15 @@
 
 
 
-export type Key = string;
+export type Keys = string;
 
 
 
 
-export const Key =
+export const Keys =
 {
 
-	is: (e: KeyboardEvent, key: Key) =>
+	is: (e: KeyboardEvent, key: Keys) =>
 	{
 
 		if (e.key !== key)

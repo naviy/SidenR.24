@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { $defaultAnimationDurationMs, $log, __$log, Div, MuiColor, SpaWaitingMask } from "../core";
 
-import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Key, TaskQueue, Values } from "../core";
+import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Keys, TaskQueue, Values } from "../core";
 
 
 import { Caret as Caret_, type CaretProps as CaretProps_, } from "./ff.Caret";
@@ -3994,7 +3994,7 @@ export class Focuser extends Component<FocuserProps>
 
 		if (!alt && !ctrl && !shift)
 		{
-			if (key === Key.ArrowUp || key === Key.ArrowDown || key === Key.Enter || key === " " ||
+			if (key === Keys.ArrowUp || key === Keys.ArrowDown || key === Keys.Enter || key === " " ||
 				code === "KeyW" || code === "KeyS" || code === "KeyE"
 			)
 			{
@@ -4208,7 +4208,7 @@ export class Focuser extends Component<FocuserProps>
 		if (!alt && (!ctrl || props.allowCtrlKey || props.listener?.ff_allowCtrlKey) && (!shift || props.allowShiftKey))
 		{
 
-			if (key === Key.ArrowLeft || code === "KeyA")
+			if (key === Keys.ArrowLeft || code === "KeyA")
 			{
 
 				e.preventDefault();
@@ -4218,7 +4218,7 @@ export class Focuser extends Component<FocuserProps>
 			}
 
 
-			else if (key === Key.ArrowRight || code === "KeyD")
+			else if (key === Keys.ArrowRight || code === "KeyD")
 			{
 
 				e.preventDefault();
@@ -4228,7 +4228,7 @@ export class Focuser extends Component<FocuserProps>
 			}
 
 
-			else if (key === Key.ArrowUp || code === "KeyW")
+			else if (key === Keys.ArrowUp || code === "KeyW")
 			{
 
 				e.preventDefault();
@@ -4241,7 +4241,7 @@ export class Focuser extends Component<FocuserProps>
 			}
 
 
-			else if (key === Key.ArrowDown || code === "KeyS")
+			else if (key === Keys.ArrowDown || code === "KeyS")
 			{
 
 				e.preventDefault();
@@ -4257,21 +4257,21 @@ export class Focuser extends Component<FocuserProps>
 			else if (this.enabled)
 			{
 
-				if (key === Key.Enter || code === "KeyE")
+				if (key === Keys.Enter || code === "KeyE")
 				{
 					e.preventDefault();
 					await Task.run(() => this.enterOrFocusNext());
 				}
 
 
-				else if (key === Key.Escape || code === "KeyQ")
+				else if (key === Keys.Escape || code === "KeyQ")
 				{
 					e.preventDefault();
 					await Task.run(() => this.exit());
 				}
 
 
-				else if (key === Key.Insert)
+				else if (key === Keys.Insert)
 				{
 					e.preventDefault();
 					await Task.run(() => this.insert());
@@ -4301,7 +4301,7 @@ export class Focuser extends Component<FocuserProps>
 				//}
 
 
-				else if (key === Key.Delete)
+				else if (key === Keys.Delete)
 				{
 					e.preventDefault();
 					await Task.run(() => this.delete());
@@ -4316,7 +4316,7 @@ export class Focuser extends Component<FocuserProps>
 				}
 
 
-				else if (key === Key.Shift)
+				else if (key === Keys.Shift)
 				{
 					e.preventDefault();
 					await Task.run(() => this.select());

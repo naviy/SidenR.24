@@ -1,7 +1,7 @@
-import { Div, Expander, GlobalState, Pane, Route } from '@libs';
+import { $log, Div, Expander, GlobalState, Pane, Route } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
-import React, { useReducer, useRef, useState } from "react";
+import React, { useReducer, useState } from "react";
 import { Pile } from "./piles";
 import { PileNode2 } from "./piles/nodes1/PileNode2";
 import { PileNode3 } from "./piles/nodes1/PileNode3";
@@ -71,14 +71,19 @@ const myData = [1, 2];
 
 class Rows05PileTenta extends PileNode2.Tenta
 {
+
 	constructor(data: typeof myData)
 	{
 		super("root");
 
-		this.addCollector("rows", () =>
+		this.initPhase({ defaultStage: "opened" })
+
+		this.addCollector("root-rows", () =>
 			data.map(a => new Row05Tenta(a))
 		);
+
 	}
+
 }
 
 
@@ -87,6 +92,8 @@ function Rows05Pile()
 {
 
 	let [tenta] = useState(() => new Rows05PileTenta(myData));
+
+	$log("Rows05Pile " + tenta);
 
 
 	return (
@@ -111,7 +118,7 @@ function Rows05Pile()
 							</>
 
 							<>
-								<Tenta.Collection id="rows" />
+								<Tenta.Collection id="root-rows" />
 							</>
 
 						</PileNode2>
@@ -201,7 +208,8 @@ class Row05Tenta extends PileNode2.Tenta
 
 function Row05(props: PileNode2.Props)
 {
-	//$log("Row05.id:", props.id)
+
+	$log("Row05 " + props.tenta);
 
 
 	return <PileNode2 {...props}>
@@ -210,6 +218,7 @@ function Row05(props: PileNode2.Props)
 
 			<>
 				<Pane start p12>
+					<div>##{props.tenta.iid}</div>
 					<Pile.PhaseIcon />
 					<span>111 1111 11111 111111</span>
 				</Pane>
@@ -347,7 +356,7 @@ class Catagory1Tenta extends PileNode3.Tenta
 	{
 		super("ctg1");
 
-		this.addCollector("rows", () =>
+		this.addCollector("rows1", () =>
 			data.map(a => new Row05Tenta(a))
 		);
 	}
@@ -364,6 +373,8 @@ class Catagory1Tenta extends PileNode3.Tenta
 function Catagory1Node(props: PileNode3.Props)
 {
 
+	$log("Catagory1Node " + props.tenta);
+
 	return (
 
 		<PileNode3 {...props}>
@@ -371,6 +382,7 @@ function Catagory1Node(props: PileNode3.Props)
 			<>
 				<Pane.Ghost start end b="">
 					<Pane start p12 vcenter>
+						<div>##{props.tenta.iid}</div>
 						<Pile.PhaseIcon />
 						<em>CATAGORY 111</em>
 					</Pane>
@@ -380,7 +392,7 @@ function Catagory1Node(props: PileNode3.Props)
 			</>
 
 			<>
-				<Tenta.Collection id="rows" />
+				<Tenta.Collection id="rows1" />
 			</>
 
 		</PileNode3>
@@ -397,9 +409,9 @@ class Catagory2Tenta extends PileNode3.Tenta
 
 	constructor(public data: typeof myData)
 	{
-		super("ctg1");
+		super("ctg2");
 
-		this.addCollector("rows", () =>
+		this.addCollector("rows2", () =>
 			data.map(a => new Row05Tenta(a))
 		);
 	}
@@ -417,6 +429,8 @@ class Catagory2Tenta extends PileNode3.Tenta
 function Catagory2Node(props: PileNode3.Props)
 {
 
+	$log("Catagory2Node " + props.tenta);
+
 	return (
 
 		<PileNode3 {...props}>
@@ -424,6 +438,7 @@ function Catagory2Node(props: PileNode3.Props)
 			<>
 				<Pane.Ghost start end b="">
 					<Pane start p12 vcenter>
+						<div>##{props.tenta.iid}</div>
 						<Pile.PhaseIcon />
 						<em>CATAGORY 2222</em>
 					</Pane>
@@ -433,7 +448,7 @@ function Catagory2Node(props: PileNode3.Props)
 			</>
 
 			<>
-				<Tenta.Collection id="rows" />
+				<Tenta.Collection id="rows2" />
 			</>
 
 		</PileNode3>

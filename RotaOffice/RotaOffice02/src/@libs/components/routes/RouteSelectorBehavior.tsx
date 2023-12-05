@@ -2,7 +2,7 @@ import { useEffect, type RefObject, useRef } from "react";
 import { Focuser } from "../flow-focuser";
 import type { RouterBehavior } from "./RouterBehavior";
 import type { RouteBehavior } from "./RouteBehavior";
-import { Key, Repaintable } from "../core";
+import { Keys, Repaintable } from "../core";
 
 
 
@@ -254,7 +254,7 @@ export class RouteSelectorBehavior extends Repaintable()
 			return;
 
 
-		if (e.key === Key.Tab)
+		if (e.key === Keys.Tab)
 		{
 
 			e.preventDefault();
@@ -264,7 +264,7 @@ export class RouteSelectorBehavior extends Repaintable()
 
 		}
 
-		else if (e.key === Key.PageUp)
+		else if (e.key === Keys.PageUp)
 		{
 
 			e.preventDefault();
@@ -275,7 +275,7 @@ export class RouteSelectorBehavior extends Repaintable()
 
 		}
 
-		else if (e.key === Key.PageDown)
+		else if (e.key === Keys.PageDown)
 		{
 
 			e.preventDefault();
@@ -293,7 +293,7 @@ export class RouteSelectorBehavior extends Repaintable()
 	onKeyUp = (e: KeyboardEvent) =>
 	{
 
-		if ((this.visible || this.showTimerId) && !e.ctrlKey && !e.altKey && e.key === Key.Shift)
+		if ((this.visible || this.showTimerId) && !e.ctrlKey && !e.altKey && e.key === Keys.Shift)
 		{
 
 			e.preventDefault();

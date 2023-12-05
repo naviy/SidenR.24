@@ -1,9 +1,9 @@
-import { GlobalState, Repaintable } from '@libs';
+import { $log, GlobalState, Repaintable, _$log } from '@libs';
 import type React from "react";
 import { TentaCollector } from "./TentaCollector";
 import type { TentaPhase } from "./TentaPhase";
 import { TentaStage } from "./TentaStage";
-import type { ReactNode } from "react";
+import { startTransition, type ReactNode } from "react";
 
 
 
@@ -111,8 +111,6 @@ export class TentaBase extends Repaintable()
 		//this.id = props.id;
 		//this.descriptor = props.descriptor;
 
-		this.initPhase(this);
-
 	}
 
 
@@ -127,9 +125,7 @@ export class TentaBase extends Repaintable()
 
 
 	collector?: TentaCollector | null;
-	//descriptor: TentaDescriptor;
 
-	//parent!: TentaBase | null;
 	get parent(): TentaBase | null { return this.collector?.tenta || null; }
 
 	#priorSibling?: TentaBase | null;
@@ -155,43 +151,189 @@ export class TentaBase extends Repaintable()
 
 
 
-	phase!: TentaPhase;
+	#phase?: TentaPhase;
+	get phase(): TentaPhase
+	{
+		if (this.#phase == null)
+			this.ensurePhase();
+
+		return this.#phase!;
+	}
+
+
 	priorPhase?: TentaPhase;
 	expandedPhase: TentaPhase = 1;
 	openedPhase: TentaPhase = 2;
 	maxPhase: TentaPhase = 2;
 
-	defaultPhase?: TentaPhase;
-	defaultStage?: TentaStage;
-	
+	//defaultPhase?: TentaPhase;
+	//defaultStage?: TentaStage;
+
 	get collapsed() { return !this.phase; }
-	get expanded() { return this.phase >= this.expandedPhase && this.phase < this.openedPhase; }
+	get expanded() { return this.phase >= this.expandedPhase && this.#phase! < this.openedPhase; }
 	get opened() { return this.phase >= this.openedPhase; }
 
 
-	get stage(): TentaStage { return TentaStage.byProps(this); }
-	get topStage() { return TentaStage.max(this.stage, this.#priorSibling?.stage); }
-	get btmStage() { return TentaStage.max(this.stage, this.#nextSibling?.stage); }
+	get stage(): TentaStage
+	{
+		return TentaStage.byProps(this);
+	}
+
+	get stageIndex(): number
+	{
+		return TentaStage.indexOf(this.stage);
+	}
 
 
 	set stage(value: TentaStage)
 	{
-		if (this.phase != null && this.stage === value)
+
+		if (this.#phase != null && this.stage === value)
 			return;
 
-		this.phase = (
+
+		this.#phase = (
 			value === "collapsed" ? 0 :
 				value === "expanded" ? this.expandedPhase :
 					value === "opened" ? this.openedPhase :
-						this.phase
+						this.#phase
 		);
+
 	}
+
 
 	canCollapse() { return this.phase > 0; }
 	canExpand() { return this.phase < this.maxPhase; }
 
 
+
+	//---
+
+
+
+	get topStage() { return TentaStage.max(this.stage, this.#priorSibling?.stage); }
+	get btmStage() { return TentaStage.max(this.stage, this.#nextSibling?.stage); }
+
+
+	topIsSeparated()
+	{
+		return (
+			this.bodyIsSeparated() ||
+			!!this.priorSibling()?.bodyIsSeparated() ||
+			!!this.priorSibling()?.tailIsSeparated() ||
+			!!this.prior()?.tailIsSeparated()
+		);
+	}
+
+	btmIsSeparated()
+	{
+		return this.bodyIsSeparated() || !!this.next()?.bodyIsSeparated() || this.isLast && !!this.parent?.tailIsSeparated();
+	}
+
+
+
+	topMargin(): number
+	{
+
+		let margin = this.bodyIsSeparated() ? this.stageIndex : 0;
+
+
+		if (margin < TentaStage.MaxIndex)
+		{
+			margin = Math.max(margin, this.prior()?.btmMargin() || 0);
+		}
+
+
+		return margin;
+
+	}
+
+
+
+	btmMargin(): number
+	{
+
+		let margin = this.bodyIsSeparated() ? this.stageIndex : 0;
+
+		margin = Math.max(margin, meOrParentMargin(this));
+
+
+		//margin = meOrParentMargin(this);
+
+
+		if (margin < TentaStage.MaxIndex)
+		{
+			let next = this.next();
+
+			if (next && next.bodyIsSeparated())
+			{
+				margin = Math.max(margin, next.stageIndex);
+			}
+		}
+
+
+		return margin;
+
+
+
+		function meOrParentMargin(tenta: TentaBase | null): number
+		{
+
+			if (!tenta)
+				return 0;
+
+			let margin = tenta.tailIsSeparated() ? 2 : 0;
+			//let margin = (/*tenta.bodyIsSeparated() ||*/ tenta.tailIsSeparated()) ? tenta.stageIndex : 0;
+
+
+			if (margin < TentaStage.MaxIndex && tenta.isLast)
+			{
+				margin = Math.max(margin, meOrParentMargin(tenta.parent));
+			}
+
+			return margin;
+
+		}
+
+	}
+
+
+
+	bodyIsSeparated()
+	{
+		return !this.collapsed;
+	}
+
+
+	tailIsVisible()
+	{
+		return this.opened;
+	}
+
+	tailIsSeparated()
+	{
+		return !this.collapsed;
+	}
+
+	tailIsVisibleAndSeparated()
+	{
+		return this.tailIsVisible() && this.tailIsSeparated();
+	}
+
+
+
 	//onPhaseChanged?: (tenta: any) => void;
+
+
+
+	//---
+
+
+
+	override toString()
+	{
+		return `${this.constructor.name}-#${this.id}-##${this.iid}`;
+	}
 
 
 
@@ -208,7 +350,9 @@ export class TentaBase extends Repaintable()
 		//cfg?.collectors && this.#useCollectors(cfg.collectors);
 
 		//this.#usePlaceholder(cfg);
-		//this.initPhase(cfg);
+
+		this.#recalcCollectors();
+		this.ensurePhase();
 
 
 		return this;
@@ -271,27 +415,50 @@ export class TentaBase extends Repaintable()
 			this.collectors.push(col);
 		}
 
-
-		this.#recalcCollectors();
-
 	}
 
 
 	#recalcCollectors()
 	{
+		//_$log(this + ".#recalcCollectors()")
+
 		this.collectors?.forEach((col, i, all) =>
 		{
-
 			col.setSiblings(all[i - 1], all[i + 1]);
-			col.tentas = this.collectorIsVisible(col) ? col?.tentasGetter?.() : undefined;
-
+			col.ensureTentas();
 		});
 	}
 
 
-	collectorIsVisible(collector: TentaCollector)
+
+
+	ensurePhase(cfg?: {
+		readonly defaultPhase?: TentaPhase;
+		readonly defaultStage?: TentaStage;
+	})
 	{
-		return this.opened;
+
+		if (this.#phase != null)
+			return;
+
+
+		if (!cfg)
+		{
+			this.#phase = 0;
+		}
+		else if (cfg.defaultPhase != null)
+		{
+			this.#phase = cfg.defaultPhase;
+		}
+		else if (cfg.defaultStage != null)
+		{
+			this.stage = cfg.defaultStage;
+		}
+		else
+		{
+			this.#phase = 0;
+		}
+
 	}
 
 
@@ -314,87 +481,9 @@ export class TentaBase extends Repaintable()
 		}
 
 
-		if (this.phase != null)
-			return;
-
-
-		if (!cfg)
-		{
-			this.phase = 0;
-		}
-		else if (cfg.defaultPhase != null)
-		{
-			this.phase = cfg.defaultPhase;
-		}
-		else if (cfg.defaultStage != null)
-		{
-			this.stage = cfg.defaultStage;
-		}
-		else
-		{
-			this.phase = 0;
-		}
-
+		this.ensurePhase(cfg);
 	}
 
-
-
-	//---
-
-
-
-	globalState?: TentaGlobalState;
-
-
-
-	setGlobalState(value: TentaGlobalState)
-	{
-
-		this.globalState = value;
-
-		this.#loadFromGlobalState();
-
-	}
-
-
-
-	#loadFromGlobalState()
-	{
-		if (!this.globalState)
-			return;
-
-		this.stage = GlobalState.get(this.globalState, 'stage', this.stage)!;
-	}
-
-
-
-	#saveToGlobalState()
-	{
-		if (!this.globalState)
-			return;
-
-		GlobalState.set(this.globalState, 'stage', this.stage, TentaStage.Default)!;
-	}
-
-
-
-	getGlobalProp<TProp extends keyof TentaGlobalState>(
-		propName: TProp,
-		defaultValue?: TentaGlobalState[TProp]
-	): TentaGlobalState[TProp] | undefined
-	{
-		return GlobalState.get(this.globalState, propName, defaultValue);
-	}
-
-
-	setGlobalProp<TProp extends keyof TentaGlobalState>(
-		propName: TProp,
-		value: TentaGlobalState[TProp],
-		defaultValue?: TentaGlobalState[TProp]
-	): TentaGlobalState[TProp] | undefined
-	{
-		return GlobalState.set(this.globalState, propName, value, defaultValue);
-	}
 
 
 	//---
@@ -403,6 +492,8 @@ export class TentaBase extends Repaintable()
 
 	async setPhase(value: TentaPhase): Promise<boolean>
 	{
+		$log("setPhase " + this, " phase =", value)
+
 
 		let { phase } = this;
 
@@ -415,7 +506,7 @@ export class TentaBase extends Repaintable()
 
 
 		this.priorPhase = this.phase;
-		this.phase = value;
+		this.#phase = value;
 
 		await this.phaseChanged();
 
@@ -436,15 +527,37 @@ export class TentaBase extends Repaintable()
 
 		this.#saveToGlobalState();
 
+		this.repaintNearests();
 
-		if (this.collector)
-		{
-			this.collector.repaint();
-		}
-		else
+	}
+
+
+	repaintNearests()
+	{
+		if (!this.collector)
 		{
 			this.repaint();
+			return;
 		}
+
+
+		let nearests = new Set<TentaBase | null | undefined>([
+			this.#priorSibling,
+			this.prior(),
+			this,
+			this.first(),
+			this.last(),
+			this.#nextSibling,
+			this.next(),
+		]);
+
+
+
+		//this.collector.repaint();
+		startTransition(() =>
+		{
+			nearests.forEach(a => a?.repaint());
+		});
 
 	}
 
@@ -637,6 +750,65 @@ export class TentaBase extends Repaintable()
 
 		return null;
 
+	}
+
+
+
+	//---
+
+
+
+	globalState?: TentaGlobalState;
+
+
+
+	setGlobalState(value: TentaGlobalState)
+	{
+
+		this.globalState = value;
+
+		this.#loadFromGlobalState();
+
+	}
+
+
+
+	#loadFromGlobalState()
+	{
+		if (!this.globalState)
+			return;
+
+		this.stage = GlobalState.get(this.globalState, 'stage', this.stage)!;
+	}
+
+
+
+	#saveToGlobalState()
+	{
+		if (!this.globalState)
+			return;
+
+		GlobalState.set(this.globalState, 'stage', this.stage, TentaStage.Default)!;
+	}
+
+
+
+	getGlobalProp<TProp extends keyof TentaGlobalState>(
+		propName: TProp,
+		defaultValue?: TentaGlobalState[TProp]
+	): TentaGlobalState[TProp] | undefined
+	{
+		return GlobalState.get(this.globalState, propName, defaultValue);
+	}
+
+
+	setGlobalProp<TProp extends keyof TentaGlobalState>(
+		propName: TProp,
+		value: TentaGlobalState[TProp],
+		defaultValue?: TentaGlobalState[TProp]
+	): TentaGlobalState[TProp] | undefined
+	{
+		return GlobalState.set(this.globalState, propName, value, defaultValue);
 	}
 
 

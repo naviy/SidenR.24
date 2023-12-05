@@ -1,8 +1,9 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, Focuser, Pane } from '@libs';
+import { $log, Div, Focuser, Pane, _$log, __$log } from '@libs';
 import { Pile } from "../core";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
+import { Tenta } from "../../tentas";
 
 
 
@@ -38,17 +39,31 @@ export function PileNode2({
 })
 {
 
+	_$log("PileNode2() for " + tenta)
+
 	//let tenta = Tenta.useById(PileNode1Tenta, id);
 
 	//tenta.use({ collectors });
 	tenta.use();
 
-	let { phase, collapsed, expanded, opened, isFirst, isLast, topStage, btmStage } = tenta;
+	let { collapsed, expanded, opened, isFirst, isLast, } = tenta;
 
 	let parts = rowProps.children;
 
-	$log("phase:", phase);
+	//__$log("phase:", tenta.phase);
+	//__$log("stage:", tenta.stage);
+	//__$log("isFirst:", tenta.isFirst);
+	//__$log("isLast:", tenta.isLast);
 
+
+	//let topIsSeparated = tenta.topIsSeparated();
+	let topMargin = tenta.topMargin();
+	let btmMargin = tenta.btmMargin();
+
+	//__$log("topIsSeparated:", topIsSeparated);
+	__$log("topMargin:", topMargin);
+	__$log("btmMargin:", btmMargin);
+	//__$log("btmStage:", btmStage);
 
 	return (
 
@@ -64,19 +79,24 @@ export function PileNode2({
 
 				<Div
 					relative
-					pb={btmStage === "expanded" ? 16 : btmStage === "opened" ? 24 : 0}
+					pb={tenta.tailIsVisibleAndSeparated() ? undefined : btmMargin * 12 as any}
 					animated
 				>
-
 
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
 
-					<Pane.Ghost
-						start={!tenta.collapsed || isFirst || !tenta.prior()?.collapsed}
-						end={!tenta.collapsed || isLast || !tenta.next()?.collapsed}
+					<Pane.Col
+						start={!!topMargin}
+						end={!!btmMargin}
+						rt={topMargin >= 2 ? "lg" : topMargin === 1 ? "sm" : undefined}
+						rb={btmMargin >= 2 ? "lg" : btmMargin === 1 ? "sm" : undefined}
+						bt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : undefined}
+						bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : undefined}
 						{...rowProps}
 					>
+
+						<Pile.ListBackfill visible={tenta.collector?.isVisibleAndSeparated() !== false} />
 
 						<Focuser
 							ref={tenta.ffRef}
@@ -88,7 +108,7 @@ export function PileNode2({
 							<Pane.Row
 
 								start
-								end={!tenta.expanded}
+								end={!!btmMargin || tenta.tailIsSeparated()}
 
 								//bl={!collapsed ? "lg" : undefined}
 								//br={!collapsed ? "lg" : undefined}
@@ -102,23 +122,10 @@ export function PileNode2({
 							>
 
 								<ErrorBoundary>
-
-									{parts[0]}
-									{/*<Pane.Col start end>*/}
-									{/*	<Pane.Row start end>*/}
-									{/*		{parts[0]}*/}
-									{/*		<Div pl4 fill><b>#{tenta.iid}</b></Div>*/}
-									{/*	</Pane.Row>*/}
-									{/*	<Div pl48>*/}
-									{/*		<Tenta.Details tenta={tenta} />*/}
-									{/*	</Div>*/}
-									{/*</Pane.Col>*/}
-
+									{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, parts[0]) : parts[0]}
 								</ErrorBoundary>
 
 							</Pane.Row>
-
-
 
 						</Focuser>
 
@@ -127,17 +134,21 @@ export function PileNode2({
 							<Focuser ref={tenta.itemsFfRef} ghost>
 
 								<PileNodeTail1
-									start={tenta.opened}
-									//end={tenta.opened}
-									expanded={!tenta.collapsed}
-									indent={tenta.opened}
+									//id={"tail2 of " + tenta}
+									start={tenta.tailIsSeparated()}
+									expanded={tenta.tailIsVisible()}
+									indent={tenta.tailIsSeparated()}
+									rt={tenta.tailIsSeparated() ? "lg" : undefined}
+									rb={tenta.tailIsSeparated() ? "lg" : undefined}
+									bt={tenta.tailIsSeparated() ? "md" : undefined}
+									bb={tenta.tailIsSeparated() ? "md" : undefined}
 									children={parts[1]}
 								/>
 
 							</Focuser>
 						}
 
-					</Pane.Ghost>
+					</Pane.Col>
 
 
 				</Div>
@@ -168,10 +179,23 @@ export module PileNode2
 
 	export class Tenta extends PileNode1Tenta
 	{
-		override collectorIsVisible()
+
+		override bodyIsSeparated()
 		{
-			return this.expanded;
+			return !this.collapsed;
 		}
+
+
+		override tailIsVisible()
+		{
+			return !this.collapsed;
+		}
+
+		override tailIsSeparated()
+		{
+			return this.opened;
+		}
+
 	}
 
 

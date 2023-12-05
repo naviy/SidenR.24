@@ -1,5 +1,5 @@
-import { $defaultAnimationDurationMs, $log, _$log, adelay, type Constructor, type Focuser } from "@libs";
-import { createRef, useEffect, type RefObject } from "react";
+import { Keys, type Constructor, type Focuser } from "@libs";
+import { createRef, type RefObject } from "react";
 import type { TentaBase } from "./TentaBase";
 
 
@@ -93,6 +93,8 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 
 		protected onLeftKey?(): Promise<void | boolean>;
 		protected onRightKey?(): Promise<void | boolean>;
+
+		protected onSpaceKey?(): Promise<void | boolean>;
 
 
 
@@ -196,30 +198,40 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 
 
 
-		//async ff_onKeyDown(ff: Focuser, e: KeyboardEvent)
-		//{
+		async ff_onKeyDown(ff: Focuser, e: KeyboardEvent)
+		{
 
-		//	if (this.disabled)
-		//		return true;
-
-
-		//	if (e.ctrlKey || e.altKey || e.shiftKey)
-		//		return false;
+			if (this.disabled)
+				return true;
 
 
-		//	if (e.key === Key.Delete)
-		//	{
-		//		if (await this.onDeleteKey() !== false)
-		//		{
-		//			e.stopPropagation();
-		//			return true;
-		//		}
-		//	}
+			if (e.ctrlKey || e.altKey || e.shiftKey)
+				return false;
 
 
-		//	return false;
+			//if (e.key === Keys.Delete)
+			//{
+			//	if (await this.onDeleteKey() !== false)
+			//	{
+			//		e.stopPropagation();
+			//		return true;
+			//	}
+			//}
 
-		//}
+
+			if (e.key === Keys.Space)
+			{
+				if (this.onSpaceKey && await this.onSpaceKey() !== false)
+				{
+					e.stopPropagation();
+					return true;
+				}
+			}
+
+
+			return false;
+
+		}
 
 
 

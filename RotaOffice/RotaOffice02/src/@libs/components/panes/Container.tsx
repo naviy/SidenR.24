@@ -1,12 +1,12 @@
 import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import React, { useRef, type ReactNode } from "react";
+import { Focuser } from "..";
 import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { Expander, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
-import { ContainerBaseProps, PaneRadius, type ContainerLayout, PaneBorder } from "./ContainerProps";
-import { Focuser } from "..";
+import { ContainerBaseProps, PaneBorder, PaneRadius, type ContainerLayout } from "./ContainerProps";
 
 
 
@@ -145,12 +145,14 @@ export function renderProvider(
 
 		if (isFlex)
 		{
+			//___$log("flexExpander", props.id);
 			flexExpander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
 			preExpanding = flexExpander.expanded && flexExpander.collapsed;
 
 		}
 		else
 		{
+			//___$log("expander", props.id);
 			expander = useNew(Expander.Behavior).use(elRef, null, props);
 			preExpanding = expander.expanded && expander.collapsed;
 
@@ -232,7 +234,7 @@ export function renderProvider(
 				<div>
 					<b>{v.layout}{props.id && ` #${props.id}`}</b>&nbsp; &nbsp;
 					{props.start && " start"}{props.end && " end"}
-					<em>&nbsp; &nbsp; &nbsp;b: {v.b}</em>
+					<em>&nbsp; &nbsp; &nbsp;b: {v.b}, r: {v.r}, rb: {props.rb}, rt: {props.rt}</em>
 				</div>
 			</DebugBox>
 			{body}

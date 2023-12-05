@@ -6,7 +6,7 @@ export { };
 declare global
 {
 
-	type PropNames<T extends {}> = Readonly<Record<keyof T, true>>;
+	type PropNames<T extends {} = {}> = Readonly<Record<keyof T, boolean>>;
 
 
 	module PropNames
@@ -30,7 +30,7 @@ declare global
 	assignDefinedProps<T extends {}>(
 		target: T,
 		source: Readonly<Partial<T>>,
-		props: Record<keyof T, true>
+		props: Record<keyof T, boolean>
 	): T
 	{
 

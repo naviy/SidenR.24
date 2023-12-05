@@ -25,7 +25,11 @@ export module TentaStage
 
 
 
-	export const Default: TentaStage = "collapsed";
+	export const Default = "collapsed" as const;
+	export const Min = "collapsed" as const;
+	export const MinIndex = 0 as const;
+	export const Max = "opened" as const;
+	export const MaxIndex = 2 as const;
 
 
 
@@ -127,6 +131,12 @@ export module TentaStage
 	export function byProps(props: Readonly<Props>): TentaStage
 	{
 		return props.opened ? "opened" : props.expanded ? "expanded" : "collapsed";
+	}
+
+
+	export function indexOf(stage: TentaStage): number
+	{
+		return values[stage] || 0;
 	}
 
 

@@ -1,4 +1,4 @@
-import { GlobalState, Repaintable } from "@libs";
+import { $log, GlobalState, Repaintable, _$log, __$log, ___$log } from "@libs";
 import type React from "react";
 import { createContext, useContext, useRef, type ReactNode } from "react";
 import { use as useTenta } from "./Tenta";
@@ -44,9 +44,30 @@ export class TentaCollector extends Repaintable()
 	#priorSibling?: TentaCollector | null;
 	#nextSibling?: TentaCollector | null;
 
-	tentas?: TentaBase[] | null;
+	#tentas?: TentaBase[] | null;
+	get tentas(): TentaBase[] | null
+	{
+		if (this.#tentas === undefined)
+			this.ensureTentas();
+
+		return this.#tentas!;
+	};
 
 	globalState?: GlobalState;
+
+
+	//children?: ReactNode;
+
+
+
+	//---
+
+
+
+	override toString()
+	{
+		return `${this.constructor.name}-#${this.id}-##${this.iid}`;
+	}
 
 
 
@@ -116,6 +137,56 @@ export class TentaCollector extends Repaintable()
 	//	}
 
 	//}
+
+
+	ensureTentas()
+	{
+		if (this.#tentas)
+			return;
+
+		this.#recalcTentas();
+	}
+
+
+	#recalcTentas()
+	{
+		//__$log(this + ".ensureTentas()")
+		//___$log("tenta.phase:", this.tenta?.phase);
+		//___$log("visible:", this.tenta?.collectorIsVisible(this));
+
+
+		this.#tentas = this.isVisible() ? this.tentasGetter?.() : this.#tentas/*undefined*/;
+		//___$log("tentas:", this.tentas);
+
+
+		this.#tentas?.map((tenta, i, all) =>
+		{
+			tenta.collector = this;
+			tenta.setSiblings(all[i - 1], all[i + 1]);
+		});
+
+	}
+
+
+
+	//---
+
+
+
+	isVisible()
+	{
+		return !this.tenta || this.tenta.tailIsVisible();
+	}
+
+	isSeparated()
+	{
+		return !this.tenta || this.tenta.tailIsSeparated();
+	}
+
+	isVisibleAndSeparated()
+	{
+		return this.isVisible() && this.isSeparated();
+	}
 
 
 
@@ -272,6 +343,9 @@ export module TentaCollector
 		}
 
 
+		$log("TentaCollection " + bhv)
+
+
 		bhv?.use(props as CollectorConfig);
 
 
@@ -281,7 +355,10 @@ export module TentaCollector
 
 		if (bhv && body === undefined)
 		{
+			//_$log("bhv.children 1:", bhv.children)
+			//body = bhv.children != null ? bhv.children : (bhv.children = bhv.tentas?.map(a => a.render()));
 			body = bhv.tentas?.map(a => a.render());
+			//_$log("bhv.children 2:", bhv.children)
 		}
 
 

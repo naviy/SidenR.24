@@ -17,7 +17,7 @@ import { Pile } from "../core";
 
 export function PileNodeTail1({
 
-	indent: indent_,
+	indent = true,
 	cellIndent,
 
 	children,
@@ -32,25 +32,27 @@ export function PileNodeTail1({
 })
 {
 
-	let indent = indent_ !== false;
+	//let indent = indent_ !== false;
 
 
 	return (
 
 		<ErrorBoundary>
 
-		<Pane.Col
-			start end
-			{...colProps}
-			wrapperCls={clsx(indent && "pt24 pl36 pr12", colProps.wrapperCls)}
-		>
-			<Pile.Node.LinkLine.OptionsProvider width={indent ? 24 : 0}>
-				<Pile.CellIndentProvider addIndent={cellIndent && !indent ? 36 : 0}>
-					{children}
-				</Pile.CellIndentProvider>
+			<Pane.Col
+				start end
+				noreexpand
+				{...colProps}
+				wrapperCls={clsx(indent && "pt24 pl36 pr12", colProps.wrapperCls)}
+				//border2 borderGreen
+			>
+				<Pile.Node.LinkLine.OptionsProvider width={indent ? 24 : 0}>
+					<Pile.CellIndentProvider addIndent={cellIndent && !indent ? 36 : 0}>
+						{children}
+					</Pile.CellIndentProvider>
 
-			</Pile.Node.LinkLine.OptionsProvider>
-		</Pane.Col>
+				</Pile.Node.LinkLine.OptionsProvider>
+			</Pane.Col>
 
 		</ErrorBoundary>
 	);
