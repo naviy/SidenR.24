@@ -533,7 +533,7 @@ export module TentaBase
 
 
 
-	export let instanceCount = 0;
+	export var instanceCount = 0;
 
 
 

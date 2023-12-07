@@ -11,13 +11,13 @@ export module UseHookProps
 
 
 
-	export const propNames_: Record<keyof UseHookProps, true> =
+	export var propNames_: Record<keyof UseHookProps, true> =
 	{
 		use: true,
 	};
 
 
-	export const propNames = Object.keys(propNames_) as Array<keyof UseHookProps>;
+	export var propNames = Object.keys(propNames_) as Array<keyof UseHookProps>;
 
 
 

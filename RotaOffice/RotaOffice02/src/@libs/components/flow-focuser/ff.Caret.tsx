@@ -63,11 +63,11 @@ export module Caret
 
 
 
-	export const defaultBorderWidth = 2;
-	export const defaultBorderRadius = "inherit";
+	export var defaultBorderWidth = 2;
+	export var defaultBorderRadius = "inherit";
 
-	//export const bordererMask = ", 0 0 0 100vw rgba(0,16,32, 0.05)";
-	export const bordererMask = "";
+	//export var bordererMask = ", 0 0 0 100vw rgba(0,16,32, 0.05)";
+	export var bordererMask = "";
 
 
 

@@ -94,7 +94,7 @@ export function DesktopHeader(props: {
 export module DesktopHeader
 {
 
-	export const Icon = styled(Div)({
+	export var Icon = styled(Div)({
 
 
 		display: "flex",
@@ -109,7 +109,7 @@ export module DesktopHeader
 
 	});
 
-	export const Title = styled(Div)({
+	export var Title = styled(Div)({
 
 
 		display: "flex",
@@ -137,7 +137,7 @@ export module DesktopHeader
 
 
 
-export const HeaderRoot = styled('div')(
+export var HeaderRoot = styled('div')(
 	({ theme }) =>
 	({
 
@@ -154,7 +154,7 @@ export const HeaderRoot = styled('div')(
 
 
 
-export const HeaderRoot1 = styled(
+export var HeaderRoot1 = styled(
 	'div',
 	{
 		name: 'header-root-1',
@@ -203,7 +203,7 @@ const TopBar = styled(AppBar)({
 
 
 
-export const HeaderLogo = styled(
+export var HeaderLogo = styled(
 	'div',
 	{
 		name: 'header-logo',

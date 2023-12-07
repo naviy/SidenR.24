@@ -22,7 +22,7 @@ export module Page03
 {
 
 
-	export const route = Route.create({
+	export var route = Route.create({
 		key: "page03",
 		icon: <FestivalIcon />,
 		title: "Page 03",

@@ -26,7 +26,7 @@ export module TentaPhase
 
 
 
-	export const Context = createContext<number | undefined>(undefined);
+	export var Context = createContext<number | undefined>(undefined);
 
 
 

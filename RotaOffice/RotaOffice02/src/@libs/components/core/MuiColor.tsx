@@ -273,7 +273,7 @@ export module MuiColor
 
 
 
-	export const Span = styled(
+	export var Span = styled(
 		_Span,
 		{ shouldForwardProp: p => p !== "color" && p !== "mode" }
 	)<
@@ -295,7 +295,7 @@ export module MuiColor
 
 
 
-	export const Div = styled(
+	export var Div = styled(
 		_Div,
 		{ shouldForwardProp: p => p !== "color" && p !== "mode" }
 	)<
@@ -343,64 +343,64 @@ export module MuiColor
 	}
 
 
-	export const TextPrimary = createColorSpan("text" as any, "primary" as any);
-	export const TextSecondary = createColorSpan("text" as any, "secondary" as any);
-	export const TextDisabled = createColorSpan("text" as any, "disabled" as any);
+	export var TextPrimary = createColorSpan("text" as any, "primary" as any);
+	export var TextSecondary = createColorSpan("text" as any, "secondary" as any);
+	export var TextDisabled = createColorSpan("text" as any, "disabled" as any);
 
-	export const Disabled = createColorSpan("disabled");
-	export const DisabledText = createColorSpan("disabled.text");
-	export const DisabledBackground = createColorSpan("disabled.background");
+	export var Disabled = createColorSpan("disabled");
+	export var DisabledText = createColorSpan("disabled.text");
+	export var DisabledBackground = createColorSpan("disabled.background");
 
-	export const Primary = createColorSpan("primary");
-	export const PrimaryLight = createColorSpan("primary", "light");
-	export const PrimaryMain = createColorSpan("primary", "main");
-	export const PrimaryDark = createColorSpan("primary", "dark");
+	export var Primary = createColorSpan("primary");
+	export var PrimaryLight = createColorSpan("primary", "light");
+	export var PrimaryMain = createColorSpan("primary", "main");
+	export var PrimaryDark = createColorSpan("primary", "dark");
 
-	export const Secondary = createColorSpan("secondary");
-	export const SecondaryLight = createColorSpan("secondary", "light");
-	export const SecondaryMain = createColorSpan("secondary", "main");
-	export const SecondaryDark = createColorSpan("secondary", "dark");
+	export var Secondary = createColorSpan("secondary");
+	export var SecondaryLight = createColorSpan("secondary", "light");
+	export var SecondaryMain = createColorSpan("secondary", "main");
+	export var SecondaryDark = createColorSpan("secondary", "dark");
 
-	export const Error = createColorSpan("error");
-	export const ErrorLight = createColorSpan("error", "light");
-	export const ErrorMain = createColorSpan("error", "main");
-	export const ErrorDark = createColorSpan("error", "dark");
+	export var Error = createColorSpan("error");
+	export var ErrorLight = createColorSpan("error", "light");
+	export var ErrorMain = createColorSpan("error", "main");
+	export var ErrorDark = createColorSpan("error", "dark");
 
-	export const Warning = createColorSpan("warning");
-	export const WarningLight = createColorSpan("warning", "light");
-	export const WarningMain = createColorSpan("warning", "main");
-	export const WarningDark = createColorSpan("warning", "dark");
+	export var Warning = createColorSpan("warning");
+	export var WarningLight = createColorSpan("warning", "light");
+	export var WarningMain = createColorSpan("warning", "main");
+	export var WarningDark = createColorSpan("warning", "dark");
 
-	export const Info = createColorSpan("info");
-	export const InfoLight = createColorSpan("info", "light");
-	export const InfoMain = createColorSpan("info", "main");
-	export const InfoDark = createColorSpan("info", "dark");
+	export var Info = createColorSpan("info");
+	export var InfoLight = createColorSpan("info", "light");
+	export var InfoMain = createColorSpan("info", "main");
+	export var InfoDark = createColorSpan("info", "dark");
 
-	export const Success = createColorSpan("success");
-	export const SuccessLight = createColorSpan("success", "light");
-	export const SuccessMain = createColorSpan("success", "main");
-	export const SuccessDark = createColorSpan("success", "dark");
+	export var Success = createColorSpan("success");
+	export var SuccessLight = createColorSpan("success", "light");
+	export var SuccessMain = createColorSpan("success", "main");
+	export var SuccessDark = createColorSpan("success", "dark");
 
 
-	export const Amber = createColorSpan("amber");
-	export const Blue = createColorSpan("blue");
-	export const BlueGrey = createColorSpan("blueGrey");
-	export const Brown = createColorSpan("brown");
-	export const Cyan = createColorSpan("cyan");
-	export const DeepOrange = createColorSpan("deepOrange");
-	export const DeepPurple = createColorSpan("deepPurple");
-	export const Green = createColorSpan("green");
-	export const Grey = createColorSpan("grey");
-	export const Indigo = createColorSpan("indigo");
-	export const LightBlue = createColorSpan("lightBlue");
-	export const LightGreen = createColorSpan("lightGreen");
-	export const Lime = createColorSpan("lime");
-	export const Orange = createColorSpan("orange");
-	export const Pink = createColorSpan("pink");
-	export const Purple = createColorSpan("purple");
-	export const Red = createColorSpan("red");
-	export const Teal = createColorSpan("teal");
-	export const Yellow = createColorSpan("yellow");
+	export var Amber = createColorSpan("amber");
+	export var Blue = createColorSpan("blue");
+	export var BlueGrey = createColorSpan("blueGrey");
+	export var Brown = createColorSpan("brown");
+	export var Cyan = createColorSpan("cyan");
+	export var DeepOrange = createColorSpan("deepOrange");
+	export var DeepPurple = createColorSpan("deepPurple");
+	export var Green = createColorSpan("green");
+	export var Grey = createColorSpan("grey");
+	export var Indigo = createColorSpan("indigo");
+	export var LightBlue = createColorSpan("lightBlue");
+	export var LightGreen = createColorSpan("lightGreen");
+	export var Lime = createColorSpan("lime");
+	export var Orange = createColorSpan("orange");
+	export var Pink = createColorSpan("pink");
+	export var Purple = createColorSpan("purple");
+	export var Red = createColorSpan("red");
+	export var Teal = createColorSpan("teal");
+	export var Yellow = createColorSpan("yellow");
 
 
 

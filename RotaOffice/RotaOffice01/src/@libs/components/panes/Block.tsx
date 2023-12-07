@@ -6,8 +6,8 @@ export module Block
 
 
 
-	export const bigBorderRadius = 12;
-	export const smallBorderRadius = 3;
+	export var bigBorderRadius = 12;
+	export var smallBorderRadius = 3;
 
 
 
@@ -43,7 +43,7 @@ export module Block
 
 
 
-	export const propNames: Array<keyof Props> = [
+	export var propNames: Array<keyof Props> = [
 		"start", "end",
 		"l", "min", "max", "width", "minWidth", "maxWidth", "height", "minHeight", "maxHeight",
 	];

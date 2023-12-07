@@ -14,7 +14,7 @@ import { $defaultAnimationDurationMs } from "../../@libs";
 
 
 
-export const DesktopIconButton = styled(
+export var DesktopIconButton = styled(
 	ButtonBase,
 	{ shouldForwardProp: p => p !== 'flexGrow' && p !== 'flexEnd' }
 )<{

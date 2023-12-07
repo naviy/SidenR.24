@@ -3,7 +3,7 @@ import createSvgIcon from "@mui/material/utils/createSvgIcon";
 
 
 
-export const Ngu3Icon = createSvgIcon(
+export var Ngu3Icon = createSvgIcon(
 	<svg
 		fill="currentColor"
 		viewBox="0 0 500.000000 500.000000"

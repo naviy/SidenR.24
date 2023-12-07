@@ -43,7 +43,7 @@ export interface ExpanderBaseProps
 export module ExpanderBaseProps
 {
 
-	export const propNames: PropNames<ExpanderBaseProps> =
+	export var propNames: PropNames<ExpanderBaseProps> =
 	{
 
 		id: false,

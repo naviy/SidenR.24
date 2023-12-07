@@ -54,7 +54,7 @@ export function App()
 
 
 
-export const darkTheme = createTheme({
+export var darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 		background: {

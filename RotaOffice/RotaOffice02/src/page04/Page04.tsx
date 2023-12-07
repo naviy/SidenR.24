@@ -23,7 +23,7 @@ export module Page04
 {
 
 
-	export const route = Route.create({
+	export var route = Route.create({
 		key: "page04",
 		icon: <PageIcon />,
 		title: "Page 04",

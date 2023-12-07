@@ -146,7 +146,7 @@ export module Pane
 
 
 
-	export const propNames: PropNames<Props> =
+	export var propNames: PropNames<Props> =
 	{
 
 		id: true,
@@ -238,7 +238,7 @@ const rootPropNames: PropNames<RootProps> =
 
 
 
-export const Root = styled(
+export var Root = styled(
 	"div",
 	{
 		shouldForwardProp: p =>
@@ -306,7 +306,7 @@ export const Root = styled(
 
 
 
-export const DebugBox = styled("div")(() =>
+export var DebugBox = styled("div")(() =>
 {
 
 	let color = "rgba(100,30,30, .5)";

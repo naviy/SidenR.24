@@ -59,7 +59,7 @@ export module ContainerInfo
 
 
 
-	export const propNames: PropNames<ContainerInfo> =
+	export var propNames: PropNames<ContainerInfo> =
 	{
 
 		layout: true,
@@ -86,7 +86,7 @@ export module ContainerInfo
 	};
 
 
-	export const Context = createContext<ContainerInfo | null>(null);
+	export var Context = createContext<ContainerInfo | null>(null);
 
 
 	export function use(): ContainerInfo | null

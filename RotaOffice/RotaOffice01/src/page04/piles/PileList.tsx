@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles";
 
 
 
-export const PileListBackfill = styled("div")({
+export var PileListBackfill = styled("div")({
 
 	position: "absolute",
 	inset: 1,

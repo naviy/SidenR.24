@@ -1,3 +1,3 @@
 import { DB } from "../domain";
 
-export const db = new DB();
+export var db = new DB();

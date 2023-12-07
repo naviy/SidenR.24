@@ -240,28 +240,31 @@ export class TentaBase extends Repaintable()
 
 		if (margin < TentaStage.MaxIndex)
 		{
-			margin = Math.max(margin, this.prior()?.btmMargin() || 0);
+			let prior = this.prior();
+			margin = !prior ? 2 : Math.max(margin, prior.btmMargin() || 0);
+			//margin = Math.max(margin, prior?.btmMargin() || 0);
 		}
 
 
 		return margin;
 
 	}
-	
+
 
 	btmMargin(): number
 	{
 
-		let margin = this.bodyIsSeparated() && !this.tailIsVisible() || this.tailIsSeparated() ? this.stageIndex : 0;
+		let margin = this.bodyBtmMargin();
 
 
 		if (margin < TentaStage.MaxIndex)
 		{
-			margin = Math.max(margin, this.next()?.bodyTopMargin() || 0);
+			let next = this.next();
+			margin = !next ? 2 : Math.max(margin, next.bodyTopMargin() || 0);
 		}
 
 
-		if (margin < TentaStage.MaxIndex && this.isLast)
+		if (margin < TentaStage.MaxIndex && this.isLast && !this.tailIsSeparated())
 		{
 			margin = Math.max(margin, this.parentTailBtmMargin());
 		}
@@ -278,9 +281,14 @@ export class TentaBase extends Repaintable()
 		return this.bodyIsSeparated() ? this.stageIndex : 0;
 	}
 
+	bodyBtmMargin(): number
+	{
+		return this.bodyIsSeparated() && !this.tailIsVisible() || this.tailIsSeparated() ? this.stageIndex : 0;
+	}
+
 	tailBtmMargin(): number
 	{
-		return this.tailIsSeparated() ? 2 : 0;
+		return this.bodyIsSeparated() ? this.stageIndex : this.tailIsSeparated() ? 2 : 0;
 	}
 
 
@@ -294,10 +302,10 @@ export class TentaBase extends Repaintable()
 			return 0;
 
 
-		let margin = Math.max(parent.tailBtmMargin(), parent.bodyTopMargin());
+		let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
 
 
-		if (margin < TentaStage.MaxIndex && this.isLast)
+		if (margin < TentaStage.MaxIndex && this.isLast && (!this.tailIsVisible() || this.tailIsSeparated()))
 		{
 			margin = Math.max(margin, parent.parentTailBtmMargin() || 0);
 		}
@@ -306,7 +314,7 @@ export class TentaBase extends Repaintable()
 		return margin;
 
 	}
-	
+
 
 	bodyIsSeparated()
 	{
@@ -480,7 +488,7 @@ export class TentaBase extends Repaintable()
 
 	protected phaseChanged()
 	{
-		//_$log("phaseChanged");
+		_$log("phaseChanged");
 		//this.onPhaseChanged?.(this);
 
 
@@ -495,13 +503,7 @@ export class TentaBase extends Repaintable()
 
 	repaintNearests()
 	{
-		//__$log("repaintNearests")
-		//___$log("collector:" + this.collector)
-		if (!this.collector)
-		{
-			this.repaint();
-			return;
-		}
+		__$log("repaintNearests")
 
 
 		let nearests = new Set<TentaBase | null | undefined>([
@@ -515,13 +517,11 @@ export class TentaBase extends Repaintable()
 		]);
 
 
-
-		//this.collector.repaint();
 		startTransition(() =>
 		{
 			nearests.forEach(a =>
 			{
-				//___$log("repaint " + a)
+				___$log("repaint " + a)
 				a?.repaint()
 			});
 		});
@@ -625,7 +625,7 @@ export class TentaBase extends Repaintable()
 
 	lastCollector(): TentaCollector | null
 	{
-		return this.tailIsVisible() ? this.collectors?.at(-1) || null: null;
+		return this.tailIsVisible() ? this.collectors?.at(-1) || null : null;
 	}
 
 
@@ -812,7 +812,7 @@ export module TentaBase
 
 
 
-	export let instanceCount = 0;
+	export var instanceCount = 0;
 
 
 

@@ -126,21 +126,21 @@ export module Pane
 
 
 	export type ContainerInfo = ContainerInfo_;
-	export const ContainerInfo = ContainerInfo_;
+	export var ContainerInfo = ContainerInfo_;
 
 	export type BgColor = PaneBgColor;
-	export const BgColor = PaneBgColor;
+	export var BgColor = PaneBgColor;
 
 	export type ColProps = Container.ColProps;
 	export type DivProps = Container.DivProps;
 	export type RowProps = Container.RowProps;
 
-	export const Col = Container.Col;
-	export const Div = Container.Div;
-	export const Row = Container.Row;
+	export var Col = Container.Col;
+	export var Div = Container.Div;
+	export var Row = Container.Row;
 
 
-	//export const injectProps = Block.injectProps;
+	//export var injectProps = Block.injectProps;
 
 
 
@@ -155,7 +155,7 @@ export module Pane
 
 
 
-	export const propNames: Array<keyof Props> = [
+	export var propNames: Array<keyof Props> = [
 		...Block.propNames,
 		...UseHookProps.propNames,
 	];
@@ -204,7 +204,7 @@ export module Pane
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		"div",
 		{
 			shouldForwardProp: p =>
@@ -259,7 +259,7 @@ export module Pane
 
 
 
-	export const DebugBox = styled("div")(() =>
+	export var DebugBox = styled("div")(() =>
 	{
 
 		let color = "rgba(100,30,30, .5)";

@@ -18,7 +18,7 @@ export module TransitionProps
 {
 
 
-	export const propNames: Array<keyof TransitionProps> = [
+	export var propNames: Array<keyof TransitionProps> = [
 		"in", "mountOnEnter", "unmountOnExit",
 		"onEnter", "onEntering", "onEntered",
 		"onExit", "onExiting", "onExited",

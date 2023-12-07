@@ -249,7 +249,7 @@ export module Container
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		"div",
 		{
 			name: "pane-container",
@@ -313,7 +313,7 @@ export module Container
 
 
 
-	export const DebugBox = styled(
+	export var DebugBox = styled(
 		"div",
 		{ shouldForwardProp: p => p !== "layout", }
 	)<{

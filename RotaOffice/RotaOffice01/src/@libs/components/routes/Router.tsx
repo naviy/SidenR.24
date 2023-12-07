@@ -70,7 +70,7 @@ export module Router
 
 
 
-	export const Context = createContext<{ router: RouterBehavior | null }>({ router: null });
+	export var Context = createContext<{ router: RouterBehavior | null }>({ router: null });
 
 
 

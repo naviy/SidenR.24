@@ -21,7 +21,7 @@ export interface ExpanderProps extends ExpanderBaseProps
 
 export module ExpanderProps
 {
-	export const propNames: Array<keyof ExpanderProps> = [
+	export var propNames: Array<keyof ExpanderProps> = [
 		"maxHeight",
 		...ExpanderBaseProps.propNames
 	];

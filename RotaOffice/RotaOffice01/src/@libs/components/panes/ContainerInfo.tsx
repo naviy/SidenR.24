@@ -75,7 +75,7 @@ export module ContainerInfo
 
 
 
-	export const propNames: (keyof ContainerInfo)[] = [
+	export var propNames: (keyof ContainerInfo)[] = [
 		"layout",
 		"debug",
 		"start", "end",
@@ -93,7 +93,7 @@ export module ContainerInfo
 	];
 
 
-	export const Context = createContext<ContainerInfo | null>(null);
+	export var Context = createContext<ContainerInfo | null>(null);
 
 
 	export function use(): ContainerInfo | null

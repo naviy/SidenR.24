@@ -24,7 +24,7 @@ export interface FlexExpanderProps extends ExpanderBaseProps
 
 export module FlexExpanderProps
 {
-	export const propNames: Array<keyof FlexExpanderProps> = [
+	export var propNames: Array<keyof FlexExpanderProps> = [
 		//"maxHeight",
 		...ExpanderBaseProps.propNames
 	];

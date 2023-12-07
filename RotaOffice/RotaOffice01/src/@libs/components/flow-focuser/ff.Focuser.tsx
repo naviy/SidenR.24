@@ -66,7 +66,7 @@ export var $focusExecutingCount = 0;
 
 
 //let _re_ff_border_ = /^ff-border-/;
-export const Task = new TaskQueue();
+export var Task = new TaskQueue();
 
 
 
@@ -4697,7 +4697,7 @@ export module Focuser
 	export type Props = FocuserProps;
 	export type Listener = IFocuserListener;
 
-	export const Tasks = Task;
+	export var Tasks = Task;
 
 
 

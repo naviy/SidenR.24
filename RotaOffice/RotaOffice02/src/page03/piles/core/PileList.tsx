@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 
 
 
-export const PileListBackfill = styled(
+export var PileListBackfill = styled(
 	"div",
 	{ shouldForwardProp: p => p !== "visible" }
 )<{

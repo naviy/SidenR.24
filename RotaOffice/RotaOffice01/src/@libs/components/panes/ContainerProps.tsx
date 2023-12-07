@@ -67,7 +67,7 @@ export module ContainerProps
 {
 
 
-	export const propNames: Array<keyof (ContainerProps & PrimitiveProps)> = [
+	export var propNames: Array<keyof (ContainerProps & PrimitiveProps)> = [
 
 		"debug",
 		"layout",

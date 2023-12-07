@@ -151,7 +151,7 @@ export module PileNode2
 
 
 
-	export const getMargin: Tenta.Descriptor["getMargin"] = phr =>
+	export var getMargin: Tenta.Descriptor["getMargin"] = phr =>
 	{
 
 		let { stage } = phr;

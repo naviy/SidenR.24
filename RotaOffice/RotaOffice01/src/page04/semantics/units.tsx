@@ -4,7 +4,7 @@ import { Unit, UnitType } from "../domain";
 
 
 
-export const units = Semantic.create(sm => ({
+export var units = Semantic.create(sm => ({
 
 
 	//UnitType: sm<UnitType>()({

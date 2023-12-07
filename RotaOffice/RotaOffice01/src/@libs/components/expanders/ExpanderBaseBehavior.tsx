@@ -41,7 +41,7 @@ export interface ExpanderBaseProps
 export module ExpanderBaseProps
 {
 
-	export const propNames_: Record<keyof ExpanderBaseProps, true> =
+	export var propNames_: Record<keyof ExpanderBaseProps, true> =
 	{
 
 		expanded: true,
@@ -57,7 +57,7 @@ export module ExpanderBaseProps
 	};
 
 
-	export const propNames: Array<keyof ExpanderBaseProps> = [
+	export var propNames: Array<keyof ExpanderBaseProps> = [
 		"expanded",
 		"noreexpand", "forceRender", "timeout",
 		"onExpanedChange", "onCollapsed", "onExpanding", "onExpanded",

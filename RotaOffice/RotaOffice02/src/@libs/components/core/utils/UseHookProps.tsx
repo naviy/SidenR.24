@@ -10,7 +10,7 @@ export module UseHookProps
 {
 
 
-	export const propNames: PropNames<UseHookProps> =
+	export var propNames: PropNames<UseHookProps> =
 	{
 		use: true,
 	};

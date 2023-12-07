@@ -41,6 +41,8 @@ export function PileNode2({
 
 	let parts = rowProps.children;
 
+	let {opened } = tenta;
+
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
 	let tailIsVisible = tenta.tailIsVisible();
@@ -71,7 +73,7 @@ export function PileNode2({
 
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
-					<Pile.ListBackfill visible={tenta.collector?.isVisibleAndSeparated() !== false} />
+					<Pile.ListBackfill />
 
 					<Focuser
 						ref={tenta.ffRef}
@@ -87,13 +89,14 @@ export function PileNode2({
 
 
 							rt={topMargin >= 2 ? "lg" : topMargin === 1 ? "sm" : ""}
-							bt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : "sm"}
-
 							rb={btmMargin >= 2 ? "lg" : btmMargin === 1 ? "sm" : ""}
-							bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
+
+							bt={topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
+							bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
 
 							mb={btmMargin * 12 as any}
 
+							//e={topMargin === 2 && btmMargin >= 1 || topMargin >= 1 && btmMargin === 2 ? "L1" : topMargin === 1 && btmMargin === 1 ? "L2" : btmMargin === 1 ? "L3b" : btmMargin === 2 ? "L2b" : topMargin === 1 ? "L3t" : topMargin === 2 ? "L2t" : "0"}
 
 							{...rowProps}
 
@@ -188,14 +191,14 @@ export module PileNode2
 	}
 
 
-	//export const newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
+	//export var newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
 	//{
 	//	return new PileNode1Tenta(collector, props)
 	//};
 
 
 
-	//export const getMargin: Tenta.Descriptor["getMargin"] = tenta =>
+	//export var getMargin: Tenta.Descriptor["getMargin"] = tenta =>
 	//{
 
 	//	let { stage } = tenta;

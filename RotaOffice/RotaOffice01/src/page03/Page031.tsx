@@ -24,7 +24,7 @@ export module Page031
 {
 
 
-	export const route = Route.create({
+	export var route = Route.create({
 		key: "page031",
 		icon: <FestivalIcon />,
 		title: "Page 031",

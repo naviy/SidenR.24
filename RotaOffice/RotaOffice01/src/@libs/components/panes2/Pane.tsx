@@ -106,16 +106,16 @@ export module Pane2
 
 
 	export type ContainerInfo = ContainerInfo_;
-	export const ContainerInfo = ContainerInfo_;
+	export var ContainerInfo = ContainerInfo_;
 
 	export type ColProps = Container.ColProps;
 	export type DivProps = Container.DivProps;
 	export type RowProps = Container.RowProps;
 
-	export const Provider = Container.Provider;
-	export const Col = Container.Col;
-	export const Div = Container.Div;
-	export const Row = Container.Row;
+	export var Provider = Container.Provider;
+	export var Col = Container.Col;
+	export var Div = Container.Div;
+	export var Row = Container.Row;
 
 
 
@@ -132,7 +132,7 @@ export module Pane2
 
 
 
-	export const propNames_: Record<keyof Props, true> =
+	export var propNames_: Record<keyof Props, true> =
 	{
 		id: true,
 		...Block.propNames_,
@@ -140,7 +140,7 @@ export module Pane2
 	};
 
 
-	export const propNames = Object.keys(propNames_) as Array<keyof Props>;
+	export var propNames = Object.keys(propNames_) as Array<keyof Props>;
 
 
 
@@ -193,7 +193,7 @@ export module Pane2
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		"div",
 		{
 			shouldForwardProp: p =>
@@ -257,7 +257,7 @@ export module Pane2
 
 
 
-	export const DebugBox = styled("div")(() =>
+	export var DebugBox = styled("div")(() =>
 	{
 
 		let color = "rgba(100,30,30, .5)";

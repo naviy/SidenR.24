@@ -273,7 +273,7 @@ const rootPropNames: Record<keyof RootProps, true> =
 
 
 
-export const Root = styled(
+export var Root = styled(
 	"div",
 	{
 		name: "pane-container",
@@ -323,7 +323,7 @@ export const Root = styled(
 
 
 
-export const DebugBox = styled(
+export var DebugBox = styled(
 	"div",
 	{ shouldForwardProp: p => p !== "layout", }
 )<{

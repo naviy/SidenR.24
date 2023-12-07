@@ -25,11 +25,11 @@ export module TentaStage
 
 
 
-	export const Default = "collapsed" as const;
-	export const Min = "collapsed" as const;
-	export const MinIndex = 0 as const;
-	export const Max = "opened" as const;
-	export const MaxIndex = 2 as const;
+	export var Default = "collapsed" as const;
+	export var Min = "collapsed" as const;
+	export var MinIndex = 0 as const;
+	export var Max = "opened" as const;
+	export var MaxIndex = 2 as const;
 
 
 
@@ -39,7 +39,7 @@ export module TentaStage
 
 
 
-	//export const Context = createContext<TentaStage | undefined>(undefined);
+	//export var Context = createContext<TentaStage | undefined>(undefined);
 
 
 

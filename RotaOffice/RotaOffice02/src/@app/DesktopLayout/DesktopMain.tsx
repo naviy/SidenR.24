@@ -57,7 +57,7 @@ export module DesktopMain
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		"main",
 		{ shouldForwardProp: p => p !== "siderIsOpened" }
 	)<{

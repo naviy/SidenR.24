@@ -6,8 +6,8 @@ export module Block
 
 
 
-	export const bigBorderRadius = 12;
-	export const smallBorderRadius = 3;
+	export var bigBorderRadius = 12;
+	export var smallBorderRadius = 3;
 
 
 
@@ -41,7 +41,7 @@ export module Block
 
 
 
-	export const propNames: PropNames<Props> =
+	export var propNames: PropNames<Props> =
 	{
 
 		start: true,

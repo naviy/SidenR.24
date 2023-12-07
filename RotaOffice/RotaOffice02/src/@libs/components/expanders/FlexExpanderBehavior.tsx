@@ -24,7 +24,7 @@ export interface FlexExpanderProps extends ExpanderBaseProps
 
 export module FlexExpanderProps
 {
-	export const propNames: PropNames<FlexExpanderProps> =
+	export var propNames: PropNames<FlexExpanderProps> =
 	{
 		...ExpanderBaseProps.propNames
 	};

@@ -25,7 +25,7 @@ import { Tabs, Tab } from "@mui/material";
 export module Page041
 {
 
-	export const route = Route.create({
+	export var route = Route.create({
 		key: "page041",
 		icon: <FestivalIcon />,
 		title: "Page 04.1",

@@ -127,7 +127,7 @@ export module GlobalState
 
 
 
-	export const Context = createContext<Node | undefined>(undefined);
+	export var Context = createContext<Node | undefined>(undefined);
 
 
 

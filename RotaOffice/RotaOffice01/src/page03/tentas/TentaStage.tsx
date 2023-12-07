@@ -11,7 +11,7 @@ export module TentaStage
 
 
 
-	export const Default: TentaStage = "collapsed";
+	export var Default: TentaStage = "collapsed";
 
 
 

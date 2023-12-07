@@ -68,7 +68,7 @@ const primitiveBasePropNames: Array<keyof PrimitiveBaseProps<Element>> = [
 
 
 
-export const Margins = [
+export var Margins = [
 	-1, -2, -3, -4, -5, -6, -7, -8, -10, -12, -16, -20, -21, -24, -30, -32, -36, -40, -48, -50, -60, -64, -80, -100, -150, -200,
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200
 ] as const;
@@ -85,7 +85,7 @@ type MTs = { [P in Margin as `mt${P}`]?: boolean; };
 type MBs = { [P in Margin as `mb${P}`]?: boolean; };
 
 
-export const Paddings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200] as const;
+export var Paddings = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 21, 24, 30, 32, 36, 40, 48, 50, 60, 64, 80, 100, 150, 200] as const;
 
 export type Padding = typeof Paddings[number];
 
@@ -114,7 +114,7 @@ type GapYs = { [P in Padding as `gapy${P}`]?: boolean; };
 
 
 
-export const widths = Paddings;
+export var widths = Paddings;
 
 
 type Width = typeof widths[number];
@@ -129,7 +129,7 @@ type WidthProps = {
 
 
 
-export const heights = Paddings;
+export var heights = Paddings;
 
 
 type Height = typeof heights[number];
@@ -183,7 +183,7 @@ type BgProps = (
 );
 
 
-export const bgColors = {
+export var bgColors = {
 
 	[0]: "#ffffff",
 	[1]: "#f0f2f5",
@@ -216,7 +216,7 @@ type ElevationProps = { [P in Capitalize<Elevation> as `e${P}`]?: boolean; } & {
 
 
 
-export const elevaltionShadows =
+export var elevaltionShadows =
 {
 	"0": "none",
 
@@ -257,7 +257,7 @@ type FontSizeProps = { [P in Capitalize<FontSize> as `font${P}`]?: boolean; }
 
 
 
-export const fontSizes: Record<FontSize, string> =
+export var fontSizes: Record<FontSize, string> =
 {
 	"xxs": "0.625em",
 	"xs": ".75em",
@@ -294,7 +294,7 @@ export const fontSizes: Record<FontSize, string> =
 
 
 
-export const rotateAngles = [0, 45, 90, 135, 180, 225, 270, 315, 360] as const;
+export var rotateAngles = [0, 45, 90, 135, 180, 225, 270, 315, 360] as const;
 
 
 type Rotate = typeof rotateAngles[number];
@@ -1401,7 +1401,7 @@ export interface DivProps extends PrimitiveProps<HTMLDivElement> { }
 
 
 
-export const Div = forwardRef((props: DivProps, ref: React.Ref<HTMLDivElement>) =>
+export var Div = forwardRef((props: DivProps, ref: React.Ref<HTMLDivElement>) =>
 {
 	return createPrimitive("div", { ref }, props);
 });
@@ -1415,13 +1415,13 @@ export interface SpanProps extends PrimitiveProps<HTMLSpanElement> { }
 
 
 
-export const Span = forwardRef((props: SpanProps, ref: React.Ref<HTMLSpanElement>) =>
+export var Span = forwardRef((props: SpanProps, ref: React.Ref<HTMLSpanElement>) =>
 {
 	return createPrimitive("span", { ref }, props);
 });
 
 
-export const Em = forwardRef((props: SpanProps, ref: React.Ref<HTMLSpanElement>) =>
+export var Em = forwardRef((props: SpanProps, ref: React.Ref<HTMLSpanElement>) =>
 {
 	return createPrimitive("em", { ref }, props);
 });
@@ -1435,7 +1435,7 @@ export interface TableProps extends PrimitiveProps<HTMLTableElement> { }
 
 
 
-export const Table = forwardRef((props: TableProps, ref: React.Ref<HTMLTableElement>) =>
+export var Table = forwardRef((props: TableProps, ref: React.Ref<HTMLTableElement>) =>
 {
 	return createPrimitive("table", { ref }, props);
 });
@@ -1512,7 +1512,7 @@ const linkBasePropNames = ["download", "href", "hrefLang", "media", "ping", "rel
 
 
 
-export const Link = forwardRef((props: LinkProps, ref: React.Ref<HTMLAnchorElement>) =>
+export var Link = forwardRef((props: LinkProps, ref: React.Ref<HTMLAnchorElement>) =>
 {
 	return createPrimitive(LinkRoot, { ref }, props, linkBasePropNames);
 });

@@ -66,7 +66,7 @@ export interface ContainerProps<Z extends ContainerProps<Z>>
 export module ContainerProps
 {
 
-	export const propNames: PropNames<ContainerProps<any>> =
+	export var propNames: PropNames<ContainerProps<any>> =
 		{
 			...ContainerBaseProps.propNames,
 			...ExpanderBaseProps.propNames,
@@ -352,7 +352,7 @@ const rootPropNames: PropNames<RootProps> =
 
 
 
-export const Root = styled(
+export var Root = styled(
 	"div",
 	{
 		name: "pane-container",
@@ -443,7 +443,7 @@ const debugPropNames: PropNames<DebugBoxProps> =
 
 
 
-export const DebugBox = styled(
+export var DebugBox = styled(
 	"div",
 	{
 		shouldForwardProp: p => !(debugPropNames as any)[p],

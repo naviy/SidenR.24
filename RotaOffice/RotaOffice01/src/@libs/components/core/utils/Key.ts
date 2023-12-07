@@ -15,7 +15,7 @@ export type Key = string;
 
 
 
-export const Key =
+export var Key =
 {
 
 	is: (e: KeyboardEvent, key: Key) =>

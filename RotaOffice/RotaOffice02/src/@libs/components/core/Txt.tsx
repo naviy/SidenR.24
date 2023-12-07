@@ -229,7 +229,7 @@ export module Txt
 
 
 
-	export const Divider = styled(MuiDivider)({
+	export var Divider = styled(MuiDivider)({
 
 		margin: '24px 0 12px 0',
 

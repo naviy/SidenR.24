@@ -151,7 +151,7 @@ export module PileNode3
 
 
 
-	export const getMargin: Tenta.Descriptor["getMargin"] = phr =>
+	export var getMargin: Tenta.Descriptor["getMargin"] = phr =>
 	{
 		let { stage } = phr;
 		return stage === "opened" ? [24, 1] : null;

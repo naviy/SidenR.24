@@ -4,7 +4,7 @@ import { units } from "./units";
 
 
 
-export const gsm = Semantic.create(sm => ({
+export var gsm = Semantic.create(sm => ({
 
 
 	...units,

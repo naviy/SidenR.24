@@ -58,7 +58,7 @@ export function Page04()
 
 export module Page04
 {
-	export const route = pageRoute;
+	export var route = pageRoute;
 }
 
 

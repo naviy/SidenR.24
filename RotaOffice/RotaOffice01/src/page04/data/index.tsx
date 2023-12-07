@@ -5,7 +5,7 @@ import * as data_01 from "./data_01";
 
 
 
-export const data =
+export var data =
 {
 
 	db,

@@ -18,7 +18,7 @@ export module TransitionProps
 {
 
 
-	export const propNames: PropNames<TransitionProps> =
+	export var propNames: PropNames<TransitionProps> =
 	{
 		in: true,
 		mountOnEnter: true,

@@ -29,7 +29,7 @@ export module DesktopContainer
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		"div",
 		{ name: "desktop-container" }
 	)(

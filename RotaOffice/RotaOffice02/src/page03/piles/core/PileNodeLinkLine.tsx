@@ -90,7 +90,7 @@ export module PileNodeLinkLine
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		"div",
 		{ shouldForwardProp: p => p !== "width" && p !== "thickness" }
 	)<{

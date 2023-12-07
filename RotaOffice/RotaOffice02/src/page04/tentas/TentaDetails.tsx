@@ -64,12 +64,17 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 				<Table details>
 					<caption>btmMargin: {tenta.btmMargin()}</caption>
 					<tbody>
-						<BoolRow label="bodyIsSeparated" r={tenta.bodyIsSeparated()} />
-						<BoolRow label="tailIsSeparated" r={tenta.tailIsSeparated()} />
+						<Row label="bodyBtmMargin" r={tenta.bodyBtmMargin()} />
 						<Row label="stageIndex" r={tenta.stageIndex} />
 						<TentaRow label="next" r={tenta.next()} />
-						<BoolRow indent label="bodyIsSeparated" r={tenta.next()?.bodyIsSeparated()} />
-						<Row indent label="stageIndex" r={tenta.next()?.stageIndex} />
+						<Row indent label="bodyTopMargin" r={tenta.next()?.bodyTopMargin()} />
+						<Row label="parentTailBtmMargin" r={tenta.parentTailBtmMargin()} />
+						<TentaRow indent label="parent" r={tenta.parent} />
+						<Row indent={2} label="tailBtmMargin" r={tenta.parent?.tailBtmMargin()} />
+						<Row indent={2} label="bodyBtmMargin" r={tenta.parent?.bodyBtmMargin()} />
+						<TentaRow indent label="parent2" r={tenta.parent?.parent} />
+						<Row indent={2} label="tailBtmMargin" r={tenta.parent?.parent?.tailBtmMargin()} />
+						<Row indent={2} label="bodyBtmMargin" r={tenta.parent?.parent?.bodyBtmMargin()} />
 					</tbody>
 				</Table>
 			</Div>
@@ -250,8 +255,8 @@ export module TentaDetails
 {
 
 
-	export let visible = true;
-	//export let visible = false;
+	export var visible = true;
+	//export var visible = false;
 
 
 

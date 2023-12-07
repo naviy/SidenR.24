@@ -36,7 +36,7 @@ export module SpaWaitingMask
 
 
 
-	export const waitingTimeoutMs = 300;
+	export var waitingTimeoutMs = 300;
 
 
 	export function isWaiting() { return _isWaiting; }
@@ -101,7 +101,7 @@ export module SpaWaitingMask
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 
 		'div',
 		{

@@ -15,7 +15,7 @@ import { $defaultAnimationDurationMs, $log, _$log, adelay } from "../core";
 
 
 
-export const FocuserContext = React.createContext<Focuser | null>(null);
+export var FocuserContext = React.createContext<Focuser | null>(null);
 
 
 
@@ -661,14 +661,14 @@ function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | n
 
 
 
-export const unfocus = (function unfocus()
+export var unfocus = (function unfocus()
 {
 	focuserFocus(null);
 });
 
 
 
-export const unfocusEvent = (function unfocusEvent(e: Event)
+export var unfocusEvent = (function unfocusEvent(e: Event)
 {
 	e?.stopPropagation();
 	focuserFocus(null);

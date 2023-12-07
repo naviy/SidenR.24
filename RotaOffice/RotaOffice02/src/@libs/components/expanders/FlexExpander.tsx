@@ -59,7 +59,7 @@ export module FlexExpander
 
 
 
-	export const Behavior = ExpanderBehavior;
+	export var Behavior = ExpanderBehavior;
 
 
 	export interface Props extends ExpanderProps, UseHookProps<Props> 
@@ -68,7 +68,7 @@ export module FlexExpander
 	}
 
 
-	export const propNames: PropNames<Props> =
+	export var propNames: PropNames<Props> =
 	{
 		l: true,
 		...ExpanderProps.propNames,
@@ -81,7 +81,7 @@ export module FlexExpander
 
 
 
-	export const Root = styled(
+	export var Root = styled(
 		Div,
 		{ shouldForwardProp: p => p !== "timeout", }
 	)<{

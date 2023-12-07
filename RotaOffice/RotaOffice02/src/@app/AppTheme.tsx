@@ -66,9 +66,9 @@ export module AppThemes
 
 
 
-	//export const lightTheme = createTheme();
+	//export var lightTheme = createTheme();
 
-	//export const darkTheme = createTheme({
+	//export var darkTheme = createTheme({
 	//	palette: {
 	//		mode: 'dark',
 	//		background: {
@@ -83,7 +83,7 @@ export module AppThemes
 	type AppThemesContext = Required<AppThemesProps>;
 
 
-	export const Context = createContext<AppThemesContext>({
+	export var Context = createContext<AppThemesContext>({
 		default: 'light',
 		navigation: 'dark',
 		lightTheme: createTheme(),

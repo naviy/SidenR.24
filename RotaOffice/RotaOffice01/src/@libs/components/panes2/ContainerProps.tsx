@@ -39,7 +39,7 @@ export module ContainerProps
 {
 
 
-	export const propNames_: Record<keyof ContainerProps, true> =
+	export var propNames_: Record<keyof ContainerProps, true> =
 	{
 
 		id: true,
@@ -59,7 +59,7 @@ export module ContainerProps
 
 
 
-	export const propNames = Object.keys(propNames_) as (keyof ContainerProps)[];
+	export var propNames = Object.keys(propNames_) as (keyof ContainerProps)[];
 
 
 

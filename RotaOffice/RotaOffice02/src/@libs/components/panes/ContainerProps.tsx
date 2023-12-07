@@ -72,7 +72,7 @@ export interface ContainerBaseProps extends Block.Props
 export module ContainerBaseProps
 {
 
-	export const propNames: PropNames<ContainerBaseProps> =
+	export var propNames: PropNames<ContainerBaseProps> =
 	{
 
 		id: true,
@@ -131,7 +131,7 @@ export module PaneBorder
 {
 
 
-	export const styles: Record<Exclude<PaneBorder, "">, { width: number, color: string, css?: string }> =
+	export var styles: Record<Exclude<PaneBorder, "">, { width: number, color: string, css?: string }> =
 	{
 		"xs": { width: 1, color: blueGrey[100] },
 		"sm": { width: 1, color: blueGrey[200] },

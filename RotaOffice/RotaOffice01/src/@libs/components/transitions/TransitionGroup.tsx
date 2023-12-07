@@ -6,7 +6,7 @@ import { TransitionGroup as TransitionGroup_ } from 'react-transition-group';
 
 
 
-export const TransitionGroup = styled(
+export var TransitionGroup = styled(
 	TransitionGroup_
 )({
 	position: "relative",

@@ -25,7 +25,7 @@ export module TentaStage
 
 
 
-	export const Default: TentaStage = "collapsed";
+	export var Default: TentaStage = "collapsed";
 
 
 
@@ -35,7 +35,7 @@ export module TentaStage
 
 
 
-	//export const Context = createContext<TentaStage | undefined>(undefined);
+	//export var Context = createContext<TentaStage | undefined>(undefined);
 
 
 

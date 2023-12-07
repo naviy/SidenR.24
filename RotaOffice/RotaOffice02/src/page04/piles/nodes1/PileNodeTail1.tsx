@@ -46,15 +46,19 @@ export function PileNodeTail1({
 				wrapperCls={clsx(indent && "pl36 pr12 pb24", colProps.wrapperCls)}
 				//border2 borderGreen
 			>
+
 				<Pile.Node.LinkLine.OptionsProvider width={indent ? 24 : 0}>
+
 					<Pile.CellIndentProvider addIndent={cellIndent && !indent ? 36 : 0}>
 						{children}
 					</Pile.CellIndentProvider>
 
 				</Pile.Node.LinkLine.OptionsProvider>
+
 			</Pane.Col>
 
 		</ErrorBoundary>
+
 	);
 
 }
