@@ -33,20 +33,22 @@ export function PileNode3(props: PileNode3Props & {
 export module PileNode3
 {
 
+
 	//---
+
 
 
 
 	export type Props = PileNode3Props;
 
 
+
+
 	export class Tenta extends PileNode1Tenta
 	{
 
-		override tailIsVisible()
-		{
-			return !this.collapsed;
-		}
+		//---
+
 
 		override bodyIsSeparated()
 		{
@@ -54,15 +56,31 @@ export module PileNode3
 			return parent ? parent.opened && this.opened : this.opened;
 		}
 
+		override tailIsVisible()
+		{
+			return !this.collapsed;
+		}
+
 		override tailIsSeparated()
 		{
 			return this.opened;
 		}
 
+		
+		//---
+		
+
+
+
+
+		//---
+
 	}
 
 
 
+
 	//---
+
 
 }

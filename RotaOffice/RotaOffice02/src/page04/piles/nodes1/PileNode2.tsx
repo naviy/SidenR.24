@@ -41,8 +41,6 @@ export function PileNode2({
 
 	let parts = rowProps.children;
 
-	let {opened } = tenta;
-
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
 	let tailIsVisible = tenta.tailIsVisible();
@@ -52,6 +50,9 @@ export function PileNode2({
 	//__$log("btmMargin:", btmMargin);
 	//___$log("next.bodyTopMargin:", tenta.next()?.bodyTopMargin());
 	//___$log("parentTailBtmMargin:", tenta.parentTailBtmMargin());
+
+
+	//let isLastest = !tenta.next();
 
 
 	return (
@@ -73,7 +74,9 @@ export function PileNode2({
 
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
-					<Pile.ListBackfill />
+					{/*<Pile.ListBackfill mb={!tenta.parent ? 0 : 24} />*/}
+					<Pile.ListBackfill mb={24} />
+
 
 					<Focuser
 						ref={tenta.ffRef}
@@ -94,6 +97,7 @@ export function PileNode2({
 							bt={topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
 							bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
 
+							//mb={btmMargin > 0 && tenta.next()? btmMargin * 12 as any: 0}
 							mb={btmMargin * 12 as any}
 
 							//e={topMargin === 2 && btmMargin >= 1 || topMargin >= 1 && btmMargin === 2 ? "L1" : topMargin === 1 && btmMargin === 1 ? "L2" : btmMargin === 1 ? "L3b" : btmMargin === 2 ? "L2b" : topMargin === 1 ? "L3t" : topMargin === 2 ? "L2t" : "0"}
@@ -161,7 +165,9 @@ export function PileNode2({
 export module PileNode2
 {
 
+
 	//---
+
 
 
 
@@ -169,14 +175,17 @@ export module PileNode2
 
 
 
+
 	export class Tenta extends PileNode1Tenta
 	{
+
+		//---
+
 
 		override bodyIsSeparated()
 		{
 			return !this.collapsed;
 		}
-
 
 		override tailIsVisible()
 		{
@@ -188,32 +197,36 @@ export module PileNode2
 			return this.opened;
 		}
 
+
+		//---
+
+
+
+		override onItemExpand(item: Tenta.Base)
+		{
+			if (item.opened)
+			{
+				this.setPhase(this.openedPhase);
+			}
+		}
+
+
+		override onItemCollapse()
+		{
+		//	if (this.allTentas(a => !a.opened))
+		//		this.setPhase(this.expandedPhase);
+		}
+
+
+
+		//---
+
 	}
 
-
-	//export var newTenta: Tenta.Descriptor["newTenta"] = (collector, props) =>
-	//{
-	//	return new PileNode1Tenta(collector, props)
-	//};
-
-
-
-	//export var getMargin: Tenta.Descriptor["getMargin"] = tenta =>
-	//{
-
-	//	let { stage } = tenta;
-
-	//	return (
-	//		stage === "opened" ? [24, 1] :
-	//			stage === "expanded" ? [12, 0] :
-	//				null
-	//	);
-
-	//};
 
 
 
 	//---
 
+
 }
-//let qqq: Tenta.Descriptor = PileNode2;

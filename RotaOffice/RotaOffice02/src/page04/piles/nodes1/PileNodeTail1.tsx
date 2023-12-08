@@ -49,7 +49,7 @@ export function PileNodeTail1({
 
 				<Pile.Node.LinkLine.OptionsProvider width={indent ? 24 : 0}>
 
-					<Pile.CellIndentProvider addIndent={cellIndent && !indent ? 36 : 0}>
+					<Pile.CellIndentProvider addIndent={cellIndent && !indent ? 24 : 0}>
 						{children}
 					</Pile.CellIndentProvider>
 

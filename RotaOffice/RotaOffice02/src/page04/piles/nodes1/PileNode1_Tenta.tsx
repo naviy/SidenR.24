@@ -100,7 +100,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 	//---
 
-	
+
 
 	toolsIsVisible = false;
 
@@ -124,14 +124,14 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 
 
+	//---
+
+
+
 	protected override async onRightKey()
 	{
 
-		if (await this.expand())
-			return;
-
-
-		if (this.parent && await this.parent.expand())
+		if (this.expand())
 			return;
 
 
@@ -149,21 +149,25 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	protected override async onRightClick()
+	protected override async onLeftClick()
 	{
 
 		if (!this.focused)
 		{
 			await this.focus();
+			return;
 		}
-		else if (await this.collapse())
-		{
-			await this.scrollIntoView();
-		}
-		else
-		{
-			await this.unfocus();
-		}
+
+
+		if (this.expand())
+			return;
+
+
+		if (await this.scrollIntoViewTop())
+			return;
+
+
+		await this.shake();
 
 	}
 
@@ -172,7 +176,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	override async onEnter()
 	{
 
-		if (await this.expand())
+		if (this.expand())
 		{
 			await this.scrollIntoViewTop();
 		}
@@ -193,7 +197,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	protected override  async onLeftKey()
 	{
 
-		if (await this.collapse())
+		if (this.collapse())
 		{
 			/*await*/ this.scrollIntoView();
 		}
@@ -206,25 +210,21 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	protected override async onLeftClick()
+	protected override async onRightClick()
 	{
 
 		if (!this.focused)
 		{
 			await this.focus();
-			return;
 		}
-
-
-		if (await this.expand())
-			return;
-
-
-		if (await this.scrollIntoViewTop())
-			return;
-
-
-		await this.shake();
+		else if (this.collapse())
+		{
+			await this.scrollIntoView();
+		}
+		else
+		{
+			await this.unfocus();
+		}
 
 	}
 
@@ -233,7 +233,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	override async onExit()
 	{
 
-		if (await this.collapse())
+		if (this.collapse())
 		{
 			await this.scrollIntoView();
 		}

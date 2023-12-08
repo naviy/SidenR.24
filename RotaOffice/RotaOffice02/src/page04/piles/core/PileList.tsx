@@ -18,17 +18,18 @@ export var PileListBackfill = styled(
 	"div",
 	{
 		name: 'pile-listbackfill',
-		shouldForwardProp: p => p !== "visible"
+		shouldForwardProp: p => p !== "visible" && p !== "mb"
 	}
 )<{
 
 	visible?: boolean;
+	mb?: number;
 
 }>((props) => ({
 
 	position: "absolute",
 	inset: 0,
-	bottom: 24,
+	bottom: props.mb,
 
 	borderRadius: 12,
 	border: `2px dotted ${blueGrey[200]}`,
