@@ -367,7 +367,7 @@ export var Root = styled(
 	return {
 
 		position: "relative",
-		boxSizing: "border-box",
+		boxSizing: "content-box",
 
 		flex: props.flex,
 

@@ -31,6 +31,7 @@ export var PileListBackfill = styled(
 	inset: 0,
 	bottom: props.mb,
 
+	minHeight: 24,
 	borderRadius: 12,
 	border: `2px dotted ${blueGrey[200]}`,
 
@@ -39,7 +40,7 @@ export var PileListBackfill = styled(
 
 	opacity: props.visible !== false ? 1 : 0,
 
-	transition: `opacity ${$defaultAnimationDurationMs}ms linear`,
+	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out, opacity ${$defaultAnimationDurationMs}ms linear`,
 
 }));
 

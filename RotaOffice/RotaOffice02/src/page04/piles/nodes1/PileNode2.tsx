@@ -75,7 +75,7 @@ export function PileNode2({
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
 					{/*<Pile.ListBackfill mb={!tenta.parent ? 0 : 24} />*/}
-					<Pile.ListBackfill mb={24} />
+					<Pile.ListBackfill mb={tailIsVisible ? 24 : 48} />
 
 
 					<Focuser
@@ -122,27 +122,34 @@ export function PileNode2({
 
 					{parts[1] !== undefined &&
 
-						<Focuser ref={tenta.itemsFfRef} ghost>
+						<Div
+							animated
+						>
 
-							<PileNodeTail1
-								//debug
-								//id={"tail3 of " + tenta}
-								start={tailIsSeparated}
-								expanded={tailIsVisible}
-								indent={tailIsSeparated}
-								rt={tailIsSeparated ? "lg" : undefined}
-								rb={tailIsSeparated ? "lg" : undefined}
-								bt={tailIsSeparated ? "md" : undefined}
-								bb={tailIsSeparated ? "md" : undefined}
-								cellIndent
+							{parts[1] &&
+								<Focuser ref={tenta.itemsFfRef} ghost>
 
-								mt={!tailIsVisible ? 0 : btmMargin * 12 as any}
-								mb={tailIsVisible ? 0 : btmMargin * 12 as any}
+									<PileNodeTail1
+										//debug
+										//id={"tail3 of " + tenta}
+										start={tailIsSeparated}
+										expanded={tailIsVisible}
+										indent={tailIsSeparated}
+										rt={tailIsSeparated ? "lg" : undefined}
+										rb={tailIsSeparated ? "lg" : undefined}
+										bt={tailIsSeparated ? "md" : undefined}
+										bb={tailIsSeparated ? "md" : undefined}
+										cellIndent
+										pt={!tailIsVisible || !parts[1] ? 0 : btmMargin * 12 as any}
+										mb={(tailIsVisible ? 0 : btmMargin * 12) + (tailIsSeparated ? 24 : 0) as any}
+										children={parts[1]}
+									/>
 
-								children={parts[1]}
-							/>
+								</Focuser>
+							}
 
-						</Focuser>
+						</Div>
+
 					}
 
 

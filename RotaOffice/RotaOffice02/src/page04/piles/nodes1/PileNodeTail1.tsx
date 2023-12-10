@@ -43,7 +43,7 @@ export function PileNodeTail1({
 				start end
 				noreexpand
 				{...colProps}
-				wrapperCls={clsx(indent && "pl36 pr12 pb24", colProps.wrapperCls)}
+				wrapperCls={clsx(indent && "pl36 pr12", colProps.wrapperCls)}
 				//border2 borderGreen
 			>
 

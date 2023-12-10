@@ -118,6 +118,7 @@ export module PileNodeLinkLine
 
 
 			"> .angle": {
+
 				position: "absolute",
 				left: 0,
 				right: 0,
@@ -128,9 +129,11 @@ export module PileNodeLinkLine
 				borderTopWidth: 0,
 				borderRightWidth: 0,
 				borderBottomLeftRadius: 12,
+
 			},
 
 			"> .line-to-parent": {
+
 				position: "absolute",
 				left: 0,
 				right: 0,
@@ -138,13 +141,16 @@ export module PileNodeLinkLine
 				height: width ? 24 : 0,
 				borderLeft: `${thickness || 2}px solid ${color}`,
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+
 			},
 
 			"> .line-to-next": {
+
 				position: "absolute",
 				inset: 0,
 				borderLeft: `${thickness || 2}px solid ${color}`,
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+
 			},
 
 		};
