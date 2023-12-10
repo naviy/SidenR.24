@@ -112,6 +112,7 @@ export module PileNodeLinkLine
 			bottom: 0,
 			width,
 			opacity: width ? 1 : 0,
+			zIndex: 0,
 
 			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
@@ -133,15 +134,17 @@ export module PileNodeLinkLine
 				position: "absolute",
 				left: 0,
 				right: 0,
-				top: -24,
-				height: 24,
+				top: width ? -24 : 0,
+				height: width ? 24 : 0,
 				borderLeft: `${thickness || 2}px solid ${color}`,
+				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 			},
 
 			"> .line-to-next": {
 				position: "absolute",
 				inset: 0,
 				borderLeft: `${thickness || 2}px solid ${color}`,
+				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 			},
 
 		};
