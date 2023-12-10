@@ -746,7 +746,7 @@ export class TentaBase extends Repaintable()
 
 	last(): TentaBase | null
 	{
-		return this.lastCollector()?.last() || null;
+		return this.lastCollector()?.last()?.lastOrMe() || null;
 	}
 
 	lastOrMe(): TentaBase | null

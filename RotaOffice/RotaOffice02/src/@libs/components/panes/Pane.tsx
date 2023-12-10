@@ -72,6 +72,7 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	}
 
 
+
 	body = createPrimitive(
 		Root as any,
 		{
@@ -90,10 +91,12 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	);
 
 
-	body = <ContainerInfo_.Context.Provider
-		value={null}
-		children={body}
-	/>;
+
+	body = (
+		<ContainerInfo_.Context.Provider value={null}>
+			{body}
+		</ContainerInfo_.Context.Provider>
+	);
 
 
 	return body;
@@ -260,16 +263,8 @@ export var Root = styled(
 
 		background: props.theme.palette.background.paper,
 		//background: Pane.BgColor(props.theme, props.bgcolor),
+
 		borderRadius: props.r,
-		//borderWidth: props.borderWidth,
-
-		borderTop: props.bt || defaultBorder,
-		borderRight: props.br || defaultBorder,
-		borderBottom: props.bb || defaultBorder,
-		borderLeft: props.bl || defaultBorder,
-
-		//border: `${ppColor} solid 0px`,
-		//borderWidth: `${props.ppt || 0}px ${props.ppr || 0}px ${props.ppb || 0}px ${props.ppl || 0}px`,
 
 		boxSizing: 'border-box',
 
@@ -289,6 +284,21 @@ export var Root = styled(
 
 		"> *": {
 			userSelect: "text",
+		},
+
+		"&::before": {
+
+			position: "absolute",
+			inset: 0,
+			content: '""',
+
+			borderRadius: "inherit",
+			//border: "0px solid transparent",
+			borderTop: props.bt || defaultBorder,
+			borderRight: props.br || defaultBorder,
+			borderBottom: props.bb || defaultBorder,
+			borderLeft: props.bl || defaultBorder,
+			transition: `all ${$defaultAnimationDurationMs}ms linear`,
 		},
 
 	};

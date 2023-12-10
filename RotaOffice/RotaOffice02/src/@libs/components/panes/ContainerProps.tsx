@@ -135,6 +135,7 @@ export module PaneBorder
 	{
 		"xs": { width: 1, color: blueGrey[100] },
 		"sm": { width: 1, color: blueGrey[200] },
+		//"sm": { width: 1, color: "red" },
 		"md": { width: 2, color: blueGrey[200] },
 		"lg": { width: 2, color: blueGrey[400] },
 		"xl": { width: 2, color: blueGrey[500] },
