@@ -131,7 +131,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	protected override async onRightKey()
 	{
 
-		if (this.expand())
+		if (this.decompress())
 			return;
 
 
@@ -159,7 +159,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 		}
 
 
-		if (this.expand())
+		if (this.decompress())
 			return;
 
 
@@ -176,7 +176,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	override async onEnter()
 	{
 
-		if (this.expand())
+		if (this.decompress())
 		{
 			await this.scrollIntoViewTop();
 		}
@@ -197,7 +197,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	protected override  async onLeftKey()
 	{
 
-		if (this.collapse())
+		if (this.compress())
 		{
 			/*await*/ this.scrollIntoView();
 		}
@@ -217,7 +217,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 		{
 			await this.focus();
 		}
-		else if (this.collapse())
+		else if (this.compress())
 		{
 			await this.scrollIntoView();
 		}
@@ -233,7 +233,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 	override async onExit()
 	{
 
-		if (this.collapse())
+		if (this.compress())
 		{
 			await this.scrollIntoView();
 		}

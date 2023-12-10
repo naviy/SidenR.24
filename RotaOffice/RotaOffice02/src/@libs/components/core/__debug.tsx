@@ -1,1 +1,1 @@
-export var $defaultAnimationDurationMs = 1 * 150;
+export var $defaultAnimationDurationMs = 10 * 150;

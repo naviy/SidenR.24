@@ -182,6 +182,7 @@ export module PileNode2
 		//---
 
 
+
 		override bodyIsSeparated()
 		{
 			return !this.collapsed;
@@ -198,23 +199,61 @@ export module PileNode2
 		}
 
 
+
 		//---
 
 
 
-		override onItemExpand(item: Tenta.Base)
+		override onItemDecompressed(item: Tenta.Base)
 		{
+
 			if (item.opened)
 			{
-				this.setPhase(this.openedPhase);
+				this.open();
 			}
+
 		}
 
 
-		override onItemCollapse()
+		override onDecompressed()
 		{
-		//	if (this.allTentas(a => !a.opened))
-		//		this.setPhase(this.expandedPhase);
+
+			if (this.opened)
+			{
+				this.forEachTenta(a =>
+					a.expanded && a.open()
+				);
+			}
+
+		}
+
+
+
+		override onItemCompressed(item: Tenta.Base)
+		{
+
+			if (!item.collapsed)
+			{
+				this.expand();
+
+				this.forEachTenta(a =>
+					a.opened && a.expand()
+				);
+			}
+
+		}
+
+
+		override onCompressed()
+		{
+
+			if (this.expanded)
+			{
+				this.forEachTenta(a =>
+					a.opened && a.expand()
+				);
+			}
+
 		}
 
 

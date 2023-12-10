@@ -1,9 +1,9 @@
-import { $log, GlobalState, Repaintable, _$log, __$log, ___$log } from '@libs';
+import { GlobalState, Repaintable, } from '@libs';
 import type React from "react";
+import { startTransition, type ReactNode } from "react";
 import { TentaCollector } from "./TentaCollector";
 import type { TentaPhase } from "./TentaPhase";
 import { TentaStage } from "./TentaStage";
-import { startTransition, type ReactNode } from "react";
 
 
 
@@ -202,8 +202,8 @@ export class TentaBase extends Repaintable()
 	}
 
 
-	canCollapse() { return this.phase > 0; }
-	canExpand() { return this.phase < this.maxPhase; }
+	canCompress() { return this.phase > 0; }
+	canDecompress() { return this.phase < this.maxPhase; }
 
 
 
@@ -282,6 +282,26 @@ export class TentaBase extends Repaintable()
 
 
 
+	initPhase(cfg?: {
+		readonly maxPhase?: TentaPhase;
+		readonly defaultPhase?: TentaPhase;
+		readonly defaultStage?: TentaStage;
+	})
+	{
+
+		if (cfg?.maxPhase != null)
+		{
+			this.maxPhase = cfg.maxPhase;
+			this.openedPhase = Math.min(this.openedPhase, this.maxPhase);
+			this.expandedPhase = Math.min(this.expandedPhase, this.openedPhase);
+		}
+
+
+		this.ensurePhase(cfg);
+	}
+
+
+
 	ensurePhase(cfg?: {
 		readonly defaultPhase?: TentaPhase;
 		readonly defaultStage?: TentaStage;
@@ -313,30 +333,6 @@ export class TentaBase extends Repaintable()
 
 
 
-	initPhase(cfg?: {
-		readonly maxPhase?: TentaPhase;
-		readonly defaultPhase?: TentaPhase;
-		readonly defaultStage?: TentaStage;
-	})
-	{
-
-		if (cfg?.maxPhase != null)
-		{
-			this.maxPhase = cfg.maxPhase;
-
-			if (this.expandedPhase > this.expandedPhase)
-				this.expandedPhase = this.expandedPhase;
-
-			if (this.openedPhase > this.maxPhase)
-				this.openedPhase = this.maxPhase;
-		}
-
-
-		this.ensurePhase(cfg);
-	}
-
-
-
 	//---
 
 
@@ -346,20 +342,29 @@ export class TentaBase extends Repaintable()
 		//$log("setPhase " + this, " phase =", value)
 
 
-		let { phase } = this;
-
-
-		if (phase === value || this.disabled)
+		if (this.#phase === value || this.disabled)
 			return false;
 
 		if (value == null || value < 0 || value > this.maxPhase)
 			return false;
 
 
-		this.priorPhase = this.phase;
+		this.priorPhase = this.#phase || 0;
 		this.#phase = value;
 
 		this.phaseChanged();
+
+
+		if (this.priorPhase < this.#phase)
+		{
+			this.onDecompressed();
+			this.parent?.onItemDecompressed(this);
+		}
+		else
+		{
+			this.onCompressed();
+			this.parent?.onItemCompressed(this);
+		}
 
 
 		return true;
@@ -413,7 +418,11 @@ export class TentaBase extends Repaintable()
 
 
 
-	findPriorPhase(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
+	//phaseIsSkipped(phase: TentaPhase)
+
+
+
+	findPriorPhase(phaseIsSkipped?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
 	{
 
 		let { phase } = this;
@@ -430,7 +439,7 @@ export class TentaBase extends Repaintable()
 			phase--;
 		}
 		while (
-			phase >= 0 && canSkipPhase?.(phase, this)
+			phase >= 0 && phaseIsSkipped?.(phase, this)
 		)
 
 
@@ -440,7 +449,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	findNextPhase(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
+	findNextPhase(phaseIsSkipped?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
 	{
 
 		let { phase, maxPhase } = this;
@@ -457,7 +466,7 @@ export class TentaBase extends Repaintable()
 			phase++;
 		}
 		while (
-			phase <= maxPhase && canSkipPhase?.(phase, this)
+			phase <= maxPhase && phaseIsSkipped?.(phase, this)
 		)
 
 
@@ -467,42 +476,42 @@ export class TentaBase extends Repaintable()
 
 
 
-	collapse(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
+	compress(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
 	{
-
-		if (!this.setPhase(this.findPriorPhase(canSkipPhase)))
-		{
-			return false;
-		}
-
-
-		this.parent?.onItemCollapse(this);
-
-		return true;
-
+		return this.setPhase(this.findPriorPhase(canSkipPhase));
 	}
 
-
-	expand(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
+	decompress(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
 	{
-
-		if (!this.setPhase(this.findNextPhase(canSkipPhase)))
-		{
-			return false;
-		}
-
-
-		this.parent?.onItemExpand(this);
-
-		return true;
-
+		return this.setPhase(this.findNextPhase(canSkipPhase));
 	}
 
 
 
-	onItemExpand(item: TentaBase) { }
+	onDecompressed() { }
+	onCompressed() { }
 
-	onItemCollapse(item: TentaBase) { }
+	onItemDecompressed(item: TentaBase) { }
+	onItemCompressed(item: TentaBase) { }
+
+
+
+	collapse()
+	{
+		return this.setPhase(0);
+	}
+
+
+	expand()
+	{
+		return this.setPhase(this.expandedPhase);
+	}
+
+
+	open()
+	{
+		return this.setPhase(this.openedPhase);
+	}
 
 
 
@@ -517,16 +526,21 @@ export class TentaBase extends Repaintable()
 
 
 
-	anyTentas(match: (tenta: TentaBase) => boolean)
+	forEachTenta(action: (tenta: TentaBase) => void)
+	{
+		return !!this.collectors?.forEach(col => col.tentas?.forEach(action));
+	}
+
+
+	anyTenta(match: (tenta: TentaBase) => boolean)
 	{
 		return !!this.collectors?.find(col => col.tentas?.find(match));
 	}
 
 
-
 	allTentas(match: (tenta: TentaBase) => boolean)
 	{
-		return !this.anyTentas(a => !match(a));
+		return !this.anyTenta(a => !match(a));
 	}
 
 
@@ -626,21 +640,34 @@ export class TentaBase extends Repaintable()
 			return 0;
 
 
-		if (!(this.isLast && (!this.tailIsVisible() || this.tailIsSeparated())))
+		if (!this.isLast || this.tailIsVisible() && !this.tailIsSeparated())
 		{
 			return 0;
 		}
 
 
-		let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
+		return getParentTailBtmMargin(parent);
 
-		if (margin < TentaStage.MaxIndex)
+
+		function getParentTailBtmMargin(parent: TentaBase | null): number
 		{
-			margin = Math.max(margin, parent.parentTailBtmMargin() || 0);
+
+			if (!parent)
+				return 0;
+
+
+			let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
+
+			if (margin < TentaStage.MaxIndex)
+			{
+				let parentMargin = getParentTailBtmMargin(parent.parent);
+				margin = Math.max(margin, parentMargin);
+			}
+
+
+			return margin;
+
 		}
-
-
-		return margin;
 
 	}
 

@@ -1,7 +1,7 @@
-import { $log, Div, Pane, Span, Table, Th, VR, ___$log } from "@libs";
+import { $log, Div, Pane, Span, Table, Th, VR } from "@libs";
 import Link from "@mui/material/Link";
 import type { ReactNode } from "react";
-import { isTenta, type TentaBase } from "./TentaBase";
+import { type TentaBase } from "./TentaBase";
 import type { TentaCollector } from "./TentaCollector";
 
 
@@ -19,7 +19,9 @@ import type { TentaCollector } from "./TentaCollector";
 export function TentaDetails({ tenta }: { tenta: TentaBase })
 {
 
-	___$log("TentaDetails " + tenta)
+	//___$log("TentaDetails " + tenta)
+
+	//let ppp = tenta.parentTailBtmMargin();
 
 	return (
 
@@ -70,11 +72,13 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 						<Row indent label="bodyTopMargin" r={tenta.next()?.bodyTopMargin()} />
 						<Row label="parentTailBtmMargin" r={tenta.parentTailBtmMargin()} />
 						<TentaRow indent label="parent" r={tenta.parent} />
-						<Row indent={2} label="tailBtmMargin" r={tenta.parent?.tailBtmMargin()} />
-						<Row indent={2} label="bodyBtmMargin" r={tenta.parent?.bodyBtmMargin()} />
+						<Row indent={2} label="parentTailBtmMargin" r={tenta.parent?.parentTailBtmMargin()} />
+						<Row indent={3} label="tailBtmMargin" r={tenta.parent?.tailBtmMargin()} />
+						<Row indent={3} label="bodyBtmMargin" r={tenta.parent?.bodyBtmMargin()} />
 						<TentaRow indent label="parent2" r={tenta.parent?.parent} />
-						<Row indent={2} label="tailBtmMargin" r={tenta.parent?.parent?.tailBtmMargin()} />
-						<Row indent={2} label="bodyBtmMargin" r={tenta.parent?.parent?.bodyBtmMargin()} />
+						<Row indent={2} label="parentTailBtmMargin" r={tenta.parent?.parent?.parentTailBtmMargin()} />
+						<Row indent={3} label="tailBtmMargin" r={tenta.parent?.parent?.tailBtmMargin()} />
+						<Row indent={3} label="bodyBtmMargin" r={tenta.parent?.parent?.bodyBtmMargin()} />
 					</tbody>
 				</Table>
 			</Div>

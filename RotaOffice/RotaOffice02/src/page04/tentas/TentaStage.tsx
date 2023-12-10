@@ -130,7 +130,7 @@ export module TentaStage
 
 	export function byProps(props: Readonly<Props>): TentaStage
 	{
-		return props.opened ? "opened" : props.expanded ? "expanded" : "collapsed";
+		return props.opened ? "opened" : props.collapsed ? "collapsed" : "expanded";
 	}
 
 
