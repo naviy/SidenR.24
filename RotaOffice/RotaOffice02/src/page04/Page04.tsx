@@ -38,6 +38,8 @@ export module Page04
 
 		return <>
 
+			<Pile.GlobalStyles />
+
 			<GlobalState name="page03">
 				<Div mx200 m100>
 					<Rows05Pile />
