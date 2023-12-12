@@ -194,7 +194,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	protected override  async onLeftKey()
+	override  async onLeftKey()
 	{
 
 		if (this.phaseUp())
@@ -210,7 +210,7 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	protected override async onRightClick()
+	override async onRightClick()
 	{
 
 		if (!this.focused)
@@ -242,6 +242,32 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 			await this.unfocus();
 		}
 
+	}
+
+
+
+	//---
+
+
+
+	override async onCtrlLeftKey()
+	{
+		await this.parent?.focus();
+	}
+
+	override async onCtrlRightKey()
+	{
+		await this.onRightKey();
+	}
+
+	override async onCtrlUpKey()
+	{
+		await (this.priorSibling() || this.parent)?.focus();
+	}
+
+	override async onCtrlDownKey()
+	{
+		await (this.nextSibling() || this.next())?.focus();
 	}
 
 

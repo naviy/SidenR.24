@@ -54,7 +54,7 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 
 
 
-		async focus(): Promise<Focuser | null>
+		override async focus(): Promise<Focuser | null>
 		{
 			return this.ff && await this.ff.focusIfCan();
 		}
@@ -85,16 +85,22 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 
 
 
-		protected onLeftClick?(): Promise<void | boolean>;
-		protected onRightClick?(): Promise<void | boolean>;
+		protected onLeftClick?(): Promise<void | boolean> | void;
+		protected onRightClick?(): Promise<void | boolean> | void;
 
-		protected async onEnter?(): Promise<void | boolean>;
-		protected async onExit?(): Promise<void | boolean>;
+		protected onEnter?(): Promise<void | boolean> | void;
+		protected onExit?(): Promise<void | boolean> | void;
 
-		protected onLeftKey?(): Promise<void | boolean>;
-		protected onRightKey?(): Promise<void | boolean>;
+		protected onLeftKey?(): Promise<void | boolean> | void;
+		protected onRightKey?(): Promise<void | boolean> | void;
 
-		protected onSpaceKey?(): Promise<void | boolean>;
+		protected onSpaceKey?(): Promise<void | boolean> | void;
+
+
+		protected onCtrlLeftKey?(): Promise<void | boolean> | void;
+		protected onCtrlRightKey?(): Promise<void | boolean> | void;
+		protected onCtrlUpKey?(): Promise<void | boolean> | void;
+		protected onCtrlDownKey?(): Promise<void | boolean> | void;
 
 
 
@@ -205,8 +211,44 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 				return true;
 
 
-			if (e.ctrlKey || e.altKey || e.shiftKey)
+			if (e.altKey || e.shiftKey)
 				return false;
+
+
+			if (e.ctrlKey)
+			{
+
+				if (e.key === Keys.ArrowLeft && this.onCtrlLeftKey && await this.onCtrlLeftKey() !== false)
+				{
+					e.stopPropagation();
+					return true;
+				}
+
+
+				if (e.key === Keys.ArrowRight && this.onCtrlRightKey && await this.onCtrlRightKey() !== false)
+				{
+					e.stopPropagation();
+					return true;
+				}
+
+
+				if (e.key === Keys.ArrowUp && this.onCtrlUpKey && await this.onCtrlUpKey() !== false)
+				{
+					e.stopPropagation();
+					return true;
+				}
+
+
+				if (e.key === Keys.ArrowDown && this.onCtrlDownKey && await this.onCtrlDownKey() !== false)
+				{
+					e.stopPropagation();
+					return true;
+				}
+
+
+				return false;
+
+			}
 
 
 			//if (e.key === Keys.Delete)

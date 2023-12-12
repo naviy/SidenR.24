@@ -3,6 +3,7 @@ import { styled } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
 import { Tenta } from "../../tentas";
 import { createContext, useContext, type ReactNode } from "react";
+import { clsx } from "clsx";
 
 
 
@@ -34,18 +35,24 @@ export function PileNodeLinkLine(props: {
 	}
 
 
-	//visible ??= !tenta.placeholder?.collector.root;
+	//width = Math.max(0, width - 4);
 
 
 	return (
 
-		<PileNodeLinkLine.Root width={Math.max(0, width - 4)}>
+		<div
+			className={clsx("pile-node-linkline", width && "visible")}
+			style={{
+				"--width": width,
+				//...thickness
+			} as any}
+		>
 
 			{(props.lineToParent ?? tenta.isFirst) && <div className="line-to-parent" />}
 			<div className="angle" />
 			{(props.lineToNext ?? !tenta.isLast) && <div className="line-to-next" />}
 
-		</PileNodeLinkLine.Root>
+		</div>
 
 	);
 
@@ -90,28 +97,18 @@ export module PileNodeLinkLine
 
 
 
-	export var Root = styled(
-		"div",
-		{ shouldForwardProp: p => p !== "width" && p !== "thickness" }
-	)<{
+	var color = blueGrey[300];
 
-		width: number;
-		thickness?: number;
+	export var globalStyles = {
 
-	}>(({ width, thickness }) =>
-	{
-
-		var color = blueGrey[300];
-
-
-		return {
+		".pile-node-linkline": {
 
 			position: "absolute",
-			left: -width,
+			left: "calc(var(--width) * -1px)",
 			top: 0,
 			bottom: 0,
-			width,
-			opacity: width ? 1 : 0,
+			width: "calc(var(--width) * 1px)",
+			opacity: 0,
 			zIndex: 0,
 
 			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
@@ -125,7 +122,7 @@ export module PileNodeLinkLine
 				top: 0,
 				height: 24,
 
-				border: `${thickness || 2}px solid ${color}`,
+				border: `calc(var(--thickness, 2) * 1px) solid ${color}`,
 				borderTopWidth: 0,
 				borderRightWidth: 0,
 				borderBottomLeftRadius: 9,
@@ -137,11 +134,8 @@ export module PileNodeLinkLine
 			"> .line-to-parent": {
 
 				position: "absolute",
-				left: 0,
-				right: 0,
-				top: width ? -24 : 0,
-				height: width ? 24 : 0,
-				borderLeft: `${thickness || 2}px solid ${color}`,
+				inset: 0,
+				borderLeft: `calc(var(--thickness, 2) * 1px) solid ${color}`,
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
 			},
@@ -150,14 +144,26 @@ export module PileNodeLinkLine
 
 				position: "absolute",
 				inset: 0,
-				borderLeft: `${thickness || 2}px solid ${color}`,
+				borderLeft: `calc(var(--thickness, 2) * 1px) solid ${color}`,
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
 			},
 
-		};
 
-	});
+			"&.visible": {
+
+				opacity: 1,
+
+				"> .line-to-parent": {
+					top: -24,
+					height: 24,
+				},
+
+			},
+
+		},
+
+	};
 
 
 

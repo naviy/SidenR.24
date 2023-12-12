@@ -13,21 +13,21 @@ import { blueGrey } from "@mui/material/colors";
 
 
 
-export function PileBackfill({ mb }: { mb?: number })
+export function PileNodeBackfill({ mb }: { mb?: number })
 {
 	return <div
-		className="pile-backfill"
+		className="pile-node-backfill"
 		style={mb !== undefined ? ({ "--mb": mb }) as any : undefined}
 	/>;
 }
 
 
-export module PileBackfill
+export module PileNodeBackfill
 {
 
 	export var globalStyles = {
 
-		".pile-backfill": {
+		".pile-node-backfill": {
 
 			position: "absolute",
 			inset: 0,

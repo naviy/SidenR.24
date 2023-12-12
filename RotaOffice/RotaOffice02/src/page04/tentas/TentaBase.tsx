@@ -847,6 +847,14 @@ export class TentaBase extends Repaintable()
 
 
 
+	focus() { }
+
+
+
+	//---
+
+
+
 	globalState?: TentaGlobalState;
 
 

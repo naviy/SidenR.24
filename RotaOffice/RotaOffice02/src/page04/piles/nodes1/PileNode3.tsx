@@ -73,6 +73,19 @@ export module PileNode3
 
 
 
+		override onPhaseDown()
+		{
+
+			//_$log("onPhaseDown " + this)
+
+			this.expanded && this.forEachTenta(a =>
+				a.collapse()// || a.repaintNearests()
+			);
+
+		}
+
+
+
 		override onItemPhaseUp(item: TentaBase)
 		{
 			//_$log(this + ".onItemPhaseUp " + item)
