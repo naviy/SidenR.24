@@ -1,4 +1,3 @@
-import { _$log, __$log } from "../../../@libs";
 import type { TentaBase } from "../../tentas/TentaBase";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNode2, type PileNode2Props } from "./PileNode2";
@@ -52,20 +51,6 @@ export module PileNode3
 		//---
 
 
-		constructor(id: React.Key)
-		{
-			super(id);
-
-			//this.initPhase({ maxPhase: 1 })
-
-		}
-
-
-
-		//---
-
-
-
 		override bodyIsSeparated()
 		{
 			let { parent } = this;
@@ -88,39 +73,9 @@ export module PileNode3
 
 
 
-		//override decompress()
-		//{
-		//	return super.decompress((phase) =>
-		//		/*!!this.parent?.opened &&*/ phase === this.expandedPhase
-		//	);
-		//}
-
-
-		//override onPhaseUp()
-		//{
-		//	//this.parent?.open();
-		//}
-
-
-
-		//override compress()
-		//{
-		//	return super.compress((phase) =>
-		//		/*!!this.parent?.opened &&*/ phase === this.expandedPhase
-		//	);
-
-		//}
-
-
-		//override onCompressed()
-		//{
-		//	this.parent?.expand();
-		//}
-
-
 		override onItemPhaseUp(item: TentaBase)
 		{
-			_$log(this + ".onItemPhaseUp " + item)
+			//_$log(this + ".onItemPhaseUp " + item)
 
 			if (!item.collapsed && this.anyTenta(a => !a.collapsed))
 			{
@@ -134,13 +89,11 @@ export module PileNode3
 
 			if (item.collapsed && this.allTentas(a => a.collapsed))
 			{
-				//this.focus();
 				this.expand();
 			}
 
 		}
-
-
+		
 
 
 		//---

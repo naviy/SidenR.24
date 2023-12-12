@@ -1,9 +1,9 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, Focuser, Pane, _$log, __$log, ___$log } from '@libs';
+import { Div, Focuser, Pane } from '@libs';
+import { Tenta } from "../../tentas";
 import { Pile } from "../core";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
-import { Tenta } from "../../tentas";
 
 
 
@@ -37,7 +37,7 @@ export function PileNode2({
 })
 {
 
-	_$log("PileNode for " + tenta)
+	//_$log("PileNode for " + tenta)
 
 	tenta.use();
 
@@ -197,7 +197,7 @@ export module PileNode2
 		override onPhaseUp()
 		{
 
-			_$log("onPhaseUp " + this)
+			//_$log("onPhaseUp " + this)
 
 			this.forEachTenta(a =>
 				this.collapsed && a.open() || a.repaintNearests()
@@ -209,7 +209,7 @@ export module PileNode2
 		override onPhaseDown()
 		{
 
-			_$log("onPhaseDown " + this)
+			//_$log("onPhaseDown " + this)
 
 			this.forEachTenta(a =>
 				!this.opened && a.collapse() || a.repaintNearests()
@@ -222,7 +222,7 @@ export module PileNode2
 		override onItemPhaseUp(item: Tenta.Base)
 		{
 
-			_$log("onItemPhaseUp " + this)
+			//_$log("onItemPhaseUp " + this)
 
 			if (item.opened)
 			{
@@ -239,7 +239,7 @@ export module PileNode2
 		override onItemPhaseDown(item: Tenta.Base)
 		{
 
-			_$log("onItemPhaseDown " + this)
+			//_$log("onItemPhaseDown " + this)
 
 			if (item.collapsed && this.allTentas(a => a.collapsed))
 			{

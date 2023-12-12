@@ -1,6 +1,6 @@
-import { $log, GlobalState, Repaintable, _$log, __$log, ___$log, } from '@libs';
+import { GlobalState, Repaintable } from '@libs';
 import type React from "react";
-import { startTransition, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { TentaCollector } from "./TentaCollector";
 import type { TentaPhase } from "./TentaPhase";
 import { TentaStage } from "./TentaStage";
@@ -339,7 +339,7 @@ export class TentaBase extends Repaintable()
 
 	setPhase(value: TentaPhase): boolean
 	{
-		$log("setPhase " + this, " phase =", value)
+		//$log("setPhase " + this, " phase =", value)
 
 
 		if (this.#phase === value || this.disabled)
@@ -375,7 +375,7 @@ export class TentaBase extends Repaintable()
 
 	protected onPhaseChanged()
 	{
-		_$log("onPhaseChanged " + this);
+		//_$log("onPhaseChanged " + this);
 		//this.onPhaseChanged?.(this);
 
 
@@ -391,15 +391,15 @@ export class TentaBase extends Repaintable()
 
 	repaintNearests()
 	{
-		__$log("repaintNearests " + this)
+		//__$log("repaintNearests " + this)
 
 
 		let nearests = new Set<TentaBase | null | undefined>([
 			this.#priorSibling,
 			this.prior(),
 			this,
-			//this.first(),
-			//this.last(),
+			this.first(),
+			this.last(),
 			//...this.all() || [],
 			this.#nextSibling,
 			this.next(),
@@ -410,7 +410,7 @@ export class TentaBase extends Repaintable()
 		//{
 		nearests.forEach(a =>
 		{
-			___$log("repaint " + a)
+			//___$log("repaint " + a)
 			a?.repaint()
 		});
 		//});
