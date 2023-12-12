@@ -101,7 +101,7 @@ export module PileNodeLinkLine
 	}>(({ width, thickness }) =>
 	{
 
-		let color = blueGrey[400];
+		var color = blueGrey[300];
 
 
 		return {
@@ -128,7 +128,9 @@ export module PileNodeLinkLine
 				border: `${thickness || 2}px solid ${color}`,
 				borderTopWidth: 0,
 				borderRightWidth: 0,
-				borderBottomLeftRadius: 12,
+				borderBottomLeftRadius: 9,
+
+				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
 			},
 

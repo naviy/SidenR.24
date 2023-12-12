@@ -6,7 +6,9 @@ import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, crea
 import { Expander, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
-import { ContainerBaseProps, PaneBorder, PaneRadius, type ContainerLayout } from "./ContainerProps";
+import { ContainerBaseProps, type ContainerLayout } from "./ContainerProps";
+import { PaneRadius } from "./PaneRadius";
+import { PaneBorder } from "./PaneBorder";
 
 
 

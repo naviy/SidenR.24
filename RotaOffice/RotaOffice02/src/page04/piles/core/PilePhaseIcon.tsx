@@ -1,8 +1,8 @@
 import { $defaultAnimationDurationMs } from '@libs';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { styled } from "@mui/material/styles";
-import { createContext, useContext, type ReactNode } from "react";
 import { Tenta } from "../../tentas";
+import { usePileCellIndent } from "./PileCellIndent";
 
 
 
@@ -11,58 +11,6 @@ import { Tenta } from "../../tentas";
 
 //===
 
-
-
-
-
-const IndentContext = createContext(0);
-
-
-
-export function useCellIndent()
-{
-	return useContext(IndentContext);
-}
-
-
-
-export function CellIndentProvider(
-	props: ({
-		indent: number;
-		addIndent?: never;
-	} | {
-		indent?: never;
-		addIndent: number;
-	}) & {
-		children: ReactNode;
-	},
-)
-{
-
-	let { indent, addIndent } = props as any as { indent?: number; addIndent?: number; };
-
-
-	if (addIndent !== undefined)
-	{
-		let parentIndent = useCellIndent();
-		indent = parentIndent + addIndent;
-	}
-
-
-
-	return <IndentContext.Provider
-		value={indent || 0}
-		children={props.children}
-	/>;
-
-}
-
-
-
-
-
-
-//===
 
 
 
@@ -89,15 +37,22 @@ export function PilePhaseIcon({
 
 	let { stage } = tenta;
 
+	let indent = usePileCellIndent();
 
-	let indent = useCellIndent();
 
+	return <>
 
-	return <Root
-		indent={indent}
-		rotate={stage === "collapsed" ? 0 : stage === "expanded" ? 45 : 90}
-		children={<div><ArrowRightIcon /></div>}
-	/>;
+		##{tenta.iid}
+
+		<Root
+			indent={indent}
+			rotate={stage === "collapsed" ? 0 : stage === "expanded" ? 45 : 90}
+			children={<div>
+				<ArrowRightIcon />
+			</div>}
+		/>
+
+	</>;
 
 }
 

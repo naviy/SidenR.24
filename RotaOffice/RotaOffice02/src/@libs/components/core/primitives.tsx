@@ -224,26 +224,26 @@ type ElevationProps = { [P in Capitalize<Elevation> as `e${P}`]?: boolean; } & {
 
 export var elevaltionShadows: Record<Elevation, string> =
 {
-	"0": "none",
+	0: "none",
 
-	"L1": "0 1px 4px 0 rgba(0, 0, 0, 0.165)",
-	"L1b": "4px 8px 4px -8px rgba(0, 0, 0, 0.165);",
-	"L2": "0 2px 2px 0 rgba(0, 0, 0, 0.1), 0 6px 10px 0 rgba(0, 0, 0, 0.15)",
-	"L2t": "0 -2px 2px -2px rgba(0, 0, 0, 0.1), 0 -6px 10px -6px rgba(0, 0, 0, 0.15)",
-	"L2b": "0 2px 2px -2px rgba(0, 0, 0, 0.1), 0 6px 10px -6px rgba(0, 0, 0, 0.15)",
+	L1: "0 1px 4px 0 rgba(0, 0, 0, 0.165)",
+	L1b: "4px 8px 4px -8px rgba(0, 0, 0, 0.165);",
+	L2: "0 2px 2px 0 rgba(0, 0, 0, 0.1), 0 6px 10px 0 rgba(0, 0, 0, 0.15)",
+	L2t: "0 -2px 2px -2px rgba(0, 0, 0, 0.1), 0 -6px 10px -6px rgba(0, 0, 0, 0.15)",
+	L2b: "0 2px 2px -2px rgba(0, 0, 0, 0.1), 0 6px 10px -6px rgba(0, 0, 0, 0.15)",
 
-	"L3": "0 11px 7px 0 rgba(0, 0, 0, 0.195), 0 13px 25px 0 rgba(0, 0, 0, 0.15)",
-	"L3t": "0 -11px 7px -5px rgba(0, 0, 0, 0.15), 0 -13px 25px 0 rgba(0, 0, 0, 0.11)",
-	"L3b": "0 11px 7px -5px rgba(0, 0, 0, 0.15), 0 13px 25px 0 rgba(0, 0, 0, 0.11)",
+	L3: "0 11px 7px 0 rgba(0, 0, 0, 0.195), 0 13px 25px 0 rgba(0, 0, 0, 0.15)",
+	L3t: "0 -11px 7px -5px rgba(0, 0, 0, 0.15), 0 -13px 25px 0 rgba(0, 0, 0, 0.11)",
+	L3b: "0 11px 7px -5px rgba(0, 0, 0, 0.15), 0 13px 25px 0 rgba(0, 0, 0, 0.11)",
 
-	"L4": "0 14px 12px 0 rgba(0, 0, 0, 0.085), 0 20px 40px 0 rgba(0, 0, 0, 0.15)",
-	"L5": "0 17px 17px 0 rgba(0, 0, 0, 0.075), 0 27px 55px 0 rgba(0, 0, 0, 0.15)",
+	L4: "0 14px 12px 0 rgba(0, 0, 0, 0.085), 0 20px 40px 0 rgba(0, 0, 0, 0.15)",
+	L5: "0 17px 17px 0 rgba(0, 0, 0, 0.075), 0 27px 55px 0 rgba(0, 0, 0, 0.15)",
 
-	"D1": "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
-	"D2": "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.3)",
-	"D3": "0 11px 7px 0 rgba(0, 0, 0, 0.19), 0 13px 25px 0 rgba(0, 0, 0, 0.3)",
-	"D4": "0 14px 12px 0 rgba(0, 0, 0, 0.17), 0 20px 40px 0 rgba(0, 0, 0, 0.3)",
-	"D5": "0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)",
+	D1: "0 1px 4px 0 rgba(0, 0, 0, 0.37)",
+	D2: "0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.3)",
+	D3: "0 11px 7px 0 rgba(0, 0, 0, 0.19), 0 13px 25px 0 rgba(0, 0, 0, 0.3)",
+	D4: "0 14px 12px 0 rgba(0, 0, 0, 0.17), 0 20px 40px 0 rgba(0, 0, 0, 0.3)",
+	D5: "0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)",
 
 };
 

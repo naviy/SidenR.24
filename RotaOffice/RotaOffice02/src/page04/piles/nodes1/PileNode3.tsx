@@ -52,10 +52,24 @@ export module PileNode3
 		//---
 
 
+		constructor(id: React.Key)
+		{
+			super(id);
+
+			//this.initPhase({ maxPhase: 1 })
+
+		}
+
+
+
+		//---
+
+
+
 		override bodyIsSeparated()
 		{
 			let { parent } = this;
-			return parent ? parent.opened && this.opened : this.opened;
+			return parent ? parent.opened && !this.collapsed : this.opened;
 		}
 
 		override tailIsVisible()
@@ -69,46 +83,61 @@ export module PileNode3
 		}
 
 
+
 		//---
 
 
 
-		override decompress()
+		//override decompress()
+		//{
+		//	return super.decompress((phase) =>
+		//		/*!!this.parent?.opened &&*/ phase === this.expandedPhase
+		//	);
+		//}
+
+
+		//override onPhaseUp()
+		//{
+		//	//this.parent?.open();
+		//}
+
+
+
+		//override compress()
+		//{
+		//	return super.compress((phase) =>
+		//		/*!!this.parent?.opened &&*/ phase === this.expandedPhase
+		//	);
+
+		//}
+
+
+		//override onCompressed()
+		//{
+		//	this.parent?.expand();
+		//}
+
+
+		override onItemPhaseUp(item: TentaBase)
 		{
-			return super.decompress((phase) =>
-				!!this.parent?.opened && phase === this.expandedPhase
-			);
-		}
+			_$log(this + ".onItemPhaseUp " + item)
 
-
-		override compress()
-		{
-			return super.compress((phase) =>
-				!!this.parent?.opened && phase === this.expandedPhase
-			);
-		}
-
-
-
-		override onItemDecompressed(item: TentaBase)
-		{
-			_$log(this + ".onItemDecompressed " + item)
-
-			if (item.expanded)
+			if (!item.collapsed && this.anyTenta(a => !a.collapsed))
 			{
 				this.open();
 			}
 		}
 
 
-		override onItemCompressed(item: TentaBase)
+		override onItemPhaseDown(item: TentaBase)
 		{
-			_$log(this + ".onItemCompressed " + item)
 
-			if (item.collapsed && this.parent?.anyTenta(a => a.anyTenta(b => b.collapsed)))
+			if (item.collapsed && this.allTentas(a => a.collapsed))
 			{
-				this.parent.expand();
+				//this.focus();
+				this.expand();
 			}
+
 		}
 
 

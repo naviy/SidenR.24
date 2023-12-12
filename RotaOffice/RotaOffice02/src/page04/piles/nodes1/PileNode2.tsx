@@ -19,8 +19,9 @@ import { Tenta } from "../../tentas";
 
 export interface PileNode2Props extends Omit<Pane.RowProps, /*"id" | */"children">
 {
-	readonly tenta: PileNode2.Tenta;
-	readonly linkToNext?: boolean;
+	tenta: PileNode2.Tenta;
+	linkToNext?: boolean;
+	backfill?: boolean;
 }
 
 
@@ -29,13 +30,14 @@ export interface PileNode2Props extends Omit<Pane.RowProps, /*"id" | */"children
 export function PileNode2({
 	tenta,
 	linkToNext,
+	backfill,
 	...rowProps
 }: PileNode2Props & {
 	children: [JSX.Element, JSX.Element]
 })
 {
 
-	//_$log("PileNode for " + tenta)
+	_$log("PileNode for " + tenta)
 
 	tenta.use();
 
@@ -45,6 +47,7 @@ export function PileNode2({
 	let btmMargin = tenta.btmMargin();
 	let tailIsVisible = tenta.tailIsVisible();
 	let tailIsSeparated = tenta.tailIsSeparated();
+	let isAccented = tenta.isAccented();
 
 	//__$log("topMargin:", topMargin);
 	//__$log("btmMargin:", btmMargin);
@@ -67,15 +70,12 @@ export function PileNode2({
 				focusable
 			>
 
-				<Div
-					relative
-					animated
-				>
+				<Div relative>
 
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
 					{/*<Pile.ListBackfill mb={!tenta.parent ? 0 : 24} />*/}
-					<Pile.ListBackfill mb={tailIsVisible ? 24 : 48} />
+					{backfill && <Pile.Backfill mb={tailIsVisible ? 24 : 48} />}
 
 
 					<Focuser
@@ -90,24 +90,18 @@ export function PileNode2({
 							start
 							end={!tailIsVisible || tailIsSeparated}
 
-							rt={topMargin >= 2 ? "lg" : topMargin === 1 ? "sm" : ""}
-							rb={btmMargin >= 2 ? "lg" : btmMargin === 1 ? "sm" : ""}
+							rt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : ""}
+							rb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
 
-							bt={topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
-							bb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
+							bl={isAccented ? "lg" : undefined}
+							br={isAccented ? "lg" : undefined}
+							bt={topMargin && isAccented ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
+							bb={btmMargin && isAccented ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
 
-							//e={topMargin === 2 && btmMargin >= 1 || topMargin >= 1 && btmMargin === 2 ? "L1" : topMargin === 1 && btmMargin === 1 ? "L2" : btmMargin === 1 ? "L3b" : btmMargin === 2 ? "L2b" : topMargin === 1 ? "L3t" : topMargin === 2 ? "L2t" : "0"}
+							e={isAccented ? "L2" : undefined}
 
 							{...rowProps}
 
-							//bl={!collapsed ? "lg" : undefined}
-							//br={!collapsed ? "lg" : undefined}
-							//bt={!collapsed ? "lg" : !isFirst && collapsed && !placeholder!.prior!.collapsed ? "md" : undefined}
-							//bb={!collapsed ? "lg" : !isLast && collapsed && !placeholder!.next!.collapsed ? "md" : undefined}
-							//rt={collapsed && !isFirst && !placeholder!.prior!.collapsed ? "xs" : expanded && !isFirst ? "sm" : undefined}
-							//rb={collapsed && !isLast && !placeholder!.next!.collapsed ? "xs" : expanded && !isLast ? "sm" : undefined}
-
-							//e={opened ? "L1" : expanded ? "L2" : btmStage === "expanded" ? "L3b" : btmStage === "opened" ? "L2b" : topStage === "expanded" ? "L3t" : topStage === "opened" ? "L2t" : "0"}
 							ff
 						>
 
@@ -122,33 +116,23 @@ export function PileNode2({
 
 					{parts[1] !== undefined &&
 
-						<Div
-							animated
-						>
+						<Focuser ref={tenta.itemsFfRef} ghost>
 
-							{parts[1] &&
-								<Focuser ref={tenta.itemsFfRef} ghost>
+							<PileNodeTail1
+								start={tailIsSeparated}
+								expanded={tailIsVisible}
+								indent={tailIsSeparated}
+								rt={tailIsSeparated ? "lg" : undefined}
+								rb={tailIsSeparated ? "lg" : undefined}
+								bt={tailIsSeparated ? "md" : undefined}
+								bb={tailIsSeparated ? "md" : undefined}
+								cellIndent
+								pt={!tailIsVisible || !parts[1] ? 0 : btmMargin * 12 as any}
+								mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
+								children={parts[1]}
+							/>
 
-									<PileNodeTail1
-										//debug
-										//id={"tail3 of " + tenta}
-										start={tailIsSeparated}
-										expanded={tailIsVisible}
-										indent={tailIsSeparated}
-										rt={tailIsSeparated ? "lg" : undefined}
-										rb={tailIsSeparated ? "lg" : undefined}
-										bt={tailIsSeparated ? "md" : undefined}
-										bb={tailIsSeparated ? "md" : undefined}
-										cellIndent
-										pt={!tailIsVisible || !parts[1] ? 0 : btmMargin * 12 as any}
-										mb={(tailIsVisible ? 0 : btmMargin * 12) + (tailIsSeparated ? 24 : 0) as any}
-										children={parts[1]}
-									/>
-
-								</Focuser>
-							}
-
-						</Div>
+						</Focuser>
 
 					}
 
@@ -210,55 +194,61 @@ export module PileNode2
 
 
 
-		override onItemDecompressed(item: Tenta.Base)
+		override onPhaseUp()
 		{
+
+			_$log("onPhaseUp " + this)
+
+			this.forEachTenta(a =>
+				this.collapsed && a.open() || a.repaintNearests()
+			);
+
+		}
+
+
+		override onPhaseDown()
+		{
+
+			_$log("onPhaseDown " + this)
+
+			this.forEachTenta(a =>
+				!this.opened && a.collapse() || a.repaintNearests()
+			);
+
+		}
+
+
+
+		override onItemPhaseUp(item: Tenta.Base)
+		{
+
+			_$log("onItemPhaseUp " + this)
 
 			if (item.opened)
 			{
 				this.open();
 			}
 
-		}
-
-
-		override onDecompressed()
-		{
-
-			if (this.opened)
-			{
-				this.forEachTenta(a =>
-					a.expanded && a.open()
-				);
-			}
+			//this.forEachTenta(a =>
+			//	!this.opened && a.collapse()
+			//);
 
 		}
 
 
-
-		override onItemCompressed(item: Tenta.Base)
+		override onItemPhaseDown(item: Tenta.Base)
 		{
 
-			if (!item.collapsed)
+			_$log("onItemPhaseDown " + this)
+
+			if (item.collapsed && this.allTentas(a => a.collapsed))
 			{
 				this.expand();
-
-				this.forEachTenta(a =>
-					a.opened && a.expand()
-				);
 			}
 
-		}
-
-
-		override onCompressed()
-		{
-
-			if (this.expanded)
-			{
-				this.forEachTenta(a =>
-					a.opened && a.expand()
-				);
-			}
+			//this.forEachTenta(a =>
+			//	!this.opened && a.collapse()
+			//);
 
 		}
 

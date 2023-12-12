@@ -34,7 +34,7 @@ declare global
 
 		mapDefineds<T2>(selector: (value: T, index: number, array: T[]) => T2 | undefined): Array<T2>;
 
-		mapMany<T2>(selector: (value: T, index: number, array: T[]) => T2[]): Array<T2>;
+		//mapMany<T2>(selector: (value: T, index: number, array: T[]) => T2[]): Array<T2>;
 
 
 	}
@@ -252,26 +252,26 @@ Array.prototype.mapDefineds = function mapDefineds(
 
 
 
-Array.prototype.mapMany = function mapMany(this: Array<any>, selector: (value: any, index: number, array: any[]) => any[])
-{
+//Array.prototype.mapMany = function mapMany(this: Array<any>, selector: (value: any, index: number, array: any[]) => any[])
+//{
 
-	const result: any[] = [];
+//	const result: any[] = [];
 
-	let subitems: any[];
+//	let subitems: any[];
 
-	for (let i = 0, len = this.length; i < len; ++i)
-	{
+//	for (let i = 0, len = this.length; i < len; ++i)
+//	{
 
-		subitems = selector(this[i], i, this);
+//		subitems = selector(this[i], i, this);
 
-		subitems && result.push(...subitems);
+//		subitems && result.push(...subitems);
 
-	}
+//	}
 
 
-	return result;
+//	return result;
 
-}
+//}
 
 
 

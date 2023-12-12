@@ -1,4 +1,4 @@
-import { Div, Expander, GlobalState, Pane, Route } from '@libs';
+import { $log, Div, Expander, GlobalState, Pane, Route } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import React, { useReducer, useState } from "react";
@@ -63,7 +63,8 @@ export module Page04
 
 
 
-const myData = [1, 2];
+//const myData = [1, 2,3,4,5,6,7];
+const myData = [1, 2,];
 
 
 
@@ -208,16 +209,15 @@ class Row05Tenta extends PileNode2.Tenta
 function Row05(props: PileNode2.Props)
 {
 
-	//$log("Row05 " + props.tenta);
+	$log("Row05 " + props.tenta);
 
 
-	return <PileNode2 {...props}>
+	return <PileNode2 backfill {...props}>
 
 		<RowBody>
 
 			<>
 				<Pane start p12>
-					<div>##{props.tenta.iid}</div>
 					<Pile.PhaseIcon />
 					<span>111 1111 11111 111111</span>
 				</Pane>
@@ -300,14 +300,14 @@ function Row05(props: PileNode2.Props)
 
 			<Pane.Col start>
 
-				<Pane.Row start end={phase !== 1}>
+				<Pane.Row start end={!phase}>
 					{parts[0]}
 				</Pane.Row>
 
 				<Pane.Row
 					end
 					//id={`row05-expander #${tenta.id}`}
-					expanded={phase === 1}
+					expanded={!!phase}
 				//noreexpand
 				>
 					{parts[1]}
@@ -372,7 +372,7 @@ class Catagory1Tenta extends PileNode3.Tenta
 function Catagory1Node(props: PileNode3.Props)
 {
 
-	//$log("Catagory1Node " + props.tenta);
+	$log("Catagory1Node " + props.tenta);
 
 	return (
 
@@ -381,7 +381,7 @@ function Catagory1Node(props: PileNode3.Props)
 			<>
 				<Pane.Ghost start end b="">
 					<Pane start p12 vcenter>
-						<div>##{props.tenta.iid}</div>
+						{/*<div>##{props.tenta.iid}</div>*/}
 						<Pile.PhaseIcon />
 						<em>CATAGORY 111</em>
 					</Pane>
@@ -428,7 +428,7 @@ class Catagory2Tenta extends PileNode3.Tenta
 function Catagory2Node(props: PileNode3.Props)
 {
 
-	//$log("Catagory2Node " + props.tenta);
+	$log("Catagory2Node " + props.tenta);
 
 	return (
 
@@ -437,7 +437,7 @@ function Catagory2Node(props: PileNode3.Props)
 			<>
 				<Pane.Ghost start end b="">
 					<Pane start p12 vcenter>
-						<div>##{props.tenta.iid}</div>
+						{/*<div>##{props.tenta.iid}</div>*/}
 						<Pile.PhaseIcon />
 						<em>CATAGORY 2222</em>
 					</Pane>

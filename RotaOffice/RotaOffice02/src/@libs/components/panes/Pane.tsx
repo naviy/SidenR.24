@@ -3,7 +3,8 @@ import { $defaultAnimationDurationMs, createPrimitive, PrimitiveProps, UseHookPr
 import { Block } from "./Block";
 import * as Container from "./Container";
 import { ContainerInfo, ContainerInfo as ContainerInfo_ } from "./ContainerInfo";
-import { PaneBorder, PaneRadius } from "./ContainerProps";
+import { PaneRadius } from "./PaneRadius";
+import { PaneBorder } from "./PaneBorder";
 
 
 
@@ -79,10 +80,10 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 			debug: containerInfo?.debug,
 			//bgcolor: props.bgcolor,
 			r: PaneRadius.css(v.rtl, v.rtr, v.rbr, v.rbl),
-			bt: PaneBorder.css(v.bt),
-			br: PaneBorder.css(v.br),
-			bb: PaneBorder.css(v.bb),
-			bl: PaneBorder.css(v.bl),
+			bt: v.bt,
+			br: v.br,
+			bb: v.bb,
+			bl: v.bl,
 			...sizes,
 			children: body,
 		} as RootProps,
@@ -200,10 +201,10 @@ export interface RootProps
 	debug?: boolean;
 
 	r: string;
-	bt: string | undefined;
-	br: string | undefined;
-	bb: string | undefined;
-	bl: string | undefined;
+	bt: PaneBorder;
+	br: PaneBorder;
+	bb: PaneBorder;
+	bl: PaneBorder;
 
 	flex?: number | string;
 
@@ -253,7 +254,7 @@ export var Root = styled(
 
 	//let ppColor = props.debug ? `rgb(231,171,171)` : "transparent";
 
-	const defaultBorder = "0 solid transparent" as const;
+	var defaultBorder = "0 solid transparent" as const;
 
 
 	return {
@@ -293,11 +294,12 @@ export var Root = styled(
 			content: '""',
 
 			borderRadius: "inherit",
+			//boxShadow: PaneBorder.shadowCss(props.bt, props.br, props.bb, props.bl),
 			//border: "0px solid transparent",
-			borderTop: props.bt || defaultBorder,
-			borderRight: props.br || defaultBorder,
-			borderBottom: props.bb || defaultBorder,
-			borderLeft: props.bl || defaultBorder,
+			borderTop: PaneBorder.borderCss(props.bt) || defaultBorder,
+			borderRight: PaneBorder.borderCss(props.br) || defaultBorder,
+			borderBottom: PaneBorder.borderCss(props.bb) || defaultBorder,
+			borderLeft: PaneBorder.borderCss(props.bl) || defaultBorder,
 			transition: `all ${$defaultAnimationDurationMs}ms linear`,
 		},
 

@@ -34,6 +34,8 @@ export function PileNodeTail1({
 
 	//let indent = indent_ !== false;
 
+	let oldCellIndent = Pile.useCellIndent();
+
 
 	return (
 
@@ -44,12 +46,12 @@ export function PileNodeTail1({
 				noreexpand
 				{...colProps}
 				wrapperCls={clsx(indent && "pl36 pr12", colProps.wrapperCls)}
-				//border2 borderGreen
+			//border2 borderGreen
 			>
 
-				<Pile.Node.LinkLine.OptionsProvider width={indent ? 24 : 0}>
+				<Pile.Node.LinkLine.OptionsProvider width={indent ? 21 : 0}>
 
-					<Pile.CellIndentProvider addIndent={cellIndent && !indent ? 24 : 0}>
+					<Pile.CellIndentProvider indent={cellIndent && !indent ? oldCellIndent + 24 : 0}>
 						{children}
 					</Pile.CellIndentProvider>
 

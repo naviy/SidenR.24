@@ -1,4 +1,4 @@
-import { GlobalState, Repaintable, } from '@libs';
+import { $log, GlobalState, Repaintable, _$log, __$log, ___$log, } from '@libs';
 import type React from "react";
 import { startTransition, type ReactNode } from "react";
 import { TentaCollector } from "./TentaCollector";
@@ -339,7 +339,7 @@ export class TentaBase extends Repaintable()
 
 	setPhase(value: TentaPhase): boolean
 	{
-		//$log("setPhase " + this, " phase =", value)
+		$log("setPhase " + this, " phase =", value)
 
 
 		if (this.#phase === value || this.disabled)
@@ -352,18 +352,18 @@ export class TentaBase extends Repaintable()
 		this.priorPhase = this.#phase || 0;
 		this.#phase = value;
 
-		this.phaseChanged();
+		this.onPhaseChanged();
 
 
 		if (this.priorPhase < this.#phase)
 		{
-			this.onDecompressed();
-			this.parent?.onItemDecompressed(this);
+			this.onPhaseUp();
+			this.parent?.onItemPhaseUp(this);
 		}
 		else
 		{
-			this.onCompressed();
-			this.parent?.onItemCompressed(this);
+			this.onPhaseDown();
+			this.parent?.onItemPhaseDown(this);
 		}
 
 
@@ -373,9 +373,9 @@ export class TentaBase extends Repaintable()
 
 
 
-	protected phaseChanged()
+	protected onPhaseChanged()
 	{
-		//_$log("phaseChanged");
+		_$log("onPhaseChanged " + this);
 		//this.onPhaseChanged?.(this);
 
 
@@ -391,31 +391,37 @@ export class TentaBase extends Repaintable()
 
 	repaintNearests()
 	{
-		//__$log("repaintNearests")
+		__$log("repaintNearests " + this)
 
 
 		let nearests = new Set<TentaBase | null | undefined>([
 			this.#priorSibling,
 			this.prior(),
 			this,
-			this.first(),
-			this.last(),
+			//this.first(),
+			//this.last(),
+			//...this.all() || [],
 			this.#nextSibling,
 			this.next(),
 		]);
 
 
-		startTransition(() =>
+		//startTransition(() =>
+		//{
+		nearests.forEach(a =>
 		{
-			nearests.forEach(a =>
-			{
-				//___$log("repaint " + a)
-				a?.repaint()
-			});
+			___$log("repaint " + a)
+			a?.repaint()
 		});
+		//});
 
 	}
 
+
+	//itemsForRepaint()
+	//{
+	//	return 
+	//}
 
 
 	//phaseIsSkipped(phase: TentaPhase)
@@ -476,23 +482,23 @@ export class TentaBase extends Repaintable()
 
 
 
-	compress(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
+	phaseUp(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
 	{
 		return this.setPhase(this.findPriorPhase(canSkipPhase));
 	}
 
-	decompress(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
+	phaseDown(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
 	{
 		return this.setPhase(this.findNextPhase(canSkipPhase));
 	}
 
 
 
-	onDecompressed() { }
-	onCompressed() { }
+	onPhaseUp() { }
+	onPhaseDown() { }
 
-	onItemDecompressed(item: TentaBase) { }
-	onItemCompressed(item: TentaBase) { }
+	onItemPhaseUp(item: TentaBase) { }
+	onItemPhaseDown(item: TentaBase) { }
 
 
 
@@ -658,7 +664,8 @@ export class TentaBase extends Repaintable()
 
 			let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
 
-			if (margin < TentaStage.MaxIndex)
+
+			if (margin < TentaStage.MaxIndex && parent.isLast)
 			{
 				let parentMargin = getParentTailBtmMargin(parent.parent);
 				margin = Math.max(margin, parentMargin);
@@ -690,9 +697,37 @@ export class TentaBase extends Repaintable()
 	}
 
 
-	tailIsVisibleAndSeparated()
+	//tailIsVisibleAndSeparated()
+	//{
+	//	return this.tailIsVisible() && this.tailIsSeparated();
+	//}
+
+
+	//tailIsVisibleAndNotSeparated()
+	//{
+	//	return this.tailIsVisible() && !this.tailIsSeparated();
+	//}
+
+
+	bodyIsAccented()
 	{
-		return this.tailIsVisible() && this.tailIsSeparated();
+		return !this.collapsed;
+	}
+
+
+	isAccented(): boolean
+	{
+
+		let { collector } = this;
+
+		if (collector?.tenta && collector.isVisibleAndNotSeparated())
+		{
+			return collector.tenta.isAccented();
+		}
+
+
+		return this.bodyIsAccented();
+
 	}
 
 
@@ -731,6 +766,12 @@ export class TentaBase extends Repaintable()
 	nextSibling(): TentaBase | null
 	{
 		return this.#nextSibling || null;
+	}
+
+
+	all(): TentaBase[] | null
+	{
+		return this.collectors?.flatMap(c => c.tentas) as TentaBase[] || null;
 	}
 
 

@@ -45,6 +45,7 @@ export class TentaCollector extends Repaintable()
 	#nextSibling?: TentaCollector | null;
 
 	#tentas?: TentaBase[] | null;
+
 	get tentas(): TentaBase[] | null
 	{
 		if (this.#tentas === undefined)
@@ -186,6 +187,11 @@ export class TentaCollector extends Repaintable()
 	isVisibleAndSeparated()
 	{
 		return this.isVisible() && this.isSeparated();
+	}
+
+	isVisibleAndNotSeparated()
+	{
+		return this.isVisible() && !this.isSeparated();
 	}
 
 
