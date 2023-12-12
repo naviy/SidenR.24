@@ -274,14 +274,6 @@ export class TentaBase extends Repaintable()
 
 
 
-	setSiblings(prior: TentaBase | null | undefined, next: TentaBase | null | undefined)
-	{
-		this.#priorSibling = prior || null;
-		this.#nextSibling = next || null;
-	}
-
-
-
 	initPhase(cfg?: {
 		readonly maxPhase?: TentaPhase;
 		readonly defaultPhase?: TentaPhase;
@@ -298,6 +290,28 @@ export class TentaBase extends Repaintable()
 
 
 		this.ensurePhase(cfg);
+	}
+
+
+
+	setCollector(
+		collector: TentaCollector | null,
+		prior: TentaBase | null | undefined,
+		next: TentaBase | null | undefined
+	)
+	{
+
+		this.collector = collector;
+		this.#priorSibling = prior || null;
+		this.#nextSibling = next || null;
+
+		if (this.globalState === undefined)
+		{
+			this.globalState = GlobalState.node(collector?.tenta?.globalState, this.id + "");
+		}
+
+		this.#loadFromGlobalState();
+
 	}
 
 
@@ -877,7 +891,6 @@ export class TentaBase extends Repaintable()
 
 		this.stage = GlobalState.get(this.globalState, 'stage', this.stage)!;
 	}
-
 
 
 	#saveToGlobalState()

@@ -176,10 +176,17 @@ export module GlobalState
 
 
 	export function node<TState extends GlobalState = GlobalState>(
-		parentNode: Node,
+		parentNode: Node | null | undefined,
 		name: string
 	): TState
 	{
+
+		if (!parentNode)
+		{
+			$error(`GlobalState.node(): parentNode is ${parentNode}`);
+			parentNode = {};
+		}
+
 
 		let state = parentNode[name] as TState | null | undefined;
 

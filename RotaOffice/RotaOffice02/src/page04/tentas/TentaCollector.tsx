@@ -1,4 +1,4 @@
-import { $log, GlobalState, Repaintable, _$log, __$log, ___$log } from "@libs";
+import { GlobalState, Repaintable } from "@libs";
 import type React from "react";
 import { createContext, useContext, useRef, type ReactNode } from "react";
 import { use as useTenta } from "./Tenta";
@@ -145,12 +145,6 @@ export class TentaCollector extends Repaintable()
 		if (this.#tentas)
 			return;
 
-		this.#recalcTentas();
-	}
-
-
-	#recalcTentas()
-	{
 		//__$log(this + ".ensureTentas()")
 		//___$log("tenta.phase:", this.tenta?.phase);
 		//___$log("visible:", this.tenta?.collectorIsVisible(this));
@@ -162,8 +156,7 @@ export class TentaCollector extends Repaintable()
 
 		this.#tentas?.map((tenta, i, all) =>
 		{
-			tenta.collector = this;
-			tenta.setSiblings(all[i - 1], all[i + 1]);
+			tenta.setCollector(this, all[i - 1], all[i + 1]);
 		});
 
 	}
@@ -349,7 +342,7 @@ export module TentaCollector
 		}
 
 
-		$log("TentaCollection " + bhv)
+		//$log("TentaCollection " + bhv)
 
 
 		bhv?.use(props as CollectorConfig);

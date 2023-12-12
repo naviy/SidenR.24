@@ -95,42 +95,41 @@ function Rows05Pile()
 
 	let [tenta] = useState(() => new Rows05PileTenta(myData));
 
+	let globalState = GlobalState.use("Rows05Pile");
+	tenta.setGlobalState(globalState);
+
 	//$log("Rows05Pile " + tenta);
 
 
 	return (
-		<GlobalState name="Rows05Pile">
+		<Pane.Col start end b="md" r="lg">
+			<Pane.Ghost start end b="sm" r="">
 
-			<Pane.Col start end b="md" r="lg">
-				<Pane.Ghost start end b="sm" r="">
+				<Pane.Col start end>
 
-					<Pane.Col start end>
+					<PileNode4 tenta={tenta}>
 
-						<PileNode4 tenta={tenta}>
+						<>
+							<Pane.Ghost start end b="">
+								<Pane start p12 vcenter>
+									<Pile.PhaseIcon />
+									<em>MY DATA</em>
+								</Pane>
+								<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
+							</Pane.Ghost>
 
-							<>
-								<Pane.Ghost start end b="">
-									<Pane start p12 vcenter>
-										<Pile.PhaseIcon />
-										<em>MY DATA</em>
-									</Pane>
-									<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
-								</Pane.Ghost>
+						</>
 
-							</>
+						<>
+							<Tenta.Collection id="root-rows" />
+						</>
 
-							<>
-								<Tenta.Collection id="root-rows" />
-							</>
+					</PileNode4>
 
-						</PileNode4>
+				</Pane.Col>
 
-					</Pane.Col>
-
-				</Pane.Ghost>
-			</Pane.Col>
-
-		</GlobalState>
+			</Pane.Ghost>
+		</Pane.Col>
 
 	);
 
@@ -211,7 +210,7 @@ class Row05Tenta extends PileNode2.Tenta
 function Row05(props: PileNode2.Props)
 {
 
-	$log("Row05 " + props.tenta);
+	//$log("Row05 " + props.tenta);
 
 
 	return <PileNode2 backfill {...props}>
@@ -374,7 +373,7 @@ class Catagory1Tenta extends PileNode3.Tenta
 function Catagory1Node(props: PileNode3.Props)
 {
 
-	$log("Catagory1Node " + props.tenta);
+	//$log("Catagory1Node " + props.tenta);
 
 	return (
 
@@ -430,7 +429,7 @@ class Catagory2Tenta extends PileNode3.Tenta
 function Catagory2Node(props: PileNode3.Props)
 {
 
-	$log("Catagory2Node " + props.tenta);
+	//$log("Catagory2Node " + props.tenta);
 
 	return (
 

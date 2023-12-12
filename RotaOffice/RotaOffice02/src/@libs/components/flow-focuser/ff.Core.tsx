@@ -1,7 +1,7 @@
 import GlobalStyles from "@mui/material/GlobalStyles";
 import React, { useEffect } from "react";
-import { Focuser, type FocusActionProps } from ".";
 import { $defaultAnimationDurationMs, $log, _$log, adelay } from "../core";
+import type { FocusActionProps, Focuser } from "./ff.Focuser";
 
 
 
@@ -1219,6 +1219,7 @@ export function Core()
 				pointerEvents: "none",
 
 				//"--color": "var(--color, red)",
+				//background: "rgba(var(--color), .05)",
 				color: "rgb(var(--color))",
 				borderColor: "rgb(var(--color))",
 				boxShadow: `0px 7px 8px -4px rgba(var(--color), .25), 0px 12px 17px 2px rgba(var(--color), .18), 0px 5px 22px 4px rgba(var(--color), .16)`,
@@ -1227,9 +1228,9 @@ export function Core()
 
 				opacity: "var(--opacity,0)",
 				borderRadius: 3,
-				borderWidth: 2,
+				borderWidth: 2,//Caret.defaultBorderWidth,
 
-				//inset: 0,
+				inset: -1,
 
 				transition: `var(--transition, all ${$defaultAnimationDurationMs}ms linear)`,
 

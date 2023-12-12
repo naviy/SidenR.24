@@ -220,7 +220,10 @@ export class CaretBehavior extends Repaintable()
 
 
 		let borderWidth = (Values
-			.manyn(this._priorBorderWidth ?? ff.borderWidth, a => a === undefined ? `${Caret.defaultBorderWidth}px` : a === null ? "0" : `${a}px`)
+			.manyn(
+				this._priorBorderWidth ?? ff.borderWidth,
+				a => a === undefined ? undefined /*`${Caret.defaultBorderWidth}px`*/ : a === null ? "0" : `${a}px`
+			)
 			.join(" ")
 		);
 
@@ -230,7 +233,7 @@ export class CaretBehavior extends Repaintable()
 
 		return {
 
-			inset,
+			inset: inset !== "0px 0px 0px 0px" ? inset : undefined,
 			"--opacity": focused || this.props.debug ? 1 : undefined,
 			borderRadius: focused ? borderRadius : undefined,
 			borderWidth: focused ? borderWidth : this.props.debug ? 1 : undefined,
