@@ -212,7 +212,7 @@ export module PileNode2
 			//_$log("onPhaseDown " + this)
 
 			this.forEachTenta(a =>
-				!this.opened && a.collapse() || a.repaintNearests()
+				!this.opened && a.opened && a.expand() || a.repaintNearests()
 			);
 
 		}
