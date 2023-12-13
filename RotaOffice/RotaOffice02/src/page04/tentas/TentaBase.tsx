@@ -261,6 +261,18 @@ export class TentaBase extends Repaintable()
 
 
 
+	addCollectors(cfg: Record<string | number | symbol, () => TentaBase[]>)
+	{
+
+		for (let id of Object.keys(cfg))
+		{
+			this.addCollector(id, cfg[id]);
+		}
+
+	}
+
+
+
 	#recalcCollectors()
 	{
 		//_$log(this + ".#recalcCollectors()")

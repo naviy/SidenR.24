@@ -1,4 +1,4 @@
-import type { TentaBase } from "../../tentas/TentaBase";
+import { Tenta as Tenta_ } from "../../tentas";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNode2, type PileNode2Props } from "./PileNode2";
 
@@ -86,7 +86,7 @@ export module PileNode3
 
 
 
-		override onItemPhaseUp(item: TentaBase)
+		override onItemPhaseUp(item: Tenta_.Base)
 		{
 			//_$log(this + ".onItemPhaseUp " + item)
 
@@ -97,7 +97,7 @@ export module PileNode3
 		}
 
 
-		override onItemPhaseDown(item: TentaBase)
+		override onItemPhaseDown(item: Tenta_.Base)
 		{
 
 			if (item.collapsed && this.allTentas(a => a.collapsed))
@@ -106,11 +106,28 @@ export module PileNode3
 			}
 
 		}
-		
+
 
 
 		//---
 
+	}
+
+
+
+
+	//---
+
+
+
+
+	class FunctionalTenta extends Tenta_.Functional(Tenta)	{	}
+
+		
+
+	export function createTentaFactory<TArgs extends any[]>(configGetter: (...args: TArgs) => Tenta_.Functional.Config<Tenta>)
+	{
+		return Tenta_.Functional.createFactory(FunctionalTenta, configGetter);
 	}
 
 

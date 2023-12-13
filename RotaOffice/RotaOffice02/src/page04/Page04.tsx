@@ -194,8 +194,8 @@ class Row05Tenta extends PileNode2.Tenta
 		super(id);
 
 		this.addCollector("catagories", () => [
-			new Catagory1Tenta(myData),
-			new Catagory2Tenta(myData)
+			Catagory1Tenta("ctg1", myData),
+			Catagory2Tenta("ctg2", myData),
 		]);
 	}
 
@@ -349,24 +349,37 @@ function Row05(props: PileNode2.Props)
 
 
 
-class Catagory1Tenta extends PileNode3.Tenta
-{
+//class Catagory1Tenta extends PileNode3.Tenta
+//{
 
-	constructor(public data: typeof myData)
-	{
-		super("ctg1");
+//	constructor(public data: typeof myData)
+//	{
+//		super("ctg1");
 
-		this.addCollector("rows1", () =>
-			data.map(a => new Row05Tenta(a))
-		);
-	}
+//		this.addCollector("rows1", () =>
+//			data.map(a => new Row05Tenta(a))
+//		);
+//	}
 
-	override render()
-	{
-		return <Catagory1Node key={this.id} tenta={this} />
-	}
+//	override render()
+//	{
+//		return <Catagory1Node key={this.id} tenta={this} />
+//	}
 
-}
+//}
+
+
+var Catagory1Tenta = PileNode3.createTentaFactory((data: typeof myData) =>
+({
+
+	component: Catagory1Node,
+
+	collectors: {
+		"rows1": () => data.map(a => new Row05Tenta(a)),
+	},
+
+	
+}))
 
 
 
@@ -404,25 +417,38 @@ function Catagory1Node(props: PileNode3.Props)
 
 
 
-class Catagory2Tenta extends PileNode3.Tenta
-{
+//class Catagory2Tenta extends PileNode3.Tenta
+//{
 
-	constructor(public data: typeof myData)
-	{
-		super("ctg2");
+//	constructor(public data: typeof myData)
+//	{
+//		super("ctg2");
 
-		this.addCollector("rows2", () =>
-			data.map(a => new Row05Tenta(a))
-		);
-	}
+//		this.addCollector("rows2", () =>
+//			data.map(a => new Row05Tenta(a))
+//		);
+//	}
 
-	override render()
-	{
-		return <Catagory2Node key={this.id} tenta={this} />
-	}
+//	override render()
+//	{
+//		return <Catagory2Node key={this.id} tenta={this} />
+//	}
 
-}
+//}
 
+
+
+var Catagory2Tenta = PileNode3.createTentaFactory((data: typeof myData) =>
+({
+
+	component: Catagory2Node,
+
+	collectors: {
+		"rows2": () => data.map(a => new Row05Tenta(a)),
+	},
+
+	
+}))
 
 
 

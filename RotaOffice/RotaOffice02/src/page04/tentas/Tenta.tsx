@@ -1,5 +1,4 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
-import type { Constructor } from "../../@libs";
 import type { TentaBase } from "./TentaBase";
 import { TentaCollector } from "./TentaCollector";
 
@@ -30,6 +29,10 @@ export import NoProviders = TentaCollector.NoProvider;
 
 export { TentaDetails as Details } from "./TentaDetails";
 
+
+export {
+	TentaFunctional as Functional,
+} from "./TentaFunctional";
 
 
 
