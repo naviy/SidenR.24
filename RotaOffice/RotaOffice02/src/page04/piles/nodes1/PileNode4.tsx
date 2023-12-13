@@ -1,5 +1,4 @@
-import { _$log, __$log } from "../../../@libs";
-import type { TentaBase } from "../../tentas/TentaBase";
+import { Tenta as Tenta_ } from "../../tentas";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNode2, type PileNode2Props } from "./PileNode2";
 
@@ -21,7 +20,7 @@ type PileNode4Props = PileNode2Props;
 
 
 export function PileNode4(props: PileNode4Props & {
-	children: [JSX.Element, JSX.Element]
+	children: JSX.Element | [JSX.Element, JSX.Element]
 })
 {
 	return PileNode2(props);
@@ -90,6 +89,26 @@ export module PileNode4
 
 	}
 
+
+
+
+	//---
+
+
+
+
+	export class FT extends Tenta_.Functional(Tenta)	{	}
+
+
+	export type Factory<TArgs extends any[] = []> = (id: React.Key, ...args: TArgs) => FT;
+	
+
+	export function createFactory<TArgs extends any[] = []>(
+		configGetter: Tenta_.Functional.ConfigAlias<FT, TArgs>
+	): Factory<TArgs>
+	{
+		return Tenta_.Functional.createFactory<FT, TArgs>(FT, configGetter);
+	}
 
 
 

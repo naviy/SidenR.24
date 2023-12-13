@@ -137,6 +137,9 @@ export class TentaBase extends Repaintable()
 
 	collectors?: TentaCollector[];
 
+	get hasCollectors() { return !!this.collectors?.length; }
+	get collectorCount() { return this.collectors?.length || 0; }
+
 
 
 	//---

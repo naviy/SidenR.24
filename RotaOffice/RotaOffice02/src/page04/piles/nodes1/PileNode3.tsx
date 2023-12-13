@@ -20,7 +20,7 @@ type PileNode3Props = PileNode2Props;
 
 
 export function PileNode3(props: PileNode3Props & {
-	children: [JSX.Element, JSX.Element]
+	children: JSX.Element | [JSX.Element, JSX.Element]
 })
 {
 	return PileNode2(props);
@@ -121,13 +121,17 @@ export module PileNode3
 
 
 
-	class FunctionalTenta extends Tenta_.Functional(Tenta)	{	}
+	export class FT extends Tenta_.Functional(Tenta)	{	}
 
-		
 
-	export function createTentaFactory<TArgs extends any[]>(configGetter: (...args: TArgs) => Tenta_.Functional.Config<Tenta>)
+	export type Factory<TArgs extends any[] = []> = (id: React.Key, ...args: TArgs) => FT;
+	
+
+	export function createFactory<TArgs extends any[] = []>(
+		configGetter: Tenta_.Functional.ConfigAlias<FT, TArgs>
+	): Factory<TArgs>
 	{
-		return Tenta_.Functional.createFactory(FunctionalTenta, configGetter);
+		return Tenta_.Functional.createFactory<FT, TArgs>(FT, configGetter);
 	}
 
 

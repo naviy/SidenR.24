@@ -73,27 +73,33 @@ const myData = [1, 2,];
 
 
 
-class Rows05PileTenta extends PileNode4.Tenta
-{
+//class Rows05PileTenta extends PileNode4.Tenta
+//{
 
-	constructor(data: typeof myData)
-	{
-		super("root");
+//	constructor(data: typeof myData)
+//	{
+//		super("root");
 
-		this.addCollector("root-rows", () =>
-			data.map(a => new Row05Tenta(a))
-		);
+//		this.addCollector("root-rows", () =>
+//			data.map(a => Row05Tenta(a))
+//		);
 
-	}
+//	}
 
-}
+//}
+
+
+var Rows05PileTenta = PileNode4.createFactory((data: typeof myData) => [
+	Rows05Pile,
+	() => data.map(Row05Tenta),
+]);
 
 
 
 function Rows05Pile()
 {
 
-	let [tenta] = useState(() => new Rows05PileTenta(myData));
+	let [tenta] = useState(() => Rows05PileTenta("root", myData));
 
 	let globalState = GlobalState.use("Rows05Pile");
 	tenta.setGlobalState(globalState);
@@ -110,18 +116,11 @@ function Rows05Pile()
 					<PileNode4 tenta={tenta}>
 
 						<>
-							<Pane.Ghost start end b="">
-								<Pane start p12 vcenter>
-									<Pile.PhaseIcon />
-									<em>MY DATA</em>
-								</Pane>
-								<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
-							</Pane.Ghost>
-
-						</>
-
-						<>
-							<Tenta.Collection id="root-rows" />
+							<Pane start p12 vcenter>
+								<Pile.PhaseIcon />
+								<em>MY DATA</em>
+							</Pane>
+							<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 						</>
 
 					</PileNode4>
@@ -147,64 +146,37 @@ function Rows05Pile()
 
 
 
-//function Rows05()
+//class Row05Tenta extends PileNode2.Tenta
 //{
+//	constructor(id: React.Key)
+//	{
+//		super(id);
 
-//	return <>
+//		this.addCollector("catagories", () => [
+//			Catagory1Tenta("ctg1", myData),
+//			Catagory2Tenta("ctg2", myData),
+//		]);
+//	}
 
-//		<Pane.Col start end>
+//	override render()
+//	{
+//		return <Row05 key={this.id} tenta={this} />
+//	}
 
-//			<Pile.ListBackfill />
-
-//			<Tenta.Collection
-//				id="rows05"
-//				tentas={[[PileNode2, 1], [PileNode2, 2],]}
-//			>
-
-//				<Row05 id={1} />
-//				<Row05 id={2} />
-//				{/*<Row05 id={3} />*/}
-//				{/*<Row05 id={4} />*/}
-//				{/*<Row05 id={5} />*/}
-//				{/*<Row05 id={6} />*/}
-//				{/*<Row05 id={7} />*/}
-
-//			</Tenta.Collection>
-
-//		</Pane.Col>
-
-//	</>;
 //}
 
 
 
+var Row05Tenta: PileNode2.Factory = PileNode2.createFactory([
+	Row05,
+	() => [
+		Catagory1Tenta("ctg1", myData),
+		Catagory2Tenta("ctg1", myData),
+	],
+]);
 
 
-//===
 
-
-
-
-
-
-class Row05Tenta extends PileNode2.Tenta
-{
-	constructor(id: React.Key)
-	{
-		super(id);
-
-		this.addCollector("catagories", () => [
-			Catagory1Tenta("ctg1", myData),
-			Catagory2Tenta("ctg2", myData),
-		]);
-	}
-
-	override render()
-	{
-		return <Row05 key={this.id} tenta={this} />
-	}
-
-}
 
 
 function Row05(props: PileNode2.Props)
@@ -258,12 +230,6 @@ function Row05(props: PileNode2.Props)
 			</>
 
 		</RowBody>
-
-
-		<>
-			<Tenta.Collection id="catagories" />
-		</>
-
 
 	</PileNode2>;
 
@@ -369,17 +335,24 @@ function Row05(props: PileNode2.Props)
 //}
 
 
-var Catagory1Tenta = PileNode3.createTentaFactory((data: typeof myData) =>
-({
+//var Catagory1Tenta = PileNode3.tentaFactory((data: typeof myData) =>
+//({
 
-	component: Catagory1Node,
+//	component: Catagory1Node,
 
-	collectors: {
-		"rows1": () => data.map(a => new Row05Tenta(a)),
-	},
+//	collectors: {
+//		"rows1": () => data.map(a => new Row05Tenta(a)),
+//	},
 
-	
-}))
+
+//}))
+
+
+var Catagory1Tenta = PileNode3.createFactory((data: typeof myData) => [
+	Catagory1Node,
+	() => data.map(Row05Tenta),
+]);
+
 
 
 
@@ -391,21 +364,15 @@ function Catagory1Node(props: PileNode3.Props)
 	return (
 
 		<PileNode3 {...props}>
-
 			<>
-				<Pane.Ghost start end b="">
-					<Pane start p12 vcenter>
-						{/*<div>##{props.tenta.iid}</div>*/}
-						<Pile.PhaseIcon />
-						<em>CATAGORY 111</em>
-					</Pane>
-					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
-				</Pane.Ghost>
 
-			</>
+				<Pane start p12 vcenter>
+					<Pile.PhaseIcon />
+					<em>CATAGORY 111</em>
+				</Pane>
 
-			<>
-				<Tenta.Collection id="rows1" />
+				<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
+
 			</>
 
 		</PileNode3>
@@ -438,17 +405,10 @@ function Catagory1Node(props: PileNode3.Props)
 
 
 
-var Catagory2Tenta = PileNode3.createTentaFactory((data: typeof myData) =>
-({
-
-	component: Catagory2Node,
-
-	collectors: {
-		"rows2": () => data.map(a => new Row05Tenta(a)),
-	},
-
-	
-}))
+var Catagory2Tenta = PileNode3.createFactory((data: typeof myData) => [
+	Catagory2Node,
+	() => data.map(Row05Tenta),
+]);
 
 
 
@@ -457,29 +417,18 @@ function Catagory2Node(props: PileNode3.Props)
 
 	//$log("Catagory2Node " + props.tenta);
 
-	return (
+	return <PileNode3 {...props}>
+		<>
 
-		<PileNode3 {...props}>
+			<Pane start p12 vcenter>
+				<Pile.PhaseIcon />
+				<em>CATAGORY 2222</em>
+			</Pane>
 
-			<>
-				<Pane.Ghost start end b="">
-					<Pane start p12 vcenter>
-						{/*<div>##{props.tenta.iid}</div>*/}
-						<Pile.PhaseIcon />
-						<em>CATAGORY 2222</em>
-					</Pane>
-					<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
-				</Pane.Ghost>
+			<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
 
-			</>
-
-			<>
-				<Tenta.Collection id="rows2" />
-			</>
-
-		</PileNode3>
-
-	);
+		</>
+	</PileNode3>;
 
 }
 

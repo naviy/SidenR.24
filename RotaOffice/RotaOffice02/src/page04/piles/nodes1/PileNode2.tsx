@@ -1,6 +1,7 @@
 import { ErrorBoundary } from "@app";
 import { Div, Focuser, Pane } from '@libs';
-import { Tenta } from "../../tentas";
+import type React from "react";
+import { Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileNode1Tenta } from "./PileNode1_Tenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -27,13 +28,14 @@ export interface PileNode2Props extends Omit<Pane.RowProps, /*"id" | */"children
 
 
 
+
 export function PileNode2({
 	tenta,
 	linkToNext,
 	backfill,
 	...rowProps
 }: PileNode2Props & {
-	children: [JSX.Element, JSX.Element]
+	children: JSX.Element | [JSX.Element, JSX.Element]
 })
 {
 
@@ -41,7 +43,14 @@ export function PileNode2({
 
 	tenta.use();
 
-	let parts = rowProps.children;
+
+	let [body, tail] = Array.isArray(rowProps.children) ? rowProps.children : [rowProps.children, undefined];
+
+	if (tail === undefined && tenta.collectorCount === 1)
+	{
+		tail = Tenta_.Collector.defaultById(tenta.collectors![0].id);
+	}
+
 
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
@@ -106,7 +115,7 @@ export function PileNode2({
 						>
 
 							<ErrorBoundary>
-								{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, parts[0]) : parts[0]}
+								{tenta.toolsIsVisible ? Tenta_.Details.wrap(tenta, body) : body}
 							</ErrorBoundary>
 
 						</Pane.Row>
@@ -114,22 +123,26 @@ export function PileNode2({
 					</Focuser>
 
 
-					{parts[1] !== undefined &&
+					{tail !== undefined &&
 
 						<Focuser ref={tenta.itemsFfRef} ghost>
 
 							<PileNodeTail1
+
 								start={tailIsSeparated}
 								expanded={tailIsVisible}
 								indent={tailIsSeparated}
+								cellIndent
+
 								rt={tailIsSeparated ? "lg" : undefined}
 								rb={tailIsSeparated ? "lg" : undefined}
 								bt={tailIsSeparated ? "md" : undefined}
 								bb={tailIsSeparated ? "md" : undefined}
-								cellIndent
-								pt={!tailIsVisible || !parts[1] ? 0 : btmMargin * 12 as any}
+
+								pt={!tailIsVisible || !tail ? 0 : btmMargin * 12 as any}
 								mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
-								children={parts[1]}
+
+								children={tail}
 							/>
 
 						</Focuser>
@@ -219,7 +232,7 @@ export module PileNode2
 
 
 
-		override onItemPhaseUp(item: Tenta.Base)
+		override onItemPhaseUp(item: Tenta_.Base)
 		{
 
 			//_$log("onItemPhaseUp " + this)
@@ -236,7 +249,7 @@ export module PileNode2
 		}
 
 
-		override onItemPhaseDown(item: Tenta.Base)
+		override onItemPhaseDown(item: Tenta_.Base)
 		{
 
 			//_$log("onItemPhaseDown " + this)
@@ -256,6 +269,27 @@ export module PileNode2
 
 		//---
 
+	}
+
+
+
+
+	//---
+
+
+
+
+	export class FT extends Tenta_.Functional(Tenta)	{	}
+
+
+	export type Factory<TArgs extends any[] = []> = (id: React.Key, ...args: TArgs) => FT;
+	
+
+	export function createFactory<TArgs extends any[] = []>(
+		configGetter: Tenta_.Functional.ConfigAlias<FT, TArgs>
+	): Factory<TArgs>
+	{
+		return Tenta_.Functional.createFactory<FT, TArgs>(FT, configGetter);
 	}
 
 

@@ -313,7 +313,8 @@ export module TentaCollector
 
 	export function Provider(
 		props: CollectorConfig & {
-			id: React.Key;
+			id?: React.Key;
+			bhv?: never;
 			children?: ReactNode;
 		}
 	): JSX.Element;
@@ -338,7 +339,7 @@ export module TentaCollector
 
 		if (bhv === undefined)
 		{
-			bhv = useById(props.id!);
+			bhv = useById(props.id ?? "items");
 		}
 
 
@@ -407,6 +408,34 @@ export module TentaCollector
 	//	next?: CollectorPlaceholder | null;
 
 	//}
+
+
+
+
+	//---
+
+
+
+	export function defaultById(id: React.Key)
+	{
+
+		let { map } = defaultById;
+
+		let col = map.get(id);
+
+		if (!col)
+			map.set(id, col = <Provider id={id} />);
+
+		return col;
+
+	}
+
+
+	export module defaultById
+	{
+		export var map = new Map<React.Key, JSX.Element>();
+	}
+
 
 
 

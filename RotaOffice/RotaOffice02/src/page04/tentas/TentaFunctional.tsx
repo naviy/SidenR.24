@@ -84,13 +84,13 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 export module TentaFunctional
 {
 
+
 	//---
 
 
 
-	export interface Config<
-		TTenta extends TentaBase = TentaBase
-	>
+
+	export interface Config<TTenta extends TentaBase = TentaBase>
 	{
 		collectors?: Record<string | number | symbol, () => TentaBase[]>;
 		render?: (tenta: TTenta) => ReactNode;
@@ -99,19 +99,88 @@ export module TentaFunctional
 
 
 
+
+	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
+		component?: FC<{ tenta: TTenta }>,
+		collectors?: /*Record<string | number | symbol, () => TentaBase[]> |*/ (() => TentaBase[]),
+	];
+
+
+
+
+	export type ConfigAlias<TTenta extends TentaBase, TArgs extends any[]> =
+		Config<TTenta> |
+		ArrayConfig<TTenta>  |
+		((...args: TArgs) => Config<TTenta> | ArrayConfig<TTenta>)
+	;
+
+
+
+	export function Config<
+		TTenta extends TentaBase,
+		TArgs extends any[]
+	>(
+		configGetter: ConfigAlias<TTenta, TArgs>,
+		args: TArgs
+	): Config<TTenta>
+	{
+
+		let cfg = typeof configGetter === "function" ? configGetter(...args) : configGetter;
+
+		if (Array.isArray(cfg))
+		{
+			return {
+				component: cfg[0],
+				collectors: typeof cfg[1] === "function" ? { "items": cfg[1] } : cfg[1],
+			};
+		}
+
+
+		return cfg;
+
+	}
+
+
+
+
+	//---
+
+
+
+
+	//export function createFactory<
+	//	TTenta extends TentaBase
+	//>(
+	//	tentaClass: Constructor<TTenta & TentaFunctional>,
+	//	configGetter: () => ConfigAlias<TTenta>
+	//):
+	//	(id: React.Key) => TTenta;
+
+
+	//export function createFactory<
+	//	TTenta extends TentaBase,
+	//	TArgs extends any[]
+	//>(
+	//	tentaClass: Constructor<TTenta & TentaFunctional>,
+	//	configGetter: (...args: TArgs) => ConfigAlias<TTenta>
+	//):
+	//	(id: React.Key, ...args: TArgs) => TTenta;
+
+
 	export function createFactory<
 		TTenta extends TentaBase,
 		TArgs extends any[]
 	>(
 		tentaClass: Constructor<TTenta & TentaFunctional>,
-		configGetter: (...args: TArgs) => Config<TTenta>
-	)
+		configGetter: ConfigAlias<TTenta, TArgs>
+	):
+		(id: React.Key, ...args: TArgs) => TTenta
 	{
 
 		return (id: React.Key, ...args: TArgs) =>
 		{
 
-			let cfg = configGetter(...args);
+			let cfg = Config(configGetter, args);
 
 			let tenta = new tentaClass(id);
 
