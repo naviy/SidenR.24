@@ -1,4 +1,4 @@
-import { Focuser, Repaintable } from "@libs";
+import { Focuser } from "@libs";
 import { createRef } from "react";
 import { Tenta } from "../../tentas";
 
@@ -14,24 +14,14 @@ import { Tenta } from "../../tentas";
 
 
 
-export interface PileNode1UseConfig extends
-	Repaintable.UseConfig,
-	Tenta.Base.UseConfig,
-	Tenta.Focusable.UseConfig
-{
-}
-
-
-
-
-export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
+export class PileNodeBaseTenta extends Tenta.Focusable(Tenta.Base)
 {
 
 	//---
 
 
 
-	override use(cfg?: PileNode1UseConfig)
+	override use(cfg?: PileNodeBaseTenta.UseConfig)
 	{
 
 		super.use(cfg);
@@ -304,7 +294,13 @@ export class PileNode1Tenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-export module PileNode1Tenta
+export module PileNodeBaseTenta
 {
+
+
+	export interface UseConfig extends Tenta.Base.UseConfig, Tenta.Focusable.UseConfig
+	{
+	}
+
 
 }

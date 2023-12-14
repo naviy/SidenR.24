@@ -148,25 +148,6 @@ export module TentaFunctional
 
 
 
-	//export function createFactory<
-	//	TTenta extends TentaBase
-	//>(
-	//	tentaClass: Constructor<TTenta & TentaFunctional>,
-	//	configGetter: () => ConfigAlias<TTenta>
-	//):
-	//	(id: React.Key) => TTenta;
-
-
-	//export function createFactory<
-	//	TTenta extends TentaBase,
-	//	TArgs extends any[]
-	//>(
-	//	tentaClass: Constructor<TTenta & TentaFunctional>,
-	//	configGetter: (...args: TArgs) => ConfigAlias<TTenta>
-	//):
-	//	(id: React.Key, ...args: TArgs) => TTenta;
-
-
 	export function createFactory<
 		TTenta extends TentaBase,
 		TArgs extends any[]
@@ -195,6 +176,8 @@ export module TentaFunctional
 
 
 
+
 	//---
+
 
 }

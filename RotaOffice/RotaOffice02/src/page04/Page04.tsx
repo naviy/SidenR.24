@@ -1,12 +1,12 @@
-import { $log, Div, Expander, GlobalState, Pane, Route } from '@libs';
+import { Div, Expander, GlobalState, Pane, Route } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
-import React, { useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import { Pile } from "./piles";
 import { PileNode2 } from "./piles/nodes1/PileNode2";
 import { PileNode3 } from "./piles/nodes1/PileNode3";
-import { Tenta } from './tentas';
 import { PileNode4 } from "./piles/nodes1/PileNode4";
+import { Tenta } from './tentas';
 
 
 
@@ -146,28 +146,7 @@ function Rows05Pile()
 
 
 
-//class Row05Tenta extends PileNode2.Tenta
-//{
-//	constructor(id: React.Key)
-//	{
-//		super(id);
-
-//		this.addCollector("catagories", () => [
-//			Catagory1Tenta("ctg1", myData),
-//			Catagory2Tenta("ctg2", myData),
-//		]);
-//	}
-
-//	override render()
-//	{
-//		return <Row05 key={this.id} tenta={this} />
-//	}
-
-//}
-
-
-
-var Row05Tenta: PileNode2.Factory = PileNode2.createFactory([
+var Row05Tenta: PileNode2.TF = PileNode2.createFactory([
 	Row05,
 	() => [
 		Catagory1Tenta("ctg1", myData),
@@ -315,39 +294,6 @@ function Row05(props: PileNode2.Props)
 
 
 
-//class Catagory1Tenta extends PileNode3.Tenta
-//{
-
-//	constructor(public data: typeof myData)
-//	{
-//		super("ctg1");
-
-//		this.addCollector("rows1", () =>
-//			data.map(a => new Row05Tenta(a))
-//		);
-//	}
-
-//	override render()
-//	{
-//		return <Catagory1Node key={this.id} tenta={this} />
-//	}
-
-//}
-
-
-//var Catagory1Tenta = PileNode3.tentaFactory((data: typeof myData) =>
-//({
-
-//	component: Catagory1Node,
-
-//	collectors: {
-//		"rows1": () => data.map(a => new Row05Tenta(a)),
-//	},
-
-
-//}))
-
-
 var Catagory1Tenta = PileNode3.createFactory((data: typeof myData) => [
 	Catagory1Node,
 	() => data.map(Row05Tenta),
@@ -374,34 +320,12 @@ function Catagory1Node(props: PileNode3.Props)
 				<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 
 			</>
-
 		</PileNode3>
 
 	);
 
 }
 
-
-
-
-//class Catagory2Tenta extends PileNode3.Tenta
-//{
-
-//	constructor(public data: typeof myData)
-//	{
-//		super("ctg2");
-
-//		this.addCollector("rows2", () =>
-//			data.map(a => new Row05Tenta(a))
-//		);
-//	}
-
-//	override render()
-//	{
-//		return <Catagory2Node key={this.id} tenta={this} />
-//	}
-
-//}
 
 
 
@@ -431,13 +355,3 @@ function Catagory2Node(props: PileNode3.Props)
 	</PileNode3>;
 
 }
-
-
-
-
-
-
-
-
-
-

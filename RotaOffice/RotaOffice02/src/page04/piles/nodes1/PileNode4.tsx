@@ -1,6 +1,5 @@
 import { Tenta as Tenta_ } from "../../tentas";
-import { PileNode1Tenta } from "./PileNode1_Tenta";
-import { PileNode2, type PileNode2Props } from "./PileNode2";
+import { PileNodeBase } from "./PileNodeBase";
 
 
 
@@ -14,16 +13,11 @@ import { PileNode2, type PileNode2Props } from "./PileNode2";
 
 
 
-type PileNode4Props = PileNode2Props;
-
-
-
-
-export function PileNode4(props: PileNode4Props & {
+export function PileNode4(props: PileNode4.Props & {
 	children: JSX.Element | [JSX.Element, JSX.Element]
 })
 {
-	return PileNode2(props);
+	return PileNodeBase(props);
 }
 
 
@@ -40,12 +34,12 @@ export module PileNode4
 
 
 
-	export type Props = PileNode4Props;
+	export type Props = PileNodeBase.Props;
 
 
 
 
-	export class Tenta extends PileNode1Tenta
+	export class Tenta extends PileNodeBase.Tenta
 	{
 
 		//---
@@ -57,7 +51,6 @@ export module PileNode4
 			super(id);
 
 			this.initPhase({ maxPhase: 1, defaultStage: "opened" })
-
 		}
 
 
@@ -109,6 +102,7 @@ export module PileNode4
 	{
 		return Tenta_.Functional.createFactory<FT, TArgs>(FT, configGetter);
 	}
+
 
 
 

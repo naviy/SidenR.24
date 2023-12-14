@@ -17,63 +17,6 @@ import { TentaStage } from "./TentaStage";
 
 
 
-//export type TentaInitProps = {
-
-//	//descriptor: TentaDescriptor;
-
-//	id: React.Key;
-
-//	defaultStage?: TentaStage;
-
-//};
-
-
-//export function TentaInitProps(props: TentaInitProps.Alias): TentaInitProps
-//{
-//	if (Array.isArray(props))
-//	{
-//		return {
-//			descriptor: props[0],
-//			id: props[1],
-//			...props[2],
-//		};
-//	}
-
-//	return props;
-//}
-
-
-
-//export module TentaInitProps
-//{
-
-//	export type Alias = TentaInitProps | [
-
-//		//descriptor: TentaDescriptor,
-
-//		id: React.Key,
-
-//		cfg?: Omit<TentaInitProps, "id" | "descriptor">
-
-//	];
-
-//}
-
-
-
-
-
-
-
-
-
-//===
-
-
-
-
-
-
 export interface TentaGlobalState extends GlobalState
 {
 

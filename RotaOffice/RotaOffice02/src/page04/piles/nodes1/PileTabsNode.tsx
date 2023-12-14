@@ -13,7 +13,12 @@ import { PileNodeBase } from "./PileNodeBase";
 
 
 
-export function PileNode3(props: PileNode3.Props & {
+type PileTabsNodeProps = PileNodeBase.Props;
+
+
+
+
+export function PileTabsNode(props: PileTabsNodeProps & {
 	children: JSX.Element | [JSX.Element, JSX.Element]
 })
 {
@@ -25,7 +30,7 @@ export function PileNode3(props: PileNode3.Props & {
 
 
 
-export module PileNode3
+export module PileTabsNode
 {
 
 
@@ -34,7 +39,7 @@ export module PileNode3
 
 
 
-	export type Props = PileNodeBase.Props;
+	export type Props = PileTabsNodeProps;
 
 
 
