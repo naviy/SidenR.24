@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "@app";
-import { Div, Focuser, Pane } from '@libs';
-import { Tenta as Tenta_ } from "../../tentas";
+import { Div, Focuser, GlobalState, Pane } from '@libs';
+import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileNodeBaseTenta } from "./PileNodeBaseTenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -47,7 +47,7 @@ export function PileNodeBase({
 
 	if (tail === undefined && tenta.collectorCount === 1)
 	{
-		tail = Tenta_.Collector.defaultById(tenta.collectors![0].id);
+		tail = tenta.collectors![0].defaultProviderElement();
 	}
 
 
@@ -68,93 +68,99 @@ export function PileNodeBase({
 
 	return (
 
+		<GlobalState state={tenta.globalState}>
 
-		<Pile.Node tenta={tenta}>
-
-			<Focuser
-				ref={tenta.rootFfRef}
-				//name={`pile-node#${id}`}
-				ghost
-				focusable
-			>
-
-				<Div relative>
-
-					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
-
-					{/*<Pile.ListBackfill mb={!tenta.parent ? 0 : 24} />*/}
-					{backfill && <Pile.Node.Backfill mb={tailIsVisible ? 24 : 48} />}
+			<Tenta.Provider tenta={tenta}>
+				<Tenta.ByPhaseProvider tenta={tenta}>
 
 
 					<Focuser
-						ref={tenta.ffRef}
-						//name={`pile-row-body#${id}`}
-						listener={tenta}
-						autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
+						ref={tenta.rootFfRef}
+						//name={`pile-node#${id}`}
+						ghost
+						focusable
 					>
 
-						<Pane.Row
-							//debug
-							start
-							end={!tailIsVisible || tailIsSeparated}
+						<Div relative>
 
-							rt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : ""}
-							rb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
+							<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
-							bl={isAccented ? "lg" : undefined}
-							br={isAccented ? "lg" : undefined}
-							bt={topMargin && isAccented ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
-							bb={btmMargin && isAccented ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
+							{/*<Pile.ListBackfill mb={!tenta.parent ? 0 : 24} />*/}
+							{backfill && <Pile.Node.Backfill mb={tailIsVisible ? 24 : 48} />}
 
-							//e={isAccented ? "L2" : undefined}
 
-							{...rowProps}
+							<Focuser
+								ref={tenta.ffRef}
+								//name={`pile-row-body#${id}`}
+								listener={tenta}
+								autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
+							>
 
-							ff
-						>
+								<Pane.Row
+									//debug
+									start
+									end={!tailIsVisible || tailIsSeparated}
 
-							<ErrorBoundary>
-								{tenta.toolsIsVisible ? Tenta_.Details.wrap(tenta, body) : body}
-							</ErrorBoundary>
+									rt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : ""}
+									rb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
 
-						</Pane.Row>
+									bl={isAccented ? "lg" : undefined}
+									br={isAccented ? "lg" : undefined}
+									bt={topMargin && isAccented ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
+									bb={btmMargin && isAccented ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
+
+									//e={isAccented ? "L2" : undefined}
+
+									{...rowProps}
+
+									ff
+								>
+
+									<ErrorBoundary>
+										{tenta.toolsIsVisible ? Tenta_.Details.wrap(tenta, body) : body}
+									</ErrorBoundary>
+
+								</Pane.Row>
+
+							</Focuser>
+
+
+							{tail !== undefined &&
+
+								<Focuser ref={tenta.itemsFfRef} ghost>
+
+									<PileNodeTail1
+
+										start={tailIsSeparated}
+										expanded={tailIsVisible}
+										indent={tailIsSeparated}
+										cellIndent
+
+										rt={tailIsSeparated ? "lg" : undefined}
+										rb={tailIsSeparated ? "lg" : undefined}
+										bt={tailIsSeparated ? "md" : undefined}
+										bb={tailIsSeparated ? "md" : undefined}
+
+										pt={!tailIsVisible || !tail ? 0 : btmMargin * 12 as any}
+										mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
+
+										children={tail}
+									/>
+
+								</Focuser>
+
+							}
+
+
+						</Div>
 
 					</Focuser>
 
 
-					{tail !== undefined &&
+				</Tenta.ByPhaseProvider>
+			</Tenta.Provider>
 
-						<Focuser ref={tenta.itemsFfRef} ghost>
-
-							<PileNodeTail1
-
-								start={tailIsSeparated}
-								expanded={tailIsVisible}
-								indent={tailIsSeparated}
-								cellIndent
-
-								rt={tailIsSeparated ? "lg" : undefined}
-								rb={tailIsSeparated ? "lg" : undefined}
-								bt={tailIsSeparated ? "md" : undefined}
-								bb={tailIsSeparated ? "md" : undefined}
-
-								pt={!tailIsVisible || !tail ? 0 : btmMargin * 12 as any}
-								mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
-
-								children={tail}
-							/>
-
-						</Focuser>
-
-					}
-
-
-				</Div>
-
-			</Focuser>
-
-		</Pile.Node>
-
+		</GlobalState>
 	);
 
 }

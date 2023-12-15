@@ -22,7 +22,7 @@ export { TentaFocusable as Focusable } from "./TentaFocusable";
 
 export import Collector = TentaCollector;
 export import Collection = TentaCollector.Provider;
-export import NoProviders = TentaCollector.NoProvider;
+//export import NoProviders = TentaCollector.NoProvider;
 
 //export { TentaDescriptor as Descriptor } from "./TentaDescriptor";
 

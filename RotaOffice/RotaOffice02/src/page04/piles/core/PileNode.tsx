@@ -16,36 +16,36 @@ import { PileNodeBackfill } from "./PileNodeBackfill";
 
 
 
-export function PileNode({
-	tenta,
-	children
-}: {
-	tenta: Tenta.Base;
-	children: ReactNode;
-})
-{
+//export function PileNode({
+//	tenta,
+//	children
+//}: {
+//	tenta: Tenta.Base;
+//	children: ReactNode;
+//})
+//{
 
-	return (
+//	return (
 
-		<GlobalState state={tenta.globalState}>
+//		<GlobalState state={tenta.globalState}>
 
-			<Tenta.Provider tenta={tenta}>
-				<Tenta.ByPhaseProvider tenta={tenta}>
+//			<Tenta.Provider tenta={tenta}>
+//				<Tenta.ByPhaseProvider tenta={tenta}>
 
-					<Tenta.Collector.NoProvider>
+//					<Tenta.Collector.NoProvider>
 
-						{children}
+//						{children}
 
-					</Tenta.Collector.NoProvider>
+//					</Tenta.Collector.NoProvider>
 
-				</Tenta.ByPhaseProvider>
-			</Tenta.Provider>
+//				</Tenta.ByPhaseProvider>
+//			</Tenta.Provider>
 
-		</GlobalState>
+//		</GlobalState>
 
-	);
+//	);
 
-}
+//}
 
 
 

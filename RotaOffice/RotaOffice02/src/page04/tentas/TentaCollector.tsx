@@ -1,6 +1,6 @@
 import { GlobalState, Repaintable } from "@libs";
 import type React from "react";
-import { createContext, useContext, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { use as useTenta } from "./Tenta";
 import { /*TentaInitProps,*/ type TentaBase } from "./TentaBase";
 
@@ -56,6 +56,12 @@ export class TentaCollector extends Repaintable()
 
 	globalState?: GlobalState;
 
+
+	#defaultProviderElement?: JSX.Element;
+	defaultProviderElement()
+	{
+		return this.#defaultProviderElement ??= <TentaCollector.Provider bhv={this} />;
+	}
 
 	//children?: ReactNode;
 
@@ -260,15 +266,15 @@ export module TentaCollector
 
 
 
-	const CollectorContext = createContext<{ collector: TentaCollector | null }>({ collector: null });
+	//const CollectorContext = createContext<{ collector: TentaCollector | null }>({ collector: null });
 
 
 
 
-	export function use(): TentaCollector | null
-	{
-		return useContext(CollectorContext)?.collector || null;
-	}
+	//export function use(): TentaCollector | null
+	//{
+	//	return useContext(CollectorContext)?.collector || null;
+	//}
 
 
 
@@ -362,10 +368,10 @@ export module TentaCollector
 		}
 
 
-		body = <CollectorContext.Provider
-			value={{ collector: bhv }}
-			children={body}
-		/>;
+		//body = <CollectorContext.Provider
+		//	value={{ collector: bhv }}
+		//	children={body}
+		///>;
 
 
 		return body;
@@ -375,13 +381,13 @@ export module TentaCollector
 
 
 
-	export function NoProvider(props: { children: ReactNode })
-	{
-		return <CollectorContext.Provider
-			value={{ collector: null }}
-			children={props.children}
-		/>;
-	}
+	//export function NoProvider(props: { children: ReactNode })
+	//{
+	//	return <CollectorContext.Provider
+	//		value={{ collector: null }}
+	//		children={props.children}
+	//	/>;
+	//}
 
 
 
@@ -408,34 +414,6 @@ export module TentaCollector
 	//	next?: CollectorPlaceholder | null;
 
 	//}
-
-
-
-
-	//---
-
-
-
-	export function defaultById(id: React.Key)
-	{
-
-		let { map } = defaultById;
-
-		let col = map.get(id);
-
-		if (!col)
-			map.set(id, col = <Provider id={id} />);
-
-		return col;
-
-	}
-
-
-	export module defaultById
-	{
-		export var map = new Map<React.Key, JSX.Element>();
-	}
-
 
 
 
