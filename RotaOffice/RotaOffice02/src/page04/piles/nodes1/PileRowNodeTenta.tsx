@@ -14,14 +14,14 @@ import { Tenta } from "../../tentas";
 
 
 
-export class PileNodeBaseTenta extends Tenta.Focusable(Tenta.Base)
+export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 {
 
 	//---
 
 
 
-	override use(cfg?: PileNodeBaseTenta.UseConfig)
+	override use(cfg?: PileRowNodeTenta.UseConfig)
 	{
 
 		super.use(cfg);
@@ -294,7 +294,7 @@ export class PileNodeBaseTenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-export module PileNodeBaseTenta
+export module PileRowNodeTenta
 {
 
 

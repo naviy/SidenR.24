@@ -68,10 +68,12 @@ const Root = styled(
 }>((props) => ({
 
 	flex: `0 0 ${24 + props.indent}px`,
-	display: "flex",
+	display: "inline-flex",
 	justifyContent: "end",
 	textAlign: "right",
-	lineHeight: 1,
+	lineHeight: "24px",
+	minHeight: 24,
+	whiteSpace: "nowrap",
 	transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
 	">div": {

@@ -1,5 +1,5 @@
 import { Tenta as Tenta_ } from "../../tentas";
-import { PileNodeBase } from "./PileNodeBase";
+import { PileRowNode } from "./PileRowNode";
 
 
 
@@ -14,10 +14,10 @@ import { PileNodeBase } from "./PileNodeBase";
 
 
 export function PileNode4(props: PileNode4.Props & {
-	children: JSX.Element | [JSX.Element, JSX.Element]
+	children: JSX.Element
 })
 {
-	return PileNodeBase(props);
+	return PileRowNode(props);
 }
 
 
@@ -34,12 +34,12 @@ export module PileNode4
 
 
 
-	export type Props = PileNodeBase.Props;
+	export type Props = PileRowNode.Props;
 
 
 
 
-	export class Tenta extends PileNodeBase.Tenta
+	export class Tenta extends PileRowNode.Tenta
 	{
 
 		//---

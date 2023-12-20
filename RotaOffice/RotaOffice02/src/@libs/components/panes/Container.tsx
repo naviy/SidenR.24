@@ -189,6 +189,9 @@ export function renderProvider(
 
 
 
+	let { wrapperCls } = props;
+
+
 	let expanderProps: Partial<RootProps> & React.HTMLProps<HTMLDivElement> = {};
 
 	if (flexExpander)
@@ -207,7 +210,8 @@ export function renderProvider(
 
 		body = expander.childrenShouldBeRendered && /*Block.injectProps(*/Values.one(body)/*)*/;
 
-		body = <div ref={expander.wrapperRef} className={clsx("pane-expander flexi relative", props.wrapperCls)} children={body} />;
+		body = <div ref={expander.wrapperRef} className={clsx("pane-expander flexi relative", wrapperCls)} children={body} />;
+		wrapperCls = undefined;
 
 		expanderProps = {
 			expandMode: "height",
@@ -256,7 +260,7 @@ export function renderProvider(
 			...sizes,
 
 			timeout: props.timeout,
-			className: addClassName,
+			className: clsx(addClassName, wrapperCls),
 
 			r: PaneRadius.css(v.rtl, v.rtr, v.rbr, v.rbl),
 

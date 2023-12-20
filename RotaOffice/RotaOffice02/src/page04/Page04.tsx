@@ -1,4 +1,4 @@
-import { Div, Expander, GlobalState, Pane, Route } from '@libs';
+import { $log, Div, Expander, GlobalState, Pane, Route } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useReducer, useState } from "react";
@@ -7,6 +7,7 @@ import { PileNode2 } from "./piles/nodes1/PileNode2";
 import { PileNode3 } from "./piles/nodes1/PileNode3";
 import { PileNode4 } from "./piles/nodes1/PileNode4";
 import { Tenta } from './tentas';
+import { PileTabsNode } from './piles/nodes1/PileTabsNode';
 
 
 
@@ -40,11 +41,9 @@ export module Page04
 
 			<Pile.GlobalStyles />
 
-			<GlobalState name="page03">
-				<Div mx200 m100>
-					<Rows05Pile />
-				</Div>
-			</GlobalState>
+			<Div mx200 m100>
+				<Rows05Pile />
+			</Div>
 
 		</>;
 
@@ -146,22 +145,28 @@ function Rows05Pile()
 
 
 
-var Row05Tenta: PileNode2.TF = PileNode2.createFactory([
-	Row05,
+var Row05Tenta: PileNode2.TF<[number]> = PileNode2.createFactory((id: number) => [
+
+	(tenta: PileNode2.Tenta) => <Row05 key={id} r={$log("Row05Tenta", id)} tenta={tenta} />,
+
 	() => [
 		Catagory1Tenta("ctg1", myData),
-		Catagory2Tenta("ctg1", myData),
+		Catagory2Tenta("ctg2", myData),
+		Catagory3Tenta("ctg3", myData.map(a => a * 10)),
 	],
+
 ]);
 
 
 
 
 
-function Row05(props: PileNode2.Props)
+function Row05(props: PileNode2.Props & { r: number })
 {
 
 	//$log("Row05 " + props.tenta);
+
+	$log("Row05", props.r)
 
 
 	return <PileNode2 backfill {...props}>
@@ -171,7 +176,7 @@ function Row05(props: PileNode2.Props)
 			<>
 				<Pane start p12>
 					<Pile.PhaseIcon />
-					<span>111 1111 11111 111111</span>
+					<em>{"".padEnd(20, props.r + " ")}#{props.tenta.iid}</em>
 				</Pane>
 				<Pane end p12 textRight>222 2222 22222 222222</Pane>
 			</>
@@ -353,5 +358,29 @@ function Catagory2Node(props: PileNode3.Props)
 
 		</>
 	</PileNode3>;
+
+}
+
+
+
+
+
+
+var Catagory3Tenta = PileTabsNode.createFactory((data: typeof myData) => [
+	(tenta: PileTabsNode.Tenta) => <Catagory3Node key={tenta.id} tenta={tenta} data={data} />,
+	{
+		tab1: () => data.map(Row05Tenta),
+		tab2: () => $log("tab2:", data.map(a => a * 10)).map((a: number) => Row05Tenta(a, a)),
+	}
+]);
+
+
+
+function Catagory3Node(props: PileTabsNode.Props & { data: number[] })
+{
+
+	$log("Catagory3Node", props.data)
+
+	return <PileTabsNode {...props} />
 
 }

@@ -1,5 +1,5 @@
 import { Tenta as Tenta_ } from "../../tentas";
-import { PileNodeBase } from "./PileNodeBase";
+import { PileRowNode } from "./PileRowNode";
 
 
 
@@ -14,10 +14,10 @@ import { PileNodeBase } from "./PileNodeBase";
 
 
 export function PileNode3(props: PileNode3.Props & {
-	children: JSX.Element | [JSX.Element, JSX.Element]
+	children: JSX.Element
 })
 {
-	return PileNodeBase(props);
+	return PileRowNode(props);
 }
 
 
@@ -34,12 +34,12 @@ export module PileNode3
 
 
 
-	export type Props = PileNodeBase.Props;
+	export type Props = PileRowNode.Props;
 
 
 
 
-	export class Tenta extends PileNodeBase.Tenta
+	export class Tenta extends PileRowNode.Tenta
 	{
 
 		//---
@@ -82,9 +82,11 @@ export module PileNode3
 
 		override onItemPhaseUp(item: Tenta_.Base)
 		{
-			//_$log(this + ".onItemPhaseUp " + item)
+			//_$log(this+".onItemPhaseDown")
+			//__$log("maxItemStage:", this.maxItemStage);
 
-			if (!item.collapsed && this.anyTenta(a => !a.collapsed))
+			if (this.hasSeparatedItems)
+			//if (!item.collapsed && this.anyTenta(a => !a.collapsed))
 			{
 				this.open();
 			}
@@ -94,7 +96,8 @@ export module PileNode3
 		override onItemPhaseDown(item: Tenta_.Base)
 		{
 
-			if (item.collapsed && this.allTentas(a => a.collapsed))
+			if (!this.hasSeparatedItems)
+			//if (item.collapsed && this.allTentas(a => a.collapsed))
 			{
 				this.expand();
 			}

@@ -1,6 +1,7 @@
 import { ErrorBoundary } from "@app";
-import { Pane } from '@libs';
+import { $log, Pane } from '@libs';
 import clsx from "clsx";
+import type { Tenta } from "../../tentas";
 import { Pile } from "../core";
 
 
@@ -17,7 +18,9 @@ import { Pile } from "../core";
 
 export function PileNodeTail1({
 
-	indent = true,
+	collector,
+
+	indent,
 	cellIndent,
 
 	children,
@@ -26,6 +29,7 @@ export function PileNodeTail1({
 
 }: Pane.ColProps & {
 
+	collector: Tenta.Collector;
 	indent?: boolean;
 	cellIndent?: boolean;
 
@@ -34,7 +38,12 @@ export function PileNodeTail1({
 
 	//let indent = indent_ !== false;
 
-	let oldCellIndent = Pile.useCellIndent();
+	let parentCellIndent = Pile.useCellIndent();
+
+
+	let isSeparated = collector.isSeparated();
+
+	indent ??= isSeparated;
 
 
 	return (
@@ -42,16 +51,25 @@ export function PileNodeTail1({
 		<ErrorBoundary>
 
 			<Pane.Col
-				start end
-				noreexpand
+
+				start
+				end
+
+				rt={isSeparated ? "lg" : undefined}
+				rb={isSeparated ? "lg" : undefined}
+				bt={isSeparated ? "md" : undefined}
+				bb={isSeparated ? "md" : undefined}
+
 				{...colProps}
+
 				wrapperCls={clsx(indent && "pl36 pr12", colProps.wrapperCls)}
+
 			//border2 borderGreen
 			>
 
 				<Pile.Node.LinkLine.OptionsProvider width={indent ? 21 : 0}>
 
-					<Pile.CellIndentProvider indent={cellIndent && !indent ? oldCellIndent + 24 : 0}>
+					<Pile.CellIndentProvider indent={cellIndent && !indent ? parentCellIndent + 24 : 0}>
 						{children}
 					</Pile.CellIndentProvider>
 

@@ -23,7 +23,7 @@ export interface TentaFunctional
 
 
 
-export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBase) 
+export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBase)
 {
 
 	return class FunctionalTenta extends Base
@@ -101,18 +101,18 @@ export module TentaFunctional
 
 
 	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
-		component?: FC<{ tenta: TTenta }>,
-		collectors?: /*Record<string | number | symbol, () => TentaBase[]> |*/ (() => TentaBase[]),
+		componentOrRender: FC<{ tenta: TTenta }> | ((tenta: TTenta) => ReactNode),
+		collectors?: Record<string | number | symbol, () => TentaBase[]> | (() => TentaBase[]),
 	];
 
 
 
 
-	export type ConfigAlias<TTenta extends TentaBase, TArgs extends any[]> =
+	export type ConfigAlias<TTenta extends TentaBase, TArgs extends any[]> = (
 		Config<TTenta> |
-		ArrayConfig<TTenta>  |
+		ArrayConfig<TTenta> |
 		((...args: TArgs) => Config<TTenta> | ArrayConfig<TTenta>)
-	;
+	);
 
 
 
@@ -127,17 +127,47 @@ export module TentaFunctional
 
 		let cfg = typeof configGetter === "function" ? configGetter(...args) : configGetter;
 
+
 		if (Array.isArray(cfg))
 		{
-			return {
-				component: cfg[0],
-				collectors: typeof cfg[1] === "function" ? { "items": cfg[1] } : cfg[1],
-			};
+
+			let collectors = typeof cfg[1] === "function" ? { "items": cfg[1] } : cfg[1];
+
+			let cfg0 = cfg[0];
+
+			if (isFC<TTenta>(cfg0))
+			{
+				return {
+					component: cfg0,
+					collectors,
+				};
+			}
+			else
+			{
+				return {
+					render: cfg0,
+					collectors,
+				};
+			}
+
+
 		}
 
 
 		return cfg;
 
+	}
+
+
+	function isFC<TTenta extends TentaBase>(func: Function | null | undefined): func is FC<{ tenta: TTenta }>
+	{
+
+		if (!func)
+			return false;
+
+		let firstChar = func.name.charCodeAt(0);
+
+		return firstChar >= 65 && firstChar <= 90;
 	}
 
 
@@ -167,6 +197,7 @@ export module TentaFunctional
 
 			tenta.cfg = cfg as any;
 			cfg.collectors && tenta.addCollectors(cfg.collectors);
+			tenta.init();
 
 			return tenta;
 

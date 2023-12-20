@@ -57,6 +57,13 @@ export class TentaBase extends Repaintable()
 	}
 
 
+	/** Вызывается вручную после создания и добавления коллекторов */
+	init()
+	{
+
+	}
+
+
 	//---
 
 
@@ -67,9 +74,9 @@ export class TentaBase extends Repaintable()
 	//---
 
 
-	collector?: TentaCollector | null;
+	parentCollector?: TentaCollector | null;
 
-	get parent(): TentaBase | null { return this.collector?.tenta || null; }
+	get parent(): TentaBase | null { return this.parentCollector?.parentTenta || null; }
 
 	#priorSibling?: TentaBase | null;
 	#nextSibling?: TentaBase | null;
@@ -125,9 +132,9 @@ export class TentaBase extends Repaintable()
 		return TentaStage.byProps(this);
 	}
 
-	get stageIndex(): number
+	get stageValue(): number
 	{
-		return TentaStage.indexOf(this.stage);
+		return TentaStage.valueOf(this.stage);
 	}
 
 
@@ -157,14 +164,9 @@ export class TentaBase extends Repaintable()
 
 
 
-	//get topStage() { return TentaStage.max(this.stage, this.#priorSibling?.stage); }
-	//get btmStage() { return TentaStage.max(this.stage, this.#nextSibling?.stage); }
-
-
-
 	override toString()
 	{
-		return `${this.constructor.name}-#${this.id}-##${this.iid}`;
+		return `T##${this.iid}`;
 	}
 
 
@@ -226,9 +228,35 @@ export class TentaBase extends Repaintable()
 		this.collectors?.forEach((col, i, all) =>
 		{
 			col.setSiblings(all[i - 1], all[i + 1]);
-			col.ensureTentas();
+			col.ensureItems();
 		});
 	}
+
+
+
+	setCollector(
+		collector: TentaCollector | null,
+		prior: TentaBase | null | undefined,
+		next: TentaBase | null | undefined
+	)
+	{
+
+		this.parentCollector = collector;
+		this.#priorSibling = prior || null;
+		this.#nextSibling = next || null;
+
+		if (this.globalState === undefined)
+		{
+			this.globalState = GlobalState.node(collector?.globalState, this.id + "");
+		}
+
+		this.#loadFromGlobalState();
+
+	}
+
+
+
+	//---
 
 
 
@@ -248,28 +276,6 @@ export class TentaBase extends Repaintable()
 
 
 		this.ensurePhase(cfg);
-	}
-
-
-
-	setCollector(
-		collector: TentaCollector | null,
-		prior: TentaBase | null | undefined,
-		next: TentaBase | null | undefined
-	)
-	{
-
-		this.collector = collector;
-		this.#priorSibling = prior || null;
-		this.#nextSibling = next || null;
-
-		if (this.globalState === undefined)
-		{
-			this.globalState = GlobalState.node(collector?.tenta?.globalState, this.id + "");
-		}
-
-		this.#loadFromGlobalState();
-
 	}
 
 
@@ -305,15 +311,8 @@ export class TentaBase extends Repaintable()
 
 
 
-	//---
-
-
-
 	setPhase(value: TentaPhase): boolean
 	{
-		//$log("setPhase " + this, " phase =", value)
-
-
 		if (this.#phase === value || this.disabled)
 			return false;
 
@@ -321,22 +320,15 @@ export class TentaBase extends Repaintable()
 			return false;
 
 
+		//$log(this + ".setPhase", " phase =", value)
+
+
 		this.priorPhase = this.#phase || 0;
 		this.#phase = value;
 
-		this.onPhaseChanged();
+		this.#phaseChanged();
 
-
-		if (this.priorPhase < this.#phase)
-		{
-			this.onPhaseUp();
-			this.parent?.onItemPhaseUp(this);
-		}
-		else
-		{
-			this.onPhaseDown();
-			this.parent?.onItemPhaseDown(this);
-		}
+		this.repaintNearests();
 
 
 		return true;
@@ -345,7 +337,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	protected onPhaseChanged()
+	#phaseChanged()
 	{
 		//_$log("onPhaseChanged " + this);
 		//this.onPhaseChanged?.(this);
@@ -355,10 +347,56 @@ export class TentaBase extends Repaintable()
 
 		this.#saveToGlobalState();
 
-		this.repaintNearests();
+
+		this.parentCollector?.itemPhaseChanged();
+
+
+		if (this.priorPhase != null && this.#phase != null)
+		{
+
+			if (this.priorPhase < this.#phase)
+			{
+				this.onPhaseUp();
+				this.parent?.onItemPhaseUp(this);
+			}
+			else if (this.priorPhase > this.#phase)
+			{
+				this.onPhaseDown();
+				this.parent?.onItemPhaseDown(this);
+			}
+
+		}
 
 	}
 
+
+
+	//maxItemStage: TentaStage | null = null;
+	hasSeparatedItems: boolean = false;
+
+	collectorPhaseChanged()
+	{
+
+		//$log(this + ".collectorPhaseChanged");
+
+		this.recalcStages();
+
+	}
+
+
+	recalcStages()
+	{
+
+		//_$log(this + ".recalcStages");
+		//this.maxItemStage = this.collectors?.reduce<TentaStage>(
+		//	(prior, cur) => TentaStage.max(prior, cur.maxItemStage),
+		//	TentaStage.Min
+		//) || null;
+
+
+		this.hasSeparatedItems = this.anyTenta(a => a.isSeparated())
+
+	}
 
 
 	repaintNearests()
@@ -506,13 +544,13 @@ export class TentaBase extends Repaintable()
 
 	forEachTenta(action: (tenta: TentaBase) => void)
 	{
-		return !!this.collectors?.forEach(col => col.tentas?.forEach(action));
+		return !!this.collectors?.forEach(col => col.items?.forEach(action));
 	}
 
 
 	anyTenta(match: (tenta: TentaBase) => boolean)
 	{
-		return !!this.collectors?.find(col => col.tentas?.find(match));
+		return !!this.collectors?.find(col => col.items?.find(match));
 	}
 
 
@@ -552,7 +590,7 @@ export class TentaBase extends Repaintable()
 		let margin = this.bodyTopMargin();
 
 
-		if (margin < TentaStage.MaxIndex)
+		if (margin < TentaStage.MaxValue)
 		{
 			let prior = this.prior();
 			margin = !prior ? 2 : Math.max(margin, prior.btmMargin() || 0);
@@ -572,14 +610,14 @@ export class TentaBase extends Repaintable()
 		let margin = this.bodyBtmMargin();
 
 
-		if (margin < TentaStage.MaxIndex)
+		if (margin < TentaStage.MaxValue)
 		{
 			let next = this.next();
 			margin = !next ? 2 : Math.max(margin, next.bodyTopMargin() || 0);
 		}
 
 
-		if (margin < TentaStage.MaxIndex)
+		if (margin < TentaStage.MaxValue)
 		{
 			margin = Math.max(margin, this.parentTailBtmMargin());
 		}
@@ -593,19 +631,19 @@ export class TentaBase extends Repaintable()
 
 	bodyTopMargin(): number
 	{
-		return this.bodyIsSeparated() ? this.stageIndex : 0;
+		return this.bodyIsSeparated() ? this.stageValue : 0;
 	}
 
 
 	bodyBtmMargin(): number
 	{
-		return this.bodyIsSeparated() && !this.tailIsVisible() || this.tailIsSeparated() ? this.stageIndex : 0;
+		return this.bodyIsSeparated() && !this.tailIsVisible() || this.tailIsSeparated() ? this.stageValue : 0;
 	}
 
 
 	tailBtmMargin(): number
 	{
-		return this.bodyIsSeparated() ? this.stageIndex : this.tailIsSeparated() ? 2 : 0;
+		return this.bodyIsSeparated() ? this.stageValue : this.tailIsSeparated() ? 2 : 0;
 	}
 
 
@@ -637,7 +675,7 @@ export class TentaBase extends Repaintable()
 			let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
 
 
-			if (margin < TentaStage.MaxIndex && parent.isLast)
+			if (margin < TentaStage.MaxValue && parent.isLast)
 			{
 				let parentMargin = getParentTailBtmMargin(parent.parent);
 				margin = Math.max(margin, parentMargin);
@@ -648,6 +686,12 @@ export class TentaBase extends Repaintable()
 
 		}
 
+	}
+
+
+	isSeparated()
+	{
+		return this.bodyIsSeparated() || this.tailIsSeparated();
 	}
 
 
@@ -666,6 +710,18 @@ export class TentaBase extends Repaintable()
 	tailIsSeparated()
 	{
 		return !this.collapsed;
+	}
+
+
+	collectorIsVisible(collector: TentaCollector)
+	{
+		return this.tailIsVisible();
+	}
+
+
+	collectorIsSeparated(collector: TentaCollector)
+	{
+		return this.tailIsSeparated();
 	}
 
 
@@ -690,11 +746,11 @@ export class TentaBase extends Repaintable()
 	isAccented(): boolean
 	{
 
-		let { collector } = this;
+		let { parentCollector } = this;
 
-		if (collector?.tenta && collector.isVisibleAndNotSeparated())
+		if (parentCollector?.parentTenta && parentCollector.isVisibleAndNotSeparated())
 		{
-			return collector.tenta.isAccented();
+			return parentCollector.parentTenta.isAccented();
 		}
 
 
@@ -710,23 +766,23 @@ export class TentaBase extends Repaintable()
 
 	firstCollector(): TentaCollector | null
 	{
-		return this.tailIsVisible() ? this.collectors?.[0] || null : null;
+		return this.tailIsVisible() ? this.collectors?.find(a => a.isVisible()) || null : null;
 	}
 
 	lastCollector(): TentaCollector | null
 	{
-		return this.tailIsVisible() ? this.collectors?.at(-1) || null : null;
+		return this.tailIsVisible() ? this.collectors?.findLast(a => a.isVisible()) || null : null;
 	}
 
 
 	priorCollector(): TentaCollector | null
 	{
-		return this.collector?.priorSibling() || null;
+		return this.parentCollector?.priorSibling() || null;
 	}
 
 	nextCollector(): TentaCollector | null
 	{
-		return this.collector?.nextSibling() || null;
+		return this.parentCollector?.nextSibling() || null;
 	}
 
 
@@ -743,7 +799,7 @@ export class TentaBase extends Repaintable()
 
 	all(): TentaBase[] | null
 	{
-		return this.collectors?.flatMap(c => c.tentas) as TentaBase[] || null;
+		return this.collectors?.flatMap(c => c.items) as TentaBase[] || null;
 	}
 
 

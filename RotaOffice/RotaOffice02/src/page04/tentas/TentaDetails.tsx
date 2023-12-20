@@ -32,6 +32,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 				<Table details>
 					<caption>me: #{tenta.iid}</caption>
 					<tbody>
+						<Row label="phase" r={tenta.phase} />
 						<Row
 							label={<em>collectors</em>}
 							r={<VR.Stack span>
@@ -45,6 +46,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 						<TentaRow label="last" r={tenta.last()} />
 						<BoolRow label="bodyIsSeparated" r={tenta.bodyIsSeparated()} />
 						<BoolRow label="tailIsSeparated" r={tenta.tailIsSeparated()} />
+						<BoolRow label="hasSeparatedItems" r={tenta.hasSeparatedItems} />
 					</tbody>
 				</Table>
 			</Div>
@@ -67,7 +69,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 					<caption>btmMargin: {tenta.btmMargin()}</caption>
 					<tbody>
 						<Row label="bodyBtmMargin" r={tenta.bodyBtmMargin()} />
-						<Row label="stageIndex" r={tenta.stageIndex} />
+						<Row label="stageIndex" r={tenta.stageValue} />
 						<TentaRow label="next" r={tenta.next()} />
 						<Row indent label="bodyTopMargin" r={tenta.next()?.bodyTopMargin()} />
 						<Row label="parentTailBtmMargin" r={tenta.parentTailBtmMargin()} />

@@ -21,7 +21,7 @@ export { TentaBase as Base, isTenta } from "./TentaBase";
 export { TentaFocusable as Focusable } from "./TentaFocusable";
 
 export import Collector = TentaCollector;
-export import Collection = TentaCollector.Provider;
+export import Collection = TentaCollector.List;
 //export import NoProviders = TentaCollector.NoProvider;
 
 //export { TentaDescriptor as Descriptor } from "./TentaDescriptor";
@@ -45,25 +45,25 @@ export {
 
 
 
-const Context = createContext<TentaBase | null | undefined>(undefined);
+//const Context = createContext<TentaBase | null | undefined>(undefined);
 
 
 
-export function Provider(props: { tenta: TentaBase; children: ReactNode })
-{
-	return <Context.Provider
-		value={props.tenta}
-		children={props.children}
-	/>;
+//export function Provider(props: { tenta: TentaBase; children: ReactNode })
+//{
+//	return <Context.Provider
+//		value={props.tenta}
+//		children={props.children}
+//	/>;
 
-}
+//}
 
 
 
-export function use(): TentaBase | null | undefined
-{
-	return useContext(Context);
-}
+//export function use(): TentaBase | null | undefined
+//{
+//	return useContext(Context);
+//}
 
 
 

@@ -1,8 +1,8 @@
-import { GlobalState, Repaintable } from "@libs";
+import { $log, GlobalState, Repaintable } from "@libs";
 import type React from "react";
-import { useRef, type ReactNode } from "react";
-import { use as useTenta } from "./Tenta";
-import { /*TentaInitProps,*/ type TentaBase } from "./TentaBase";
+import { type ReactNode } from "react";
+import { type TentaBase } from "./TentaBase";
+import { TentaStage } from "./TentaStage";
 
 
 
@@ -25,7 +25,7 @@ export class TentaCollector extends Repaintable()
 
 	constructor(
 		public id: React.Key,
-		public tenta?: TentaBase | null,
+		public parentTenta?: TentaBase | null,
 		public tentasGetter?: () => TentaBase[] | null | undefined,
 	)
 	{
@@ -44,23 +44,29 @@ export class TentaCollector extends Repaintable()
 	#priorSibling?: TentaCollector | null;
 	#nextSibling?: TentaCollector | null;
 
-	#tentas?: TentaBase[] | null;
+	#items?: TentaBase[] | null;
 
-	get tentas(): TentaBase[] | null
+	get items(): TentaBase[] | null
 	{
-		if (this.#tentas === undefined)
-			this.ensureTentas();
+		if (this.#items === undefined)
+			this.ensureItems();
 
-		return this.#tentas!;
+		return this.#items!;
 	};
 
-	globalState?: GlobalState;
 
 
-	#defaultProviderElement?: JSX.Element;
-	defaultProviderElement()
+	maxItemStage: TentaStage | null = null;
+
+
+	#globalState?: GlobalState;
+	get globalState() { return this.#globalState ??= GlobalState.node(this.parentTenta?.globalState, this.id + ""); }
+
+
+	#defaultListElement?: JSX.Element;
+	defaultListElement()
 	{
-		return this.#defaultProviderElement ??= <TentaCollector.Provider bhv={this} />;
+		return this.#defaultListElement ??= <TentaCollector.List key={this.id} bhv={this} />;
 	}
 
 	//children?: ReactNode;
@@ -73,7 +79,7 @@ export class TentaCollector extends Repaintable()
 
 	override toString()
 	{
-		return `${this.constructor.name}-#${this.id}-##${this.iid}`;
+		return `C##${this.iid}`;
 	}
 
 
@@ -87,83 +93,67 @@ export class TentaCollector extends Repaintable()
 
 		Repaintable.use(this, cfg);
 
-
-		if (cfg.globalState !== undefined)
-		{
-			if (cfg.globalState)
-				this.globalState = GlobalState.use(cfg.globalState);
-		}
-		else if (typeof this.id === "string")
-		{
-			this.globalState = GlobalState.use(this.id);
-		}
-
-
-		//this.root = cfg?.root || false;
-
-		//this.useTentas(cfg.tentas);
-
-
 		return this;
 
 	}
 
 
 
-	//useTentas(news: TentaInitProps.Alias[])
-	//{
-
-	//	let me = this;
-
-
-	//	this.tentas = mergeTentas(this.tentas, news);
-
-
-	//	this.tentas.forEach((a, i, all) =>
-	//	{
-	//		a.setSiblings(all[i - 1], all[i + 1]);
-
-	//		this.globalState && a.setGlobalState(
-	//			GlobalState.node(this.globalState, `tenta${a.id}`)
-	//		);
-	//	});
-
-
-
-	//	function mergeTentas(olds: TentaBase[] | undefined, news: TentaInitProps.Alias[])
-	//	{
-	//		return news.map(nn =>
-	//		{
-	//			let n = TentaInitProps(nn);
-	//			return (
-	//				olds?.find(o => o.id === n.id)
-	//				?? n.descriptor.newTenta(me, n)
-	//			);
-	//		});
-
-	//	}
-
-	//}
-
-
-	ensureTentas()
+	ensureItems()
 	{
-		if (this.#tentas)
+
+		if (this.#items || !this.isVisible())
 			return;
 
-		//__$log(this + ".ensureTentas()")
-		//___$log("tenta.phase:", this.tenta?.phase);
-		//___$log("visible:", this.tenta?.collectorIsVisible(this));
+		this.#createItems();
+
+	}
 
 
-		this.#tentas = this.isVisible() ? this.tentasGetter?.() : this.#tentas/*undefined*/;
+	#createItems()
+	{
+
+		$log(this + ".#createItems")
+
+		this.#items = this.tentasGetter?.() || null;
 		//___$log("tentas:", this.tentas);
 
 
-		this.#tentas?.map((tenta, i, all) =>
+		this.#items?.map((tenta, i, all) =>
 		{
 			tenta.setCollector(this, all[i - 1], all[i + 1]);
 		});
+
+
+		this.recalcStages();
+		this.parentTenta?.recalcStages();
+	}
+
+
+
+	//---
+
+
+
+	itemPhaseChanged()
+	{
+		//$log(this + ".itemPhaseChanged");
+
+		this.recalcStages();
+		this.parentTenta?.collectorPhaseChanged();
+	}
+
+
+
+	recalcStages()
+	{
+
+		//_$log(this + ".recalcStages")
+
+		this.maxItemStage = this.#items?.reduce<TentaStage>(
+			(prior, cur) => TentaStage.max(prior, cur.stage),
+			TentaStage.Min
+		) || null;
 
 	}
 
@@ -175,12 +165,12 @@ export class TentaCollector extends Repaintable()
 
 	isVisible()
 	{
-		return !this.tenta || this.tenta.tailIsVisible();
+		return !this.parentTenta || this.parentTenta.collectorIsVisible(this);
 	}
 
 	isSeparated()
 	{
-		return !this.tenta || this.tenta.tailIsSeparated();
+		return !this.parentTenta || this.parentTenta.collectorIsSeparated(this);
 	}
 
 	isVisibleAndSeparated()
@@ -206,17 +196,6 @@ export class TentaCollector extends Repaintable()
 	}
 
 
-	//byId(id: React.Key)
-	//{
-	//	return this.tentas?.find(a => a.id === id);
-	//}
-
-	//indexById(id: React.Key)
-	//{
-	//	return this.tentas?.findIndex(a => a.id === id);
-	//}
-
-
 
 	//---
 
@@ -224,24 +203,47 @@ export class TentaCollector extends Repaintable()
 
 	priorSibling(): TentaCollector | null
 	{
-		return this.#priorSibling || null;
+
+		let prior = this.#priorSibling;
+
+
+		while (prior && !prior.isVisible())
+		{
+			prior = prior.#priorSibling;
+		}
+
+
+		return prior || null;
+
 	}
+
 
 	nextSibling(): TentaCollector | null
 	{
-		return this.#nextSibling || null;
+
+		let next = this.#nextSibling;
+
+
+		while (next && !next.isVisible())
+		{
+			next = next.#nextSibling;
+		}
+
+
+		return next || null;
+
 	}
 
 
 	first()
 	{
-		return this.tentas?.[0] || null;
+		return this.items?.[0] || null;
 	}
 
 
 	last()
 	{
-		return this.tentas?.at(-1) || null;
+		return this.items?.at(-1) || null;
 	}
 
 
@@ -258,98 +260,19 @@ export class TentaCollector extends Repaintable()
 export module TentaCollector
 {
 
-
 	//---
 
 
 
-
-
-
-	//const CollectorContext = createContext<{ collector: TentaCollector | null }>({ collector: null });
-
-
-
-
-	//export function use(): TentaCollector | null
-	//{
-	//	return useContext(CollectorContext)?.collector || null;
-	//}
-
-
-
-	export function useById(id: React.Key, tenta?: TentaBase | null)
-	{
-
-		if (tenta === undefined)
-		{
-			tenta = useTenta();
-		}
-
-
-		let collector: TentaCollector | null = null;
-
-
-		if (tenta === undefined)
-		{
-			const ref = useRef<TentaCollector | null>(null);
-			collector = ref.current;
-
-			if (!collector)
-				ref.current = collector = new TentaCollector(id);
-		}
-		else if (tenta === null)
-		{
-			collector = null;
-		}
-		else
-		{
-			collector = tenta.collectorById(id);
-
-			if (!collector)
-				throw Error(`Не найден collector#${id} в tenta ${tenta.constructor.name}#${tenta.iid}`);
-		}
-
-
-		return collector;
-
-	}
-
-
-
-	export function Provider(
-		props: CollectorConfig & {
-			id?: React.Key;
-			bhv?: never;
-			children?: ReactNode;
-		}
-	): JSX.Element;
-
-	export function Provider(
+	export function List(
 		props: {
 			bhv: TentaCollector;
 			children?: ReactNode;
 		}
-	): JSX.Element;
-
-	export function Provider(
-		props: Partial<CollectorConfig> & {
-			bhv?: TentaCollector | null
-			id?: React.Key;
-			children?: ReactNode;
-		}
-	)
+	): JSX.Element
 	{
 
-		let bhv = props.bhv;
-
-		if (bhv === undefined)
-		{
-			bhv = useById(props.id ?? "items");
-		}
-
-
-		//$log("TentaCollection " + bhv)
+		let { bhv } = props;
 
 
 		bhv?.use(props as CollectorConfig);
@@ -363,62 +286,25 @@ export module TentaCollector
 		{
 			//_$log("bhv.children 1:", bhv.children)
 			//body = bhv.children != null ? bhv.children : (bhv.children = bhv.tentas?.map(a => a.render()));
-			body = bhv.tentas?.map(a => a.render());
+			body = bhv.items?.map(a => a.render());
 			//_$log("bhv.children 2:", bhv.children)
 		}
 
 
-		//body = <CollectorContext.Provider
-		//	value={{ collector: bhv }}
-		//	children={body}
-		///>;
 
-
-		return body;
+		return <>{body}</>;
 
 	}
-
-
-
-
-	//export function NoProvider(props: { children: ReactNode })
-	//{
-	//	return <CollectorContext.Provider
-	//		value={{ collector: null }}
-	//		children={props.children}
-	//	/>;
-	//}
-
-
 
 
 
 
 	export interface CollectorConfig
 	{
-		globalState?: string | GlobalState | null | false;
-		//tentas: TentaInitProps.Alias[];
 	}
 
 
 
-
-	//export interface CollectorPlaceholder
-	//{
-
-	//	id: React.Key;
-
-	//	collector?: TentaCollector;
-
-	//	prior?: CollectorPlaceholder | null;
-	//	next?: CollectorPlaceholder | null;
-
-	//}
-
-
-
-
 	//---
-
 
 }

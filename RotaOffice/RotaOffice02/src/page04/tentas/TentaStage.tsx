@@ -26,10 +26,12 @@ export module TentaStage
 
 
 	export var Default = "collapsed" as const;
+
 	export var Min = "collapsed" as const;
-	export var MinIndex = 0 as const;
+	export var MinValue = 0 as const;
+
 	export var Max = "opened" as const;
-	export var MaxIndex = 2 as const;
+	export var MaxValue = 2 as const;
 
 
 
@@ -81,24 +83,18 @@ export module TentaStage
 	};
 
 
-	export function valueBy(stage: TentaStage)
-	{
-		return values[stage];
-	}
-
-
 
 	export function min(a: TentaStage | undefined | null, b: TentaStage | undefined | null)
 	{
 
 		if (!a)
-			return b ?? TentaStage.Default;
+			return b || TentaStage.Min;
 
 		if (!b)
-			return a ?? TentaStage.Default;
+			return a || TentaStage.Min;
 
 
-		return stages[Math.min(values[a], values[b])] as TentaStage;
+		return stages[Math.min(values[a], values[b])] || TentaStage.Min;
 
 	}
 
@@ -107,13 +103,13 @@ export module TentaStage
 	{
 
 		if (!a)
-			return b ?? TentaStage.Default;
+			return b || TentaStage.Min;
 
 		if (!b)
-			return a ?? TentaStage.Default;
+			return a || TentaStage.Min;
 
 
-		return stages[Math.max(values[a], values[b])] as TentaStage;
+		return stages[Math.max(values[a], values[b])] || TentaStage.Min;
 
 	}
 
@@ -134,9 +130,16 @@ export module TentaStage
 	}
 
 
-	export function indexOf(stage: TentaStage): number
+
+	export function valueOf(stage: TentaStage): number
 	{
 		return values[stage] || 0;
+	}
+
+
+	export function nameOf(stage: number | null | undefined): TentaStage | null
+	{
+		return stage && stages[stage] || null;
 	}
 
 
