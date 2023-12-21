@@ -1,10 +1,10 @@
 import { ErrorBoundary } from "@app";
-import { Div, Focuser, Pane } from '@libs';
+import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
-import type { ReactNode } from "react";
+import type { MutableRefObject, ReactNode, RefObject } from "react";
 
 
 
@@ -26,6 +26,9 @@ export interface PileRowNodeProps extends Omit<Pane.RowProps, /*"id" | */"childr
 	linkToNext?: boolean;
 	backfill?: boolean;
 
+	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
+	tailReexpand?: boolean;
+
 	tailDecorator?: PileRowNode.TailDecorator;
 
 }
@@ -41,6 +44,8 @@ export function PileRowNode({
 	linkToNext,
 	backfill,
 
+	tailExpanderRef,
+	tailReexpand,
 	tailDecorator,
 
 	children,
@@ -133,15 +138,19 @@ export function PileRowNode({
 					</Focuser>
 
 
-					<Focuser ref={tenta.itemsFfRef} ghost>
+					<Focuser ref={tenta.tailFfRef} ghost>
 
 						<Pane.Col
+
+							expanderRef={tailExpanderRef}
+
 							start={tailIsSeparated}
 							expanded={tailIsVisible}
-							noreexpand
+							noreexpand={!tailReexpand}
 
 							pt={!tailIsVisible/* || !tail*/ ? 0 : btmMargin * 12 as any}
 							mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
+
 						>
 							{tailDecorator(tenta)}
 						</Pane.Col>

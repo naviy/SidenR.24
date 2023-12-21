@@ -1,6 +1,6 @@
 import { useLayoutEffect } from "react";
 
-import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
+import { $defaultAnimationDurationMs, $log, adelay, arequestAnimationFrame, Repaintable } from "../core";
 
 
 
@@ -95,6 +95,19 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 
+	mustReexpandCount: number = 0;
+
+	mustReexpand(count: number = 1)
+	{
+		this.mustReexpandCount = count;
+	}
+
+
+
+	//---
+
+
+
 	abstract getMaxSize(): string | number | undefined;
 
 	abstract getCurrentSize(): string | number | undefined;
@@ -181,8 +194,11 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 		else if (expanded && this._startSize != null)
 		{
 
-			if (!props.noreexpand)
+			if (!props.noreexpand || this.mustReexpandCount)
 			{
+
+				this.mustReexpandCount = Math.max(0, this.mustReexpandCount - 1);
+
 				//_____$log("reexpand");
 				await this.reexpand();
 			}

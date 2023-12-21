@@ -92,6 +92,7 @@ export module TentaFunctional
 
 	export interface Config<TTenta extends TentaBase = TentaBase>
 	{
+		id: React.Key;
 		collectors?: Record<string | number | symbol, () => TentaBase[]>;
 		render?: (tenta: TTenta) => ReactNode;
 		component?: FC<{ tenta: TTenta }>;
@@ -101,6 +102,7 @@ export module TentaFunctional
 
 
 	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
+		id: React.Key,
 		componentOrRender: FC<{ tenta: TTenta }> | ((tenta: TTenta) => ReactNode),
 		collectors?: Record<string | number | symbol, () => TentaBase[]> | (() => TentaBase[]),
 	];
@@ -131,21 +133,24 @@ export module TentaFunctional
 		if (Array.isArray(cfg))
 		{
 
-			let collectors = typeof cfg[1] === "function" ? { "items": cfg[1] } : cfg[1];
+			let collectors = typeof cfg[2] === "function" ? { "items": cfg[2] } : cfg[2];
 
-			let cfg0 = cfg[0];
+			let id = cfg[0];
+			let cfg1 = cfg[1];
 
-			if (isFC<TTenta>(cfg0))
+			if (isFC<TTenta>(cfg1))
 			{
 				return {
-					component: cfg0,
+					id,
+					component: cfg1,
 					collectors,
 				};
 			}
 			else
 			{
 				return {
-					render: cfg0,
+					id,
+					render: cfg1,
 					collectors,
 				};
 			}
@@ -185,15 +190,15 @@ export module TentaFunctional
 		tentaClass: Constructor<TTenta & TentaFunctional>,
 		configGetter: ConfigAlias<TTenta, TArgs>
 	):
-		(id: React.Key, ...args: TArgs) => TTenta
+		(/*id: React.Key,*/ ...args: TArgs) => TTenta
 	{
 
-		return (id: React.Key, ...args: TArgs) =>
+		return (/*id: React.Key,*/ ...args: TArgs) =>
 		{
 
 			let cfg = Config(configGetter, args);
 
-			let tenta = new tentaClass(id);
+			let tenta = new tentaClass(cfg.id);
 
 			tenta.cfg = cfg as any;
 			cfg.collectors && tenta.addCollectors(cfg.collectors);

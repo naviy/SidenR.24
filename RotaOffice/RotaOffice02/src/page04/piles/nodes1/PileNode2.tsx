@@ -1,4 +1,4 @@
-import type React from "react";
+import { $log } from "@libs";
 import { Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
@@ -18,6 +18,8 @@ export function PileNode2(props: PileNode2.Props & {
 	children: JSX.Element
 })
 {
+	$log("PileNode2 " + props.tenta)
+
 	return PileRowNode(props);
 }
 
@@ -145,7 +147,7 @@ export module PileNode2
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = (id: React.Key, ...args: TArgs) => FunctionalTenta;
+	export type TentaFactory<TArgs extends any[] = []> = (/*id: React.Key,*/ ...args: TArgs) => FunctionalTenta;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 

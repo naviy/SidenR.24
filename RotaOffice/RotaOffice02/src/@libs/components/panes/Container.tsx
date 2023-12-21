@@ -1,9 +1,9 @@
 import { styled } from "@mui/material/styles";
 import clsx from "clsx";
-import React, { useRef, type ReactNode } from "react";
+import React, { useRef, type ReactNode, type MutableRefObject } from "react";
 import { Focuser } from "..";
 import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
-import { Expander, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
+import { Expander, ExpanderBaseBehavior, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
 import { ContainerBaseProps, type ContainerLayout } from "./ContainerProps";
@@ -68,12 +68,11 @@ export interface ContainerProps<Z extends ContainerProps<Z>>
 export module ContainerProps
 {
 
-	export var propNames: PropNames<ContainerProps<any>> =
-		{
-			...ContainerBaseProps.propNames,
-			...ExpanderBaseProps.propNames,
-			...UseHookProps.propNames,
-		} as const;
+	export var propNames: PropNames<ContainerProps<any>> = {
+		...ContainerBaseProps.propNames,
+		...ExpanderBaseProps.propNames,
+		...UseHookProps.propNames,
+	} as const;
 
 }
 
@@ -150,17 +149,22 @@ export function renderProvider(
 			//___$log("flexExpander", props.id);
 			flexExpander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
 			preExpanding = flexExpander.expanded && flexExpander.collapsed;
-
 		}
 		else
 		{
 			//___$log("expander", props.id);
 			expander = useNew(Expander.Behavior).use(elRef, null, props);
 			preExpanding = expander.expanded && expander.collapsed;
-
 		}
 
 	}
+
+
+	if (props.expanderRef)
+	{
+		(props.expanderRef as MutableRefObject<ExpanderBaseBehavior | null>).current = expander || flexExpander || null;
+	}
+
 
 
 	let v = ContainerInfo.init(
@@ -197,7 +201,7 @@ export function renderProvider(
 	if (flexExpander)
 	{
 
-		body = flexExpander.childrenShouldBeRendered && /*Block.injectProps(*/Values.one(body)/*)*/;
+		body = flexExpander.childrenShouldBeRendered && Values.one(body);
 
 		expanderProps = {
 			expandMode: "flex",
@@ -208,7 +212,7 @@ export function renderProvider(
 	else if (expander)
 	{
 
-		body = expander.childrenShouldBeRendered && /*Block.injectProps(*/Values.one(body)/*)*/;
+		body = expander.childrenShouldBeRendered && Values.one(body);
 
 		body = <div ref={expander.wrapperRef} className={clsx("pane-expander flexi relative", wrapperCls)} children={body} />;
 		wrapperCls = undefined;
@@ -221,13 +225,14 @@ export function renderProvider(
 	}
 	else
 	{
-		body = /*Block.injectProps(*/Values.one(body)/*)*/;
+		body = Values.one(body);
 	}
 
 
 
 	if (v.debug)
 	{
+
 		body = <>
 			<DebugBox
 				layout={layout!}
@@ -246,13 +251,17 @@ export function renderProvider(
 			{body}
 		</>;
 
+
 		addClassName = clsx(addClassName, "m8 pt16");
+
 	}
 
 
 
 	body = createPrimitive(
+
 		Root,
+
 		{
 
 			ref: elRef,
@@ -269,8 +278,10 @@ export function renderProvider(
 			children: body,
 
 		} as RootProps,
+
 		props,
 		ContainerProps.propNames
+
 	);
 
 

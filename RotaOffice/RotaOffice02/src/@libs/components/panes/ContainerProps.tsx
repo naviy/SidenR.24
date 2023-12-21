@@ -1,3 +1,5 @@
+import type { MutableRefObject, RefObject } from "react";
+import type { ExpanderBaseBehavior } from "../expanders";
 import { Block } from "./Block";
 import type { PaneBorder } from "./PaneBorder";
 import type { PaneRadius } from "./PaneRadius";
@@ -26,6 +28,8 @@ export interface ContainerBaseProps extends Block.Props
 
 
 	id?: string;
+
+	expanderRef?: RefObject<ExpanderBaseBehavior | null>;
 
 
 	//---
@@ -77,6 +81,8 @@ export module ContainerBaseProps
 	{
 
 		id: true,
+
+		expanderRef: true,
 
 		layout: true,
 

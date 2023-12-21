@@ -42,22 +42,22 @@ export module Block
 
 
 	export var propNames: PropNames<Props> =
-	{
+		{
 
-		start: true,
-		end: true,
+			start: true,
+			end: true,
 
-		l: true,
-		min: true,
-		max: true,
-		width: true,
-		minWidth: true,
-		maxWidth: true,
-		height: true,
-		minHeight: true,
-		maxHeight: true,
+			l: true,
+			min: true,
+			max: true,
+			width: true,
+			minWidth: true,
+			maxWidth: true,
+			height: true,
+			minHeight: true,
+			maxHeight: true,
 
-	} as const;
+		} as const;
 
 
 
@@ -159,14 +159,18 @@ export module Block
 
 		function sum(x: string | number | undefined, y: number): string | number | undefined
 		{
+
 			if (typeof x === "number")
 				return x + y;
-			else if (typeof x === "string")
+
+			if (typeof x === "string")
 				return `calc(${x} + ${y})`;
-			else if (x !== undefined && y)
+
+			if (x !== undefined && y)
 				return y;
-			else
-				return undefined;
+
+			return undefined;
+
 		}
 
 	}

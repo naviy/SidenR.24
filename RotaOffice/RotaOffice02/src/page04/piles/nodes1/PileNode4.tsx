@@ -90,17 +90,19 @@ export module PileNode4
 
 
 
-	export class FT extends Tenta_.Functional(Tenta)	{	}
+	export class FunctionalTenta extends Tenta_.Functional(Tenta) { }
+	export type FT = FunctionalTenta;
 
 
-	export type Factory<TArgs extends any[] = []> = (id: React.Key, ...args: TArgs) => FT;
-	
+	export type TentaFactory<TArgs extends any[] = []> = (/*id: React.Key,*/ ...args: TArgs) => FunctionalTenta;
+	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
+
 
 	export function createFactory<TArgs extends any[] = []>(
-		configGetter: Tenta_.Functional.ConfigAlias<FT, TArgs>
-	): Factory<TArgs>
+		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, TArgs>
+	): TentaFactory<TArgs>
 	{
-		return Tenta_.Functional.createFactory<FT, TArgs>(FT, configGetter);
+		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);
 	}
 
 

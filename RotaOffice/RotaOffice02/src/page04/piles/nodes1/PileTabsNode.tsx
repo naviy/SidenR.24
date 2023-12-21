@@ -1,6 +1,6 @@
 //import Tab from "@mui/material/Tab";
 //import Tabs from "@mui/material/Tabs";
-import { FillFade, Pane } from "@libs";
+import { $log, FillFade, Pane } from "@libs";
 import { Tab, Tabs } from "@mui/material";
 import type React from "react";
 import { Tenta as Tenta_ } from "../../tentas";
@@ -32,6 +32,8 @@ interface PileTabsNodeProps extends PileRowNode.Props
 export function PileTabsNode(props: PileTabsNodeProps)
 {
 
+	$log("PileTabsNode " + props.tenta)
+
 	let { tenta } = props;
 
 	let body: JSX.Element;
@@ -43,7 +45,12 @@ export function PileTabsNode(props: PileTabsNodeProps)
 		<Pane start end pl12>
 			<Tabs
 				value={tenta.activeTabIndex + 1}
-				onChange={(e, tabIndex) => { e.stopPropagation(); tenta.activateTabByIndex(tabIndex - 1) }}
+				onChange={(e, tabIndex) =>
+				{
+					e.stopPropagation();
+					tenta.focus();
+					tenta.activateTabByIndex(tabIndex - 1);
+				}}
 			>
 				<Tab label={<div className="nowrap"><PilePhaseIcon tenta={tenta} /></div>} />
 				{tenta.collectors?.map(a => <Tab key={a.id} label={a.id + ""} />)}
@@ -53,9 +60,16 @@ export function PileTabsNode(props: PileTabsNodeProps)
 
 
 	return PileRowNode({
+
+		//tailReexpand: true,
+		tailExpanderRef: tenta.tailExpanderRef,
+
 		...props,
+
 		tailDecorator: PileTabsNode.defaultTailDecorator as PileRowNode.TailDecorator,
-		children: body
+
+		children: body,
+
 	});
 
 }
@@ -91,13 +105,20 @@ export module PileTabsNode
 		return <>
 			{tenta.collectors?.map(col =>
 
-				<FillFade key={col.id} id={col.id + ""} in={col === activeCol || activeCol == null} >
+				<FillFade
+					key={col.id}
+					id={col.id + ""}
+					in={col === activeCol || activeCol == null}
+					mountOnEnter
+					unmountOnExit
+				>
 
 					<PileNodeTail1
 						key={col.id}
 						collector={col}
 						cellIndent
-						children={<Tenta_.Collector.List bhv={col} />}
+						children={col.defaultListElement()}
+					//children={<Tenta_.Collector.List bhv={col} />}
 					/>
 
 				</FillFade>
@@ -115,7 +136,7 @@ export module PileTabsNode
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = (id: React.Key, ...args: TArgs) => FunctionalTenta;
+	export type TentaFactory<TArgs extends any[] = []> = (/*id: React.Key,*/ ...args: TArgs) => FunctionalTenta;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 

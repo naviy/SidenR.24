@@ -89,6 +89,7 @@ const myData = [1, 2,];
 
 
 var Rows05PileTenta = PileNode4.createFactory((data: typeof myData) => [
+	"Rows05Pile",
 	Rows05Pile,
 	() => data.map(Row05Tenta),
 ]);
@@ -98,10 +99,8 @@ var Rows05PileTenta = PileNode4.createFactory((data: typeof myData) => [
 function Rows05Pile()
 {
 
-	let [tenta] = useState(() => Rows05PileTenta("root", myData));
-
-	let globalState = GlobalState.use("Rows05Pile");
-	tenta.setGlobalState(globalState);
+	let [tenta] = useState(() => Rows05PileTenta(myData));
+	tenta.useGlobalState();
 
 	//$log("Rows05Pile " + tenta);
 
@@ -147,12 +146,14 @@ function Rows05Pile()
 
 var Row05Tenta: PileNode2.TF<[number]> = PileNode2.createFactory((id: number) => [
 
-	(tenta: PileNode2.Tenta) => <Row05 key={id} r={$log("Row05Tenta", id)} tenta={tenta} />,
+	id,
+
+	(tenta: PileNode2.Tenta) => <Row05 key={id} r={id} tenta={tenta} />,
 
 	() => [
-		Catagory1Tenta("ctg1", myData),
-		Catagory2Tenta("ctg2", myData),
-		Catagory3Tenta("ctg3", myData.map(a => a * 10)),
+		Catagory1Tenta(myData),
+		Catagory2Tenta(myData),
+		Catagory3Tenta(myData.map(a => a * 10)),
 	],
 
 ]);
@@ -161,12 +162,11 @@ var Row05Tenta: PileNode2.TF<[number]> = PileNode2.createFactory((id: number) =>
 
 
 
-function Row05(props: PileNode2.Props & { r: number })
+function Row05({ r, ...props }: PileNode2.Props & { r: number })
 {
 
-	//$log("Row05 " + props.tenta);
-
-	$log("Row05", props.r)
+	$log("Row05 " + props.tenta);
+	//$log("Row05" )
 
 
 	return <PileNode2 backfill {...props}>
@@ -176,7 +176,7 @@ function Row05(props: PileNode2.Props & { r: number })
 			<>
 				<Pane start p12>
 					<Pile.PhaseIcon />
-					<em>{"".padEnd(20, props.r + " ")}#{props.tenta.iid}</em>
+					<em>{"".padEnd(20, r + " ")}#{props.tenta.iid}</em>
 				</Pane>
 				<Pane end p12 textRight>222 2222 22222 222222</Pane>
 			</>
@@ -300,6 +300,7 @@ function Row05(props: PileNode2.Props & { r: number })
 
 
 var Catagory1Tenta = PileNode3.createFactory((data: typeof myData) => [
+	"ctg1",
 	Catagory1Node,
 	() => data.map(Row05Tenta),
 ]);
@@ -335,8 +336,13 @@ function Catagory1Node(props: PileNode3.Props)
 
 
 var Catagory2Tenta = PileNode3.createFactory((data: typeof myData) => [
+
+	"ctg2",
+
 	Catagory2Node,
+
 	() => data.map(Row05Tenta),
+
 ]);
 
 
@@ -367,19 +373,23 @@ function Catagory2Node(props: PileNode3.Props)
 
 
 var Catagory3Tenta = PileTabsNode.createFactory((data: typeof myData) => [
-	(tenta: PileTabsNode.Tenta) => <Catagory3Node key={tenta.id} tenta={tenta} data={data} />,
+
+	"ctg3",
+	Catagory3Node,
+
 	{
 		tab1: () => data.map(Row05Tenta),
-		tab2: () => $log("tab2:", data.map(a => a * 10)).map((a: number) => Row05Tenta(a, a)),
+		tab2: () => [...data, ...data.map(a => a + 5)].map(a => a * 10).map(Row05Tenta),
 	}
+
 ]);
 
 
 
-function Catagory3Node(props: PileTabsNode.Props & { data: number[] })
+function Catagory3Node(props: PileTabsNode.Props/* & { data: number[] }*/)
 {
 
-	$log("Catagory3Node", props.data)
+	//$log("Catagory3Node", props.data)
 
 	return <PileTabsNode {...props} />
 

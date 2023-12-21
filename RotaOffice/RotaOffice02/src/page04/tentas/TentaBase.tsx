@@ -339,8 +339,8 @@ export class TentaBase extends Repaintable()
 
 	#phaseChanged()
 	{
-		//_$log("onPhaseChanged " + this);
-		//this.onPhaseChanged?.(this);
+		//_$log("onPhaseChanging " + this);
+		this.onPhaseChanged();
 
 
 		this.#recalcCollectors();
@@ -504,6 +504,7 @@ export class TentaBase extends Repaintable()
 
 
 
+	onPhaseChanged() { }
 	onPhaseUp() { }
 	onPhaseDown() { }
 
@@ -887,13 +888,24 @@ export class TentaBase extends Repaintable()
 
 
 
-	setGlobalState(value: TentaGlobalState)
+	useGlobalState(nameOrState?: string | TentaGlobalState)
 	{
 
+		let globalState = GlobalState.use(nameOrState ?? (this.id + ""));
+
+		this.setGlobalState(globalState);
+
+
+		return this;
+
+	}
+
+
+	setGlobalState(value: TentaGlobalState)
+	{
 		this.globalState = value;
 
 		this.#loadFromGlobalState();
-
 	}
 
 

@@ -71,6 +71,14 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 
 
 
+	override onPhaseChanged()
+	{
+		if (!this.collapsed)
+			this.tailExpanderRef.current?.mustReexpand();
+	}
+
+
+
 	override onPhaseDown()
 	{
 		//_$log("onPhaseDown " + this)

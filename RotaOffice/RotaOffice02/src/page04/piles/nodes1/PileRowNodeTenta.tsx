@@ -1,4 +1,4 @@
-import { Focuser } from "@libs";
+import { ExpanderBaseBehavior, Focuser } from "@libs";
 import { createRef } from "react";
 import { Tenta } from "../../tentas";
 
@@ -19,6 +19,13 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 	//---
 
+
+
+	//constructor(id: React.Key)
+	//{
+	//	super(id);
+
+	//}
 
 
 	override use(cfg?: PileRowNodeTenta.UseConfig)
@@ -44,11 +51,13 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	rootFfRef = createRef<Focuser>();
 	get rootFf(): Focuser | null { return this.rootFfRef.current; }
 
-	itemsFfRef = createRef<Focuser>();
-	get itemsFf(): Focuser | null { return this.itemsFfRef.current; }
 
+	tailFfRef = createRef<Focuser>();
+	get tailFf(): Focuser | null { return this.tailFfRef.current; }
 
-	get itemsFocused() { return !!this.itemsFf?.isFocused; }
+	get tailFocused() { return !!this.tailFf?.isFocused; }
+
+	tailExpanderRef = createRef<ExpanderBaseBehavior | null>();
 
 
 
@@ -63,15 +72,15 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	async focusItems(): Promise<Focuser | null>
+	async focusTail(): Promise<Focuser | null>
 	{
-		return this.itemsFfRef.current && await this.itemsFfRef.current.enter();
+		return this.tailFfRef.current && await this.tailFfRef.current.enter();
 	}
 
 
-	unfocusItems()
+	unfocusTail()
 	{
-		this.itemsFf?.unfocus();
+		this.tailFf?.unfocus();
 	}
 
 
@@ -129,7 +138,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 			return;
 
 
-		if (await this.focusItems())
+		if (await this.focusTail())
 			return;
 
 
