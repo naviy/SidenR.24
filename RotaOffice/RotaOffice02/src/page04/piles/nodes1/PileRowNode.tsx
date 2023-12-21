@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
+import { $log, Div, ExpanderBaseBehavior, Focuser, Pane, _$log } from '@libs';
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";
@@ -82,6 +82,14 @@ export function PileRowNode({
 	tailDecorator ??= PileRowNode.defaultTailDecorator;
 
 
+	//pt={!tailIsVisible/* || !tail*/ ? 0 : btmMargin * 12 as any}
+	//mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
+
+
+	let tailMt = !tailIsVisible ? 0 : btmMargin * 12;
+	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0);
+	_$log("tailMb:", tailMb)
+
 	return (
 
 		<Tenta.ByPhaseProvider tenta={tenta}>
@@ -148,14 +156,18 @@ export function PileRowNode({
 							expanded={tailIsVisible}
 							noreexpand={!tailReexpand}
 
-							pt={!tailIsVisible/* || !tail*/ ? 0 : btmMargin * 12 as any}
-							mb={(tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0) as any}
+							//pt={tailMt as any}
+							mb={tailMb as any}
+
+							wrapperCls={`mt${tailMt}`}
+							addExpandedHeight={tailMt}
 
 						>
 							{tailDecorator(tenta)}
 						</Pane.Col>
 
 					</Focuser>
+
 
 
 				</Div>

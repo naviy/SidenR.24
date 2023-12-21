@@ -88,7 +88,10 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 
 	getCurrentSize()
 	{
-		return (this.wrapperEl || this.el)?.clientHeight;
+		return (
+			((this.wrapperEl || this.el)?.clientHeight || 0) +
+			(this.expanded ? this.props.addExpandedHeight || 0 : !this.collapsed ? this.priorAddExpandedHeight || 0 : 0)
+		);
 	}
 
 

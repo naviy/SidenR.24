@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { useRef } from 'react';
 import { Transition, type TransitionStatus } from 'react-transition-group';
-import { $defaultAnimationDurationMs, createPrimitive, type DivProps } from '../core';
+import { $defaultAnimationDurationMs, $log, createPrimitive, type DivProps } from '../core';
 import { Focuser } from "../flow-focuser";
 import { TransitionProps } from "./TransitionProps";
 
@@ -97,6 +97,8 @@ const propNames: PropNames<FillFadeProps> =
 
 export function FillFade(props: FillFadeProps & DivProps)
 {
+
+	$log("FillFade", props.in);
 
 	let transitionProps = TransitionProps.extract(props);
 

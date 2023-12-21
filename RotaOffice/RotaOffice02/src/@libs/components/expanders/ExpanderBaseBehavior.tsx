@@ -30,6 +30,8 @@ export interface ExpanderBaseProps
 
 	timeout?: number;
 
+	addExpandedHeight?: number;
+
 	onExpanedChange?: () => void;
 	onCollapsed?: () => void;
 	onExpanding?: () => void;
@@ -52,6 +54,7 @@ export module ExpanderBaseProps
 		noreexpand: true,
 		forceRender: true,
 		timeout: true,
+		addExpandedHeight: true,
 
 		onExpanedChange: true,
 		onCollapsed: true,
@@ -82,6 +85,9 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	collapsed!: boolean;
 	private _startSize?: string | number | null;
+
+
+	protected priorAddExpandedHeight?: number;
 
 
 	get childrenShouldBeRendered()
@@ -175,6 +181,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	async componentDidUpdate(prevProps: Props)
 	{
+
 		//____$log("Expander.componentDidUpdate()"+ this.props.id)
 
 		let props = this.props;
@@ -187,18 +194,18 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 		{
 			await this.expand();
 		}
+
 		else if (!expanded && prevExpanded)
 		{
 			await this.collapse();
 		}
+
 		else if (expanded && this._startSize != null)
 		{
 
 			if (!props.noreexpand || this.mustReexpandCount)
 			{
-
 				this.mustReexpandCount = Math.max(0, this.mustReexpandCount - 1);
-
 				//_____$log("reexpand");
 				await this.reexpand();
 			}
@@ -299,6 +306,8 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	private setExpanded()
 	{
+
+		this.priorAddExpandedHeight = this.props.addExpandedHeight;
 
 		let maxSize = this.getMaxSize();
 

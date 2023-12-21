@@ -65,6 +65,7 @@ export interface ContainerBaseProps extends Block.Props
 	ff?: boolean;
 
 	wrapperCls?: string | null;
+	addHeight?: number;
 
 
 	//---
@@ -105,6 +106,7 @@ export module ContainerBaseProps
 		debug: true,
 		ff: true,
 		wrapperCls: true,
+		addHeight: true,
 
 		...Block.propNames,
 

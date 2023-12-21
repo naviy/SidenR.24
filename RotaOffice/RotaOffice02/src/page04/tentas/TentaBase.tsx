@@ -405,14 +405,13 @@ export class TentaBase extends Repaintable()
 
 
 		let nearests = new Set<TentaBase | null | undefined>([
+			this,
 			this.#priorSibling,
 			this.prior(),
-			this,
-			this.first(),
-			this.last(),
-			//...this.all() || [],
+			//this.first(),
+			//this.last(),
 			this.#nextSibling,
-			this.next(),
+			//this.next(),
 		]);
 
 
@@ -420,6 +419,10 @@ export class TentaBase extends Repaintable()
 		//{
 		nearests.forEach(a =>
 		{
+
+			if (a?.parentCollector && !a.parentCollector.isVisible())
+				return;
+
 			//___$log("repaint " + a)
 			a?.repaint()
 		});
@@ -638,7 +641,7 @@ export class TentaBase extends Repaintable()
 
 	bodyBtmMargin(): number
 	{
-		return this.bodyIsSeparated() && !this.tailIsVisible() || this.tailIsSeparated() ? this.stageValue : 0;
+		return this.bodyIsSeparated() && !this.tailIsVisible() ? this.stageValue : this.tailIsSeparated() ? 2 : 0;
 	}
 
 

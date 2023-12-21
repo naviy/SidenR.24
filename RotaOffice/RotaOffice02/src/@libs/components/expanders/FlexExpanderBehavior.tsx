@@ -33,7 +33,7 @@ export module FlexExpanderProps
 
 
 
-export class FlexExpanderBehavior<Props extends FlexExpanderProps = FlexExpanderProps> extends ExpanderBaseBehavior<Props>
+export class FlexExpanderBehavior<P extends FlexExpanderProps = FlexExpanderProps> extends ExpanderBaseBehavior<P>
 {
 
 	//---
@@ -55,7 +55,7 @@ export class FlexExpanderBehavior<Props extends FlexExpanderProps = FlexExpander
 	use(
 		ref: RefObject<HTMLDivElement> | null | undefined,
 		flex: string | number | null | undefined,
-		props: Props,
+		props: P,
 		cfg?: Repaintable.UseConfig
 	)
 	{

@@ -108,7 +108,7 @@ export module PileTabsNode
 				<FillFade
 					key={col.id}
 					id={col.id + ""}
-					in={col === activeCol || activeCol == null}
+					in={col === activeCol}
 					mountOnEnter
 					unmountOnExit
 				>
