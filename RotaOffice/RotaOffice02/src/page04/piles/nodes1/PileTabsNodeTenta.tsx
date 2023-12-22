@@ -66,6 +66,26 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 	}
 
 
+	override bodySeparate()
+	{
+		return this.open();
+	}
+
+	override tailSeparate()
+	{
+		return this.open();
+	}
+
+	override bodyDeseparate()
+	{
+		return this.opened && this.expand();
+	}
+
+	override tailDeseparate()
+	{
+		return this.opened && this.expand();
+	}
+
 
 	//---
 
@@ -79,32 +99,23 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 
 
 
-	override onPhaseDown()
+	override onTailDeseparated()
 	{
-		//_$log("onPhaseDown " + this)
-		//this.expanded && this.forEachTenta(a =>
-		//	a.collapse()// || a.repaintNearests()
-		//);
+		this.hasSeparatedItems && this.forEachTenta(a =>
+			a.bodyDeseparate() || a.repaintNearests()
+		);
 	}
 
 
-
-	override onItemPhaseUp(item: Tenta.Base)
+	override onItemSeparated()
 	{
-		//_$log(this + ".onItemPhaseUp " + item)
-		//if (!item.collapsed && this.anyTenta(a => !a.collapsed))
-		//{
-		//	this.open();
-		//}
+		this.tailSeparate();
 	}
 
 
-	override onItemPhaseDown(item: Tenta.Base)
+	override onItemDeseparated()
 	{
-		//if (item.collapsed && this.allTentas(a => a.collapsed))
-		//{
-		//	this.expand();
-		//}
+		!this.hasSeparatedItems && this.tailDeseparate();
 	}
 
 

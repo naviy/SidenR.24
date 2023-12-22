@@ -65,69 +65,118 @@ export module PileNode2
 		}
 
 
+		override bodySeparate()
+		{
+			return this.collapsed && this.expand();
+		}
+
+		override tailSeparate()
+		{
+			return this.open();
+		}
+
+		override bodyDeseparate()
+		{
+			return this.collapse();
+		}
+
+		override tailDeseparate()
+		{
+			return this.opened && this.expand();
+		}
+
+
 
 		//---
 
 
 
-		override onPhaseUp()
+		//override onSeparated()
+		//{
+		//	this.hasSeparatedItems && !this.isSeparated() && this.forEachTenta(a =>
+		//		this.separate() || a.repaintNearests()
+		//	);
+		//}
+
+
+
+		override onTailDeseparated()
 		{
-
-			//_$log("onPhaseUp " + this)
-
-			this.forEachTenta(a =>
-				this.collapsed && a.open() || a.repaintNearests()
+			this.hasSeparatedItems && this.forEachTenta(a =>
+				a.bodyDeseparate() || a.repaintNearests()
 			);
-
 		}
 
 
-		override onPhaseDown()
+		override onItemSeparated(item: Tenta_.Base)
 		{
-
-			//_$log("onPhaseDown " + this)
-
-			this.forEachTenta(a =>
-				!this.opened && a.opened && a.expand() || a.repaintNearests()
-			);
-
+			this.tailSeparate();
 		}
 
 
-
-		override onItemPhaseUp(item: Tenta_.Base)
+		override onItemDeseparated(item: Tenta_.Base)
 		{
-
-			//_$log("onItemPhaseUp " + this)
-
-			if (this.hasSeparatedItems)
-			{
-				this.open();
-			}
-
-			//this.forEachTenta(a =>
-			//	!this.opened && a.collapse()
-			//);
-
+			!this.hasSeparatedItems && this.tailDeseparate();
 		}
 
+		//override onPhaseUp()
+		//{
 
-		override onItemPhaseDown(item: Tenta_.Base)
-		{
+		//	//_$log("onPhaseUp " + this)
 
-			//_$log(this+".onItemPhaseDown")
-			//__$log("maxItemStage:", this.maxItemStage);
-			//if (item.collapsed && this.allTentas(a => a.collapsed))
-			if (!this.hasSeparatedItems)
-			{
-				this.expand();
-			}
+		//	this.forEachTenta(a =>
+		//		this.collapsed && a.open() || a.repaintNearests()
+		//	);
 
-			//this.forEachTenta(a =>
-			//	!this.opened && a.collapse()
-			//);
+		//}
 
-		}
+
+		//override onPhaseDown()
+		//{
+
+		//	//_$log("onPhaseDown " + this)
+
+		//	this.forEachTenta(a =>
+		//		!this.opened && a.opened && a.expand() || a.repaintNearests()
+		//	);
+
+		//}
+
+
+
+		//override onItemPhaseUp(item: Tenta_.Base)
+		//{
+
+		//	//_$log("onItemPhaseUp " + this)
+
+		//	if (this.hasSeparatedItems)
+		//	{
+		//		this.open();
+		//	}
+
+		//	//this.forEachTenta(a =>
+		//	//	!this.opened && a.collapse()
+		//	//);
+
+		//}
+
+
+		//override onItemPhaseDown(item: Tenta_.Base)
+		//{
+
+		//	//_$log(this+".onItemPhaseDown")
+		//	//__$log("maxItemStage:", this.maxItemStage);
+		//	//if (item.collapsed && this.allTentas(a => a.collapsed))
+		//	if (!this.hasSeparatedItems)
+		//	{
+		//		this.expand();
+		//	}
+
+		//	//this.forEachTenta(a =>
+		//	//	!this.opened && a.collapse()
+		//	//);
+
+		//}
 
 
 

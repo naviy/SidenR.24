@@ -13,11 +13,11 @@ import { blueGrey } from "@mui/material/colors";
 
 
 
-export function PileNodeBackfill({ mb }: { mb?: number })
+export function PileNodeBackfill({ mb, visible }: { mb?: number; visible?: boolean })
 {
 	return <div
 		className="pile-node-backfill"
-		style={mb !== undefined ? ({ "--mb": mb }) as any : undefined}
+		style={mb !== undefined ? ({ "--mb": mb, "--op": visible !== false ? 1 : undefined }) as any : undefined}
 	/>;
 }
 
@@ -40,8 +40,9 @@ export module PileNodeBackfill
 
 			background: "rgba(255,255,255,.4)",
 
-			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out, opacity ${$defaultAnimationDurationMs}ms linear`,
+			opacity: "var(--op, 0)",
 
+			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out, opacity ${$defaultAnimationDurationMs}ms linear`,
 
 		},
 

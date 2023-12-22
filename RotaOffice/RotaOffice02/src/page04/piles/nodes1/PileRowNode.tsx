@@ -107,7 +107,12 @@ export function PileRowNode({
 					<Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />
 
 					{/*<Pile.ListBackfill mb={!tenta.parent ? 0 : 24} />*/}
-					{backfill && <Pile.Node.Backfill mb={tailIsVisible ? 24 : 48} />}
+					{backfill &&
+						<Pile.Node.Backfill
+							mb={tailIsVisible ? 24 : 48}
+							visible={tailIsSeparated}
+						/>
+					}
 
 
 					<Focuser
@@ -157,11 +162,12 @@ export function PileRowNode({
 							noreexpand={!tailReexpand}
 
 							//pt={tailMt as any}
-							mb={tailMb as any}
 
 							wrapperCls={`mt${tailMt}`}
-							addExpandedHeight={tailMt}
+							addExpandedHeight={tailMt + tailMb}
+							pb={tailMb as any}
 
+						//borderGreen border4
 						>
 							{tailDecorator(tenta)}
 						</Pane.Col>

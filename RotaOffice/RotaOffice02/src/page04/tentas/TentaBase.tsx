@@ -115,6 +115,9 @@ export class TentaBase extends Repaintable()
 
 
 	priorPhase?: TentaPhase;
+	priorBodyIsSeparated?: boolean;
+	priorTailIsSeparated?: boolean;
+	priorIsSeparated?: boolean;
 	expandedPhase: TentaPhase = 1;
 	openedPhase: TentaPhase = 2;
 	maxPhase: TentaPhase = 2;
@@ -324,6 +327,10 @@ export class TentaBase extends Repaintable()
 
 
 		this.priorPhase = this.#phase || 0;
+		this.priorBodyIsSeparated = this.bodyIsSeparated();
+		this.priorTailIsSeparated = this.tailIsSeparated();
+		this.priorIsSeparated = this.isSeparated();
+
 		this.#phase = value;
 
 		this.#phaseChanged();
@@ -351,6 +358,7 @@ export class TentaBase extends Repaintable()
 		this.parentCollector?.itemPhaseChanged();
 
 
+
 		if (this.priorPhase != null && this.#phase != null)
 		{
 
@@ -363,6 +371,53 @@ export class TentaBase extends Repaintable()
 			{
 				this.onPhaseDown();
 				this.parent?.onItemPhaseDown(this);
+			}
+
+		}
+
+
+
+		if (this.priorBodyIsSeparated != null && this.priorBodyIsSeparated !== this.bodyIsSeparated())
+		{
+
+			if (this.priorBodyIsSeparated)
+			{
+				this.onBodyDeseparated();
+			}
+			else
+			{
+				this.onBodySeparated();
+			}
+
+		}
+
+		if (this.priorTailIsSeparated != null && this.priorTailIsSeparated !== this.tailIsSeparated())
+		{
+
+			if (this.priorTailIsSeparated)
+			{
+				this.onTailDeseparated();
+			}
+			else
+			{
+				this.onTailSeparated();
+			}
+
+		}
+
+
+		if (this.priorIsSeparated != null && this.priorIsSeparated !== this.isSeparated())
+		{
+
+			if (this.priorIsSeparated)
+			{
+				this.onDeseparated();
+				this.parent?.onItemDeseparated(this);
+			}
+			else
+			{
+				this.onSeparated();
+				this.parent?.onItemSeparated(this);
 			}
 
 		}
@@ -408,10 +463,10 @@ export class TentaBase extends Repaintable()
 			this,
 			this.#priorSibling,
 			this.prior(),
-			//this.first(),
-			//this.last(),
+			this.first(),
+			this.last(),
 			this.#nextSibling,
-			//this.next(),
+			this.next(),
 		]);
 
 
@@ -506,15 +561,12 @@ export class TentaBase extends Repaintable()
 	}
 
 
-
 	onPhaseChanged() { }
+
 	onPhaseUp() { }
 	onPhaseDown() { }
-
 	onItemPhaseUp(item: TentaBase) { }
 	onItemPhaseDown(item: TentaBase) { }
-
-
 
 	collapse()
 	{
@@ -531,6 +583,42 @@ export class TentaBase extends Repaintable()
 	open()
 	{
 		return this.setPhase(this.openedPhase);
+	}
+
+
+
+	//---
+
+
+
+	onBodySeparated() { }
+	onBodyDeseparated() { }
+	onTailSeparated() { }
+	onTailDeseparated() { }
+	onSeparated() { }
+	onDeseparated() { }
+	onItemSeparated(item: TentaBase) { }
+	onItemDeseparated(item: TentaBase) { }
+
+
+	bodySeparate()
+	{
+		return this.collapsed && this.expand();
+	}
+
+	tailSeparate()
+	{
+		return this.open();
+	}
+
+	bodyDeseparate()
+	{
+		return this.collapse();
+	}
+
+	tailDeseparate()
+	{
+		return this.opened && this.expand();
 	}
 
 
