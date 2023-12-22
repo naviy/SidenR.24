@@ -121,17 +121,17 @@ export module TentaStage
 
 
 
-	export type Props = Record<TentaStage, boolean>;
+	//export type Props = Record<TentaStage, boolean>;
 
 
-	export function byProps(props: Readonly<Props>): TentaStage
-	{
-		return props.opened ? "opened" : props.collapsed ? "collapsed" : "expanded";
-	}
+	//export function byProps(props: Readonly<Props>): TentaStage
+	//{
+	//	return props.opened ? "opened" : props.collapsed ? "collapsed" : "expanded";
+	//}
 
 
 
-	export function valueOf(stage: TentaStage): number
+	export function indexOf(stage: TentaStage): number
 	{
 		return values[stage] || 0;
 	}

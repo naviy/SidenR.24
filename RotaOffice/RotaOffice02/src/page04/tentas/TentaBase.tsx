@@ -37,6 +37,35 @@ export interface TentaGlobalState extends GlobalState
 
 
 
+export interface TentaInitState
+{
+
+	phase: number;
+	stage: TentaStage;
+}
+
+
+
+export interface TentaState extends TentaInitState
+{
+
+	stageIndex: number;
+
+	bodyIsSeparated: boolean;
+	bodyIsAccented: boolean;
+
+	tailIsVisible: boolean;
+	tailIsSeparated: boolean;
+
+	isSeparated: boolean;
+
+}
+
+
+
+
+
+
 export class TentaBase extends Repaintable()
 	implements Repaintable
 {
@@ -74,6 +103,7 @@ export class TentaBase extends Repaintable()
 	//---
 
 
+
 	parentCollector?: TentaCollector | null;
 
 	get parent(): TentaBase | null { return this.parentCollector?.parentTenta || null; }
@@ -103,63 +133,78 @@ export class TentaBase extends Repaintable()
 	//---
 
 
+	#state?: TentaState;
+	#priorState?: TentaState;
 
-	#phase?: TentaPhase;
-	get phase(): TentaPhase
+
+	get state(): TentaState
 	{
-		if (this.#phase == null)
-			this.ensurePhase();
-
-		return this.#phase!;
+		return this.ensureState();
 	}
 
 
-	priorPhase?: TentaPhase;
-	priorBodyIsSeparated?: boolean;
-	priorTailIsSeparated?: boolean;
-	priorIsSeparated?: boolean;
+	//---
+
+
+
+	get phase(): TentaPhase
+	{
+		return this.state.phase;
+	}
+
+
 	expandedPhase: TentaPhase = 1;
 	openedPhase: TentaPhase = 2;
 	maxPhase: TentaPhase = 2;
 
-	//defaultPhase?: TentaPhase;
-	//defaultStage?: TentaStage;
-
-	get collapsed() { return !this.phase; }
-	get expanded() { return this.phase >= this.expandedPhase && this.#phase! < this.openedPhase; }
-	get opened() { return this.phase >= this.openedPhase; }
-
 
 	get stage(): TentaStage
 	{
-		return TentaStage.byProps(this);
+		return this.state.stage;
 	}
 
-	get stageValue(): number
+	get stageIndex(): number
 	{
-		return TentaStage.valueOf(this.stage);
+		return this.state.stageIndex;
 	}
 
+	get collapsed() { return this.stage === "collapsed"; }
+	get expanded() { return this.stage === "expanded"; }
+	get opened() { return this.stage === "opened"; }
 
-	set stage(value: TentaStage)
+
+	stageByPhase(phase: TentaPhase): TentaStage
 	{
-
-		if (this.#phase != null && this.stage === value)
-			return;
-
-
-		this.#phase = (
-			value === "collapsed" ? 0 :
-				value === "expanded" ? this.expandedPhase :
-					value === "opened" ? this.openedPhase :
-						this.#phase
+		return (
+			phase >= this.openedPhase ? "opened" :
+				phase >= this.expandedPhase && phase < this.openedPhase ? "expanded" :
+					"collapsed"
 		);
-
 	}
 
 
-	canCompress() { return this.phase > 0; }
-	canDecompress() { return this.phase < this.maxPhase; }
+	phaseByStage(stage: TentaStage)
+	{
+		return (
+			stage === "opened" ? this.openedPhase :
+				stage === "expanded" ? this.expandedPhase :
+					0
+		);
+	}
+
+
+
+	//---
+
+
+
+	get isSeparated() { return this.state.isSeparated; }
+
+	get bodyIsSeparated() { return this.state.bodyIsSeparated; }
+	get bodyIsAccented() { return this.state.bodyIsAccented; }
+
+	get tailIsVisible() { return this.state.tailIsVisible; }
+	get tailIsSeparated() { return this.state.tailIsSeparated; }
 
 
 
@@ -184,7 +229,7 @@ export class TentaBase extends Repaintable()
 		Repaintable.use(this, cfg);
 
 		this.#recalcCollectors();
-		this.ensurePhase();
+		this.ensureState();
 
 
 		return this;
@@ -278,45 +323,98 @@ export class TentaBase extends Repaintable()
 		}
 
 
-		this.ensurePhase(cfg);
+		this.ensureState(cfg);
 	}
 
 
 
-	ensurePhase(cfg?: {
+	ensureState(cfg?: {
 		readonly defaultPhase?: TentaPhase;
 		readonly defaultStage?: TentaStage;
-	})
+	}): TentaState
 	{
 
-		if (this.#phase != null)
-			return;
+		if (this.#state != null)
+			return this.#state;
 
 
-		if (!cfg)
+		let phase: number | undefined = undefined;
+		let stage: TentaStage | undefined = undefined;
+
+		if (cfg?.defaultPhase != null)
 		{
-			this.#phase = 0;
+			phase = cfg.defaultPhase;
 		}
-		else if (cfg.defaultPhase != null)
+		else if (cfg?.defaultStage != null)
 		{
-			this.#phase = cfg.defaultPhase;
-		}
-		else if (cfg.defaultStage != null)
-		{
-			this.stage = cfg.defaultStage;
-		}
-		else
-		{
-			this.#phase = 0;
+			stage = cfg.defaultStage;
+			phase = this.phaseByStage(stage);
 		}
 
+
+		this.#state = this.getState(phase, stage);
+
+
+		return this.#state;
+
+	}
+
+
+
+	getState(phase?: TentaPhase, stage?: TentaStage): TentaState
+	{
+
+		if (phase === undefined)
+		{
+			phase = stage !== undefined ? this.phaseByStage(stage) : 0;
+		}
+
+		if (stage === undefined)
+		{
+			stage = this.stageByPhase(phase);
+		}
+
+
+
+		let restState = this.getRestState(stage, phase);
+
+
+		return {
+
+			phase,
+			stage,
+
+			stageIndex: TentaStage.indexOf(stage),
+
+			isSeparated: restState.bodyIsSeparated || restState.tailIsSeparated,
+
+			...restState,
+
+		};
+
+	}
+
+
+	protected getRestState(stage: TentaStage, phase: TentaPhase): Omit<TentaState, "phase" | "stage" | "stageIndex" | "isSeparated">
+	{
+
+		let collapsed = stage === "collapsed";
+		let opened = stage === "opened";
+
+		return {
+			bodyIsSeparated: !collapsed,
+			bodyIsAccented: !collapsed,
+			tailIsVisible: !collapsed,
+			tailIsSeparated: opened,
+		};
 	}
 
 
 
 	setPhase(value: TentaPhase): boolean
 	{
-		if (this.#phase === value || this.disabled)
+
+		if (this.#state?.phase === value || this.disabled)
 			return false;
 
 		if (value == null || value < 0 || value > this.maxPhase)
@@ -326,12 +424,10 @@ export class TentaBase extends Repaintable()
 		//$log(this + ".setPhase", " phase =", value)
 
 
-		this.priorPhase = this.#phase || 0;
-		this.priorBodyIsSeparated = this.bodyIsSeparated();
-		this.priorTailIsSeparated = this.tailIsSeparated();
-		this.priorIsSeparated = this.isSeparated();
+		this.#priorState = this.state;
 
-		this.#phase = value;
+		this.#state = this.getState(value);
+
 
 		this.#phaseChanged();
 
@@ -358,16 +454,19 @@ export class TentaBase extends Repaintable()
 		this.parentCollector?.itemPhaseChanged();
 
 
+		let s0 = this.#priorState;
+		let s1 = this.state;
 
-		if (this.priorPhase != null && this.#phase != null)
+
+		if (s0?.phase != null)
 		{
 
-			if (this.priorPhase < this.#phase)
+			if (s0.phase < s1.phase)
 			{
 				this.onPhaseUp();
 				this.parent?.onItemPhaseUp(this);
 			}
-			else if (this.priorPhase > this.#phase)
+			else if (s0.phase > s1.phase)
 			{
 				this.onPhaseDown();
 				this.parent?.onItemPhaseDown(this);
@@ -377,47 +476,47 @@ export class TentaBase extends Repaintable()
 
 
 
-		if (this.priorBodyIsSeparated != null && this.priorBodyIsSeparated !== this.bodyIsSeparated())
+		if (s0?.bodyIsSeparated != null && s0.bodyIsSeparated !== s1.bodyIsSeparated)
 		{
 
-			if (this.priorBodyIsSeparated)
-			{
-				this.onBodyDeseparated();
-			}
-			else
+			if (s1.bodyIsSeparated)
 			{
 				this.onBodySeparated();
 			}
+			else
+			{
+				this.onBodyDeseparated();
+			}
 
 		}
 
-		if (this.priorTailIsSeparated != null && this.priorTailIsSeparated !== this.tailIsSeparated())
+		if (s0?.tailIsSeparated != null && s0.tailIsSeparated !== s1.tailIsSeparated)
 		{
 
-			if (this.priorTailIsSeparated)
-			{
-				this.onTailDeseparated();
-			}
-			else
+			if (s1.tailIsSeparated)
 			{
 				this.onTailSeparated();
 			}
+			else
+			{
+				this.onTailDeseparated();
+			}
 
 		}
 
 
-		if (this.priorIsSeparated != null && this.priorIsSeparated !== this.isSeparated())
+		if (s0?.isSeparated != null && s0.isSeparated !== s1.isSeparated)
 		{
 
-			if (this.priorIsSeparated)
-			{
-				this.onDeseparated();
-				this.parent?.onItemDeseparated(this);
-			}
-			else
+			if (s1.isSeparated)
 			{
 				this.onSeparated();
 				this.parent?.onItemSeparated(this);
+			}
+			else
+			{
+				this.onDeseparated();
+				this.parent?.onItemDeseparated(this);
 			}
 
 		}
@@ -449,7 +548,7 @@ export class TentaBase extends Repaintable()
 		//) || null;
 
 
-		this.hasSeparatedItems = this.anyTenta(a => a.isSeparated())
+		this.hasSeparatedItems = this.anyTenta(a => a.isSeparated)
 
 	}
 
@@ -660,10 +759,10 @@ export class TentaBase extends Repaintable()
 	topIsSeparated()
 	{
 		return (
-			this.bodyIsSeparated() ||
-			!!this.priorSibling()?.bodyIsSeparated() ||
-			!!this.priorSibling()?.tailIsSeparated() ||
-			!!this.prior()?.tailIsSeparated()
+			this.bodyIsSeparated ||
+			!!this.priorSibling()?.bodyIsSeparated ||
+			!!this.priorSibling()?.tailIsSeparated ||
+			!!this.prior()?.tailIsSeparated
 		);
 	}
 
@@ -671,7 +770,7 @@ export class TentaBase extends Repaintable()
 
 	btmIsSeparated()
 	{
-		return this.bodyIsSeparated() || !!this.next()?.bodyIsSeparated() || this.isLast && !!this.parent?.tailIsSeparated();
+		return this.bodyIsSeparated || !!this.next()?.bodyIsSeparated || this.isLast && !!this.parent?.tailIsSeparated;
 	}
 
 
@@ -723,19 +822,19 @@ export class TentaBase extends Repaintable()
 
 	bodyTopMargin(): number
 	{
-		return this.bodyIsSeparated() ? this.stageValue : 0;
+		return this.bodyIsSeparated ? this.stageIndex : 0;
 	}
 
 
 	bodyBtmMargin(): number
 	{
-		return this.bodyIsSeparated() && !this.tailIsVisible() ? this.stageValue : this.tailIsSeparated() ? 2 : 0;
+		return this.bodyIsSeparated && !this.tailIsVisible ? this.stageIndex : this.tailIsSeparated ? 2 : 0;
 	}
 
 
 	tailBtmMargin(): number
 	{
-		return this.bodyIsSeparated() ? this.stageValue : this.tailIsSeparated() ? 2 : 0;
+		return this.bodyIsSeparated ? this.stageIndex : this.tailIsSeparated ? 2 : 0;
 	}
 
 
@@ -748,7 +847,7 @@ export class TentaBase extends Repaintable()
 			return 0;
 
 
-		if (!this.isLast || this.tailIsVisible() && !this.tailIsSeparated())
+		if (!this.isLast || this.tailIsVisible && !this.tailIsSeparated)
 		{
 			return 0;
 		}
@@ -781,58 +880,18 @@ export class TentaBase extends Repaintable()
 	}
 
 
-	isSeparated()
-	{
-		return this.bodyIsSeparated() || this.tailIsSeparated();
-	}
-
-
-	bodyIsSeparated()
-	{
-		return !this.collapsed;
-	}
-
-
-	tailIsVisible()
-	{
-		return this.opened;
-	}
-
-
-	tailIsSeparated()
-	{
-		return !this.collapsed;
-	}
-
 
 	collectorIsVisible(collector: TentaCollector)
 	{
-		return this.tailIsVisible();
+		return this.state.tailIsVisible;
 	}
 
 
 	collectorIsSeparated(collector: TentaCollector)
 	{
-		return this.tailIsSeparated();
+		return this.state.tailIsSeparated;
 	}
 
-
-	//tailIsVisibleAndSeparated()
-	//{
-	//	return this.tailIsVisible() && this.tailIsSeparated();
-	//}
-
-
-	//tailIsVisibleAndNotSeparated()
-	//{
-	//	return this.tailIsVisible() && !this.tailIsSeparated();
-	//}
-
-
-	bodyIsAccented()
-	{
-		return !this.collapsed;
-	}
 
 
 	isAccented(): boolean
@@ -846,7 +905,7 @@ export class TentaBase extends Repaintable()
 		}
 
 
-		return this.bodyIsAccented();
+		return this.bodyIsAccented;
 
 	}
 
@@ -858,12 +917,12 @@ export class TentaBase extends Repaintable()
 
 	firstCollector(): TentaCollector | null
 	{
-		return this.tailIsVisible() ? this.collectors?.find(a => a.isVisible()) || null : null;
+		return this.tailIsVisible ? this.collectors?.find(a => a.isVisible()) || null : null;
 	}
 
 	lastCollector(): TentaCollector | null
 	{
-		return this.tailIsVisible() ? this.collectors?.findLast(a => a.isVisible()) || null : null;
+		return this.tailIsVisible ? this.collectors?.findLast(a => a.isVisible()) || null : null;
 	}
 
 
@@ -1003,10 +1062,16 @@ export class TentaBase extends Repaintable()
 
 	#loadFromGlobalState()
 	{
+
 		if (!this.globalState)
 			return;
 
-		this.stage = GlobalState.get(this.globalState, 'stage', this.stage)!;
+
+		let stage = GlobalState.get(this.globalState, 'stage', this.stage)!;
+
+		if (stage !== undefined)
+			this.#state = this.getState(undefined, stage);
+
 	}
 
 

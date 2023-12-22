@@ -1,5 +1,5 @@
 import { $log } from "@libs";
-import { Tenta as Tenta_ } from "../../tentas";
+import { TentaStage, Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
 
@@ -49,19 +49,18 @@ export module PileNode2
 
 
 
-		override bodyIsSeparated()
+		override getRestState(stage: TentaStage)
 		{
-			return !this.collapsed;
-		}
 
-		override tailIsVisible()
-		{
-			return !this.collapsed;
-		}
+			let collapsed = stage === "collapsed";
+			let opened = stage === "opened";
 
-		override tailIsSeparated()
-		{
-			return this.opened;
+			return {
+				bodyIsSeparated: !collapsed,
+				bodyIsAccented: !collapsed,
+				tailIsVisible: !collapsed,
+				tailIsSeparated: opened,
+			};
 		}
 
 

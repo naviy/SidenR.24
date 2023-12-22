@@ -1,5 +1,5 @@
 import type React from "react";
-import { Tenta } from "../../tentas";
+import { Tenta, type TentaInitState } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
 
@@ -41,28 +41,48 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 
 
 
-	override bodyIsSeparated()
+	override getRestState(stage: Tenta.Stage)
 	{
-		let { parent } = this;
-		return (!parent || parent.opened) && this.tailIsSeparated();
+
+		//let { parent } = this;
+		//return parent ? parent.opened && !this.collapsed : this.opened;
+
+		let collapsed = stage === "collapsed";
+		let opened = stage === "opened";
+
+		return {
+			bodyIsSeparated: opened,
+			bodyIsAccented: !collapsed,
+			tailIsVisible: !collapsed,
+			tailIsSeparated: opened,
+		};
+
 	}
 
 
-	override tailIsVisible()
-	{
-		return !this.collapsed;
-	}
+
+	//override bodyIsSeparated()
+	//{
+	//	let { parent } = this;
+	//	return (!parent || parent.opened) && this.tailIsSeparated();
+	//}
 
 
-	override tailIsSeparated()
-	{
-		return !this.collapsed && this.hasSeparatedItems;
-	}
+	//override tailIsVisible()
+	//{
+	//	return !this.collapsed;
+	//}
+
+
+	//override tailIsSeparated()
+	//{
+	//	return !this.collapsed && this.hasSeparatedItems;
+	//}
 
 
 	override collectorIsVisible(collector: Tenta.Collector)
 	{
-		return this.tailIsVisible() && collector === this.collectors?.[this.activeTabIndex];
+		return this.tailIsVisible && collector === this.collectors?.[this.activeTabIndex];
 	}
 
 
@@ -85,6 +105,7 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 	{
 		return this.opened && this.expand();
 	}
+
 
 
 	//---

@@ -59,21 +59,17 @@ export module PileNode4
 
 
 
-		override bodyIsSeparated()
+		override getRestState(stage: Tenta_.Stage)
 		{
-			return !this.collapsed;
-		}
 
+			let collapsed = stage === "collapsed";
 
-		override tailIsVisible()
-		{
-			return !this.collapsed;
-		}
-
-
-		override tailIsSeparated()
-		{
-			return !this.collapsed;
+			return {
+				bodyIsSeparated: !collapsed,
+				bodyIsAccented: !collapsed,
+				tailIsVisible: !collapsed,
+				tailIsSeparated: !collapsed,
+			};
 		}
 
 

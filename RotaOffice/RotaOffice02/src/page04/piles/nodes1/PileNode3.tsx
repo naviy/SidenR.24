@@ -48,20 +48,23 @@ export module PileNode3
 		//---
 
 
-		override bodyIsSeparated()
-		{
-			let { parent } = this;
-			return parent ? parent.opened && !this.collapsed : this.opened;
-		}
 
-		override tailIsVisible()
+		override getRestState(stage: Tenta_.Stage)
 		{
-			return !this.collapsed;
-		}
 
-		override tailIsSeparated()
-		{
-			return this.opened;
+			//let { parent } = this;
+			//return parent ? parent.opened && !this.collapsed : this.opened;
+
+			let collapsed = stage === "collapsed";
+			let opened = stage === "opened";
+
+			return {
+				bodyIsSeparated: opened,
+				bodyIsAccented: !collapsed,
+				tailIsVisible: !collapsed,
+				tailIsSeparated: opened,
+			};
+
 		}
 
 

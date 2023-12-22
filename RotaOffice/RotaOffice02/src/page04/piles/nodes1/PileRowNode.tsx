@@ -66,8 +66,7 @@ export function PileRowNode({
 
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
-	let tailIsVisible = tenta.tailIsVisible();
-	let tailIsSeparated = tenta.tailIsSeparated();
+	let { tailIsVisible, tailIsSeparated } = tenta.state;
 	let isAccented = tenta.isAccented();
 
 	//__$log("topMargin:", topMargin);
