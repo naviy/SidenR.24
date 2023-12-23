@@ -89,10 +89,59 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		let { ff } = this;
 		return !!ff && await ff.scrollIntoView();
 	}
+
+
 	async scrollIntoViewTop(): Promise<boolean>
 	{
 		let { ff } = this;
 		return !!ff && await ff.scrollIntoViewTop({ topOffset: 80 });
+	}
+
+
+
+	//---
+
+
+
+	override bodySeparate()
+	{
+		return !this.bodyIsSeparated && this.setState(this.findNextPhaseState(a => a.bodyIsSeparated));
+	}
+
+	override tailSeparate()
+	{
+		return !this.tailIsSeparated && this.setState(this.findNextPhaseState(a => a.tailIsSeparated));
+	}
+
+	override bodyDeseparate()
+	{
+		return this.bodyIsSeparated && this.setState(this.findPriorPhaseState(a => !a.bodyIsSeparated));
+	}
+
+	override tailDeseparate()
+	{
+		return this.tailIsSeparated && this.setState(this.findPriorPhaseState(a => !a.tailIsSeparated));
+	}
+
+
+
+	override onTailDeseparated()
+	{
+		this.hasSeparatedItems && this.forEachTenta(a =>
+			a.bodyDeseparate() || a.repaintNearests()
+		);
+	}
+
+
+	override onItemSeparated()
+	{
+		this.tailSeparate();
+	}
+
+
+	override onItemDeseparated()
+	{
+		!this.hasSeparatedItems && this.tailDeseparate();
 	}
 
 

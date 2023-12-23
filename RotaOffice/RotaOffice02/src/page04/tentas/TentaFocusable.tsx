@@ -34,6 +34,7 @@ export interface TentaFocusable extends TentaBase
 
 export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: TBase) 
 {
+
 	return class TentaFocusableClass extends Base
 		implements TentaFocusable, Focuser.Listener
 	{
@@ -65,13 +66,6 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 			this.ff?.unfocus();
 		}
 
-
-
-		//async focusItems()
-		//{
-
-		//	return this.itemsFF.current && await this.itemsFF.current.focusLastItemOrFirst();
-		//}
 
 
 		async shake(mode?: 1 | 2 | 3)
@@ -280,6 +274,7 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 		//---
 
 	};
+
 }
 
 
@@ -299,27 +294,6 @@ export module TentaFocusable
 	export function use(me: TentaFocusable, cfg?: UseConfig)
 	{
 
-		//useEffect(() =>
-		//{
-
-		//	let focused = me.getGlobalProp("focused");
-
-		//	$log("focused:", focused);
-
-		//	if (!focused)
-		//		return;
-
-		//	_$log("ff:", me.ff);
-
-
-		//	(async () =>
-		//	{
-		//		await adelay(2 * $defaultAnimationDurationMs);
-		//		await me.ff?.focus();
-		//	})();
-
-
-		//})
 
 	}
 

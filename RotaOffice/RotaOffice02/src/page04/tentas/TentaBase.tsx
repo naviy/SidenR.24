@@ -411,25 +411,38 @@ export class TentaBase extends Repaintable()
 
 
 
-	setPhase(value: TentaPhase): boolean
+	protected setPhase(newPhase: TentaPhase, newState?: TentaState): boolean
 	{
 
-		if (this.#state?.phase === value || this.disabled)
+		if (this.#state?.phase === newPhase || this.disabled)
 			return false;
 
-		if (value == null || value < 0 || value > this.maxPhase)
+		if (newPhase == null || newPhase < 0 || newPhase > this.maxPhase)
 			return false;
 
 
-		//$log(this + ".setPhase", " phase =", value)
+		this.setState(newState ?? this.getState(newPhase));
 
 
-		this.#priorState = this.state;
+		return true;
 
-		this.#state = this.getState(value);
+	}
 
 
-		this.#phaseChanged();
+
+	protected setState(newState: TentaState|null| undefined)
+	{
+
+		if (!newState)
+			return false;
+
+
+		let priorState = this.state;
+
+		this.#state = newState;
+
+		this.#stateChanged(priorState);
+
 
 		this.repaintNearests();
 
@@ -440,7 +453,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	#phaseChanged()
+	#stateChanged(priorState: TentaState)
 	{
 		//_$log("onPhaseChanging " + this);
 		this.onPhaseChanged();
@@ -454,7 +467,7 @@ export class TentaBase extends Repaintable()
 		this.parentCollector?.itemPhaseChanged();
 
 
-		let s0 = this.#priorState;
+		let s0 = priorState;
 		let s1 = this.state;
 
 
@@ -595,69 +608,83 @@ export class TentaBase extends Repaintable()
 
 
 
-	findPriorPhase(phaseIsSkipped?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
+	findPriorPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
 	{
+
+		if (this.disabled)
+			return null;
+
 
 		let { phase } = this;
 
 
-		if (this.disabled || phase <= 0)
+		while (phase > 0)
 		{
-			return phase;
-		}
 
-
-		do
-		{
 			phase--;
+
+
+			let newState = this.getState(phase);
+
+			if (!match || match(newState, this))
+				return newState;
+
 		}
-		while (
-			phase >= 0 && phaseIsSkipped?.(phase, this)
-		)
 
 
-		return phase;
+		return null;
 
 	}
 
 
-
-	findNextPhase(phaseIsSkipped?: (phase: TentaPhase, bhv: this) => boolean): TentaPhase
+	findNextPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
 	{
+
+		if (this.disabled)
+			return null;
+
 
 		let { phase, maxPhase } = this;
 
 
-		if (this.disabled || phase >= maxPhase)
+		while (phase < maxPhase)
 		{
-			return phase;
-		}
 
-
-		do
-		{
 			phase++;
+
+
+			let newState = this.getState(phase);
+
+			if (!match || match(newState, this))
+				return newState;
+
 		}
-		while (
-			phase <= maxPhase && phaseIsSkipped?.(phase, this)
-		)
 
 
-		return phase;
+		return null;
 
 	}
 
 
 
-	phaseUp(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
+	phaseUp(match?: (state: TentaState, bhv: this) => boolean): boolean
 	{
-		return this.setPhase(this.findPriorPhase(canSkipPhase));
+
+		let newState = this.findPriorPhaseState(match);
+
+		return this.setState(newState);
+
 	}
 
-	phaseDown(canSkipPhase?: (phase: TentaPhase, bhv: this) => boolean): boolean
+	phaseDown(match?: (state: TentaState, bhv: this) => boolean): boolean
 	{
-		return this.setPhase(this.findNextPhase(canSkipPhase));
+
+		let newState = this.findNextPhaseState(match);
+
+		return this.setState(newState);
+
 	}
+
 
 
 	onPhaseChanged() { }
@@ -666,6 +693,8 @@ export class TentaBase extends Repaintable()
 	onPhaseDown() { }
 	onItemPhaseUp(item: TentaBase) { }
 	onItemPhaseDown(item: TentaBase) { }
+
+
 
 	collapse()
 	{

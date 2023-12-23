@@ -68,25 +68,25 @@ export module PileNode3
 		}
 
 
-		override bodySeparate()
-		{
-			return this.open();
-		}
+		//override bodySeparate()
+		//{
+		//	return this.open();
+		//}
 
-		override tailSeparate()
-		{
-			return this.open();
-		}
+		//override tailSeparate()
+		//{
+		//	return this.open();
+		//}
 
-		override bodyDeseparate()
-		{
-			return this.opened && this.expand();
-		}
+		//override bodyDeseparate()
+		//{
+		//	return this.opened && this.expand();
+		//}
 
-		override tailDeseparate()
-		{
-			return this.opened && this.expand();
-		}
+		//override tailDeseparate()
+		//{
+		//	return this.opened && this.expand();
+		//}
 
 
 
@@ -94,24 +94,24 @@ export module PileNode3
 
 
 
-		override onTailDeseparated()
-		{
-			this.hasSeparatedItems && this.forEachTenta(a =>
-				a.bodyDeseparate() || a.repaintNearests()
-			);
-		}
+		//override onTailDeseparated()
+		//{
+		//	this.hasSeparatedItems && this.forEachTenta(a =>
+		//		a.bodyDeseparate() || a.repaintNearests()
+		//	);
+		//}
 
 
-		override onItemSeparated()
-		{
-			this.tailSeparate();
-		}
+		//override onItemSeparated()
+		//{
+		//	this.tailSeparate();
+		//}
 
 
-		override onItemDeseparated()
-		{
-			!this.hasSeparatedItems && this.tailDeseparate();
-		}
+		//override onItemDeseparated()
+		//{
+		//	!this.hasSeparatedItems && this.tailDeseparate();
+		//}
 
 
 
