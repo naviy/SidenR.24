@@ -1,5 +1,6 @@
 import { $defaultAnimationDurationMs } from "@libs";
 import { blueGrey } from "@mui/material/colors";
+import type { CSSObject } from "@mui/material/styles";
 
 
 
@@ -25,7 +26,7 @@ export function PileNodeBackfill({ mb, visible }: { mb?: number; visible?: boole
 export module PileNodeBackfill
 {
 
-	export var globalStyles = {
+	export var globalStyles: CSSObject = {
 
 		".pile-node-backfill": {
 

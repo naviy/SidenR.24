@@ -1,9 +1,9 @@
 import { $defaultAnimationDurationMs } from '@libs';
-import { styled } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
-import { Tenta } from "../../tentas";
-import { createContext, useContext, type ReactNode } from "react";
 import { clsx } from "clsx";
+import { createContext, useContext, type ReactNode } from "react";
+import { Tenta } from "../../tentas";
+import type { CSSObject } from '@mui/material/styles';
 
 
 
@@ -99,7 +99,7 @@ export module PileNodeLinkLine
 
 	var color = blueGrey[300];
 
-	export var globalStyles = {
+	export var globalStyles: CSSObject = {
 
 		".pile-node-linkline": {
 
