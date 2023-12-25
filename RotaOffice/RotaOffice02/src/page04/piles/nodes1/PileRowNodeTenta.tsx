@@ -1,4 +1,4 @@
-import { ExpanderBaseBehavior, Focuser } from "@libs";
+import { ExpanderBaseBehavior, Focuser, __$log, ___$log } from "@libs";
 import { createRef } from "react";
 import { Tenta } from "../../tentas";
 
@@ -105,22 +105,22 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 	override bodySeparate()
 	{
-		return !this.bodyIsSeparated && this.setState(this.findNextPhaseState(a => a.bodyIsSeparated));
+		return this.goToStage(+1, a => a.bodyIsSeparated);
 	}
 
 	override tailSeparate()
 	{
-		return !this.tailIsSeparated && this.setState(this.findNextPhaseState(a => a.tailIsSeparated));
+		return this.goToStage(+1, a => a.tailIsSeparated);
 	}
 
 	override bodyDeseparate()
 	{
-		return this.bodyIsSeparated && this.setState(this.findPriorPhaseState(a => !a.bodyIsSeparated));
+		return this.goToStage(-1, a => !a.bodyIsSeparated);
 	}
 
 	override tailDeseparate()
 	{
-		return this.tailIsSeparated && this.setState(this.findPriorPhaseState(a => !a.tailIsSeparated));
+		return this.goToStage(-1, a => !a.tailIsSeparated);
 	}
 
 
@@ -141,7 +141,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 	override onItemDeseparated()
 	{
-		!this.hasSeparatedItems && this.tailDeseparate();
+		//!this.hasSeparatedItems && this.tailDeseparate();
 	}
 
 
@@ -179,7 +179,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	protected override async onRightKey()
 	{
 
-		if (this.phaseDown())
+		if (this.incPhase())
 			return;
 
 
@@ -207,7 +207,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		}
 
 
-		if (this.phaseDown())
+		if (this.incPhase())
 			return;
 
 
@@ -224,7 +224,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	override async onEnter()
 	{
 
-		if (this.phaseDown())
+		if (this.incPhase())
 		{
 			await this.scrollIntoViewTop();
 		}
@@ -245,11 +245,11 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	override  async onLeftKey()
 	{
 
-		if (this.phaseUp())
+		if (this.decPhase())
 		{
 			/*await*/ this.scrollIntoView();
 		}
-		else
+		else if (!this.parent?.tailDeseparate())
 		{
 			await this.focusParent() || await this.shake(3);
 		}
@@ -265,7 +265,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		{
 			await this.focus();
 		}
-		else if (this.phaseUp())
+		else if (this.decPhase())
 		{
 			await this.scrollIntoView();
 		}
@@ -281,7 +281,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	override async onExit()
 	{
 
-		if (this.phaseUp())
+		if (this.decPhase())
 		{
 			await this.scrollIntoView();
 		}

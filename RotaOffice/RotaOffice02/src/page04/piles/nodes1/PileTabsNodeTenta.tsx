@@ -1,5 +1,5 @@
 import type React from "react";
-import { Tenta, type TentaInitState } from "../../tentas";
+import { Tenta, TentaStage, type TentaInitState } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
 
@@ -44,9 +44,6 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 	override getRestState(stage: Tenta.Stage)
 	{
 
-		//let { parent } = this;
-		//return parent ? parent.opened && !this.collapsed : this.opened;
-
 		let collapsed = stage === "collapsed";
 		let opened = stage === "opened";
 
@@ -61,51 +58,37 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 
 
 
-	//override bodyIsSeparated()
-	//{
-	//	let { parent } = this;
-	//	return (!parent || parent.opened) && this.tailIsSeparated();
-	//}
+	#opened?: boolean;
 
 
-	//override tailIsVisible()
-	//{
-	//	return !this.collapsed;
-	//}
+	override setStage(newStage: Tenta.Stage)
+	{
+		this.#opened = newStage === "opened";
+		return this.setPhase(this.phaseByStage(newStage));
+	}
 
 
-	//override tailIsSeparated()
-	//{
-	//	return !this.collapsed && this.hasSeparatedItems;
-	//}
+	override stageByPhase(phase: Tenta.Phase): Tenta.Stage
+	{
+		return (
+			phase <= 0 ? "collapsed" :
+				this.#opened ? "opened" :
+					"expanded"
+		);
+	}
+
+
+	override phaseByStage(stage: Tenta.Stage)
+	{
+		return stage === "collapsed" ? 0 : this.phase;
+	}
 
 
 	override collectorIsVisible(collector: Tenta.Collector)
 	{
 		return this.tailIsVisible && collector === this.collectors?.[this.activeTabIndex];
 	}
-
-
-	//override bodySeparate()
-	//{
-	//	return this.open();
-	//}
-
-	//override tailSeparate()
-	//{
-	//	return this.open();
-	//}
-
-	//override bodyDeseparate()
-	//{
-	//	return this.opened && this.expand();
-	//}
-
-	//override tailDeseparate()
-	//{
-	//	return this.opened && this.expand();
-	//}
-
+	
 
 
 	//---
@@ -114,32 +97,11 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 
 	override onPhaseChanged()
 	{
-		if (!this.collapsed)
+		if (this.expanded)
 			this.tailExpanderRef.current?.mustReexpand();
 	}
 
-
-
-	//override onTailDeseparated()
-	//{
-	//	this.hasSeparatedItems && this.forEachTenta(a =>
-	//		a.bodyDeseparate() || a.repaintNearests()
-	//	);
-	//}
-
-
-	//override onItemSeparated()
-	//{
-	//	this.tailSeparate();
-	//}
-
-
-	//override onItemDeseparated()
-	//{
-	//	!this.hasSeparatedItems && this.tailDeseparate();
-	//}
-
-
+	
 
 	//---
 

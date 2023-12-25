@@ -28,10 +28,10 @@ export module TentaStage
 	export var Default = "collapsed" as const;
 
 	export var Min = "collapsed" as const;
-	export var MinValue = 0 as const;
+	export var MinIndex = 0 as const;
 
 	export var Max = "opened" as const;
-	export var MaxValue = 2 as const;
+	export var MaxIndex = 2 as const;
 
 
 
@@ -114,6 +114,24 @@ export module TentaStage
 	}
 
 
+
+	export function add(state: TentaStage | undefined | null, delta: number): TentaStage | null
+	{
+
+		if (!state)
+			return null;
+
+
+		let nextIndex = values[state] + delta;
+
+
+		if (nextIndex < MinIndex || nextIndex > MaxIndex)
+			return null;
+
+
+		return stages[nextIndex];
+
+	}
 
 
 	//---

@@ -1,14 +1,14 @@
-import { Component, useContext, type ReactNode, type RefObject } from "react";
+import { Component, useContext, type ReactNode } from "react";
 import ReactDOM from "react-dom";
 
-import { $defaultAnimationDurationMs, $log, __$log, Div, MuiColor, SpaWaitingMask } from "../core";
+import { $defaultAnimationDurationMs, $log, Div, MuiColor, SpaWaitingMask } from "../core";
 
 import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Keys, TaskQueue, Values } from "../core";
 
 
+import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from "./ff.Anchor";
 import { Caret as Caret_, type CaretProps as CaretProps_, } from "./ff.Caret";
 import { CaretBehavior } from "./ff.CaretBehavior";
-import { anchorPropsToString, type AnchorProps, type AnchorPart, type Anchor } from "./ff.Anchor";
 import { $min_priority, Core, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext, focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus } from "./ff.Core";
 import { findInDirection } from "./ff.Navigation";
 
@@ -177,8 +177,6 @@ export interface FocuserProps
 	//border?: boolean | number;
 	//enterBorder?: boolean | number;
 	//borderClassName?: string;
-
-	borderer?: RefObject<{ updateByFocuser(ff: Focuser): void; }>;
 
 	autoFocus?: boolean | "first" | "lazy" | number;
 	ignoreOnKeyboardNavigation?: boolean;
@@ -407,15 +405,6 @@ export class Focuser extends Component<FocuserProps>
 	{
 		return useContext(FocuserContext);
 	}
-
-
-
-	//static Borderer = Borderer;
-
-	//static useBorderer()
-	//{
-	//	return useRef<Borderer>(null);
-	//}
 
 
 
@@ -823,7 +812,8 @@ export class Focuser extends Component<FocuserProps>
 
 
 	carets: CaretBehavior[] = [];
-
+	borderers?: Array<(ff: Focuser) => void>;
+	itemBorderers?: Array<(ff: Focuser) => void>;
 
 
 	private _items?: Focuser[] | null;
@@ -1146,7 +1136,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		//this.updateCarets(null);
-		this.updateBorderer();
+		this.updateBorderers();
 
 	}
 
@@ -1160,9 +1150,7 @@ export class Focuser extends Component<FocuserProps>
 		this.carets.register(caret);
 	}
 
-
-
-	removeCaret(caret: CaretBehavior)
+	unregisterCaret(caret: CaretBehavior)
 	{
 		this.carets.remove(caret);
 	}
@@ -1197,12 +1185,50 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	updateBorderer()
+	//---
+
+
+
+	registerBorderer(borderer: (ff: Focuser) => void)
+	{
+		(this.borderers ?? (this.borderers = [])).register(borderer);
+	}
+
+	unregisterBorderer(borderer: (ff: Focuser) => void)
+	{
+		this.borderers?.remove(borderer);
+	}
+
+
+	updateBorderers()
+	{
+		this.borderers?.forEach(a => a(this));
+	}
+
+
+	registerItemBorderer(borderer: (ff: Focuser) => void)
+	{
+		(this.itemBorderers ?? (this.itemBorderers = [])).register(borderer);
+	}
+
+	unregisterItemBorderer(borderer: (ff: Focuser) => void)
+	{
+		this.itemBorderers?.remove(borderer);
+	}
+
+
+	updateItemBorderers()
 	{
 
-		this.props.borderer?.current?.updateByFocuser(this);
+		this.itemBorderers && $log(this + " updateItemBorderers")
 
+		this.itemBorderers?.forEach(a => a(this));
 	}
+
+
+
+	//---
+
 
 
 	override shouldComponentUpdate(nextProps: any, nextState: any): boolean
@@ -1220,7 +1246,7 @@ export class Focuser extends Component<FocuserProps>
 	override componentDidUpdate()
 	{
 
-		this.updateBorderer();
+		this.updateBorderers();
 		//this.updateCarets(null);
 
 
@@ -2359,7 +2385,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		this.updateCarets(prior, mustRepaint);
-		this.updateBorderer();
+		this.updateBorderers();
 
 	}
 
@@ -2372,6 +2398,9 @@ export class Focuser extends Component<FocuserProps>
 
 		this.props.listener?.ff_onItemFocus?.(this, prior, next);
 
+
+		this.updateItemBorderers();
+
 	}
 
 
@@ -2381,6 +2410,9 @@ export class Focuser extends Component<FocuserProps>
 		this.props.onItemUnfocus?.(this, prior, next);
 
 		this.props.listener?.ff_onItemUnfocus?.(this, prior, next);
+
+
+		this.updateItemBorderers();
 
 	}
 
@@ -2394,7 +2426,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		this.updateCarets(prior, mustRepaint);
-		this.updateBorderer();
+		this.updateBorderers();
 
 	}
 
@@ -2406,7 +2438,7 @@ export class Focuser extends Component<FocuserProps>
 		if (this._unmounted)
 			return;
 
-		//_$log("onUnfocus")
+		//_$log(this + " onUnfocus")
 
 		this.exitTargetId = null;
 
@@ -2416,7 +2448,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 		this.updateCarets(prior, mustRepaint);
-		this.updateBorderer();
+		this.updateBorderers();
 
 
 		if (this.props.domFocus)

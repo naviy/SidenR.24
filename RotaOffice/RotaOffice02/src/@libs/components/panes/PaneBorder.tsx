@@ -34,13 +34,13 @@ export module PaneBorder
 			borderCss?: string;
 		}> =
 	{
-		"xs": { width: 1, color: blueGrey[100] },
-		"sm": { width: 1, color: blueGrey[200] },
+		"xs": { width: 1, color: blueGrey[50] },
+		"sm": { width: 1, color: blueGrey[100] },
 		//"sm": { width: 1, color: "red" },
-		"md": { width: 2, color: blueGrey[200] },
-		"lg": { width: 2, color: blueGrey[400] },
+		"md": { width: 2, color: blueGrey[100] },
+		"lg": { width: 2, color: blueGrey[300] },
 		//"lg": { width: 2, color: "red" },
-		"xl": { width: 2, color: blueGrey[500] },
+		"xl": { width: 2, color: blueGrey[700] },
 
 		"1-100": { width: 1, color: blueGrey[100] },
 		"1-200": { width: 1, color: blueGrey[200] },

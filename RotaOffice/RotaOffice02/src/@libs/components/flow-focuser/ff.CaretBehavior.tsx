@@ -114,7 +114,7 @@ export class CaretBehavior extends Repaintable()
 		useEffect(() =>
 		{
 			ff?.registerCaret(this);
-			return () => ff?.removeCaret(this);
+			return () => ff?.unregisterCaret(this);
 		});
 
 

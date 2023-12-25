@@ -1,7 +1,7 @@
 import { type GlobalProps } from "@emotion/react";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import * as muiColors from "@mui/material/colors";
-import { styled, type CSSObject } from "@mui/material/styles";
+import { type CSSObject } from "@mui/material/styles";
 import clsx from "clsx";
 import * as React from "react";
 import { forwardRef, type ReactNode } from "react";
@@ -358,6 +358,10 @@ export interface PrimitiveClassesProps extends
 	fill?: boolean;
 	fullScreen?: boolean;
 
+	top0?: boolean;
+	left0?: boolean;
+
+
 
 	//---
 
@@ -416,6 +420,17 @@ export interface PrimitiveClassesProps extends
 
 	opacity?: number;
 
+	opacity0_0?: boolean;
+	opacity0_1?: boolean;
+	opacity0_2?: boolean;
+	opacity0_3?: boolean;
+	opacity0_4?: boolean;
+	opacity0_5?: boolean;
+	opacity0_6?: boolean;
+	opacity0_7?: boolean;
+	opacity0_8?: boolean;
+	opacity0_9?: boolean;
+
 	opacity0?: boolean;
 	opacity1?: boolean;
 	opacity2?: boolean;
@@ -441,6 +456,8 @@ export interface PrimitiveClassesProps extends
 
 	//---
 
+
+	bgBlack?: boolean;
 
 	//border?: "blue" | "green" | "red";
 	borderBlue?: boolean;
@@ -511,6 +528,7 @@ export interface PrimitiveClassesProps extends
 
 	cursorPointer?: boolean;
 	noselect?: boolean;
+	nomouse?: boolean;
 
 	animated?: boolean;
 
@@ -550,7 +568,6 @@ export function GlobalStylesOfPrimitives(props: {
 		displayNone: { display: "none!important" },
 		".displayBlock, .block": { display: "block!important" },
 		".displayInline, .inline": { display: "inline!important" },
-
 
 
 		...rangeMP("m", Margins, i => ({ margin: `${i}px!important` })),
@@ -658,6 +675,7 @@ export function GlobalStylesOfPrimitives(props: {
 		fill: {
 			position: "absolute !important",
 			inset: "0 0 0 0 !important",
+			borderRadius: "inherit",
 		},
 
 
@@ -669,12 +687,17 @@ export function GlobalStylesOfPrimitives(props: {
 			minWidth: "100vw",
 		},
 
+		top0: { top: 0 },
+		left0: { left: 0 },
+
 
 		...range("opacity", 0, 10, 1, i => ({ opacity: i / 10.0 })),
-		...range("opacity0_", 1, 9, 1, i => ({ opacity: i / 10.0 })),
+		...range("opacity0_", 1, 9, 1, i => ({ opacity: i / 100.0 })),
 
 		...range("zIndex", 0, 4, 1, i => ({ zIndex: i })),
 
+
+		bgBlack: { background: "black" },
 
 		borderBlue: { border: "1px solid blue" },
 		borderGreen: { border: "1px solid green" },
@@ -784,6 +807,10 @@ export function GlobalStylesOfPrimitives(props: {
 
 		noselect: {
 			userSelect: "none",
+		},
+
+		nomouse: {
+			pointerEvents: "none",
 		},
 
 		animated: {

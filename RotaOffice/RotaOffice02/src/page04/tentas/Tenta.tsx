@@ -14,8 +14,9 @@ import { TentaCollector } from "./TentaCollector";
 
 
 
-export { type TentaPhase as Phase } from "./TentaPhase";
-export { type TentaStage as Stage } from "./TentaStage";
+export { TentaPhase as Phase } from "./TentaPhase";
+export { TentaStage as Stage } from "./TentaStage";
+export { TentaAccent as Accent } from "./TentaAccent";
 
 export { TentaBase as Base, isTenta } from "./TentaBase";
 export { TentaFocusable as Focusable } from "./TentaFocusable";

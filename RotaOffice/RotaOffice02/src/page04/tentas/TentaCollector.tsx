@@ -1,4 +1,4 @@
-import { $log, GlobalState, Repaintable } from "@libs";
+import { GlobalState, Repaintable } from "@libs";
 import type React from "react";
 import { type ReactNode } from "react";
 import { type TentaBase } from "./TentaBase";
@@ -112,8 +112,6 @@ export class TentaCollector extends Repaintable()
 
 	#createItems()
 	{
-
-		$log(this + ".#createItems")
 
 		this.#items = this.tentasGetter?.() || null;
 		//___$log("tentas:", this.tentas);

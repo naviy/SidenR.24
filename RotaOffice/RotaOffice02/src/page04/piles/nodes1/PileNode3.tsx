@@ -60,9 +60,9 @@ export module PileNode3
 
 			return {
 				bodyIsSeparated: opened,
-				bodyIsAccented: !collapsed,
 				tailIsVisible: !collapsed,
 				tailIsSeparated: opened,
+				bodyIsAccented: opened,
 			};
 
 		}

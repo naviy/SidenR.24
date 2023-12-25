@@ -1,9 +1,10 @@
-import { GlobalState, Repaintable } from '@libs';
+import { GlobalState, Repaintable, _$log } from '@libs';
 import type React from "react";
 import { type ReactNode } from "react";
 import { TentaCollector } from "./TentaCollector";
-import type { TentaPhase } from "./TentaPhase";
+import { TentaPhase } from "./TentaPhase";
 import { TentaStage } from "./TentaStage";
+import type { TentaAccent } from './TentaAccent';
 
 
 
@@ -202,6 +203,7 @@ export class TentaBase extends Repaintable()
 
 	get bodyIsSeparated() { return this.state.bodyIsSeparated; }
 	get bodyIsAccented() { return this.state.bodyIsAccented; }
+	get bodyAccent(): TentaAccent { return this.state.bodyIsAccented ? 1 as const : 0 as const; }
 
 	get tailIsVisible() { return this.state.tailIsVisible; }
 	get tailIsSeparated() { return this.state.tailIsSeparated; }
@@ -430,12 +432,14 @@ export class TentaBase extends Repaintable()
 
 
 
-	protected setState(newState: TentaState|null| undefined)
+	protected setState(newState: TentaState | null | undefined)
 	{
 
 		if (!newState)
 			return false;
 
+
+		_$log(this + ".setState:", newState)
 
 		let priorState = this.state;
 
@@ -476,13 +480,13 @@ export class TentaBase extends Repaintable()
 
 			if (s0.phase < s1.phase)
 			{
-				this.onPhaseUp();
-				this.parent?.onItemPhaseUp(this);
+				this.onDecPhase();
+				this.parent?.onItemDecPhase(this);
 			}
 			else if (s0.phase > s1.phase)
 			{
-				this.onPhaseDown();
-				this.parent?.onItemPhaseDown(this);
+				this.onIncPhase();
+				this.parent?.onItemIncPhase(this);
 			}
 
 		}
@@ -598,36 +602,93 @@ export class TentaBase extends Repaintable()
 	}
 
 
-	//itemsForRepaint()
+
+	//findPriorPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
 	//{
-	//	return 
+
+	//	if (this.disabled)
+	//		return null;
+
+
+	//	let { phase } = this;
+
+
+	//	while (phase > 0)
+	//	{
+
+	//		phase--;
+
+
+	//		let newState = this.getState(phase);
+
+	//		if (!match || match(newState, this))
+	//			return newState;
+
+	//	}
+
+
+	//	return null;
+
 	//}
 
 
-	//phaseIsSkipped(phase: TentaPhase)
+	//findNextPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
+	//{
+
+	//	if (this.disabled)
+	//		return null;
+
+
+	//	let { phase, maxPhase } = this;
 
 
 
-	findPriorPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
+
+	//	while (phase < maxPhase)
+	//	{
+
+	//		phase++;
+
+
+	//		let newState = this.getState(phase);
+
+	//		if (!match || match(newState, this))
+	//			return newState;
+
+	//	}
+
+
+	//	return null;
+
+	//}
+
+
+	findPhaseState(
+		startPhase: TentaPhase,
+		dir: -1 | 1,
+		match?: (state: TentaState, bhv: this) => boolean
+	): TentaState | null
 	{
 
 		if (this.disabled)
 			return null;
 
 
-		let { phase } = this;
+		let newPhase = TentaPhase.add(startPhase, dir, this.maxPhase);
 
 
-		while (phase > 0)
+		while (newPhase != null)
 		{
 
-			phase--;
-
-
-			let newState = this.getState(phase);
+			let newState = this.getState(newPhase);
 
 			if (!match || match(newState, this))
+			{
 				return newState;
+			}
+
+
+			newPhase = TentaPhase.add(newPhase, dir, this.maxPhase);
 
 		}
 
@@ -637,26 +698,28 @@ export class TentaBase extends Repaintable()
 	}
 
 
-	findNextPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
+	findStageState(startStage: TentaStage, dir: -1 | 1, match?: (state: TentaState, bhv: this) => boolean): TentaState | null
 	{
 
 		if (this.disabled)
 			return null;
 
 
-		let { phase, maxPhase } = this;
+		let newStage = TentaStage.add(startStage, dir);
 
 
-		while (phase < maxPhase)
+		while (newStage != null)
 		{
 
-			phase++;
-
-
-			let newState = this.getState(phase);
+			let newState = this.getState(undefined, newStage);
 
 			if (!match || match(newState, this))
+			{
 				return newState;
+			}
+
+
+			newStage = TentaStage.add(newStage, dir);
 
 		}
 
@@ -666,20 +729,81 @@ export class TentaBase extends Repaintable()
 	}
 
 
-
-	phaseUp(match?: (state: TentaState, bhv: this) => boolean): boolean
+	goToStage(dir: -1 | 1, match: (state: TentaState, bhv: this) => boolean): boolean
 	{
 
-		let newState = this.findPriorPhaseState(match);
+		let { state } = this;
+
+		if (match(state, this))
+			return false;
+
+
+		let newState = this.findStageState(state.stage, dir, match);
+
+		return this.setState(newState);
+
+
+	}
+
+
+	//getNextPhase(current: { phase: TentaPhase; stage: TentaStage }): { phase: TentaPhase; stage: TentaStage } | null
+	//{
+
+	//	if (current.phase < this.maxPhase)
+	//		return null;
+
+
+	//	let phase = current.phase + 1;
+
+	//	return {
+	//		phase,
+	//		stage: this.stageByPhase(phase),
+	//	};
+
+	//}
+
+
+	//findNextPhaseState(match?: (state: TentaState, bhv: this) => boolean): TentaState | null
+	//{
+
+	//	if (this.disabled)
+	//		return null;
+
+
+	//	let next = this.getNextPhase(this);
+
+	//	while (next)
+	//	{
+
+	//		let newState = this.getState(next.phase, next.stage);
+
+	//		if (!match || match(newState, this))
+	//			return newState;
+
+	//		next = this.getNextPhase(next);
+
+	//	}
+
+
+	//	return null;
+
+	//}
+
+
+
+	decPhase(match?: (state: TentaState, bhv: this) => boolean): boolean
+	{
+
+		let newState = this.findPhaseState(this.phase, -1, match);
 
 		return this.setState(newState);
 
 	}
 
-	phaseDown(match?: (state: TentaState, bhv: this) => boolean): boolean
+	incPhase(match?: (state: TentaState, bhv: this) => boolean): boolean
 	{
 
-		let newState = this.findNextPhaseState(match);
+		let newState = this.findPhaseState(this.phase, 1, match);
 
 		return this.setState(newState);
 
@@ -689,28 +813,36 @@ export class TentaBase extends Repaintable()
 
 	onPhaseChanged() { }
 
-	onPhaseUp() { }
-	onPhaseDown() { }
-	onItemPhaseUp(item: TentaBase) { }
-	onItemPhaseDown(item: TentaBase) { }
+	onDecPhase() { }
+	onIncPhase() { }
+	onItemDecPhase(item: TentaBase) { }
+	onItemIncPhase(item: TentaBase) { }
 
+
+
+	//---
+
+
+
+	setStage(newStage: TentaStage)
+	{
+		return this.setPhase(this.phaseByStage(newStage));
+	}
 
 
 	collapse()
 	{
-		return this.setPhase(0);
+		return this.setStage("collapsed");
 	}
-
 
 	expand()
 	{
-		return this.setPhase(this.expandedPhase);
+		return this.setStage("expanded");
 	}
-
 
 	open()
 	{
-		return this.setPhase(this.openedPhase);
+		return this.setStage("opened");
 	}
 
 
@@ -810,7 +942,7 @@ export class TentaBase extends Repaintable()
 		let margin = this.bodyTopMargin();
 
 
-		if (margin < TentaStage.MaxValue)
+		if (margin < TentaStage.MaxIndex)
 		{
 			let prior = this.prior();
 			margin = !prior ? 2 : Math.max(margin, prior.btmMargin() || 0);
@@ -830,14 +962,14 @@ export class TentaBase extends Repaintable()
 		let margin = this.bodyBtmMargin();
 
 
-		if (margin < TentaStage.MaxValue)
+		if (margin < TentaStage.MaxIndex)
 		{
 			let next = this.next();
 			margin = !next ? 2 : Math.max(margin, next.bodyTopMargin() || 0);
 		}
 
 
-		if (margin < TentaStage.MaxValue)
+		if (margin < TentaStage.MaxIndex)
 		{
 			margin = Math.max(margin, this.parentTailBtmMargin());
 		}
@@ -895,7 +1027,7 @@ export class TentaBase extends Repaintable()
 			let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
 
 
-			if (margin < TentaStage.MaxValue && parent.isLast)
+			if (margin < TentaStage.MaxIndex && parent.isLast)
 			{
 				let parentMargin = getParentTailBtmMargin(parent.parent);
 				margin = Math.max(margin, parentMargin);
@@ -923,20 +1055,27 @@ export class TentaBase extends Repaintable()
 
 
 
-	isAccented(): boolean
-	{
+	//accent(): 0 | 1
+	//{
 
-		let { parentCollector } = this;
-
-		if (parentCollector?.parentTenta && parentCollector.isVisibleAndNotSeparated())
-		{
-			return parentCollector.parentTenta.isAccented();
-		}
+	//	let accent = this.bodyIsAccented ? 1 as const : 0 as const;
 
 
-		return this.bodyIsAccented;
+	//	if (accent === 1)
+	//		return accent;
 
-	}
+
+	//	let { parentCollector } = this;
+
+	//	if (parentCollector?.parentTenta && parentCollector.isVisibleAndNotSeparated())
+	//	{
+	//		return parentCollector.parentTenta.accent();
+	//	}
+
+
+	//	return accent;
+
+	//}
 
 
 

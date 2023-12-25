@@ -1,13 +1,14 @@
 //import Tab from "@mui/material/Tab";
 //import Tabs from "@mui/material/Tabs";
 import { $log, FillFade, Pane } from "@libs";
-import { Tab, Tabs } from "@mui/material";
-import type React from "react";
 import { Tenta as Tenta_ } from "../../tentas";
 import { PilePhaseIcon } from "../core/PilePhaseIcon";
 import { PileNodeTail1 } from "./PileNodeTail1";
 import { PileRowNode } from "./PileRowNode";
 import { PileTabsNodeTenta } from "./PileTabsNodeTenta";
+import { styled } from "@mui/material/styles";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 
 
 
@@ -42,8 +43,9 @@ export function PileTabsNode(props: PileTabsNodeProps)
 	//$log("tenta.activeTabIndex:", tenta.activeTabIndex)
 
 	body = (
-		<Pane start end pl12>
-			<Tabs
+		<Pane start end p6 pl12>
+
+			<PileTabsNode.NodeTabs
 				value={tenta.activeTabIndex + 1}
 				onChange={(e, tabIndex) =>
 				{
@@ -52,9 +54,15 @@ export function PileTabsNode(props: PileTabsNodeProps)
 					tenta.activateTabByIndex(tabIndex - 1);
 				}}
 			>
-				<Tab label={<div className="nowrap"><PilePhaseIcon tenta={tenta} /></div>} />
-				{tenta.collectors?.map(a => <Tab key={a.id} label={a.id + ""} />)}
-			</Tabs>
+
+				<PileTabsNode.NodeZeroTab label={<PilePhaseIcon tenta={tenta} />} />
+
+				{tenta.collectors?.map(a =>
+					<PileTabsNode.NodeTab key={a.id} label={a.id + ""} />
+				)}
+
+			</PileTabsNode.NodeTabs>
+
 		</Pane>
 	);
 
@@ -96,6 +104,40 @@ export module PileTabsNode
 
 
 
+	export var NodeTabs = styled(Tabs)({
+
+		minHeight: 24,
+
+		">.MuiTabs-indicator": {
+			height: "4px!important",
+		},
+
+	})
+
+
+
+	export var NodeZeroTab = styled(Tab)({
+
+		minHeight: 24,
+		padding: "6px 0",
+		minWidth: 24,
+	})
+
+
+	export var NodeTab = styled(Tab)({
+
+		minHeight: 24,
+		padding: "6px 12px 6px 0",
+		minWidth: 24,
+		fontSize: "1em",
+	})
+
+
+
+	//---
+
+
+
 	export function defaultTailDecorator(tenta: Tenta)
 	{
 
@@ -126,6 +168,7 @@ export module PileTabsNode
 			)}
 		</>;
 	}
+
 
 
 	//---

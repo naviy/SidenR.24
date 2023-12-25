@@ -52,6 +52,21 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 			</Div>
 
 
+			{/*<Div flex200px>*/}
+			{/*	<Table details>*/}
+			{/*		<caption>isAccented: {tenta.accent() + ""}</caption>*/}
+			{/*		<tbody>*/}
+			{/*			<BoolRow label="bodyIsAccented" r={tenta.bodyIsAccented} />*/}
+			{/*			<CollectorRow label="parentCollector" r={tenta.parentCollector} />*/}
+			{/*			<BoolRow indent label="isVisible" r={tenta.parentCollector?.isVisible()} />*/}
+			{/*			<BoolRow indent label="isSeparated" r={tenta.parentCollector?.isSeparated()} />*/}
+			{/*			<TentaRow label="parent" r={tenta.parent} />*/}
+			{/*			<BoolRow label="isAccented" r={tenta.parent?.accent()} />*/}
+			{/*		</tbody>*/}
+			{/*	</Table>*/}
+			{/*</Div>*/}
+
+
 			<Div flex250px>
 				<Table details>
 					<caption>topMargin: {tenta.topMargin()}</caption>
@@ -136,6 +151,18 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 			<tr>
 				<Th pl={typeof indent === "number" ? indent * 24 + 24 as any : indent === true ? 48 : 18}>{label}:</Th>
 				<td>{r}</td>
+			</tr>
+		);
+	}
+
+
+
+	function EmptyRow()
+	{
+		return (
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
 			</tr>
 		);
 	}
