@@ -100,6 +100,8 @@ function Rows05Pile()
 {
 
 	let [tenta] = useState(() => Rows05PileTenta(myData));
+
+	tenta.use({ root: true });
 	tenta.useGlobalState();
 
 	//$log("Rows05Pile " + tenta);

@@ -50,7 +50,7 @@ export function PileTabsNode(props: PileTabsNodeProps)
 				onChange={(e, tabIndex) =>
 				{
 					e.stopPropagation();
-					tenta.focus();
+					tenta.focusBody();
 					tenta.activateTabByIndex(tabIndex - 1);
 				}}
 			>

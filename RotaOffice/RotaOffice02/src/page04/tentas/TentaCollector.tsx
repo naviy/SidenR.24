@@ -56,7 +56,7 @@ export class TentaCollector extends Repaintable()
 
 
 
-	maxItemStage: TentaStage | null = null;
+	//maxItemStage: TentaStage | null = null;
 
 
 	#globalState?: GlobalState;
@@ -120,11 +120,13 @@ export class TentaCollector extends Repaintable()
 		this.#items?.map((tenta, i, all) =>
 		{
 			tenta.setCollector(this, all[i - 1], all[i + 1]);
+			tenta.created();
 		});
 
 
-		this.recalcStages();
+		//this.recalcStages();
 		this.parentTenta?.recalcStages();
+
 	}
 
 
@@ -137,23 +139,23 @@ export class TentaCollector extends Repaintable()
 	{
 		//$log(this + ".itemPhaseChanged");
 
-		this.recalcStages();
+		//this.recalcStages();
 		this.parentTenta?.collectorPhaseChanged();
 	}
 
 
 
-	recalcStages()
-	{
+	//recalcStages()
+	//{
 
-		//_$log(this + ".recalcStages")
+	//	//_$log(this + ".recalcStages")
 
-		this.maxItemStage = this.#items?.reduce<TentaStage>(
-			(prior, cur) => TentaStage.max(prior, cur.stage),
-			TentaStage.Min
-		) || null;
+	//	this.maxItemStage = this.#items?.reduce<TentaStage>(
+	//		(prior, cur) => TentaStage.max(prior, cur.stage),
+	//		TentaStage.Min
+	//	) || null;
 
-	}
+	//}
 
 
 

@@ -1,5 +1,4 @@
 import { Keys, type Constructor, type Focuser } from "@libs";
-import { createRef, type RefObject } from "react";
 import type { TentaBase } from "./TentaBase";
 
 
@@ -17,13 +16,13 @@ import type { TentaBase } from "./TentaBase";
 export interface TentaFocusable extends TentaBase
 {
 
-	ffRef: RefObject<Focuser>;
-	ff: Focuser | null;
+	//bodyFfRef: RefObject<Focuser>;
+	//bodyFf: Focuser | null;
 
-	focused: boolean;
+	//bodyIsFocused: boolean;
 
-	focus(): Promise<Focuser | null>;
-	unfocus(): void;
+	//focusBody(): Promise<Focuser | null>;
+	//unfocusBody(): void;
 
 }
 
@@ -38,43 +37,7 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 	return class TentaFocusableClass extends Base
 		implements TentaFocusable, Focuser.Listener
 	{
-
-		//---
-
-
-
-		ffRef = createRef<Focuser>();
-		get ff(): Focuser | null { return this.ffRef.current; }
-
-
-		get focused() { return !!this.ff?.isFocused; }
-
-
-
-		//---
-
-
-
-		override async focus(): Promise<Focuser | null>
-		{
-			return this.ff && await this.ff.focusIfCan();
-		}
-
-
-		unfocus()
-		{
-			this.ff?.unfocus();
-		}
-
-
-
-		async shake(mode?: 1 | 2 | 3)
-		{
-			await this.ff?.caret?.shake(mode);
-		}
-
-
-
+		
 		//---
 
 

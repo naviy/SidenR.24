@@ -292,15 +292,25 @@ export class TentaBase extends Repaintable()
 	{
 
 		this.parentCollector = collector;
+
 		this.#priorSibling = prior || null;
 		this.#nextSibling = next || null;
+
 
 		if (this.globalState === undefined)
 		{
 			this.globalState = GlobalState.node(collector?.globalState, this.id + "");
 		}
 
+
 		this.#loadFromGlobalState();
+
+	}
+
+
+
+	created()
+	{
 
 	}
 
@@ -1194,7 +1204,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	focus() { }
+	focusBody() { }
 
 
 

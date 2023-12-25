@@ -1,10 +1,10 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, ExpanderBaseBehavior, Focuser, Pane, _$log, useForceUpdate } from '@libs';
+import { $log, Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
+import { useEffect, useState, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
-import { PileRowNodeTenta } from "./PileRowNodeTenta";
 import { PileNodeTail1 } from "./PileNodeTail1";
-import { useEffect, type MutableRefObject, type ReactNode, type RefObject, useState } from "react";
+import { PileRowNodeTenta } from "./PileRowNodeTenta";
 
 
 
@@ -87,7 +87,7 @@ export function PileRowNode({
 		<Tenta.ByPhaseProvider tenta={tenta}>
 
 			<Focuser
-				ref={tenta.rootFfRef}
+				ref={tenta.ffRef}
 				//name={`pile-node#${id}`}
 				ghost
 				focusable
@@ -240,7 +240,7 @@ function PileRowNodeBody({
 	return (
 
 		<Focuser
-			ref={tenta.ffRef}
+			ref={tenta.bodyFfRef}
 			//name={`pile-row-body#${id}`}
 			listener={tenta}
 			autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
@@ -294,7 +294,7 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 	function updateFocuser()
 	{
 
-		let focused = !!tenta.ff?.focused || !!tenta.tailFf?.itemFocused || !Focuser.current();
+		let focused = !!tenta.bodyFf?.focused || !!tenta.tailFf?.itemFocused || !Focuser.current();
 
 		if (isFocused !== focused)
 			setIsFocused(focused);
@@ -306,8 +306,14 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 	{
 
 		tenta.rootFf?.registerBorderer(updateFocuser);
+		tenta.ff?.registerBorderer(updateFocuser);
 
-		return () => tenta.rootFf?.unregisterBorderer(updateFocuser);
+		return () =>
+		{
+			tenta.rootFf?.unregisterBorderer(updateFocuser);
+			tenta.ff?.unregisterBorderer(updateFocuser);
+		}
+
 	});
 
 
@@ -315,7 +321,7 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 		fill
 		bgBlack
 		opacity0
-		opacity0_3={!isFocused}
+		opacity0_4={!isFocused}
 		animated		
 		nomouse
 	/>;
