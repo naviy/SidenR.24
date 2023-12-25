@@ -36,6 +36,9 @@ export function PileNodeTail1({
 })
 {
 
+
+	//return <>{children}</>;
+
 	//let indent = indent_ !== false;
 
 	let parentCellIndent = Pile.useCellIndent();

@@ -299,10 +299,10 @@ export class CaretBehavior extends Repaintable()
 			return;
 
 
-		if (ff.isFocused)
+		if (ff!.isFocused)
 		{
 
-			if (prior && !prior.caret)
+			if (prior && !prior!.caret)
 			{
 				$error(`prior && !prior.caret`);
 			}
