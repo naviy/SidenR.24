@@ -323,8 +323,15 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 		_isFocusing = true;
 
 
-		focuserFocusStep(next, focusProps, true);
-		next?.scrollIntoView();
+		try
+		{
+			focuserFocusStep(next, focusProps, true);
+			next?.scrollIntoView();
+		}
+		catch(ex)
+		{
+			_isFocusing = false;
+		}
 
 
 		window.setTimeout(
@@ -332,23 +339,29 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 			() =>
 			{
 
-				let last: Focuser | null = null;
-
-				while (_focusSteps.length)
+				try
 				{
-					let step = _focusSteps.shift()!;
+					let last: Focuser | null = null;
 
-					let mustRepaint = true;//!_focusSteps.length;
+					while (_focusSteps.length)
+					{
+						let step = _focusSteps.shift()!;
 
-					focuserFocusStep(step.next, step.focusProps, mustRepaint);
+						let mustRepaint = true;//!_focusSteps.length;
 
-					last = step.next ?? last;
+						focuserFocusStep(step.next, step.focusProps, mustRepaint);
+
+						last = step.next ?? last;
+					}
+
+
+					last?.scrollIntoView();
+
 				}
-
-
-				last?.scrollIntoView();
-
-				_isFocusing = false;
+				finally
+				{
+					_isFocusing = false;
+				}
 
 			},
 

@@ -35,6 +35,8 @@ export interface CaretProps extends UseHookProps<CaretProps>
 export function Caret(props: CaretProps)
 {
 
+	//return null;
+
 	let bhv = useNew(CaretBehavior).use(props);
 
 

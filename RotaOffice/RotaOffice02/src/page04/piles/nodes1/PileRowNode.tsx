@@ -304,13 +304,24 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 	useEffect(() =>
 	{
 
-		tenta.rootFf?.registerBorderer(updateFocuser);
-		tenta.ff?.registerBorderer(updateFocuser);
+		let unmount0 = tenta.rootFf?.addListener({
+
+			unfocus: () => setIsFocused(false),
+
+		});
+
+
+		let unmount1 = tenta.ff?.addListener({
+
+			itemFocus: updateFocuser,
+			itemUnfocus: updateFocuser,
+
+		});
 
 		return () =>
 		{
-			tenta.rootFf?.unregisterBorderer(updateFocuser);
-			tenta.ff?.unregisterBorderer(updateFocuser);
+			unmount0?.();
+			unmount1?.();
 		}
 
 	});
@@ -321,7 +332,7 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 		bgBlack
 		opacity0
 		opacity0_4={!isFocused}
-		animated		
+		animated
 		nomouse
 	/>;
 

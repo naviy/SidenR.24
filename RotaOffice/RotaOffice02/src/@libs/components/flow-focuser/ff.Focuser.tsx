@@ -213,8 +213,7 @@ export interface FocuserProps
 	scrollIntoView?: boolean;
 
 
-	listener?: IFocuserListener | null;
-
+	listener?: IFocuserBehaviorListener | null;
 
 	onFocus?: FocusEvent;
 	onUnfocus?: UnfocusEvent;
@@ -295,37 +294,100 @@ export type FocuserClickBehavior = boolean | "focus" | "unfocus" | "enter" | "fo
 export interface IFocuserListener
 {
 
-	ff_allowCtrlKey?: boolean;
+	focus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+	unfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+	itemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+	itemUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+	changeItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
 
-	ff_onFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-	ff_onUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-	ff_onItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-	ff_onItemUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-	ff_onChangeItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-
-	ff_onFocusLeft?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-	ff_onFocusUp?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-	ff_onFocusRight?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-	ff_onFocusDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+	focusLeft?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+	focusUp?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+	focusRight?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+	focusDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
 
 
-	ff_onClick?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
-	ff_onContextMenu?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
-	ff_onKeyDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<any>;
+	click?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
+	contextMenu?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
+	keyDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<any>;
 
-	ff_onEnter?(ff: Focuser): void | boolean | Promise<any>;
-	ff_onItemEnter?(ff: Focuser, itemFf: Focuser): boolean | Promise<boolean>;
-	ff_onExit?(ff: Focuser): void | boolean | Promise<void | boolean | Focuser>;
+	enter?(ff: Focuser): void | boolean | Promise<any>;
+	itemEnter?(ff: Focuser, itemFf: Focuser): boolean | Promise<boolean>;
+	exit?(ff: Focuser): void | boolean | Promise<void | boolean | Focuser>;
 
-	ff_onInsert?(ff: Focuser): void | boolean | Promise<any>;
-	//ff_onInspect?(ff: Focuser, e: InspectArgs): void | boolean | Promise<any>;
-	ff_onDelete?(ff: Focuser): void | boolean | Promise<any>;
-	ff_onActivate?(ff: Focuser, activated: boolean): void | boolean | Promise<any>;
-	ff_onSelect?(ff: Focuser): void | boolean | Promise<any>;
-	ff_onMount?(ff: Focuser): void;
-	ff_onUnmount?(ff: Focuser): void;
+	insert?(ff: Focuser): void | boolean | Promise<any>;
+
+	delete?(ff: Focuser): void | boolean | Promise<any>;
+	activate?(ff: Focuser, activated: boolean): void | boolean | Promise<any>;
+	select?(ff: Focuser): void | boolean | Promise<any>;
+	mount?(ff: Focuser): void;
+	unmount?(ff: Focuser): void;
 
 }
+
+
+
+
+
+
+export type FocuserEventName = keyof IFocuserListener;
+
+
+export module FocuserEventName
+{
+	export function toBehaviorEventName(eventName: FocuserEventName): FocuserBehaviorEventName
+	{
+		return `ff_on${eventName.toCapitalizeCase()}` as any;
+	}
+}
+
+
+
+
+export type FocuserBehaviorEventName = `ff_on${Capitalize<FocuserEventName>}`;
+
+
+export type IFocuserBehaviorListener = (
+	{
+		[P in keyof IFocuserListener as `ff_on${Capitalize<P>}`]?: IFocuserListener[P];
+	} & {
+		ff_allowCtrlKey?: boolean;
+	}
+);
+
+//export interface IFocuserListener
+//{
+
+//	ff_allowCtrlKey?: boolean;
+
+//	ff_onFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+//	ff_onUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+//	ff_onItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+//	ff_onItemUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+//	ff_onChangeItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+
+//	ff_onFocusLeft?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+//	ff_onFocusUp?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+//	ff_onFocusRight?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+//	ff_onFocusDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
+
+
+//	ff_onClick?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
+//	ff_onContextMenu?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
+//	ff_onKeyDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<any>;
+
+//	ff_onEnter?(ff: Focuser): void | boolean | Promise<any>;
+//	ff_onItemEnter?(ff: Focuser, itemFf: Focuser): boolean | Promise<boolean>;
+//	ff_onExit?(ff: Focuser): void | boolean | Promise<void | boolean | Focuser>;
+
+//	ff_onInsert?(ff: Focuser): void | boolean | Promise<any>;
+//	//ff_onInspect?(ff: Focuser, e: InspectArgs): void | boolean | Promise<any>;
+//	ff_onDelete?(ff: Focuser): void | boolean | Promise<any>;
+//	ff_onActivate?(ff: Focuser, activated: boolean): void | boolean | Promise<any>;
+//	ff_onSelect?(ff: Focuser): void | boolean | Promise<any>;
+//	ff_onMount?(ff: Focuser): void;
+//	ff_onUnmount?(ff: Focuser): void;
+
+//}
 
 
 
@@ -794,6 +856,194 @@ export class Focuser extends Component<FocuserProps>
 
 
 
+	#listeners?: IFocuserListener[];
+
+
+	addListener(listener: IFocuserListener): (() => void) | null
+	{
+
+		let listeners = this.#listeners ??= [];
+
+
+		if (listeners.indexOf(listener) >= 0)
+			return null;
+
+		listeners.push(listener);
+
+		return () => this.removeListener(listener);
+
+	}
+
+
+	removeListener(listener: IFocuserListener | null | undefined): boolean
+	{
+		return listener && this.#listeners?.remove(listener) || false;
+	}
+
+
+	//addListeners(...newListeners: IFocuserListener[]): () => void
+	//{
+
+	//	let listeners = this.#listeners ?? (this.#listeners = new Set());
+
+
+	//	newListeners.forEach(listeners.add, listeners);
+
+
+	//	return () =>
+	//	{
+	//		newListeners.forEach(listeners.delete, listeners);
+	//	};
+
+	//}
+
+
+
+	hasListenerEvent(eventName: FocuserEventName): boolean
+	{
+		return !!(
+			this.props.listener && this.props.listener[FocuserEventName.toBehaviorEventName(eventName)] ||
+			this.#listeners?.find(a => a[eventName])
+		);
+	}
+
+
+	callListenerEvent<
+		TEventName extends FocuserEventName,
+		TEvent extends NonNullable<IFocuserListener[TEventName]>
+	>(
+		eventName: TEventName,
+		caller: (event: TEvent) => void
+	): void
+	{
+
+		call(this.props.listener, FocuserEventName.toBehaviorEventName(eventName));
+
+		this.#listeners?.forEach(l =>
+		{
+			call(l, eventName);
+		});
+
+
+		function call(listener: any, eventName: string)
+		{
+			var eventMethod = listener?.[eventName];
+
+			eventMethod && caller(((...args: any[]) => (eventMethod as Function).apply(listener, args)) as any);
+		}
+	}
+
+
+	async callListenerEventUntil<
+		TEventName extends FocuserEventName,
+		TEvent extends NonNullable<IFocuserListener[TEventName]>
+	>(
+		eventName: TEventName,
+		caller: (event: TEvent) => boolean
+	): Promise<boolean>
+	{
+
+		if (await call(this.props.listener, FocuserEventName.toBehaviorEventName(eventName)))
+			return true;
+
+
+		if (this.#listeners)
+		{
+			for (let l of this.#listeners)
+			{
+				if (await call(l, eventName))
+					return true;
+			}
+		}
+
+
+		return false;
+
+
+		async function call(listener: any, eventName: string): Promise<boolean>
+		{
+
+			var eventMethod = listener?.[eventName];
+
+			if (!eventMethod)
+				return false;
+
+
+			let result = await caller(((...args: any[]) => (eventMethod as Function).apply(listener, args)) as any);
+
+			return result;
+
+		}
+
+	}
+
+
+
+	async callListenerEventUntilFocuser<
+		TEventName extends FocuserEventName,
+		TEvent extends NonNullable<IFocuserListener[TEventName]>
+	>(
+		eventName: TEventName,
+		caller: (event: TEvent) => void | boolean | Promise<void | boolean | Focuser>
+	): Promise<Focuser | null | undefined>
+	{
+
+		let ff = await call(this.props.listener, FocuserEventName.toBehaviorEventName(eventName));
+
+		if (ff != undefined)
+			return ff;
+
+
+		if (this.#listeners)
+		{
+			for (let l of this.#listeners)
+			{
+
+				let ff = await call(l, eventName);
+
+				if (ff != undefined)
+					return ff;
+
+			}
+		}
+
+
+		return undefined;
+
+
+
+		async function call(listener: any, eventName: string): Promise<Focuser | null | undefined>
+		{
+
+			var eventMethod = listener?.[eventName];
+
+			if (!eventMethod)
+				return undefined;
+
+
+			let focusResult = await caller(((...args: any[]) => (eventMethod as Function).apply(listener, args)) as any);
+
+			if (focusResult instanceof Focuser)
+				return focusResult;
+
+			if (focusResult !== false)
+				return null;
+
+
+			return undefined;
+
+		}
+
+
+	}
+
+
+
+
+	//---
+
+
+
 	padding(): number | [number, number, number, number] | null | undefined
 	{
 		return this.props.padding ?? this.parent?.props.itemPadding ?? this.props.defaultPadding;
@@ -1070,7 +1320,8 @@ export class Focuser extends Component<FocuserProps>
 
 		this.props.onMount?.(this);
 
-		this.props.listener?.ff_onMount?.(this);
+
+		this.callListenerEvent("mount", a => a(this));
 
 
 	}
@@ -1268,12 +1519,12 @@ export class Focuser extends Component<FocuserProps>
 		//$log("currentFocuser():", currentFocuser());
 
 
-		if (this.props.onUnmount || this.props.listener?.ff_onUnmount)
+		if (this.props.onUnmount || this.hasListenerEvent("unmount"))
 		{
 
 			this.props.onUnmount?.(this);
 
-			this.props.listener?.ff_onUnmount?.(this);
+			this.callListenerEvent("unmount", a => a(this));
 
 		}
 
@@ -2378,7 +2629,7 @@ export class Focuser extends Component<FocuserProps>
 
 		this.props.onFocus?.(this, prior, next);
 
-		this.props.listener?.ff_onFocus?.(this, prior, next);
+		this.callListenerEvent("focus", a => a(this, prior, next));
 
 
 		this.parent?.setLastFocusedItem(this);
@@ -2396,8 +2647,7 @@ export class Focuser extends Component<FocuserProps>
 
 		this.props.onItemFocus?.(this, prior, next);
 
-		this.props.listener?.ff_onItemFocus?.(this, prior, next);
-
+		this.callListenerEvent("itemFocus", a => a(this, prior, next));
 
 		this.updateItemBorderers();
 
@@ -2409,8 +2659,7 @@ export class Focuser extends Component<FocuserProps>
 
 		this.props.onItemUnfocus?.(this, prior, next);
 
-		this.props.listener?.ff_onItemUnfocus?.(this, prior, next);
-
+		this.callListenerEvent("itemUnfocus", a => a(this, prior, next));
 
 		this.updateItemBorderers();
 
@@ -2422,7 +2671,7 @@ export class Focuser extends Component<FocuserProps>
 		//_$log("onChangeItemFocus")
 		this.props.onChangeItemFocus?.(this, prior, next);
 
-		this.props.listener?.ff_onChangeItemFocus?.(this, prior, next);
+		this.callListenerEvent("changeItemFocus", a => a(this, prior, next));
 
 
 		this.updateCarets(prior, mustRepaint);
@@ -2444,8 +2693,7 @@ export class Focuser extends Component<FocuserProps>
 
 		this.props.onUnfocus?.(this, prior, next);
 
-		this.props.listener?.ff_onUnfocus?.(this, prior, next);
-
+		this.callListenerEvent("unfocus", a => a(this, prior, next));
 
 		this.updateCarets(prior, mustRepaint);
 		this.updateBorderers();
@@ -3274,8 +3522,7 @@ export class Focuser extends Component<FocuserProps>
 		}
 
 
-
-		if (props.listener?.ff_onEnter && await props.listener.ff_onEnter(this) !== false)
+		if (await this.callListenerEventUntil("enter", a => a(this) !== false))
 		{
 			return currentFocuser();
 		}
@@ -3358,7 +3605,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-			if (parent.props.listener?.ff_onItemEnter && await parent.props.listener.ff_onItemEnter(parent, this) !== false)
+			if (await parent.callListenerEventUntil("itemEnter", a => a(parent!, this) !== false))
 				return this;
 
 
@@ -3433,8 +3680,7 @@ export class Focuser extends Component<FocuserProps>
 		}
 
 
-
-		if (props.listener?.ff_onExit && await props.listener.ff_onExit(this) !== false)
+		if (await this.callListenerEventUntil("exit", a => a(this) !== false))
 		{
 			return currentFocuser();
 		}
@@ -3514,18 +3760,10 @@ export class Focuser extends Component<FocuserProps>
 					}
 
 
-					if (parent.props.listener?.ff_onExit)
-					{
+					let ff = await this.callListenerEventUntilFocuser("exit", a => a(this));
 
-						let focusResult = await parent.props.listener.ff_onExit(this);
-
-						if (focusResult instanceof Focuser)
-							return focusResult;
-
-						if (focusResult !== false)
-							return null;
-
-					}
+					if (ff !== undefined)
+						return ff;
 
 				}
 
@@ -3579,8 +3817,7 @@ export class Focuser extends Component<FocuserProps>
 		}
 
 
-
-		if (props.listener?.ff_onInsert && await props.listener.ff_onInsert(this) !== false)
+		if (await this.callListenerEventUntil("insert", a => a(this) !== false))
 			return true;
 
 
@@ -3771,8 +4008,7 @@ export class Focuser extends Component<FocuserProps>
 		}
 
 
-
-		if (props.listener?.ff_onActivate && await props.listener.ff_onActivate(this, this._activated) !== false)
+		if (await this.callListenerEventUntil("activate", a => a(this, !!this._activated) !== false))
 		{
 			return true;
 		}
@@ -3825,7 +4061,7 @@ export class Focuser extends Component<FocuserProps>
 		}
 
 
-		if (props.listener?.ff_onDelete && await props.listener.ff_onDelete(this) !== false)
+		if (await this.callListenerEventUntil("delete", a => a(this) !== false))
 		{
 			return true;
 		}
@@ -3860,7 +4096,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-		if (props.listener?.ff_onSelect && await props.listener.ff_onSelect(this) !== false)
+		if (await this.callListenerEventUntil("select", a => a(this) !== false))
 			return true;
 
 
@@ -4013,7 +4249,7 @@ export class Focuser extends Component<FocuserProps>
 			return;
 
 
-		if (this.props.listener?.ff_onKeyDown && await this.props.listener.ff_onKeyDown(this, e) !== false)
+		if (await this.callListenerEventUntil("keyDown", a => a(this, e) !== false))
 			return;
 
 
@@ -4085,17 +4321,10 @@ export class Focuser extends Component<FocuserProps>
 				if (props.onFocusLeft && await props.onFocusLeft(this) !== false)
 					return null;
 
-				if (props.listener?.ff_onFocusLeft)
-				{
-					let focusResult = await props.listener.ff_onFocusLeft(this, e);
+				let ff = await this.callListenerEventUntilFocuser("focusLeft", a => a(this, e));
 
-					if (focusResult instanceof Focuser)
-						return focusResult;
-
-					if (focusResult !== false)
-						return null;
-
-				}
+				if (ff !== undefined)
+					return ff;
 
 			}
 
@@ -4105,17 +4334,10 @@ export class Focuser extends Component<FocuserProps>
 				if (props.onFocusUp && await props.onFocusUp(this) !== false)
 					return null;
 
-				if (props.listener?.ff_onFocusUp)
-				{
-					let focusResult = await props.listener.ff_onFocusUp(this, e);
+				let ff = await this.callListenerEventUntilFocuser("focusUp", a => a(this, e));
 
-					if (focusResult instanceof Focuser)
-						return focusResult;
-
-					if (focusResult !== false)
-						return null;
-
-				}
+				if (ff !== undefined)
+					return ff;
 
 			}
 
@@ -4125,17 +4347,10 @@ export class Focuser extends Component<FocuserProps>
 				if (props.onFocusRight && await props.onFocusRight(this) !== false)
 					return null;
 
-				if (props.listener?.ff_onFocusRight)
-				{
-					let focusResult = await props.listener.ff_onFocusRight(this, e);
+				let ff = await this.callListenerEventUntilFocuser("focusRight", a => a(this, e));
 
-					if (focusResult instanceof Focuser)
-						return focusResult;
-
-					if (focusResult !== false)
-						return null;
-
-				}
+				if (ff !== undefined)
+					return ff;
 
 			}
 
@@ -4145,17 +4360,10 @@ export class Focuser extends Component<FocuserProps>
 				if (props.onFocusDown && await props.onFocusDown(this) !== false)
 					return null;
 
-				if (props.listener?.ff_onFocusDown)
-				{
-					let focusResult = await props.listener.ff_onFocusDown(this, e);
+				let ff = await this.callListenerEventUntilFocuser("focusDown", a => a(this, e));
 
-					if (focusResult instanceof Focuser)
-						return focusResult;
-
-					if (focusResult !== false)
-						return null;
-
-				}
+				if (ff !== undefined)
+					return ff;
 
 			}
 
@@ -4221,7 +4429,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-		if (props.listener?.ff_onKeyDown && await props.listener.ff_onKeyDown(this, e) !== false)
+		if (await this.callListenerEventUntil("keyDown", a => a(this, e) !== false))
 		{
 			e.preventDefault();
 			return true;
@@ -4406,13 +4614,20 @@ export class Focuser extends Component<FocuserProps>
 
 	canClick()
 	{
-		return this.enabled && !!(this.props.click /*&& !this.ghost*/ || this.props.onClick || this.props.listener?.ff_onClick);
+		return this.enabled && !!(
+			this.props.click /*&& !this.ghost*/ ||
+			this.props.onClick ||
+			this.hasListenerEvent("click")
+		);
 	}
 
 
 	canContextMenu()
 	{
-		return this.enabled && !!(this.props.onContextMenu || this.props.listener?.ff_onContextMenu);
+		return this.enabled && !!(
+			this.props.onContextMenu ||
+			this.hasListenerEvent("contextMenu")
+		);
 	}
 
 
@@ -4429,28 +4644,11 @@ export class Focuser extends Component<FocuserProps>
 
 		//$log("props.onClick:", props.onClick);
 
-		if (props.onClick || props.listener?.ff_onClick)
-		{
+		if (props.onClick && await props.onClick(this, e) !== false)
+			return true;
 
-			//beginFreeze();
-
-			//try
-			//{
-
-			if (props.onClick && await props.onClick(this, e) !== false)
-				return true;
-
-			if (props.listener?.ff_onClick && await props.listener.ff_onClick(this, e) !== false)
-				return true;
-
-			//	}
-			//	finally
-			//	{
-			//		endFreeze();
-			//	}
-
-		}
-
+		if (await this.callListenerEventUntil("click", a =>	a(this, e) !== false))
+			return true;
 
 
 		if (await this.defaultClick(e))
@@ -4606,7 +4804,7 @@ export class Focuser extends Component<FocuserProps>
 			return true;
 
 
-		if (props.listener?.ff_onContextMenu && await props.listener.ff_onContextMenu(this, e) !== false)
+		if (await this.callListenerEventUntil("contextMenu", a => a(this, e) !== false))
 			return true;
 
 
@@ -4717,7 +4915,7 @@ export module Focuser
 
 
 	export type Props = FocuserProps;
-	export type Listener = IFocuserListener;
+	export type Listener = IFocuserBehaviorListener;
 
 	export var Tasks = Task;
 
