@@ -1,4 +1,4 @@
-import { $log, Div, Expander, GlobalState, Pane, Route } from '@libs';
+import { $log, Div, Expander, Pane, Route } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useReducer, useState } from "react";
@@ -6,8 +6,8 @@ import { Pile } from "./piles";
 import { PileNode2 } from "./piles/nodes1/PileNode2";
 import { PileNode3 } from "./piles/nodes1/PileNode3";
 import { PileNode4 } from "./piles/nodes1/PileNode4";
-import { Tenta } from './tentas';
 import { PileTabsNode } from './piles/nodes1/PileTabsNode';
+import { Tenta } from './tentas';
 
 
 
@@ -301,12 +301,12 @@ function Row05({ r, ...props }: PileNode2.Props & { r: number })
 
 
 
+
 var Catagory1Tenta = PileNode3.createFactory((data: typeof myData) => [
 	"ctg1",
 	Catagory1Node,
 	() => data.map(Row05Tenta),
 ]);
-
 
 
 
@@ -372,16 +372,20 @@ function Catagory2Node(props: PileNode3.Props)
 
 
 
-
-
 var Catagory3Tenta = PileTabsNode.createFactory((data: typeof myData) => [
 
 	"ctg3",
 	Catagory3Node,
 
 	{
-		tab1: () => data.map(Row05Tenta),
-		tab2: () => [...data, ...data.map(a => a + 5)].map(a => a * 10).map(Row05Tenta),
+		tab1: {
+			title: () => "TAB 111",
+			tentas: () => data.map(Row05Tenta),
+		},
+		tab2: {
+			title: () => "TAB 222",
+			tentas: () => [...data, ...data.map(a => a + 5)].map(a => a * 10).map(Row05Tenta),
+		},
 	}
 
 ]);

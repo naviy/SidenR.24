@@ -1,7 +1,7 @@
 import { GlobalState, Repaintable, _$log } from '@libs';
 import type React from "react";
 import { type ReactNode } from "react";
-import { TentaCollector } from "./TentaCollector";
+import { TentaCollector, type TentaCollectorPropsAlias } from "./TentaCollector";
 import { TentaPhase } from "./TentaPhase";
 import { TentaStage } from "./TentaStage";
 import type { TentaAccent } from './TentaAccent';
@@ -240,10 +240,10 @@ export class TentaBase extends Repaintable()
 
 
 
-	addCollector(id: React.Key, tentaGetter: () => TentaBase[])
+	addCollector(id: React.Key, props: TentaCollectorPropsAlias)
 	{
 
-		let col = new TentaCollector(id, this, tentaGetter);
+		let col = new TentaCollector(id, this, props);
 
 
 		if (!this.collectors)
@@ -259,7 +259,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	addCollectors(cfg: Record<string | number | symbol, () => TentaBase[]>)
+	addCollectors(cfg: Record<string | number | symbol, TentaCollectorPropsAlias>)
 	{
 
 		for (let id of Object.keys(cfg))

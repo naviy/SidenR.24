@@ -1,6 +1,6 @@
 import GlobalStyles from "@mui/material/GlobalStyles";
 import React, { useEffect } from "react";
-import { $defaultAnimationDurationMs, $log, _$log, adelay } from "../core";
+import { $defaultAnimationDurationMs, $error, $log, _$log, adelay } from "../core";
 import type { FocusActionProps, Focuser } from "./ff.Focuser";
 
 
@@ -331,6 +331,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 		catch(ex)
 		{
 			_isFocusing = false;
+			$error(ex);
 		}
 
 
@@ -1247,6 +1248,8 @@ export function Core()
 
 				transition: `var(--transition, all ${$defaultAnimationDurationMs}ms linear)`,
 
+				willChange: "inset, opacity, border-radius, border-width, color, border-color, transition",
+
 				"> div": {
 					position: "absolute",
 					inset: 0,
@@ -1321,6 +1324,10 @@ export function Core()
 				//borderRadius: `0 0 ${value < max2 ? height : 0}px ${value > 0 ? height : 0}px`,
 
 				transition: `all 225ms ease-out`,
+
+				willChange: "height, left, width, background, border, border-radius",
+
+
 
 			},
 

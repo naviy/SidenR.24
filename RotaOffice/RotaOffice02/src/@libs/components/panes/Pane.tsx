@@ -283,6 +283,9 @@ export var Root = styled(
 
 		userSelect: "none",
 
+		willChange: "border-radius, flex, width, min-width, max-width, height, min-height, max-height",
+
+
 		"> *": {
 			userSelect: "text",
 		},
@@ -301,6 +304,9 @@ export var Root = styled(
 			borderBottom: PaneBorder.borderCss(props.bb) || defaultBorder,
 			borderLeft: PaneBorder.borderCss(props.bl) || defaultBorder,
 			transition: `all ${$defaultAnimationDurationMs}ms linear`,
+
+			willChange: "border-radius, border",
+
 		},
 
 	};

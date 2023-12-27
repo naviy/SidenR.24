@@ -45,6 +45,8 @@ export module PileNodeBackfill
 
 			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out, opacity ${$defaultAnimationDurationMs}ms linear`,
 
+			wiiChange: "bottom, opacity",
+
 		},
 
 	};

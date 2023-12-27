@@ -2,7 +2,6 @@ import { GlobalState, Repaintable } from "@libs";
 import type React from "react";
 import { type ReactNode } from "react";
 import { type TentaBase } from "./TentaBase";
-import { TentaStage } from "./TentaStage";
 
 
 
@@ -10,6 +9,22 @@ import { TentaStage } from "./TentaStage";
 
 
 //===
+
+
+
+
+
+
+export interface TentaCollectorProps
+{
+
+	title?: (collector: TentaCollector) => ReactNode;
+	tentas: (collector: TentaCollector) => TentaBase[] | null | undefined;
+
+}
+
+
+export type TentaCollectorPropsAlias = TentaCollectorProps | TentaCollectorProps["tentas"];
 
 
 
@@ -25,11 +40,13 @@ export class TentaCollector extends Repaintable()
 
 	constructor(
 		public id: React.Key,
-		public parentTenta?: TentaBase | null,
-		public tentasGetter?: () => TentaBase[] | null | undefined,
+		public parentTenta: TentaBase | null,
+		props: TentaCollectorPropsAlias
 	)
 	{
 		super();
+
+		this.props = typeof props === "function" ? { tentas: props } : props;
 	}
 
 
@@ -41,10 +58,14 @@ export class TentaCollector extends Repaintable()
 	static instanceCount = 0;
 	iid = ++TentaCollector.instanceCount;
 
+	props: TentaCollectorProps;
+
 	#priorSibling?: TentaCollector | null;
 	#nextSibling?: TentaCollector | null;
 
 	#items?: TentaBase[] | null;
+
+
 
 	get items(): TentaBase[] | null
 	{
@@ -113,7 +134,7 @@ export class TentaCollector extends Repaintable()
 	#createItems()
 	{
 
-		this.#items = this.tentasGetter?.() || null;
+		this.#items = this.props.tentas?.(this) || null;
 		//___$log("tentas:", this.tentas);
 
 
@@ -127,6 +148,17 @@ export class TentaCollector extends Repaintable()
 		//this.recalcStages();
 		this.parentTenta?.recalcStages();
 
+	}
+
+
+
+	//---
+
+
+
+	title(): ReactNode
+	{
+		return this.props.title?.(this)
 	}
 
 

@@ -407,13 +407,19 @@ export var Root = styled(
 			gap: "inherit",
 			willChange: "flex",
 		},
+
 		transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
+
+		willChange: "border-radius, width, min-width, max-width, height, min-height, max-height, flex",
+
+
 
 		">.pane-expander": {
 			padding: 0,
 			margin: 0,
 			transition: `all ease-in-out ${timeout}ms, mask-image 0s, background ${timeout}ms linear, opacity ${timeout}ms linear !important`,
-		}
+			willChange: "height, flex",
+		},
 
 	};
 

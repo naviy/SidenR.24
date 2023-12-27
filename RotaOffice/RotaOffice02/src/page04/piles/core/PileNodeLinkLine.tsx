@@ -113,6 +113,8 @@ export module PileNodeLinkLine
 
 			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
+			willChange: "left, width",
+
 
 			"> .angle": {
 
@@ -129,6 +131,9 @@ export module PileNodeLinkLine
 
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
 
+				willChange: "border",
+
+
 			},
 
 			"> .line-to-parent": {
@@ -137,6 +142,7 @@ export module PileNodeLinkLine
 				inset: 0,
 				borderLeft: `calc(var(--thickness, 2) * 1px) solid ${color}`,
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+				willChange: "border-left",
 
 			},
 
@@ -146,6 +152,7 @@ export module PileNodeLinkLine
 				inset: 0,
 				borderLeft: `calc(var(--thickness, 2) * 1px) solid ${color}`,
 				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
+				willChange: "border-left",
 
 			},
 

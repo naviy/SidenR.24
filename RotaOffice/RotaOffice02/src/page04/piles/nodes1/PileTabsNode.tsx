@@ -58,7 +58,7 @@ export function PileTabsNode(props: PileTabsNodeProps)
 				<PileTabsNode.NodeZeroTab label={<PilePhaseIcon tenta={tenta} />} />
 
 				{tenta.collectors?.map(a =>
-					<PileTabsNode.NodeTab key={a.id} label={a.id + ""} />
+					<PileTabsNode.NodeTab key={a.id} label={a.title() ?? (a.id + "")} />
 				)}
 
 			</PileTabsNode.NodeTabs>

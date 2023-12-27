@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
+import { $log, Div, ExpanderBaseBehavior, Focuser, Pane, _$log, __$log } from '@libs';
 import { useEffect, useState, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
@@ -287,16 +287,18 @@ function PileRowNodeBody({
 function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 {
 
-	let [isFocused, setIsFocused] = useState(false);
+	let [isFocused, setIsFocused] = useState(!tenta.rootFf?.itemFocused);
 
 
-	function updateFocuser()
+	function updateFocuser(/*ff: Focuser*/)
 	{
 
-		let focused = !!tenta.bodyFf?.focused || !!tenta.tailFf?.itemFocused || !Focuser.current();
+		let focused = !!tenta.bodyFf?.focused || !!tenta.tailFf?.itemFocused || !tenta.rootFf?.itemFocused;
 
 		if (isFocused !== focused)
+		{
 			setIsFocused(focused);
+		}
 
 	}
 
@@ -304,19 +306,23 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 	useEffect(() =>
 	{
 
-		let unmount0 = tenta.rootFf?.addListener({
+		let { rootFf, ff } = tenta
 
-			unfocus: () => setIsFocused(false),
+		let unmount0 = rootFf?.on({
+
+			focus: updateFocuser,
+			unfocus: () => setIsFocused(true),
 
 		});
 
 
-		let unmount1 = tenta.ff?.addListener({
+		let unmount1 = ff?.on({
 
 			itemFocus: updateFocuser,
 			itemUnfocus: updateFocuser,
 
 		});
+
 
 		return () =>
 		{
@@ -334,6 +340,7 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 		opacity0_4={!isFocused}
 		animated
 		nomouse
+		style={{ willChange: "opacity" }}
 	/>;
 
 }

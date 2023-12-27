@@ -2,6 +2,7 @@ import type React from "react";
 import type { TentaBase } from "./TentaBase";
 import { createElement, type FC, type ReactNode } from "react";
 import type { Constructor } from "@libs";
+import type { TentaCollectorProps, TentaCollectorPropsAlias } from "./TentaCollector";
 
 
 
@@ -93,7 +94,7 @@ export module TentaFunctional
 	export interface Config<TTenta extends TentaBase = TentaBase>
 	{
 		id: React.Key;
-		collectors?: Record<string | number | symbol, () => TentaBase[]>;
+		collectors?: Record<string | number | symbol, TentaCollectorPropsAlias>;
 		render?: (tenta: TTenta) => ReactNode;
 		component?: FC<{ tenta: TTenta }>;
 	}
@@ -104,7 +105,14 @@ export module TentaFunctional
 	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
 		id: React.Key,
 		componentOrRender: FC<{ tenta: TTenta }> | ((tenta: TTenta) => ReactNode),
-		collectors?: Record<string | number | symbol, () => TentaBase[]> | (() => TentaBase[]),
+		collectors?: (
+			Record<
+				string | number | symbol,
+				TentaCollectorPropsAlias
+			>
+			|
+			TentaCollectorProps["tentas"]
+		),
 	];
 
 
@@ -133,7 +141,8 @@ export module TentaFunctional
 		if (Array.isArray(cfg))
 		{
 
-			let collectors = typeof cfg[2] === "function" ? { "items": cfg[2] } : cfg[2];
+			let collectors = typeof cfg[2] === "function" ? { items: cfg[2] } : cfg[2];
+
 
 			let id = cfg[0];
 			let cfg1 = cfg[1];
