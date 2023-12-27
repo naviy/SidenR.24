@@ -45,10 +45,6 @@ export module PileNode2
 	export class Tenta extends PileRowNode.Tenta
 	{
 
-		//---
-
-
-
 		override getRestState(stage: TentaStage)
 		{
 
@@ -57,61 +53,10 @@ export module PileNode2
 
 			return {
 				bodyIsSeparated: !collapsed,
-				bodyIsAccented: !collapsed,
 				tailIsVisible: !collapsed,
 				tailIsSeparated: opened,
 			};
 		}
-
-
-		//override bodySeparate()
-		//{
-		//	return this.collapsed && this.expand();
-		//}
-
-		//override tailSeparate()
-		//{
-		//	return this.open();
-		//}
-
-		//override bodyDeseparate()
-		//{
-		//	return this.collapse();
-		//}
-
-		//override tailDeseparate()
-		//{
-		//	return this.opened && this.expand();
-		//}
-
-
-
-		//---
-
-
-
-		//override onTailDeseparated()
-		//{
-		//	this.hasSeparatedItems && this.forEachTenta(a =>
-		//		a.bodyDeseparate() || a.repaintNearests()
-		//	);
-		//}
-
-
-		//override onItemSeparated()
-		//{
-		//	this.tailSeparate();
-		//}
-
-
-		//override onItemDeseparated()
-		//{
-		//	!this.hasSeparatedItems && this.tailDeseparate();
-		//}
-
-
-
-		//---
 
 	}
 

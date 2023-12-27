@@ -49,7 +49,6 @@ export class PileTabsNodeTenta extends PileRowNode.Tenta
 
 		return {
 			bodyIsSeparated: opened,
-			bodyIsAccented: !collapsed,
 			tailIsVisible: !collapsed,
 			tailIsSeparated: opened,
 		};

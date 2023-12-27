@@ -45,15 +45,8 @@ export module PileNode3
 	export class Tenta extends PileRowNode.Tenta
 	{
 
-		//---
-
-
-
 		override getRestState(stage: Tenta_.Stage)
 		{
-
-			//let { parent } = this;
-			//return parent ? parent.opened && !this.collapsed : this.opened;
 
 			let collapsed = stage === "collapsed";
 			let opened = stage === "opened";
@@ -62,60 +55,9 @@ export module PileNode3
 				bodyIsSeparated: opened,
 				tailIsVisible: !collapsed,
 				tailIsSeparated: opened,
-				bodyIsAccented: opened,
 			};
 
 		}
-
-
-		//override bodySeparate()
-		//{
-		//	return this.open();
-		//}
-
-		//override tailSeparate()
-		//{
-		//	return this.open();
-		//}
-
-		//override bodyDeseparate()
-		//{
-		//	return this.opened && this.expand();
-		//}
-
-		//override tailDeseparate()
-		//{
-		//	return this.opened && this.expand();
-		//}
-
-
-
-		//---
-
-
-
-		//override onTailDeseparated()
-		//{
-		//	this.hasSeparatedItems && this.forEachTenta(a =>
-		//		a.bodyDeseparate() || a.repaintNearests()
-		//	);
-		//}
-
-
-		//override onItemSeparated()
-		//{
-		//	this.tailSeparate();
-		//}
-
-
-		//override onItemDeseparated()
-		//{
-		//	!this.hasSeparatedItems && this.tailDeseparate();
-		//}
-
-
-
-		//---
 
 	}
 
@@ -131,7 +73,7 @@ export module PileNode3
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = (/*id: React.Key,*/ ...args: TArgs) => FunctionalTenta;
+	export type TentaFactory<TArgs extends any[] = []> = (...args: TArgs) => FunctionalTenta;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 

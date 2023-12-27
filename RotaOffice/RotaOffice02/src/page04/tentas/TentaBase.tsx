@@ -53,7 +53,7 @@ export interface TentaState extends TentaInitState
 	stageIndex: number;
 
 	bodyIsSeparated: boolean;
-	bodyIsAccented: boolean;
+	bodyIsAccented?: boolean;
 
 	tailIsVisible: boolean;
 	tailIsSeparated: boolean;
@@ -202,8 +202,8 @@ export class TentaBase extends Repaintable()
 	get isSeparated() { return this.state.isSeparated; }
 
 	get bodyIsSeparated() { return this.state.bodyIsSeparated; }
-	get bodyIsAccented() { return this.state.bodyIsAccented; }
-	get bodyAccent(): TentaAccent { return this.state.bodyIsAccented ? 1 as const : 0 as const; }
+	get bodyIsAccented() { return this.state.bodyIsAccented ?? this.#state!.bodyIsSeparated; }
+	get bodyAccent(): TentaAccent { return this.bodyIsAccented ? 1 as const : 0 as const; }
 
 	get tailIsVisible() { return this.state.tailIsVisible; }
 	get tailIsSeparated() { return this.state.tailIsSeparated; }

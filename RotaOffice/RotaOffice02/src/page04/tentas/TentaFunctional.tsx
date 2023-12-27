@@ -48,12 +48,12 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 		override render(): ReactNode
 		{
 
-			let { cfg } = this;
+			var { cfg } = this;
+			var { render } = cfg;
 
-
-			if (cfg.render)
+			if (render)
 			{
-				return cfg.render(this);
+				return <Renderer key={this.id} tenta={this} render={render}/>;
 			}
 
 
@@ -74,6 +74,21 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 		}
 
 	};
+
+
+
+	function Renderer({tenta, render }: { tenta: TentaBase, render: (tenta: TentaBase) => ReactNode })
+	{
+		if (tenta == null || render == null)
+		{
+			return null;
+		}
+
+
+		return render(tenta);
+
+	}
+
 
 }
 
@@ -104,8 +119,8 @@ export module TentaFunctional
 
 	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
 		id: React.Key,
-		componentOrRender: FC<{ tenta: TTenta }> | ((tenta: TTenta) => ReactNode),
-		collectors?: (
+
+		collectors: (
 			Record<
 				string | number | symbol,
 				TentaCollectorPropsAlias
@@ -113,6 +128,12 @@ export module TentaFunctional
 			|
 			TentaCollectorProps["tentas"]
 		),
+
+		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
+
+	] | [
+		id: React.Key,
+		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
 	];
 
 
@@ -138,37 +159,36 @@ export module TentaFunctional
 		let cfg = typeof configGetter === "function" ? configGetter(...args) : configGetter;
 
 
-		if (Array.isArray(cfg))
+		if (!Array.isArray(cfg))
+			return cfg;
+
+
+
+		let id = cfg[0];
+
+		let componentOrRender = cfg.length === 3 ? cfg[2] : cfg[1];
+
+		let collectors0 = cfg.length === 3 ? cfg[1] : undefined;
+
+		let collectors = typeof collectors0 === "function" ? { items: collectors0 } : collectors0;
+
+
+		if (isFC<TTenta>(componentOrRender))
 		{
-
-			let collectors = typeof cfg[2] === "function" ? { items: cfg[2] } : cfg[2];
-
-
-			let id = cfg[0];
-			let cfg1 = cfg[1];
-
-			if (isFC<TTenta>(cfg1))
-			{
-				return {
-					id,
-					component: cfg1,
-					collectors,
-				};
-			}
-			else
-			{
-				return {
-					id,
-					render: cfg1,
-					collectors,
-				};
-			}
-
-
+			return {
+				id,
+				component: componentOrRender,
+				collectors,
+			};
 		}
-
-
-		return cfg;
+		else
+		{
+			return {
+				id,
+				render: componentOrRender,
+				collectors,
+			};
+		}
 
 	}
 
