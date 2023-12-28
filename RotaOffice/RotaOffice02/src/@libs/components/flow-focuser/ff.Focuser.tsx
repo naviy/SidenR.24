@@ -882,16 +882,15 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	on(listener: IFocuserListener): (() => void) | null
+	on(listener: IFocuserListener): () => void
 	{
 
 		let listeners = this.#listeners ??= [];
 
-
-		if (listeners.indexOf(listener) >= 0)
-			return null;
-
-		listeners.push(listener);
+		if (listeners.indexOf(listener) < 0)
+		{
+			listeners.push(listener);
+		}
 
 		return () => this.removeListener(listener);
 

@@ -50,6 +50,15 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	}
 
 
+	//if (typeof body === "string")
+	//{
+	//	body = <>
+	//		{body}
+	//		<div className="pane-border"/>
+	//	</>
+	//}
+
+
 	//if (props.ff)
 	//{
 	//	body = <>
@@ -305,6 +314,7 @@ export var Root = styled(
 			borderLeft: PaneBorder.borderCss(props.bl) || defaultBorder,
 			transition: `all ${$defaultAnimationDurationMs}ms linear`,
 
+			pointerEvents: "none",
 			willChange: "border-radius, border",
 
 		},

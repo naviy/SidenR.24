@@ -171,7 +171,6 @@ function PileRowAccentor({
 
 	function updateTailFocuser(tailFf: Focuser)
 	{
-
 		let itemFocused = !!tailFf.itemFocused && tenta.tailIsSeparated;
 
 		if (tailIsFocused !== itemFocused)
@@ -192,23 +191,21 @@ function PileRowAccentor({
 
 
 	useEffect(() =>
-	{
-		tenta.tailFfRef.current?.registerBorderer(updateTailFocuser);
-		return () => tenta.tailFfRef.current?.unregisterBorderer(updateTailFocuser);
-	});
+
+		tenta.tailFf!.on({
+			focus: updateTailFocuser,
+			unfocus: updateTailFocuser,
+		})
+
+	);
 
 
 	return <>
 
-		<Tenta.Accent.Provider
-			accent={accent}
-			children={children[0]}
-		/>
-
-		<Tenta.Accent.Provider
-			accent={tailAccent}
-			children={children[1]}
-		/>
+		<Tenta.Accent.Provider accent={accent} children={children[0]} />
+		{/*children[0]*/}
+		{/*children[1]*/}
+		<Tenta.Accent.Provider accent={tailAccent} children={children[1]} />
 
 	</>;
 
@@ -259,8 +256,6 @@ function PileRowNodeBody({
 				bt={topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
 				bb={btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
 
-				//e={accent >= 2 ? "L2" : undefined}
-
 				{...rowProps}
 
 				ff
@@ -280,6 +275,8 @@ function PileRowNodeBody({
 	);
 
 }
+
+
 
 
 

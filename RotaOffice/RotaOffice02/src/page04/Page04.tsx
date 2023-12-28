@@ -108,6 +108,7 @@ function Rows05Pile()
 
 
 	return (
+
 		<Pane.Col start end b="md" r="lg">
 			<Pane.Ghost start end b="sm" r="">
 
