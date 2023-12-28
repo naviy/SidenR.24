@@ -36,7 +36,7 @@ export function Ghost(props: ContainerBaseProps & { children?: ReactNode })
 	);
 
 
-	v = ContainerInfo.useValue(v, props.id);
+	v = ContainerInfo.useChangedOrCurrent(v, props.id);
 
 	return <ContainerInfo.Context.Provider
 		value={v}
@@ -176,7 +176,7 @@ export function renderProvider(
 	);
 
 
-	v = ContainerInfo.useValue(v, props.id);
+	v = ContainerInfo.useChangedOrCurrent(v, props.id);
 
 
 	let body = props.children;

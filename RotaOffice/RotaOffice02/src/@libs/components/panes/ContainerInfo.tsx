@@ -104,7 +104,7 @@ export module ContainerInfo
 
 
 
-	export function useValue(newValue: ContainerInfo, id?: React.Key): ContainerInfo
+	export function useChangedOrCurrent(newValue: ContainerInfo, id?: React.Key): ContainerInfo
 	{
 
 		let valueRef = useRef<ContainerInfo | null>();
