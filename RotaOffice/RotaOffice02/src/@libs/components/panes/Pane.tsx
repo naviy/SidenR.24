@@ -299,6 +299,8 @@ export var Root = styled(
 			userSelect: "text",
 		},
 
+		//border: "1px solid red",
+
 		"&::before": {
 
 			position: "absolute",
