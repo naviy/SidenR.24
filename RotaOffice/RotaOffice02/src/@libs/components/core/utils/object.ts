@@ -23,6 +23,8 @@ declare global
 		assignDefinedsToClone<T extends {}, U1, U2, U3>(target: T, source1: U1, source2: U2, source3: U3): T & U1 & U2 & U3;
 		assignDefinedsToClone(target: object, ...sources: any[]): any;
 
+		shallowEqual<T extends {}>(target: T, source: T): boolean;
+
 	}
 
 
@@ -48,13 +50,13 @@ Object.assignDefineds = function assignDefineds(target: any, ...sources: any[]):
 		return target;
 
 
-	for (const source of sources)
+	for (var source of sources)
 	{
 
-		for (const key of Object.keys(source))
+		for (var key of Object.keys(source))
 		{
 
-			const value = source[key];
+			var value = source[key];
 
 			if (value !== undefined)
 			{
@@ -79,18 +81,18 @@ Object.assignDefinedsToClone = function assignDefinedsToClone(target: any, ...so
 		return target;
 
 
-	let clone = undefined;
+	var clone = undefined;
 
 
-	for (const source of sources)
+	for (var source of sources)
 	{
 
-		for (const key of Object.keys(source))
+		for (var key of Object.keys(source))
 		{
 
-			const value = source[key];
+			var value = source[key];
 
-			if (value !== undefined)
+			if (value !== undefined && target[key] !== value)
 			{
 
 				if (!clone)
@@ -107,3 +109,41 @@ Object.assignDefinedsToClone = function assignDefinedsToClone(target: any, ...so
 	return clone || target;
 
 }
+
+
+
+
+var keyList = Object.keys;
+
+
+Object.shallowEqual = function shallowEqual(a, b)
+{
+
+	if (a === b)
+		return true;
+
+
+	if (!(a instanceof Object) || !(b instanceof Object))
+		return false;
+
+
+	var keys = keyList(a);
+	var length = keys.length;
+
+	for (var i = 0; i < length; i++)
+	{
+		if (!(keys[i] in b))
+			return false;
+	}
+
+
+	for (var i = 0; i < length; i++)
+	{
+		if ((a as any)[keys[i]] !== (b as any)[keys[i]])
+			return false;
+	}
+
+
+	return length === keyList(b).length;
+
+};
