@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 import { createContext, useContext, type ReactNode } from "react";
 import { Tenta } from "../../tentas";
 
-import "./PileNodeLinkLine.css";
+import "./PileNodeLinkLine.scss";
 
 
 

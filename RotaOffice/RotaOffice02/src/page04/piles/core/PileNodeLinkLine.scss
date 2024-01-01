@@ -14,10 +14,8 @@
 
 	will-change: left, width;
 
-}
 
-
-	.pile-node-linkline > .angle {
+	> .angle {
 
 		position: absolute;
 		left: 0;
@@ -36,7 +34,7 @@
 
 	}
 
-	.pile-node-linkline> .line-to-parent {
+	> .line-to-parent {
 
 		position: absolute;
 		inset: 0;
@@ -46,7 +44,7 @@
 
 	}
 
-	.pile-node-linkline > .line-to-next {
+	> .line-to-next {
 
 		position: absolute;
 		inset: 0;
@@ -57,13 +55,16 @@
 	}
 
 
-	.pile-node-linkline.visible {
+	&.visible {
 
 		opacity: 1;
 
+		> .line-to-parent {
+			top: -24px;
+			height: 24px;
+		}
+
 	}
 
-	.pile-node-linkline.visible	> .line-to-parent {
-		top: -24px;
-		height: 24px;
-	}
+	
+}

@@ -1,10 +1,9 @@
-import { $defaultAnimationDurationMs, Div } from '@libs';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { styled } from "@mui/material/styles";
 import { Tenta } from "../../tentas";
 import { usePileCellIndent } from "./PileCellIndent";
 
-import "./PilePhaseIcon.css";
+import "./PilePhaseIcon.scss";
 
 
 

@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 
-import "./PileNodeBackfill.css";
+import "./PileNodeBackfill.scss";
 
 
 

@@ -9,10 +9,12 @@
 	white-space: nowrap;
 	transition: all var(--default-animation-duration) ease-in-out;
 
-}
 
-	.pile-phase-icon > div {
+	> div {
 		height: 24px;
 		transform: rotate(var(--rotate)) !important;
 		transition: all var(--default-animation-duration) ease-in-out;
 	}
+
+}
+

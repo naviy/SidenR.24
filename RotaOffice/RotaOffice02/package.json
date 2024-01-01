@@ -40,6 +40,7 @@
 		"eslint": "latest",
 		"eslint-plugin-react-hooks": "latest",
 		"eslint-plugin-react-refresh": "latest",
+		"sass": "^1.69.6",
 		"typescript": "latest",
 		"vite": "latest",
 		"vite-plugin-checker": "latest",
