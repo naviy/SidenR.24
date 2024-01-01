@@ -1,9 +1,9 @@
-import { $defaultAnimationDurationMs } from '@libs';
-import { blueGrey } from "@mui/material/colors";
+import { styled } from '@mui/material/styles';
 import { clsx } from "clsx";
 import { createContext, useContext, type ReactNode } from "react";
 import { Tenta } from "../../tentas";
-import type { CSSObject } from '@mui/material/styles';
+
+import "./PileNodeLinkLine.css";
 
 
 
@@ -16,9 +16,9 @@ import type { CSSObject } from '@mui/material/styles';
 
 
 
+
 export function PileNodeLinkLine(props: {
 	tenta: Tenta.Base;
-	//visible?: boolean;
 	width?: number;
 	lineToParent?: boolean;
 	lineToNext?: boolean;
@@ -35,24 +35,19 @@ export function PileNodeLinkLine(props: {
 	}
 
 
-	//width = Math.max(0, width - 4);
-
-
 	return (
 
-		<div
+		<PileNodeLinkLine.Root
 			className={clsx("pile-node-linkline", width && "visible")}
-			style={{
-				"--width": width,
-				//...thickness
-			} as any}
+			width={width}
+			//thickness={thickness}			
 		>
 
 			{(props.lineToParent ?? tenta.isFirst) && <div className="line-to-parent" />}
 			<div className="angle" />
 			{(props.lineToNext ?? !tenta.isLast) && <div className="line-to-next" />}
 
-		</div>
+		</PileNodeLinkLine.Root>
 
 	);
 
@@ -97,80 +92,18 @@ export module PileNodeLinkLine
 
 
 
-	var color = blueGrey[300];
+	export var Root = styled(
+		"div",
+		{ shouldForwardProp: p => p !== "width" && p !== "thickness" }
+	)<{
+		width?: number;
+		thickness?: boolean;
+	}>(props => ({
 
-	export var globalStyles: CSSObject = {
+		"--width": `${props.width}px`,
+		"--thickness": `${props.thickness || 2}px`,
 
-		".pile-node-linkline": {
-
-			position: "absolute",
-			left: "calc(var(--width) * -1px)",
-			top: 0,
-			bottom: 0,
-			width: "calc(var(--width) * 1px)",
-			opacity: 0,
-			zIndex: 0,
-
-			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
-
-			willChange: "left, width",
-
-
-			"> .angle": {
-
-				position: "absolute",
-				left: 0,
-				right: 0,
-				top: 0,
-				height: 24,
-
-				border: `calc(var(--thickness, 2) * 1px) solid ${color}`,
-				borderTopWidth: 0,
-				borderRightWidth: 0,
-				borderBottomLeftRadius: 9,
-
-				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
-
-				willChange: "border",
-
-
-			},
-
-			"> .line-to-parent": {
-
-				position: "absolute",
-				inset: 0,
-				borderLeft: `calc(var(--thickness, 2) * 1px) solid ${color}`,
-				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
-				willChange: "border-left",
-
-			},
-
-			"> .line-to-next": {
-
-				position: "absolute",
-				inset: 0,
-				borderLeft: `calc(var(--thickness, 2) * 1px) solid ${color}`,
-				transition: `all ${$defaultAnimationDurationMs}ms ease-in-out`,
-				willChange: "border-left",
-
-			},
-
-
-			"&.visible": {
-
-				opacity: 1,
-
-				"> .line-to-parent": {
-					top: -24,
-					height: 24,
-				},
-
-			},
-
-		},
-
-	};
+	}));
 
 
 

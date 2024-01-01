@@ -1,6 +1,6 @@
-import { $defaultAnimationDurationMs } from "@libs";
-import { blueGrey } from "@mui/material/colors";
-import type { CSSObject } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
+
+import "./PileNodeBackfill.css";
 
 
 
@@ -14,41 +14,34 @@ import type { CSSObject } from "@mui/material/styles";
 
 
 
-export function PileNodeBackfill({ mb, visible }: { mb?: number; visible?: boolean })
+export function PileNodeBackfill(props: { mb?: number; visible?: boolean })
 {
-	return <div
+	return <PileNodeBackfill.Root
 		className="pile-node-backfill"
-		style={mb !== undefined ? ({ "--mb": mb, "--op": visible !== false ? 1 : undefined }) as any : undefined}
+		mb={props.mb}
+		visible={props.visible}
 	/>;
 }
+
+
 
 
 export module PileNodeBackfill
 {
 
-	export var globalStyles: CSSObject = {
 
-		".pile-node-backfill": {
+	export var Root = styled(
+		"div",
+		{ shouldForwardProp: p => p !== "mb" && p !== "visible" }
+	)<{
+		mb?: number;
+		visible?: boolean;
+	}>(props => ({
 
-			position: "absolute",
-			inset: 0,
-			bottom: "calc(var(--mb, 24) * 1px)",
+		"--mb": `${props.mb}px`,
+		"--op": props.visible !== false ? 1 : undefined
 
-			minHeight: 24,
-			borderRadius: 12,
-			border: `2px dotted ${blueGrey[200]}`,
-			//boxShadow: elevaltionShadows.L1,
+	}));
 
-			background: "rgba(255,255,255,.4)",
-
-			opacity: "var(--op, 0)",
-
-			transition: `all ${$defaultAnimationDurationMs}ms ease-in-out, opacity ${$defaultAnimationDurationMs}ms linear`,
-
-			wiiChange: "bottom, opacity",
-
-		},
-
-	};
 
 }

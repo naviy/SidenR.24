@@ -854,7 +854,23 @@ export function GlobalStylesOfPrimitives(props: {
 
 	return <GlobalStyles styles={{
 
+		html: {
+
+			"--default-animation-duration": `${$defaultAnimationDurationMs}ms`,
+
+			"--blue-grey-50": muiColors.blueGrey[50],
+			"--blue-grey-100": muiColors.blueGrey[100],
+			"--blue-grey-200": muiColors.blueGrey[200],
+			"--blue-grey-300": muiColors.blueGrey[300],
+			"--blue-grey-400": muiColors.blueGrey[400],
+			"--blue-grey-500": muiColors.blueGrey[500],
+			"--blue-grey-600": muiColors.blueGrey[600],
+			"--blue-grey-700": muiColors.blueGrey[700],
+
+		},
+
 		...primitiveStyles as any,
+
 
 		em: {
 			fontStyle: "normal",
