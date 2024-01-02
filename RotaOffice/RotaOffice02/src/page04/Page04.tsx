@@ -202,8 +202,8 @@ var Row05Tenta: PileNode2.TF<[number]> = PileNode2.createFactory((id: number) =>
 				</Pane.Col>
 
 				<>
-					<Pane start p12 vcenter>222 2222 22222 222222</Pane>
-					<Pane end p12 textRight vcenter>333 3333 33333 333333</Pane>
+					<Pane start p12 vcenter l={2}>222 2222 22222 222222</Pane>
+					<Pane end p12 textRight l={1} vcenter>333 3333 33333 333333</Pane>
 				</>
 
 			</RowBody>
