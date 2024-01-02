@@ -53,7 +53,9 @@ export class Soldier_CallSign extends Entity
 
 				callSign.soldier = soldier;
 
-				(soldier.callSigns ??= []).push(callSign);
+				soldier.callSigns ??= [];
+				soldier.callSigns.push(callSign)
+
 
 				soldier.callSign = callSign.name;
 

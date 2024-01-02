@@ -1,0 +1,20 @@
+.pile-phase-icon {
+
+	width: calc((24 + var(--indent, 0)) * 1px);
+	min-height: 24px;
+	display: inline-flex;
+	justify-content: end;
+	text-align: right;
+	line-height: 24px;
+	white-space: nowrap;
+	transition: all var(--default-animation-duration) ease-in-out;
+
+
+	> div {
+		height: 24px;
+		transform: rotate(var(--rotate)) !important;
+		transition: all var(--default-animation-duration) ease-in-out;
+	}
+
+}
+
