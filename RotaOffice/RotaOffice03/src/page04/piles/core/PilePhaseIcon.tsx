@@ -69,7 +69,8 @@ var Root = styled(
 	rotate: number;
 }>(props => ({
 
-	"--indent": props.indent,
+	//"--indent": props.indent,
+	width: 32 + (props.indent || 0),
 	"--rotate": `${props.rotate}deg`,
 
 }));

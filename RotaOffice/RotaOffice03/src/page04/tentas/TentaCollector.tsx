@@ -19,12 +19,18 @@ export interface TentaCollectorProps
 {
 
 	title?: (collector: TentaCollector) => ReactNode;
-	tentas: (collector: TentaCollector) => TentaBase[] | null | undefined;
+	tentas: (collector: TentaCollector) => Array<TentaBase | null | undefined | false | 0 | ""> | null | undefined | false | 0 | "";
 
 }
 
 
+
 export type TentaCollectorPropsAlias = TentaCollectorProps | TentaCollectorProps["tentas"];
+
+export type TentaCollectorPropsAliases = Record<
+	string | number | symbol,
+	TentaCollectorPropsAlias | null | undefined | false | 0 | ""
+>;
 
 
 
@@ -41,12 +47,10 @@ export class TentaCollector extends Repaintable()
 	constructor(
 		public id: React.Key,
 		public parentTenta: TentaBase | null,
-		props: TentaCollectorPropsAlias
+		public props: TentaCollectorProps
 	)
 	{
 		super();
-
-		this.props = typeof props === "function" ? { tentas: props } : props;
 	}
 
 
@@ -57,8 +61,6 @@ export class TentaCollector extends Repaintable()
 
 	static instanceCount = 0;
 	iid = ++TentaCollector.instanceCount;
-
-	props: TentaCollectorProps;
 
 	#priorSibling?: TentaCollector | null;
 	#nextSibling?: TentaCollector | null;
@@ -134,7 +136,7 @@ export class TentaCollector extends Repaintable()
 	#createItems()
 	{
 
-		this.#items = this.props.tentas?.(this) || null;
+		this.#items = (this.props.tentas?.(this) || null)?.filter(a => a) as TentaBase[];
 		//___$log("tentas:", this.tentas);
 
 

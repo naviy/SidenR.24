@@ -15,7 +15,7 @@ import { PileRowNode } from "./PileRowNode";
 
 
 export function PileNode2(props: PileNode2.Props & {
-	children: JSX.Element
+	children: JSX.Element | (() => JSX.Element)
 })
 {
 	$log("PileNode2 " + props.tenta)

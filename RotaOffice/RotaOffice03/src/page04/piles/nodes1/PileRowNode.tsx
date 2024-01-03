@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, ExpanderBaseBehavior, Focuser, Pane, _$log, __$log } from '@libs';
-import { useEffect, useState, type ReactNode, type RefObject } from "react";
+import { $log, Div, ExpanderBaseBehavior, Focuser, Pane, Values, _$log, __$log } from '@libs';
+import { useEffect, useState, type ReactNode, type RefObject, useMemo } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -54,7 +54,7 @@ export function PileRowNode({
 
 }: PileRowNodeProps & {
 
-	children?: JSX.Element
+	children?: JSX.Element | (() => JSX.Element)
 
 })
 {
@@ -223,7 +223,7 @@ function PileRowNodeBody({
 }: {
 	tenta: PileRowNodeTenta;
 	rowProps: Pane.RowProps;
-	children?: JSX.Element;
+	children?: JSX.Element | (() => JSX.Element)
 })
 {
 
@@ -232,6 +232,11 @@ function PileRowNodeBody({
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
+
+	let children2 = (typeof children === "function"
+		? useMemo(children, [tenta.phase, tenta.stage])
+		: children
+	);
 
 
 	return (
@@ -262,7 +267,7 @@ function PileRowNodeBody({
 			>
 
 				<ErrorBoundary>
-					{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, children) : children}
+					{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, children2) : children2}
 					{/*<Div absolute top0 style={{left: 40} }>tailFf: {tenta.tailFf + ""}</Div>*/}
 				</ErrorBoundary>
 

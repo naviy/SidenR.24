@@ -31,8 +31,12 @@ export class Unit extends Entity
 
 
 	master?: Unit_Subordination;
+
 	masters?: Unit_Subordination[];
+	get hasMasters() { return !!this.masters?.length; }
+
 	subunits?: Unit_Subordination[];
+	get hasSubunits() { return !!this.subunits?.length; }
 
 
 	formationDate?: Date;

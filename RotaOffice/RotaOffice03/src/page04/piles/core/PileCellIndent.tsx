@@ -12,7 +12,7 @@ import { createContext, useContext, type ReactNode } from "react";
 
 
 
-const IndentContext = createContext(0);
+var IndentContext = createContext(0);
 
 
 

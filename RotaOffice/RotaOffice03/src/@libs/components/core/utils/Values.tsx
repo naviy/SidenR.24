@@ -22,11 +22,11 @@ export module Values
 
 
 
-	export function one<T>(source: One<T> | null | undefined): T;
+	export function one<T>(source: One<T> /*| null | undefined*/): T;
 
-	export function one<T, T2>(source: One<T> | null | undefined, selector: (value: T) => T2): T2;
+	export function one<T, T2>(source: One<T> /*| null | undefined*/, selector: (value: T) => T2): T2;
 
-	export function one(source: One<any> | null | undefined, selector?: (value: any) => any): any
+	export function one(source: One<any> /*| null | undefined*/, selector?: (value: any) => any): any
 	{
 
 		let value: any = source;

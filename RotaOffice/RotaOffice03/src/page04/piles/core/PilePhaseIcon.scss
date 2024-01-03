@@ -3,7 +3,7 @@
 	--size: 32px;
 
 
-	width: calc((var(--size) + var(--indent, 0)) * 1px);
+	//width: calc((var(--size) + var(--indent, 0)) * 1px);
 	min-height: var(--size);
 	display: inline-flex;
 	justify-content: end;

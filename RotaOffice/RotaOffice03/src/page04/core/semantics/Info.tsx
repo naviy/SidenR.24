@@ -423,33 +423,33 @@ export class Info<P extends InfoProps = InfoProps, F extends Object = {}>
 
 
 
-	$noun(num: number) { return noun(num, this.$one, this.$two, this.$five); }
-	$noun2(num: number) { return noun(num, this.$one2, this.$two2, this.$five2); }
-	$noun3(num: number) { return noun(num, this.$one3, this.$two3, this.$five3); }
-	$noun4(num: number) { return noun(num, this.$one4, this.$two4, this.$five4); }
-	$noun5(num: number) { return noun(num, this.$one5, this.$two5, this.$five5); }
-	$noun6(num: number) { return noun(num, this.$one6, this.$two6, this.$five6); }
+	$noun(num: number | null | undefined) { return noun(num, this.$one, this.$two, this.$five); }
+	$noun2(num: number | null | undefined) { return noun(num, this.$one2, this.$two2, this.$five2); }
+	$noun3(num: number | null | undefined) { return noun(num, this.$one3, this.$two3, this.$five3); }
+	$noun4(num: number | null | undefined) { return noun(num, this.$one4, this.$two4, this.$five4); }
+	$noun5(num: number | null | undefined) { return noun(num, this.$one5, this.$two5, this.$five5); }
+	$noun6(num: number | null | undefined) { return noun(num, this.$one6, this.$two6, this.$five6); }
 
-	$Noun(num: number) { return noun(num, this.$One, this.$Two, this.$Five); }
-	$Noun2(num: number) { return noun(num, this.$One2, this.$Two2, this.$Five); }
-	$Noun3(num: number) { return noun(num, this.$One3, this.$Two3, this.$Five); }
-	$Noun4(num: number) { return noun(num, this.$One4, this.$Two4, this.$Five); }
-	$Noun5(num: number) { return noun(num, this.$One5, this.$Two5, this.$Five); }
-	$Noun6(num: number) { return noun(num, this.$One6, this.$Two6, this.$Five); }
+	$Noun(num: number | null | undefined) { return noun(num, this.$One, this.$Two, this.$Five); }
+	$Noun2(num: number | null | undefined) { return noun(num, this.$One2, this.$Two2, this.$Five); }
+	$Noun3(num: number | null | undefined) { return noun(num, this.$One3, this.$Two3, this.$Five); }
+	$Noun4(num: number | null | undefined) { return noun(num, this.$One4, this.$Two4, this.$Five); }
+	$Noun5(num: number | null | undefined) { return noun(num, this.$One5, this.$Two5, this.$Five); }
+	$Noun6(num: number | null | undefined) { return noun(num, this.$One6, this.$Two6, this.$Five); }
 
-	$verb(num: number) { return verb(num, this.$one, this.$two, this.$five); }
-	$verb2(num: number) { return verb(num, this.$one2, this.$two2, this.$five2); }
-	$verb3(num: number) { return verb(num, this.$one3, this.$two3, this.$five3); }
-	$verb4(num: number) { return verb(num, this.$one4, this.$two4, this.$five4); }
-	$verb5(num: number) { return verb(num, this.$one5, this.$two5, this.$five5); }
-	$verb6(num: number) { return verb(num, this.$one6, this.$two6, this.$five6); }
+	$verb(num: number | null | undefined) { return verb(num, this.$one, this.$two, this.$five); }
+	$verb2(num: number | null | undefined) { return verb(num, this.$one2, this.$two2, this.$five2); }
+	$verb3(num: number | null | undefined) { return verb(num, this.$one3, this.$two3, this.$five3); }
+	$verb4(num: number | null | undefined) { return verb(num, this.$one4, this.$two4, this.$five4); }
+	$verb5(num: number | null | undefined) { return verb(num, this.$one5, this.$two5, this.$five5); }
+	$verb6(num: number | null | undefined) { return verb(num, this.$one6, this.$two6, this.$five6); }
 
-	$Verb(num: number) { return verb(num, this.$One, this.$Two, this.$Five); }
-	$Verb2(num: number) { return verb(num, this.$One2, this.$Two2, this.$Five2); }
-	$Verb3(num: number) { return verb(num, this.$One3, this.$Two3, this.$Five3); }
-	$Verb4(num: number) { return verb(num, this.$One4, this.$Two4, this.$Five4); }
-	$Verb5(num: number) { return verb(num, this.$One5, this.$Two5, this.$Five5); }
-	$Verb6(num: number) { return verb(num, this.$One6, this.$Two6, this.$Five6); }
+	$Verb(num: number | null | undefined) { return verb(num, this.$One, this.$Two, this.$Five); }
+	$Verb2(num: number | null | undefined) { return verb(num, this.$One2, this.$Two2, this.$Five2); }
+	$Verb3(num: number | null | undefined) { return verb(num, this.$One3, this.$Two3, this.$Five3); }
+	$Verb4(num: number | null | undefined) { return verb(num, this.$One4, this.$Two4, this.$Five4); }
+	$Verb5(num: number | null | undefined) { return verb(num, this.$One5, this.$Two5, this.$Five5); }
+	$Verb6(num: number | null | undefined) { return verb(num, this.$One6, this.$Two6, this.$Five6); }
 
 
 

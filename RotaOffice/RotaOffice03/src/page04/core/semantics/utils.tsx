@@ -1,5 +1,14 @@
-export function noun(num: number, one: string | null | undefined, two: string | null | undefined, five: string | null | undefined)
+export function noun(
+	num: number | null | undefined,
+	one: string | null | undefined,
+	two: string | null | undefined,
+	five: string | null | undefined
+)
 {
+
+	if (num == null)
+		return null;
+
 
 	if (!five)
 		return num > 1 ? two : one;
@@ -23,8 +32,17 @@ export function noun(num: number, one: string | null | undefined, two: string | 
 
 
 
-export function verb(num: number, one: string | null | undefined, two: string | null | undefined, five: string | null | undefined) 
+export function verb(
+	num: number | null | undefined,
+	one: string | null | undefined,
+	two: string | null | undefined,
+	five: string | null | undefined
+) 
 {
+
+	if (num == null)
+		return null;
+
 
 	if (num > 1000000)
 	{

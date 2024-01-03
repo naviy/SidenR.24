@@ -65,7 +65,7 @@ export var units = Semantic.create(sm => ({
 	Unit: sm<Unit>()({
 
 		one: "підрозділ",
-		one2: "підрозділи",
+		one2: "підрозділа",
 		one3: "підрозділу",
 		one4: "підрозділ",
 		one5: "підрозділом",
@@ -94,7 +94,7 @@ export var units = Semantic.create(sm => ({
 
 	}, {
 
-		hasMasters: sm("був у підпорядкуванні"),
+		hasMasters: sm("був підпорядкуван"),
 		hasSubunits: sm("у складі"),
 
 	})

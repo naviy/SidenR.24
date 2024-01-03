@@ -2,7 +2,7 @@ import type React from "react";
 import type { TentaBase } from "./TentaBase";
 import { createElement, type FC, type ReactNode } from "react";
 import type { Constructor } from "@libs";
-import type { TentaCollectorProps, TentaCollectorPropsAlias } from "./TentaCollector";
+import type { TentaCollectorProps, TentaCollectorPropsAlias, TentaCollectorPropsAliases } from "./TentaCollector";
 
 
 
@@ -53,7 +53,7 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 
 			if (render)
 			{
-				return <Renderer key={this.id} tenta={this} render={render}/>;
+				return <Renderer key={this.id} tenta={this} render={render} />;
 			}
 
 
@@ -77,7 +77,7 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 
 
 
-	function Renderer({tenta, render }: { tenta: TentaBase, render: (tenta: TentaBase) => ReactNode })
+	function Renderer({ tenta, render }: { tenta: TentaBase, render: (tenta: TentaBase) => ReactNode })
 	{
 		if (tenta == null || render == null)
 		{
@@ -109,7 +109,7 @@ export module TentaFunctional
 	export interface Config<TTenta extends TentaBase = TentaBase>
 	{
 		id: React.Key;
-		collectors?: Record<string | number | symbol, TentaCollectorPropsAlias>;
+		collectors?: TentaCollectorPropsAliases;
 		render?: (tenta: TTenta) => ReactNode;
 		component?: FC<{ tenta: TTenta }>;
 	}
@@ -118,16 +118,10 @@ export module TentaFunctional
 
 
 	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
+
 		id: React.Key,
 
-		collectors: (
-			Record<
-				string | number | symbol,
-				TentaCollectorPropsAlias
-			>
-			|
-			TentaCollectorProps["tentas"]
-		),
+		collectors: TentaCollectorPropsAliases | TentaCollectorProps["tentas"],
 
 		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
 

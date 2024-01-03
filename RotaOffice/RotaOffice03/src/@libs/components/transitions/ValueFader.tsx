@@ -32,6 +32,27 @@ const $animationDurationMs = 1 * $defaultAnimationDurationMs;
 
 
 
+export interface ValueFaderProps<TValue = any> extends Omit<DivProps, 'children'>
+{
+
+	value: TValue;
+
+	animateProps?: (value: TValue, oldValue: TValue | undefined) => {
+		expander?: boolean | Expander.Props;
+	};
+
+	mountOnEnter?: boolean;
+	unmountOnExit?: boolean;
+
+	expander?: boolean | Expander.Props;
+
+	children: ReactNode | ((value: TValue, oldValue: TValue | undefined) => ReactNode);
+
+}
+
+
+
+
 export function ValueFader<TValue>({
 
 	value,
@@ -49,7 +70,7 @@ export function ValueFader<TValue>({
 	...faderProps
 
 }
-	: ValueFader.Props<TValue>
+	: ValueFaderProps<TValue>
 )
 {
 
@@ -140,27 +161,12 @@ export function ValueFader<TValue>({
 
 
 
+
 export module ValueFader
 {
 
 
-	export interface Props<TValue = any> extends Omit<DivProps, 'children'>
-	{
-
-		value: TValue;
-
-		animateProps?: (value: TValue, oldValue: TValue | undefined) => {
-			expander?: boolean | Expander.Props;
-		};
-
-		mountOnEnter?: boolean;
-		unmountOnExit?: boolean;
-
-		expander?: boolean | Expander.Props;
-
-		children: ReactNode | ((value: TValue, oldValue: TValue | undefined) => ReactNode);
-
-	}
+	export type Props<TValue = any> = ValueFaderProps<TValue>;
 
 
 }
