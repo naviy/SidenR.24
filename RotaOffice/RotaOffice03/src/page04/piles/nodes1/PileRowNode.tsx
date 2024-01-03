@@ -79,7 +79,7 @@ export function PileRowNode({
 
 
 	let tailMt = !tailIsVisible ? 0 : btmMargin * 12;
-	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsSeparated ? 24 : 0);
+	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsVisible && tailIsSeparated ? 24 : 0);
 
 
 	return (
@@ -251,8 +251,8 @@ function PileRowNodeBody({
 				rt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : ""}
 				rb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
 
-				bl={accent === 2 ? "xl" : accent === 1 ? "lg" : undefined}
-				br={accent === 2 ? "xl" : accent === 1 ? "lg" : undefined}
+				bl={accent === 2 ? "xl" : accent === 1 ? "lg" : "md"}
+				br={accent === 2 ? "xl" : accent === 1 ? "lg" : "md"}
 				bt={topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
 				bb={btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
 

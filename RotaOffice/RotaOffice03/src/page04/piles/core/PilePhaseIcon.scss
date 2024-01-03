@@ -1,19 +1,28 @@
 .pile-phase-icon {
 
-	width: calc((24 + var(--indent, 0)) * 1px);
-	min-height: 24px;
+	--size: 32px;
+
+
+	width: calc((var(--size) + var(--indent, 0)) * 1px);
+	min-height: var(--size);
 	display: inline-flex;
 	justify-content: end;
 	text-align: right;
-	line-height: 24px;
+	line-height: var(--size);
 	white-space: nowrap;
 	transition: all var(--default-animation-duration) ease-in-out;
 
 
 	> div {
-		height: 24px;
+		height: var(--size);
 		transform: rotate(var(--rotate)) !important;
 		transition: all var(--default-animation-duration) ease-in-out;
+
+		> svg {
+			color: var(--blue-grey-500);
+			font-size: var(--size)!important;
+		}
+
 	}
 
 }

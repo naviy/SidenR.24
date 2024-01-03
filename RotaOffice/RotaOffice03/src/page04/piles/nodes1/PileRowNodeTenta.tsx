@@ -160,25 +160,25 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	override bodySeparate()
-	{
-		return this.goToStage(+1, a => a.bodyIsSeparated);
-	}
+	//override bodySeparate()
+	//{
+	//	return this.goToStage(+1, a => a.bodyIsSeparated);
+	//}
 
-	override tailSeparate()
-	{
-		return this.goToStage(+1, a => a.tailIsSeparated);
-	}
+	//override tailSeparate()
+	//{
+	//	return this.goToStage(+1, a => a.tailIsSeparated);
+	//}
 
-	override bodyDeseparate()
-	{
-		return this.goToStage(-1, a => !a.bodyIsSeparated);
-	}
+	//override bodyDeseparate()
+	//{
+	//	return this.goToStage(-1, a => !a.bodyIsSeparated);
+	//}
 
-	override tailDeseparate()
-	{
-		return this.goToStage(-1, a => !a.tailIsSeparated);
-	}
+	//override tailDeseparate()
+	//{
+	//	return this.goToStage(-1, a => !a.tailIsSeparated);
+	//}
 
 
 
@@ -196,10 +196,10 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	}
 
 
-	override onItemDeseparated()
-	{
-		//!this.hasSeparatedItems && this.tailDeseparate();
-	}
+	//override onItemDeseparated()
+	//{
+	//	!this.hasSeparatedItems && this.tailDeseparate();
+	//}
 
 
 
@@ -306,7 +306,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		{
 			/*await*/ this.scrollIntoView();
 		}
-		else if (!this.parent?.tailDeseparate())
+		else if (!this.parent?.goToStage(-1, a => !a.tailIsSeparated && a.stage !== "collapsed"))
 		{
 			await this.focusParent() || await this.shakeBody(3);
 		}

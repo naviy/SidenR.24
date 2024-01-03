@@ -69,8 +69,7 @@ export module PileNode4
 
 			return {
 				bodyIsSeparated: !collapsed,
-				bodyIsAccented: !collapsed,
-				tailIsVisible: !collapsed,
+				tailIsVisible: !collapsed && this.hasCollectors,
 				tailIsSeparated: !collapsed,
 			};
 		}
@@ -93,12 +92,12 @@ export module PileNode4
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = (/*id: React.Key,*/ ...args: TArgs) => FunctionalTenta;
+	export type TentaFactory<TArgs extends any[] = []> = (...args: TArgs) => FunctionalTenta;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 
 	export function createFactory<TArgs extends any[] = []>(
-		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, TArgs>
+		configGetter: Tenta_.Functional.ConfigAlias<FT, TArgs>
 	): TentaFactory<TArgs>
 	{
 		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);

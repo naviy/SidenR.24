@@ -53,7 +53,7 @@ export module PileNode3
 
 			return {
 				bodyIsSeparated: opened,
-				tailIsVisible: !collapsed,
+				tailIsVisible: !collapsed && this.hasCollectors,
 				tailIsSeparated: opened,
 			};
 

@@ -14,11 +14,11 @@ import { PileRowNode } from "./PileRowNode";
 
 
 
-export function PileNode2(props: PileNode2.Props & {
+export function PileNode1(props: PileNode1.Props & {
 	children: JSX.Element
 })
 {
-	$log("PileNode2 " + props.tenta)
+	//$log("PileNode1 " + props.tenta)
 
 	return PileRowNode(props);
 }
@@ -28,7 +28,7 @@ export function PileNode2(props: PileNode2.Props & {
 
 
 
-export module PileNode2
+export module PileNode1
 {
 
 
@@ -49,12 +49,12 @@ export module PileNode2
 		{
 
 			let collapsed = stage === "collapsed";
-			let opened = stage === "opened";
+			//let opened = stage === "opened";
 
 			return {
 				bodyIsSeparated: !collapsed,
 				tailIsVisible: !collapsed && this.hasCollectors,
-				tailIsSeparated: opened,
+				tailIsSeparated: !collapsed,
 			};
 		}
 

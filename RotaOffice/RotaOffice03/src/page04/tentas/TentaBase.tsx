@@ -873,22 +873,22 @@ export class TentaBase extends Repaintable()
 
 	bodySeparate()
 	{
-		return this.collapsed && this.expand();
+		return this.goToStage(+1, a => a.bodyIsSeparated);
 	}
 
 	tailSeparate()
 	{
-		return this.open();
+		return this.goToStage(+1, a => a.tailIsSeparated);
 	}
 
 	bodyDeseparate()
 	{
-		return this.collapse();
+		return this.goToStage(-1, a => !a.bodyIsSeparated);
 	}
 
 	tailDeseparate()
 	{
-		return this.opened && this.expand();
+		return this.goToStage(-1, a => !a.tailIsSeparated);
 	}
 
 
