@@ -18,7 +18,7 @@ export function PileNode4(props: PileNode4.Props & {
 	children: JSX.Element
 })
 {
-	$log("PileNode4 " + props.tenta)
+	//$log("PileNode4 " + props.tenta)
 
 	return PileRowNode(props);
 }

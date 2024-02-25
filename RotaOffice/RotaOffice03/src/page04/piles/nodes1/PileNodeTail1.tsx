@@ -48,6 +48,10 @@ export function PileNodeTail1({
 
 	indent ??= isSeparated;
 
+	let myIndent = !indent ? 36 : 0;
+
+	$log("Tail " + collector.parentTenta, indent)
+
 
 	return (
 
@@ -65,14 +69,15 @@ export function PileNodeTail1({
 
 				{...colProps}
 
-				wrapperCls={clsx(indent && "pl36 pr12", colProps.wrapperCls)}
+				wrapperCls={clsx(indent && `pl${parentCellIndent + 36} pr12`, colProps.wrapperCls)}
 
 			//border2 borderGreen
 			>
 
 				<Pile.Node.LinkLine.OptionsProvider width={indent ? 21 : 0}>
 
-					<Pile.CellIndentProvider indent={cellIndent && !indent ? parentCellIndent + 24 : 0}>
+					{/*<Pile.CellIndentProvider indent={!cellIndent ? 0 : parentCellIndent + myIndent}>*/}
+					<Pile.CellIndentProvider indent={cellIndent && !indent ? parentCellIndent + 36 : 0}>
 						{children}
 					</Pile.CellIndentProvider>
 

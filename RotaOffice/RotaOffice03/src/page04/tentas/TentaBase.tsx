@@ -138,6 +138,10 @@ export class TentaBase extends Repaintable()
 	#priorState?: TentaState;
 
 
+	get _state(): TentaState | undefined
+	{
+		return this.#state;
+	}
 	get state(): TentaState
 	{
 		return this.ensureState();
@@ -201,6 +205,7 @@ export class TentaBase extends Repaintable()
 
 	get isSeparated() { return this.state.isSeparated; }
 
+	get _bodyIsSeparated() { return this.#state?.bodyIsSeparated || false; }
 	get bodyIsSeparated() { return this.state.bodyIsSeparated; }
 	get bodyIsAccented() { return this.state.bodyIsAccented ?? this.#state!.bodyIsSeparated; }
 	get bodyAccent(): TentaAccent { return this.bodyIsAccented ? 1 as const : 0 as const; }
@@ -248,7 +253,7 @@ export class TentaBase extends Repaintable()
 
 
 		let props = typeof propsAlias === "function" ? { tentas: propsAlias } : propsAlias;
-		
+
 		if (!props)
 			return false;
 
@@ -386,6 +391,17 @@ export class TentaBase extends Repaintable()
 
 
 
+	refreshState()
+	{
+
+		this.#state = this.getState(this.#state?.phase, this.#state?.stage);
+
+		return this.#state;
+
+	}
+
+
+
 	getState(phase?: TentaPhase, stage?: TentaStage): TentaState
 	{
 
@@ -462,7 +478,7 @@ export class TentaBase extends Repaintable()
 			return false;
 
 
-		_$log(this + ".setState:", newState)
+		//_$log(this + ".setState:", newState)
 
 		let priorState = this.state;
 
@@ -501,12 +517,12 @@ export class TentaBase extends Repaintable()
 		if (s0?.phase != null)
 		{
 
-			if (s0.phase < s1.phase)
+			if (s1.phase < s0.phase)
 			{
 				this.onDecPhase();
 				this.parent?.onItemDecPhase(this);
 			}
-			else if (s0.phase > s1.phase)
+			else if (s1.phase > s0.phase)
 			{
 				this.onIncPhase();
 				this.parent?.onItemIncPhase(this);
@@ -563,6 +579,21 @@ export class TentaBase extends Repaintable()
 
 	}
 
+
+
+	//---
+
+
+
+	refresh()
+	{
+		this.refreshState();
+		this.repaint();
+	}
+
+
+
+	//---
 
 
 	//maxItemStage: TentaStage | null = null;
@@ -886,22 +917,22 @@ export class TentaBase extends Repaintable()
 
 	bodySeparate()
 	{
-		return this.goToStage(+1, a => a.bodyIsSeparated);
+		return this.bodyIsSeparated || this.goToStage(+1, a => a.bodyIsSeparated);
 	}
 
 	tailSeparate()
 	{
-		return this.goToStage(+1, a => a.tailIsSeparated);
+		return this.tailIsSeparated || this.goToStage(+1, a => a.tailIsSeparated);
 	}
 
 	bodyDeseparate()
 	{
-		return this.goToStage(-1, a => !a.bodyIsSeparated);
+		return !this.bodyIsSeparated || this.goToStage(-1, a => !a.bodyIsSeparated);
 	}
 
 	tailDeseparate()
 	{
-		return this.goToStage(-1, a => !a.tailIsSeparated);
+		return !this.tailIsSeparated || this.goToStage(-1, a => !a.tailIsSeparated);
 	}
 
 

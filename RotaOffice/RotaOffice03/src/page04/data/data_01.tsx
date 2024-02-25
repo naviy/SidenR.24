@@ -167,7 +167,7 @@ export var R50_BG = db.Unit.add(
 /** 4РГр БГр 50П */
 export var R50_BG_4CG = db.Unit.add(
 	R50_BG,
-	UnitType.Platoon,
+	UnitType.Company,
 	["4ГРр", "4 ротна група"],
 	["4ГРр", "4 ротної групи"],
 );

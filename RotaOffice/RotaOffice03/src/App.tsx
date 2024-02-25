@@ -13,6 +13,7 @@ import { GlobalState } from "./@libs/components/core/GlobalState";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Page04 } from "./page04/Page04";
 import { Page041 } from "./page04/Page041";
+import { Page042 } from "./page04/Page042";
 
 
 
@@ -86,7 +87,7 @@ function AppDesktop()
 		routes: [
 			Page04.route,
 			Page041.route,
-			//Page042.route,
+			Page042.route,
 		],
 
 		activeKey: location.pathname.substring(1) || Page041.route.key,
@@ -119,6 +120,7 @@ function AppDesktop()
 							<List>
 								<MainMenuItem route={Page04.route} />
 								<MainMenuItem route={Page041.route} />
+								<MainMenuItem route={Page042.route} />
 							</List>
 
 						</DesktopLayout.Sider>

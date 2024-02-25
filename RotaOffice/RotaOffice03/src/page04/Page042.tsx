@@ -7,6 +7,7 @@ import { DB, Unit_Subordination, type Unit, UnitType } from "./domain";
 import { Pile } from "./piles";
 import { gsm } from "./semantics";
 import { PileNode2 } from "./piles/nodes1/PileNode2";
+import { PileNode2_1 } from "./piles/nodes1/PileNode2_1";
 import { PileNode3 } from "./piles/nodes1/PileNode3";
 import { PileNode4 } from "./piles/nodes1/PileNode4";
 import { PileTabsNode } from './piles/nodes1/PileTabsNode';
@@ -25,14 +26,14 @@ import { PileNode1 } from './piles/nodes1/PileNode1';
 
 
 
-export module Page041
+export module Page042
 {
 
 
 	export var route = Route.create({
-		key: "page041",
+		key: "page042",
 		icon: <PageIcon />,
-		title: "Page 041",
+		title: "Page 042",
 		content: () => <Content />,
 	});
 
@@ -111,30 +112,32 @@ var UnitsPileTenta = PileNode4.createFactory((db: DB, units: Unit[]) => [
 
 
 
-var UnitTenta: PileNode2.TF<[DB, Unit]> = PileNode2.createFactory((db: DB, unit: Unit) => [
+var UnitTenta: PileNode2_1.TF<[DB, Unit]> = PileNode2_1.createFactory((db: DB, unit: Unit) => [
 
 	unit.id,
 
-	() => [
-		(unit.hasSubunits || unit.hasMasters) && UnitSubordinationsTenta(db, unit),
-	//	Catagory2Tenta(myData),
-	//	Catagory3Tenta(myData.map(a => a * 10)),
-	],
+	() => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
 
-	(tenta: PileNode2.Tenta) =>
+
+	//() => [
+	//	//(unit.hasSubunits || unit.hasMasters) && UnitSubordinationsTenta(db, unit),
+	//	unit.hasSubunits && UnitSubordinationsTenta(db, unit),
+	//],
+
+	(tenta: PileNode2_1.Tenta) =>
 	{
 
 		//$log("Unit Row " + tenta);
 
 
-		return <PileNode2 backfill tenta={tenta}>
+		return <PileNode2_1 backfill tenta={tenta}>
 
 			{() => <>
 				<UnitBody tenta={tenta} db={db} unit={unit} start />
 				<UnitActions db={db} unit={unit} end />
 			</>}
 
-		</PileNode2>;
+		</PileNode2_1>;
 
 	},
 
@@ -192,41 +195,40 @@ function UnitActions({ db, unit, ...props }: { db: DB, unit: Unit } & Pane.Props
 
 
 
-var UnitSubordinationsTenta = PileTabsNode.createFactory((db: DB, unit: Unit) => [
+//var UnitSubordinationsTenta = PileTabsNode.createFactory((db: DB, unit: Unit) => [
 
-	"subordinations",
+//	"subordinations",
 
-	{
-		subunits: unit.hasSubunits && {
-			title: () => <em>{gsm.Unit.hasSubunits.$one} {unit.subunits?.length} {gsm.Unit.$noun(unit.subunits?.length)}</em>,
-			tentas: () => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
-		},
+//	{
+//		subunits: unit.hasSubunits && {
+//			title: () => <em>{gsm.Unit.hasSubunits.$one} {unit.subunits?.length} {gsm.Unit.$noun(unit.subunits?.length)}</em>,
+//			tentas: () => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
+//		},
 
-		masters: unit.hasMasters && {
-			title: () => <em>{gsm.Unit.hasMasters.$one} {unit.masters?.length} {gsm.Unit.$noun3(unit.masters?.length)}</em>,
-			tentas: () => unit.masters?.map(a => UnitMasterTenta(db, a)),
-		},
-	},
+//		masters: unit.hasMasters && {
+//			title: () => <em>{gsm.Unit.hasMasters.$one} {unit.masters?.length} {gsm.Unit.$noun3(unit.masters?.length)}</em>,
+//			tentas: () => unit.masters?.map(a => UnitMasterTenta(db, a)),
+//		},
+//	},
 
-	tenta => <PileTabsNode tenta={tenta} />,
+//	tenta => <PileTabsNode tenta={tenta} />,
 
-]);
+//]);
 
 
 
-var UnitSubunitTenta: PileNode2.TF<[DB, Unit_Subordination]> = PileNode2.createFactory((db: DB, r: Unit_Subordination) => [
+var UnitSubunitTenta: PileNode2_1.TF<[DB, Unit_Subordination]> = PileNode2_1.createFactory((db: DB, r: Unit_Subordination) => [
 
 	r.id,
 
-	() => [
-		(r.unit.hasSubunits || r.unit.hasMasters) && UnitSubordinationsTenta(db, r.unit),
-	//	Catagory2Tenta(myData),
-	//	Catagory3Tenta(myData.map(a => a * 10)),
-	],
+	() => r.unit.subunits?.map(a => UnitSubunitTenta(db, a)),
+	//() => [
+	//	(r.unit.hasSubunits || r.unit.hasMasters) && UnitSubordinationsTenta(db, r.unit),
+	//],
 
-	(tenta: PileNode2.Tenta) => (
+	(tenta: PileNode2_1.Tenta) => (
 
-		<PileNode2 tenta={tenta}>
+		<PileNode2_1 tenta={tenta}>
 
 			<>
 
@@ -243,113 +245,42 @@ var UnitSubunitTenta: PileNode2.TF<[DB, Unit_Subordination]> = PileNode2.createF
 
 			</>
 
-		</PileNode2>
+		</PileNode2_1>
 
 	)
 
 ]);
 
 
-var UnitMasterTenta: PileNode2.TF<[DB, Unit_Subordination]> = PileNode2.createFactory((db: DB, r: Unit_Subordination) => [
+//var UnitMasterTenta: PileNode2.TF<[DB, Unit_Subordination]> = PileNode2.createFactory((db: DB, r: Unit_Subordination) => [
 
-	r.id,
+//	r.id,
 
-	() => [
-		(r.master.hasSubunits || r.master.hasMasters) && UnitSubordinationsTenta(db, r.master),
-	//	Catagory2Tenta(myData),
-	//	Catagory3Tenta(myData.map(a => a * 10)),
-	],
+//	() => [
+//		(r.master.hasSubunits || r.master.hasMasters) && UnitSubordinationsTenta(db, r.master),
+//	],
 
-	(tenta: PileNode2.Tenta) => (
+//	(tenta: PileNode2.Tenta) => (
 
-		<PileNode2 tenta={tenta}>
+//		<PileNode2 tenta={tenta}>
 
-			<>
-
-				<UnitBody tenta={tenta} db={db} unit={r.master} start />
-
-				<Pane flex0 p12>
-					<div>
-						<div><Txt.Date>{r.dateFrom}</Txt.Date></div>
-						<div><Txt.Date>{r.dateTo}</Txt.Date></div>
-					</div>
-				</Pane>
-
-				<UnitActions db={db} unit={r.master} end />
-
-			</>
-
-		</PileNode2>
-
-	)
-
-]);
-
-
-//var Catagory1Tenta = PileNode3.createFactory((data: typeof myData) => [
-
-//	"ctg1",
-
-//	() => data.map(Row05Tenta),
-
-//	tenta => <PileNode3 tenta={tenta}>
-//		<>
-
-//			<Pane start p12 vcenter>
-//				<Pile.PhaseIcon />
-//				<em>CATAGORY 111</em>
-//			</Pane>
-
-//			<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
-
-//		</>
-//	</PileNode3>,
-
-//]);
-
-
-
-
-//var Catagory2Tenta = PileNode3.createFactory((data: typeof myData) => [
-//	"ctg2",
-//	() => data.map(Row05Tenta),
-//	tenta =>
-//	{
-//		//$log("Catagory2Node " + props.tenta);
-//		return <PileNode3 tenta={tenta}>
 //			<>
 
-//				<Pane start p12 vcenter>
-//					<Pile.PhaseIcon />
-//					<em>CATAGORY 2222</em>
+//				<UnitBody tenta={tenta} db={db} unit={r.master} start />
+
+//				<Pane flex0 p12>
+//					<div>
+//						<div><Txt.Date>{r.dateFrom}</Txt.Date></div>
+//						<div><Txt.Date>{r.dateTo}</Txt.Date></div>
+//					</div>
 //				</Pane>
 
-//				<Pane end p12 textRight vcenter>222 2222 22222 222222</Pane>
+//				<UnitActions db={db} unit={r.master} end />
 
 //			</>
-//		</PileNode3>;
-//	}
 
-//]);
+//		</PileNode2>
 
-
-
-
-//var Catagory3Tenta = PileTabsNode.createFactory((data: typeof myData) => [
-
-//	"ctg3",
-
-//	{
-//		tab1: {
-//			title: () => "TAB 111",
-//			tentas: () => data.map(Row05Tenta),
-//		},
-//		tab2: {
-//			title: () => "TAB 222",
-//			tentas: () => [...data, ...data.map(a => a + 5)].map(a => a * 10).map(Row05Tenta),
-//		},
-//	},
-
-//	tenta => <PileTabsNode tenta={tenta} />,
+//	)
 
 //]);

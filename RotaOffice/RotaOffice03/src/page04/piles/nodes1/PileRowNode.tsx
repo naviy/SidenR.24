@@ -163,7 +163,7 @@ function PileRowAccentor({
 })
 {
 
-	$log("PileRowAccentor " + tenta)
+	//$log("PileRowAccentor " + tenta)
 
 	//let forceUpdate = useForceUpdate();
 	let [tailIsFocused, setTailIsFocused] = useState(false);
@@ -339,7 +339,7 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 		fill
 		bgBlack
 		opacity0
-		opacity0_4={!isFocused}
+		opacity0_2={!isFocused}
 		animated
 		nomouse
 		style={{ willChange: "opacity" }}

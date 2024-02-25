@@ -98,8 +98,6 @@ const propNames: PropNames<FillFadeProps> =
 export function FillFade(props: FillFadeProps & DivProps)
 {
 
-	$log("FillFade", props.in);
-
 	let transitionProps = TransitionProps.extract(props);
 
 	const nodeRef = useRef<any>();
