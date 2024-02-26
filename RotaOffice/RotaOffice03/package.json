@@ -28,6 +28,7 @@
 		"react-world-flags": "latest"
 	},
 	"devDependencies": {
+		"@babel/plugin-proposal-decorators": "^7.23.9",
 		"@types/lodash": "latest",
 		"@types/node": "latest",
 		"@types/numeral": "latest",

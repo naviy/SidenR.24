@@ -16,14 +16,25 @@ export default defineConfig({
 
 		checker({ typescript: true }),
 
-		react(),
+		react({
+			babel: {
+
+				plugins: [
+					["@babel/plugin-proposal-decorators", { "version": "2023-05" }],
+				],
+
+			//	parserOpts: {
+			//		plugins: ['decorators'],
+			//	},
+			},
+		}),
 
 		//viteSingleFile(),
 
 	],
 
 	server: {
-		//open: true,
+		open: true,
 		port: 5203,
 	},
 

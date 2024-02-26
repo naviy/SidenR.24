@@ -12,7 +12,21 @@ import type { TentaAccent } from './TentaAccent';
 
 
 //===
+function log(method: any, { kind, name }: ClassMethodDecoratorContext)
+{
 
+	if (kind !== "method")
+		return method;
+
+	return function logged(this: any, ...args: any[])
+	{
+		console.log(`starting ${name as any} with arguments ${args.join(", ")}`);
+		const ret = method.call(this, ...args);
+		console.log(`ending ${name as any}`);
+		return ret;
+	};
+
+}
 
 
 
@@ -393,11 +407,9 @@ export class TentaBase extends Repaintable()
 
 	refreshState()
 	{
-
-		this.#state = this.getState(this.#state?.phase, this.#state?.stage);
+		this.setState(this.getState(this.#state?.phase, this.#state?.stage));
 
 		return this.#state;
-
 	}
 
 
@@ -471,6 +483,7 @@ export class TentaBase extends Repaintable()
 
 
 
+	@log
 	protected setState(newState: TentaState | null | undefined)
 	{
 
@@ -581,14 +594,10 @@ export class TentaBase extends Repaintable()
 
 
 
-	//---
-
-
-
 	refresh()
 	{
 		this.refreshState();
-		this.repaint();
+		//this.repaint();
 	}
 
 
@@ -1409,3 +1418,7 @@ export function isTenta(obj: any): obj is TentaBase
 {
 	return obj instanceof TentaBase;
 }
+
+
+
+
