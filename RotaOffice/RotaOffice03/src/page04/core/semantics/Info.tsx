@@ -1,4 +1,4 @@
-import { $log, _$log, type MuiColor } from "@libs";
+import { type MuiColor } from "@libs";
 import _ from 'lodash';
 import moment from 'moment';
 import numeral from 'numeral';

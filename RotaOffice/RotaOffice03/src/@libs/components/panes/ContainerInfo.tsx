@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useRef } from "react";
 import { type ContainerBaseProps } from "./ContainerProps";
-import { $log, _$log } from "../core/utils";
 import type { PaneBorder } from "./PaneBorder";
 import type { PaneRadius } from "./PaneRadius";
 

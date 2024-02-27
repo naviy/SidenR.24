@@ -1,4 +1,4 @@
-import { GlobalState, Repaintable, _$log } from '@libs';
+import { $log, GlobalState, Repaintable } from '@libs';
 import type React from "react";
 import { type ReactNode } from "react";
 import { TentaCollector, type TentaCollectorPropsAlias, type TentaCollectorPropsAliases } from "./TentaCollector";
@@ -12,21 +12,7 @@ import type { TentaAccent } from './TentaAccent';
 
 
 //===
-function log(method: any, { kind, name }: ClassMethodDecoratorContext)
-{
 
-	if (kind !== "method")
-		return method;
-
-	return function logged(this: any, ...args: any[])
-	{
-		console.log(`starting ${name as any} with arguments ${args.join(", ")}`);
-		const ret = method.call(this, ...args);
-		console.log(`ending ${name as any}`);
-		return ret;
-	};
-
-}
 
 
 
@@ -405,6 +391,7 @@ export class TentaBase extends Repaintable()
 
 
 
+	@$log.m
 	refreshState()
 	{
 		this.setState(this.getState(this.#state?.phase, this.#state?.stage));
@@ -483,7 +470,6 @@ export class TentaBase extends Repaintable()
 
 
 
-	@log
 	protected setState(newState: TentaState | null | undefined)
 	{
 

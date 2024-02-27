@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import checker from 'vite-plugin-checker';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import checker from "vite-plugin-checker";
+import react from "@vitejs/plugin-react";
 //import { viteSingleFile } from "vite-plugin-singlefile"
 
 
@@ -17,6 +17,7 @@ export default defineConfig({
 		checker({ typescript: true }),
 
 		react({
+
 			babel: {
 
 				plugins: [
@@ -24,9 +25,10 @@ export default defineConfig({
 				],
 
 			//	parserOpts: {
-			//		plugins: ['decorators'],
+			//		plugins: ["decorators"],
 			//	},
 			},
+
 		}),
 
 		//viteSingleFile(),

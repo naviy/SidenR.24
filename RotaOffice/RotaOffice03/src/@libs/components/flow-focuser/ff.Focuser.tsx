@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { $defaultAnimationDurationMs, $log, Div, MuiColor, SpaWaitingMask } from "../core";
 
-import { $error, $logb, _$error, _$log, __$error, ___$error, adelay, arequestAnimationFrame, Keys, TaskQueue, Values } from "../core";
+import { adelay, arequestAnimationFrame, Keys, TaskQueue, Values } from "../core";
 
 
 import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from "./ff.Anchor";
@@ -1323,7 +1323,7 @@ export class Focuser extends Component<FocuserProps>
 
 			if (!parent)
 			{
-				$error(`Не удаётся найти parent`);
+				$log.error(`Не удаётся найти parent`);
 				return;
 			}
 
@@ -1442,9 +1442,9 @@ export class Focuser extends Component<FocuserProps>
 
 		if (!this.carets.length)
 		{
-			$error(`Focuser: не найден Focuser.Caret для "${this}"`);
-			_$log("focuser:", this);
-			_$log("focuser.el:", this.el);
+			$log.error(`Focuser: не найден Focuser.Caret для "${this}"`);
+			$log._("focuser:", this);
+			$log._("focuser.el:", this.el);
 		}
 
 		else if (this.carets.length === 1)
@@ -2233,7 +2233,7 @@ export class Focuser extends Component<FocuserProps>
 
 		if (i < 0)
 		{
-			$error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
+			$log.error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
 			throw Error(`Как-то странно: не нашёл себя в parent.items`);
 
 		}
@@ -2278,7 +2278,7 @@ export class Focuser extends Component<FocuserProps>
 
 		if (i < 0)
 		{
-			$error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
+			$log.error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
 			throw Error(`Как-то странно: не нашёл себя в parent.items`);
 		}
 
@@ -3449,64 +3449,64 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-		$error("Попытка провести операцию над disabled-focuser-ом!");
-		_$log("ff:", this);
+		$log.error("Попытка провести операцию над disabled-focuser-ом!");
+		$log._("ff:", this);
 
-		_$error("disabled:", this.disabled);
+		$log._error("disabled:", this.disabled);
 
 		if (this.priority < $min_priority)
 		{
-			__$error("priority < $min_priority");
-			___$error("priority:", this.priority);
-			___$error("$min_priority:", $min_priority);
+			$log.__error("priority < $min_priority");
+			$log.___error("priority:", this.priority);
+			$log.___error("$min_priority:", $min_priority);
 		}
 
 
-		_$error("baseDisabled:", this.baseDisabled);
+		$log._error("baseDisabled:", this.baseDisabled);
 
 
 		//if (this._baseDisabled)
 		//{
-		//	__$error("this._baseDisabled:", this._baseDisabled);
+		//	$log.__error("this._baseDisabled:", this._baseDisabled);
 		//}
 
 
 		if (this._unmounted)
 		{
-			__$error("unmounted:", this._unmounted);
+			$log.__error("unmounted:", this._unmounted);
 		}
 
 
 		if (this.props.disabled && !this.props.forceEnabled)
 		{
-			__$error("props.disabled:", this.props.disabled);
+			$log.__error("props.disabled:", this.props.disabled);
 		}
 
 
 		if (SpaWaitingMask.isWaiting())
 		{
-			__$error("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
+			$log.__error("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
 		}
 
 
 		if (this.props.disableIfParentIsCollapsed && this.parentIsCollapsed)
 		{
-			__$error("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
-			__$error("parentIsCollapsed:", this.parentIsCollapsed);
+			$log.__error("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
+			$log.__error("parentIsCollapsed:", this.parentIsCollapsed);
 		}
 
 
 		if (this.props.disableIfParentIsNotFocused && this.parentIsNotFocused)
 		{
-			__$error("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
-			__$error("parentIsNotFocused:", this.parentIsNotFocused);
+			$log.__error("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
+			$log.__error("parentIsNotFocused:", this.parentIsNotFocused);
 		}
 
 
 		if (this.parent?.baseDisabled)
 		{
-			__$error("parent.baseDisabled:", this.parent!.baseDisabled);
-			$logb("parent:", () => this.parent!.checkDisabled());
+			$log.__error("parent.baseDisabled:", this.parent!.baseDisabled);
+			$log.b("parent:", () => this.parent!.checkDisabled());
 		}
 
 
@@ -4239,7 +4239,7 @@ export class Focuser extends Component<FocuserProps>
 			}
 			catch (ex)
 			{
-				$error(ex);
+				$log.error(ex);
 			}
 		}
 

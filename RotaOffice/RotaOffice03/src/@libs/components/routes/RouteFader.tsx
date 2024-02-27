@@ -1,4 +1,4 @@
-import { $defaultAnimationDurationMs, $log, Div, _$log, type DivProps } from "../core";
+import { $defaultAnimationDurationMs, Div, type DivProps } from "../core";
 import { FillFade } from "../transitions";
 import { Children } from "./Route";
 import { Router } from "./Router";

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { $error } from "./utils";
+import { $log } from "./utils";
 
 
 
@@ -145,7 +145,7 @@ export module GlobalState
 
 			if (!parentNode)
 			{
-				$error('GlobalState.use() можно использовать только внутри <GlobalState.Root ... />');
+				$log.error('GlobalState.use() можно использовать только внутри <GlobalState.Root ... />');
 				parentNode = {};
 			}
 
@@ -183,7 +183,7 @@ export module GlobalState
 
 		if (!parentNode)
 		{
-			$error(`GlobalState.node(): parentNode is ${parentNode}`);
+			$log.error(`GlobalState.node(): parentNode is ${parentNode}`);
 			parentNode = {};
 		}
 

@@ -1,4 +1,4 @@
-import { ExpanderBaseBehavior, Focuser, __$log, ___$log } from "@libs";
+import { ExpanderBaseBehavior, Focuser } from "@libs";
 import { createRef, type RefObject } from "react";
 import { Tenta } from "../../tentas";
 

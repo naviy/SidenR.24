@@ -67,6 +67,7 @@ export module PileNode2_1
 		}
 
 
+		@$log.m
 		override onItemSeparated()
 		{
 			this.refresh();

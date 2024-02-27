@@ -1,6 +1,6 @@
 import GlobalStyles from "@mui/material/GlobalStyles";
 import React, { useEffect } from "react";
-import { $defaultAnimationDurationMs, $error, $log, _$log, adelay } from "../core";
+import { $defaultAnimationDurationMs, $log, adelay } from "../core";
 import type { FocusActionProps, Focuser } from "./ff.Focuser";
 
 
@@ -119,7 +119,7 @@ export function coreUnmountFocuser(ff: Focuser)
 	if (_currentFocuser === ff)
 	{
 		$log("unmount Current Focuser()");
-		_$log("ff:", ff);
+		$log._("ff:", ff);
 		_currentFocuser = null;
 	}
 
@@ -331,7 +331,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 		catch(ex)
 		{
 			_isFocusing = false;
-			$error(ex);
+			$log.error(ex);
 		}
 
 
