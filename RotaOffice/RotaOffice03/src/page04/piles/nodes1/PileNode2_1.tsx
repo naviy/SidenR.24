@@ -18,7 +18,7 @@ export function PileNode2_1(props: PileNode2_1.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
-	$log("PileNode2_1 " + props.tenta)
+	//$log("PileNode2_1 " + props.tenta)
 
 	return PileRowNode(props);
 }
@@ -45,6 +45,7 @@ export module PileNode2_1
 	export class Tenta extends PileRowNode.Tenta
 	{
 
+		@$log.m
 		override getRestState(stage: TentaStage)
 		{
 
@@ -57,6 +58,7 @@ export module PileNode2_1
 				tailIsVisible: !collapsed && this.hasCollectors,
 				//tailIsSeparated: opened,
 				tailIsSeparated: opened || this.hasSeparatedItems,
+				isSeparated: opened,
 			};
 		}
 
@@ -76,7 +78,6 @@ export module PileNode2_1
 
 		override onDecPhase()
 		{
-			$log("onDecPhase "+ this)
 			this.hasSeparatedItems && this.forEachTenta(a => a.bodyDeseparate());
 			this.parent?.refresh();
 		}

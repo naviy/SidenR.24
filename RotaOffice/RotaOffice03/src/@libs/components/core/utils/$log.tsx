@@ -53,22 +53,22 @@ export module $log
 
 	export function _(...args: any[])
 	{
-		return log('    ', ...args);
+		return log("    ", ...args);
 	}
 
 	export function __(...args: any[])
 	{
-		return log('        ', ...args);
+		return log("        ", ...args);
 	}
 
 	export function ___(...args: any[])
 	{
-		return log('            ', ...args);
+		return log("            ", ...args);
 	}
 
 	export function ____(...args: any[])
 	{
-		return log('                ', ...args);
+		return log("                ", ...args);
 	}
 
 
@@ -88,22 +88,22 @@ export module $log
 
 	export function _debug(...args: any[])
 	{
-		return debug('    ', ...args);
+		return debug("    ", ...args);
 	}
 
 	export function __debug(...args: any[])
 	{
-		return debug('        ', ...args);
+		return debug("        ", ...args);
 	}
 
 	export function ___debug(...args: any[])
 	{
-		return debug('            ', ...args);
+		return debug("            ", ...args);
 	}
 
 	export function ____debug(...args: any[])
 	{
-		return debug('                ', ...args);
+		return debug("                ", ...args);
 	}
 
 
@@ -119,14 +119,14 @@ export module $log
 			return undefined;
 
 
-		const msg: any[] = [/*line + '   ' +*/];
+		const msg: any[] = [/*line + "   " +*/];
 
 		indent && msg.push(indent);
 
 
 		if (
 			args.length === 1 &&
-			args[0] && typeof args[0] === 'object' && args[0].message
+			args[0] && typeof args[0] === "object" && args[0].message
 		)
 		{
 
@@ -144,8 +144,8 @@ export module $log
 
 		else if (
 			args.length === 2 &&
-			typeof args[0] === 'string' &&
-			args[1] && args[1] && typeof args[1] === 'object' && args[1].message
+			typeof args[0] === "string" &&
+			args[1] && args[1] && typeof args[1] === "object" && args[1].message
 		)
 		{
 
@@ -214,22 +214,22 @@ export module $log
 
 	export function _error(...args: any[])
 	{
-		return error('    ', ...args);
+		return error("    ", ...args);
 	}
 
 	export function __error(...args: any[])
 	{
-		return error('        ', ...args);
+		return error("        ", ...args);
 	}
 
 	export function ___error(...args: any[])
 	{
-		return error('            ', ...args);
+		return error("            ", ...args);
 	}
 
 	export function ____error(...args: any[])
 	{
-		return error('                ', ...args);
+		return error("                ", ...args);
 	}
 
 
@@ -247,7 +247,7 @@ export module $log
 
 		let msgs = toLogValues(args);
 
-		if (typeof msgs[0] === 'string')
+		if (typeof msgs[0] === "string")
 		{
 			msgs[0] = indent + msgs[0];
 		}
@@ -275,7 +275,7 @@ export module $log
 	function printLogTrace(msgs: any[])
 	{
 		console.groupCollapsed(...msgs);
-		//console.groupCollapsed('%c%s', 'font-weight: normal', ...msgs);
+		//console.groupCollapsed("%c%s", "font-weight: normal", ...msgs);
 		console.trace();
 		console.groupEnd();
 	}
@@ -319,13 +319,13 @@ export module $log
 				msg.push(value2);
 			}
 
-			else if (typeof value === 'object' && value['toLogValue'])
+			else if (typeof value === "object" && value["toLogValue"])
 			{
 				let value2: any;
 
 				try
 				{
-					value2 = value['toLogValue']();
+					value2 = value["toLogValue"]();
 				}
 				catch (ex)
 				{
@@ -398,7 +398,7 @@ export module $log
 	export function e(...msgs: any[])
 	{
 
-		indent = indent.substring(0, indent.length - 4) || '';
+		indent = indent.substring(0, indent.length - 4) || "";
 
 
 		forceAllowLogTrace = false;
@@ -406,7 +406,7 @@ export module $log
 		console.groupEnd();
 
 		let logCount = _blockLogCounts[_blockLogCounts.length - 1];
-		logCount && log('}', ...msgs);
+		logCount && log("}", ...msgs);
 
 		forceAllowLogTrace = undefined;
 
@@ -425,22 +425,22 @@ export module $log
 
 		if (Array.isArray(msg))
 		{
-			log(...msg /*, ' {'*/);
+			log(...msg /*, " {"*/);
 		}
 		else if (msg)
 		{
-			log(msg /*, '{'*/);
+			log(msg /*, "{"*/);
 		}
 		else
 		{
-			log('{');
+			log("{");
 		}
 
 
 		forceAllowLogTrace = undefined;
 
 
-		indent += '    ';
+		indent += "    ";
 		_blockLogCounts.push(0);
 
 	};
@@ -467,7 +467,7 @@ export module $log
 	export function m(arg0: any, arg1?: any): ((this: any, ...args: any[]) => any)
 	{
 
-		if (typeof arg0 === 'object')
+		if (typeof arg0 === "object")
 		{
 			return (originalMethod: any, context: ClassMethodDecoratorContext) =>
 			{
@@ -507,12 +507,12 @@ export module $log
 			blockHeader([logPrms.fmt, ...logPrms.args]);
 
 
-			let logValue = this['toLogValue'] ? this['toLogValue']() : this;
+			let logValue = this["toLogValue"] ? this["toLogValue"]() : this;
 
 			if (logValue !== null && logValue !== undefined)
 			{
 
-				let valueFmt = '';
+				let valueFmt = "";
 
 				if (!Array.isArray(logValue))
 					logValue = [{ this: logValue }];
@@ -526,8 +526,8 @@ export module $log
 				//$disablePrintStack = true;
 
 				log(`%cthis: %c${valueFmt}`,
-					'color: blue; font-weight: 400;',
-					'color: gray; font-weight: 400;',
+					"color: blue; font-weight: 400;",
+					"color: gray; font-weight: 400;",
 					...logValue
 				);
 
@@ -540,21 +540,21 @@ export module $log
 			let startTime = new Date().getTime();
 
 			let result = originalMethod.apply(this, args);
-			//$log(`%c${methodName}%c.result: `, 'color: #c5790f; font-weight: bold;', '', result);
+			//$log(`%c${methodName}%c.result: `, "color: #c5790f; font-weight: bold;", "", result);
 
 
 			if (result === undefined)
 			{
 				let endTime = new Date().getTime();
 
-				e(endTime - startTime, 'ms');
+				e(endTime - startTime, "ms");
 			}
 
 
 			else if (result && cfg?.async !== false && Promise.resolve(result) === result)
 			{
 
-				//$log(`... await %c${methodName} ...`, 'color: #c5790f; font-weight: bold;');
+				//$log(`... await %c${methodName} ...`, "color: #c5790f; font-weight: bold;");
 
 				result = result
 					.then((aresult: any) =>
@@ -566,10 +566,10 @@ export module $log
 						if (aresult !== void 0)
 						{
 							forceAllowLogTrace = false;
-							log(`~ %c${methodName}%c ~> `, 'color: #c5790f; font-weight: bold;', '', aresult);
+							log(`~ %c${methodName}%c ~> `, "color: #c5790f; font-weight: bold;", "", aresult);
 						}
 
-						e(endTime - startTime, 'ms');
+						e(endTime - startTime, "ms");
 
 
 						return aresult;
@@ -586,13 +586,14 @@ export module $log
 				let endTime = new Date().getTime();
 
 
-				if (!result || typeof result !== 'object' || result['$$typeof'] !== Symbol.for('react.element'))
+				if (!result || typeof result !== "object" || result["$$typeof"] !== Symbol.for("react.element"))
 				{
+					let result2 = typeof result === "object" ? { "return": result } : result;
 					forceAllowLogTrace = false;
-					log(`= %c${methodName}%c => `, 'color: #c5790f; font-weight: bold;', '', result);
+					log(`= %c${methodName}%c => `, "color: #c5790f; font-weight: bold;", "", result2);
 				}
 
-				e(endTime - startTime, 'ms');
+				e(endTime - startTime, "ms");
 
 			}
 
@@ -606,7 +607,7 @@ export module $log
 
 
 
-	function methodLogParams(obj: any, method: Function, methodName: string, args: any)
+	function methodLogParams(obj: any, method: Function, methodName: string, args: any[])
 	{
 		let objName: string;
 
@@ -619,7 +620,7 @@ export module $log
 						obj.toLogName() :
 						obj.toString ?
 							obj.toString() :
-							obj + '';
+							obj + "";
 		}
 		catch (ex)
 		{
@@ -628,10 +629,11 @@ export module $log
 
 
 
-		if (objName === '[object Object]')
+		if (objName === "[object Object]")
 			objName = obj.constructor.name;
 
 
+		args = [...args];
 
 		let argCount = args.length;
 
@@ -643,55 +645,70 @@ export module $log
 			--argCount;
 		}
 
+		args.length = argCount;
 
 
-		let argsFmt = '';
+
+		let argsFmt = "";
 		let args2 = [];
 
+		let allArgsIsPrimitive = true;
 
-		for (let i = 0; i < argCount; i++)
+
+		for (let arg of args)
 		{
 
-			let arg = args[i];
-
-			arg = !arg || typeof arg !== 'object' ?
+			arg = !arg || typeof arg !== "object" ?
 				arg :
 				arg.toLogName ?
 					arg.toLogName() :
 					arg;
-			//arg.toString ?
-			//	arg.toString() :
-			//	arg + '';
+
+
+			if (typeof arg === "object" || typeof arg === "function")
+				allArgsIsPrimitive = false;
+
 
 			args2.push(arg);
 
 
-			if (argsFmt)
-				argsFmt += ', ';
+			if (allArgsIsPrimitive)
+			{
+				if (argsFmt)
+					argsFmt += ", ";
 
-			argsFmt += consoleFormatParamTypeOf(arg);
+				argsFmt += consoleFormatParamTypeOf(arg);
+			}
 
 		}
 
+
+		if (!allArgsIsPrimitive)
+		{
+			argsFmt = "%O";
+			args2 = [{ args: args2.length === 1 ? args2[0] : args2 }];
+		}
 
 
 		// all emoji: https://unicode.org/emoji/charts/full-emoji-list.html
 		let icon = String.fromCodePoint(0x1F4D1);
 
 
-		let fmt = `${icon} %c${objName ? objName + '.' : ''}%c${methodName}%c(%c${argsFmt}%c)    %O`;
+		let fmt = `${icon} %c${objName ? objName + "." : ""}%c${methodName}%c(%c${argsFmt}%c)`//`    %c%O`;
 
 
 		return {
 			fmt,
 			args: [
-				'color: #1f3795; font-weight: normal;',
-				'color: #c5790f; font-weight: bold;',
-				'',
-				'color: gray; font-style: italic; font-weight: normal;',
+				"color: #1f3795; font-weight: normal;",
+				"color: #c5790f; font-weight: bold;",
+				"",
+				"color: gray; font-style: italic; font-weight: normal;",
 				...args2,
-				'',
-				{ method }
+				"",
+				//"color: red;",
+				////{ method }
+				//method
 			]
 
 
@@ -703,7 +720,7 @@ export module $log
 
 	function consoleFormatParamTypeOf(arg: any)
 	{
-		return typeof arg === 'number' ? '%d' : typeof arg === 'string' ? '%s' : '%o';
+		return typeof arg === "number" ? "%d" : typeof arg === "string" ? "%s" : "%o";
 	}
 
 

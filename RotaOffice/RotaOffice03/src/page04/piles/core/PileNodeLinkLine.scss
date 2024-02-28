@@ -38,9 +38,12 @@
 
 		position: absolute;
 		inset: 0;
+		height: 0;
+
 		border-left: var(--thickness) solid var(--color);
+		opacity: 0;
 		transition: all var(--default-animation-duration) ease-in-out;
-		will-change: border-left;
+		will-change: border-left, opacity;
 
 	}
 
@@ -49,8 +52,9 @@
 		position: absolute;
 		inset: 0;
 		border-left: var(--thickness) solid var(--color);
+		opacity: 0;
 		transition: all var(--default-animation-duration) ease-in-out;
-		will-change: border-left;
+		will-change: border-left, opacity;
 
 	}
 

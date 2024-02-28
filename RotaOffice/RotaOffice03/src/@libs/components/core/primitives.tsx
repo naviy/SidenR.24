@@ -693,8 +693,8 @@ export function GlobalStylesOfPrimitives(props: {
 		left0: { left: 0 },
 
 
-		...range("opacity", 0, 10, 1, i => ({ opacity: i / 10.0 })),
-		...range("opacity0_", 1, 9, 1, i => ({ opacity: i / 100.0 })),
+		...range("opacity", 0, 10, 1, i => ({ opacity: `${i / 10.0} !important` })),
+		...range("opacity0_", 1, 9, 1, i => ({ opacity: `${i / 100.0} !important` })),
 
 		...range("zIndex", 0, 4, 1, i => ({ zIndex: i })),
 

@@ -116,24 +116,26 @@ export function PileRowNode({
 
 						<Focuser ref={tenta.tailFfRef} ghost>
 
-							<Pane.Col
+							<Div pb={tailMb as any} animated>
+								<Pane.Col
 
-								expanderRef={tailExpanderRef}
+									expanderRef={tailExpanderRef}
 
-								start={tailIsSeparated}
-								expanded={tailIsVisible}
-								noreexpand={!tailReexpand}
+									start={tailIsSeparated}
+									expanded={tailIsVisible}
+									noreexpand={!tailReexpand}
 
-								//pt={tailMt as any}
+									//pt={tailMt as any}
 
-								wrapperCls={`mt${tailMt}`}
-								addExpandedHeight={tailMt + tailMb}
-								pb={tailMb as any}
+									wrapperCls={`mt${tailMt}`}
+									addExpandedHeight={tailMt + tailMb}
 
-							//borderGreen border4
-							>
-								{tailDecorator(tenta)}
-							</Pane.Col>
+
+								//borderGreen border4
+								>
+									{tailDecorator(tenta)}
+								</Pane.Col>
+							</Div>
 
 						</Focuser>
 

@@ -1,5 +1,5 @@
 import { type MutableRefObject, useEffect, useReducer, useRef } from 'react';
-import { $error } from './logging';
+import { $log } from './$log';
 
 
 
@@ -32,11 +32,11 @@ export function useNew<T>(
 	}
 	else if (typeof obj !== 'object')
 	{
-		$error(`useNew(): объект, полученный с помощью useRef(), имеет тип ${typeof obj} и не является наследником класса ${objectClass.name}`);
+		$log.error(`useNew(): объект, полученный с помощью useRef(), имеет тип ${typeof obj} и не является наследником класса ${objectClass.name}`);
 	}
 	else if (!(obj instanceof objectClass))
 	{
-		$error(`useNew(): объект, полученный с помощью useRef(), имеет тип ${(obj as Object).constructor.name} и не является наследником класса ${objectClass.name}`);
+		$log.error(`useNew(): объект, полученный с помощью useRef(), имеет тип ${(obj as Object).constructor.name} и не является наследником класса ${objectClass.name}`);
 	}
 
 

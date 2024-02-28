@@ -64,6 +64,14 @@ export interface TentaState extends TentaInitState
 
 
 
+export type TentaRestState = Omit<TentaState, "phase" | "stage" | "stageIndex" | "isSeparated"> & {
+
+	isSeparated?: boolean;
+
+};
+
+
+
 
 
 
@@ -426,16 +434,19 @@ export class TentaBase extends Repaintable()
 
 			stageIndex: TentaStage.indexOf(stage),
 
-			isSeparated: restState.bodyIsSeparated || restState.tailIsSeparated,
-
 			...restState,
 
+			isSeparated: restState.isSeparated !== undefined
+				? restState.isSeparated
+				: restState.bodyIsSeparated || restState.tailIsSeparated,
+
+			//isSeparated: restState.bodyIsSeparated || restState.tailIsSeparated,
 		};
 
 	}
 
 
-	protected getRestState(stage: TentaStage, phase: TentaPhase): Omit<TentaState, "phase" | "stage" | "stageIndex" | "isSeparated">
+	protected getRestState(stage: TentaStage, phase: TentaPhase): TentaRestState		
 	{
 
 		let collapsed = stage === "collapsed";
@@ -537,10 +548,12 @@ export class TentaBase extends Repaintable()
 			if (s1.bodyIsSeparated)
 			{
 				this.onBodySeparated();
+				this.parent?.onItemBodySeparated(this);
 			}
 			else
 			{
 				this.onBodyDeseparated();
+				this.parent?.onItemBodyDeseparated(this);
 			}
 
 		}
@@ -906,6 +919,9 @@ export class TentaBase extends Repaintable()
 	onTailDeseparated() { }
 	onSeparated() { }
 	onDeseparated() { }
+
+	onItemBodySeparated(item: TentaBase) { }
+	onItemBodyDeseparated(item: TentaBase) { }
 	onItemSeparated(item: TentaBase) { }
 	onItemDeseparated(item: TentaBase) { }
 

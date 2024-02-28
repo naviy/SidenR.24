@@ -1,4 +1,4 @@
-import { $error } from './logging';
+import { $log } from "./$log";
 
 
 
@@ -282,7 +282,7 @@ export class TaskQueue
 
 		catch (ex2)
 		{
-			ex2 && $error(ex2);
+			ex2 && $log.error(ex2);
 		}
 
 		finally

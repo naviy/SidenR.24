@@ -48,9 +48,9 @@ export function PileNodeTail1({
 
 	indent ??= isSeparated;
 
-	let myIndent = !indent ? 36 : 0;
+	//let myIndent = !indent ? 36 : 0;
 
-	$log("Tail " + collector.parentTenta, indent)
+	//$log("Tail " + collector.parentTenta, indent)
 
 
 	return (
