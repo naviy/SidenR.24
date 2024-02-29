@@ -125,7 +125,7 @@ export class TentaCollector extends Repaintable()
 	ensureItems()
 	{
 
-		if (this.#items || !this.isVisible())
+		if (this.#items !== undefined || !this.isVisible())
 			return;
 
 		this.#createItems();
@@ -133,10 +133,11 @@ export class TentaCollector extends Repaintable()
 	}
 
 
+
 	#createItems()
 	{
 
-		this.#items = (this.props.tentas?.(this) || null)?.filter(a => a) as TentaBase[];
+		this.#items = (this.props.tentas?.(this) || null)?.filter(a => a) as TentaBase[] || null;
 		//___$log("tentas:", this.tentas);
 
 

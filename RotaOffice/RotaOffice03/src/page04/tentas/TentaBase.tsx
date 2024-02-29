@@ -399,7 +399,6 @@ export class TentaBase extends Repaintable()
 
 
 
-	@$log.m
 	refreshState()
 	{
 		this.setState(this.getState(this.#state?.phase, this.#state?.stage));
@@ -615,6 +614,7 @@ export class TentaBase extends Repaintable()
 		this.recalcStages();
 
 	}
+
 
 
 	recalcStages()

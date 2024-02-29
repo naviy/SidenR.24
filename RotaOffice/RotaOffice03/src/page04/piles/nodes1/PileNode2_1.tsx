@@ -45,7 +45,7 @@ export module PileNode2_1
 	export class Tenta extends PileRowNode.Tenta
 	{
 
-		@$log.m
+
 		override getRestState(stage: TentaStage)
 		{
 
@@ -62,14 +62,13 @@ export module PileNode2_1
 			};
 		}
 
-
+		
 		override onItemDeseparated()
 		{
 			this.refresh();
 		}
 
 
-		@$log.m
 		override onItemSeparated()
 		{
 			this.refresh();
@@ -81,7 +80,6 @@ export module PileNode2_1
 			this.hasSeparatedItems && this.forEachTenta(a => a.bodyDeseparate());
 			this.parent?.refresh();
 		}
-
 
 
 	}
