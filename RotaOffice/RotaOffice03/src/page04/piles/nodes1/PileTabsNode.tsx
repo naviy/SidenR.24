@@ -33,9 +33,11 @@ interface PileTabsNodeProps extends PileRowNode.Props
 export function PileTabsNode(props: PileTabsNodeProps)
 {
 
-	$log("PileTabsNode " + props.tenta)
-
 	let { tenta } = props;
+
+
+	tenta.use();
+
 
 	let body: JSX.Element;
 

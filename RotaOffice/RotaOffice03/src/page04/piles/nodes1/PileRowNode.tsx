@@ -18,10 +18,11 @@ import { PileRowNodeTenta } from "./PileRowNodeTenta";
 
 
 
-export interface PileRowNodeProps extends Omit<Pane.RowProps, /*"id" | */"children">
+export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeTenta>
+	extends Omit<Pane.RowProps, /*"id" | */"children">
 {
 
-	tenta: PileRowNodeTenta;
+	tenta: TTenta;
 
 	linkToNext?: boolean;
 	backfill?: boolean;
@@ -29,7 +30,7 @@ export interface PileRowNodeProps extends Omit<Pane.RowProps, /*"id" | */"childr
 	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
 	tailReexpand?: boolean;
 
-	tailDecorator?: PileRowNode.TailDecorator;
+	tailDecorator?: PileRowNode.TailDecorator<TTenta>;
 
 }
 
@@ -60,9 +61,6 @@ export function PileRowNode({
 {
 
 	//_$log("PileNode for " + tenta)
-
-	tenta.use();
-
 
 	let btmMargin = tenta.btmMargin();
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
@@ -357,16 +355,18 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 export module PileRowNode
 {
 
+
 	//---
 
 
 
-	export type Props = PileRowNodeProps;
+
+	export type Props<TTenta extends Tenta = Tenta> = PileRowNodeProps<TTenta>;
 
 	export import Tenta = PileRowNodeTenta;
 
 
-	export type TailDecorator = (tenta: Tenta_.Base) => ReactNode;
+	export type TailDecorator<TTenta extends Tenta_.Base = Tenta_.Base> = (tenta: TTenta) => ReactNode;
 
 
 
@@ -387,6 +387,8 @@ export module PileRowNode
 
 
 
+
 	//---
+
 
 }

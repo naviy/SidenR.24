@@ -1,4 +1,3 @@
-import { $log } from "@libs";
 import { TentaStage, Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
@@ -18,8 +17,8 @@ export function PileNode2(props: PileNode2.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
-	$log("PileNode2 " + props.tenta)
-
+	//$log("PileNode2 " + props.tenta)
+	props.tenta.use();
 	return PileRowNode(props);
 }
 

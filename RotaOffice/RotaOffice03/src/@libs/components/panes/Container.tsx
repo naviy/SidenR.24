@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import React, { useRef, type ReactNode, type MutableRefObject } from "react";
 import { Focuser } from "..";
-import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
+import { $defaultAnimationDurationMs, $log, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { Expander, ExpanderBaseBehavior, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
@@ -152,7 +152,7 @@ export function renderProvider(
 		}
 		else
 		{
-			//___$log("expander", props.id);
+			//$log("expander", props.id);
 			expander = useNew(Expander.Behavior).use(elRef, null, props);
 			preExpanding = expander.expanded && expander.collapsed;
 		}

@@ -1,14 +1,16 @@
-import { $log, Div, Pane, Route, Txt, ValueFader } from '@libs';
+import { $log, Div, HR, Pane, Route, Txt, ValueFader } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useData } from "./db";
 import { DB, Unit_Subordination, type Unit } from "./domain";
 import { Pile } from "./piles";
 import { PileNode1 } from './piles/nodes1/PileNode1';
-import { PileNode2_1 } from "./piles/nodes1/PileNode2_1";
+import { PileNode2_2 } from "./piles/nodes1/PileNode2_2";
 import { PileNode4 } from "./piles/nodes1/PileNode4";
 import { gsm } from "./semantics";
+import { Tenta } from './tentas';
+import Alert from '@mui/material/Alert';
 
 
 
@@ -108,7 +110,7 @@ var UnitsPileTenta = PileNode4.createFactory((db: DB, units: Unit[]) => [
 
 
 
-var UnitTenta: PileNode2_1.TF<[DB, Unit]> = PileNode2_1.createFactory((db: DB, unit: Unit) => [
+var UnitTenta: PileNode2_2.TF<[DB, Unit]> = PileNode2_2.createFactory((db: DB, unit: Unit) => [
 
 	unit.id,
 
@@ -120,20 +122,20 @@ var UnitTenta: PileNode2_1.TF<[DB, Unit]> = PileNode2_1.createFactory((db: DB, u
 	//	unit.hasSubunits && UnitSubordinationsTenta(db, unit),
 	//],
 
-	(tenta: PileNode2_1.Tenta) =>
+	(tenta: PileNode2_2.Tenta) =>
 	{
 
 		//$log("Unit Row " + tenta);
 
 
-		return <PileNode2_1 backfill tenta={tenta}>
+		return <PileNode2_2 backfill tenta={tenta}>
 
 			{() => <>
 				<UnitBody tenta={tenta} db={db} unit={unit} start />
 				<UnitActions db={db} unit={unit} end />
 			</>}
 
-		</PileNode2_1>;
+		</PileNode2_2>;
 
 	},
 
@@ -190,62 +192,139 @@ function UnitActions({ db, unit, ...props }: { db: DB, unit: Unit } & Pane.Props
 
 
 
+function UnitRow({ children }: { children: ReactNode })
+{
 
-//var UnitSubordinationsTenta = PileTabsNode.createFactory((db: DB, unit: Unit) => [
+	let tenta = Tenta.useByPhase()!;
 
-//	"subordinations",
-
-//	{
-//		subunits: unit.hasSubunits && {
-//			title: () => <em>{gsm.Unit.hasSubunits.$one} {unit.subunits?.length} {gsm.Unit.$noun(unit.subunits?.length)}</em>,
-//			tentas: () => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
-//		},
-
-//		masters: unit.hasMasters && {
-//			title: () => <em>{gsm.Unit.hasMasters.$one} {unit.masters?.length} {gsm.Unit.$noun3(unit.masters?.length)}</em>,
-//			tentas: () => unit.masters?.map(a => UnitMasterTenta(db, a)),
-//		},
-//	},
-
-//	tenta => <PileTabsNode tenta={tenta} />,
-
-//]);
+	if (!(tenta instanceof PileNode2_2.Tenta))
+		return <Alert severity="error">tenta is {tenta + ''}</Alert>;
 
 
 
-var UnitSubunitTenta: PileNode2_1.TF<[DB, Unit_Subordination]> = PileNode2_1.createFactory((db: DB, r: Unit_Subordination) => [
+	return (
 
-	r.id,
+		<Pane.Col start end>
 
-	() => r.unit.subunits?.map(a => UnitSubunitTenta(db, a)),
-	//() => [
-	//	(r.unit.hasSubunits || r.unit.hasMasters) && UnitSubordinationsTenta(db, r.unit),
-	//],
+			<Pane.Row start end={!tenta.opened}>
+				{children}
+			</Pane.Row>
 
-	(tenta: PileNode2_1.Tenta) => (
+			<HR/>
 
-		<PileNode2_1 tenta={tenta}>
-
-			<>
-
-				<UnitBody tenta={tenta} db={db} unit={r.unit} start />
-
-				<Pane flex0 p12>
-					<div>
-						<div><Txt.Date>{r.dateFrom}</Txt.Date></div>
-						<div><Txt.Date>{r.dateTo}</Txt.Date></div>
-					</div>
+			<Pane.Row expanded={tenta.opened} end>
+				<Pane start end p8 pl48>
+					<PileNode2_2.Tabs tenta={tenta} />
 				</Pane>
+			</Pane.Row>
 
-				<UnitActions db={db} unit={r.unit} end />
+		</Pane.Col>
 
-			</>
+	);
 
-		</PileNode2_1>
+}
 
-	)
 
-]);
+var UnitSubunitTenta: PileNode2_2.TF<[DB, Unit_Subordination]> = PileNode2_2.createFactory(
+
+	(db: DB, { id, unit, dateFrom, dateTo }: Unit_Subordination) => [
+
+		id,
+
+		//() => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
+
+		{
+			subunits: unit.hasSubunits && {
+				title: () => <em>{gsm.Unit.hasSubunits.$one} {unit.subunits?.length} {gsm.Unit.$noun(unit.subunits?.length)}</em>,
+				tentas: () => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
+			},
+
+			masters: unit.hasMasters && {
+				title: () => <em>{gsm.Unit.hasMasters.$one} {unit.masters?.length} {gsm.Unit.$noun3(unit.masters?.length)}</em>,
+				tentas: () => unit.masters?.map(a => UnitMasterTenta(db, a)),
+			},
+		},
+
+
+		(tenta: PileNode2_2.Tenta) => (
+
+			<PileNode2_2 tenta={tenta}>
+
+				<UnitRow>
+
+					<UnitBody tenta={tenta} db={db} unit={unit} start />
+
+					<Pane flex0 p12>
+						<div>
+							<div><Txt.Date>{dateFrom}</Txt.Date></div>
+							<div><Txt.Date>{dateTo}</Txt.Date></div>
+						</div>
+					</Pane>
+
+					<UnitActions db={db} unit={unit} end />
+
+				</UnitRow>
+
+			</PileNode2_2>
+
+		)
+
+	]
+
+);
+
+
+
+var UnitMasterTenta: PileNode2_2.TF<[DB, Unit_Subordination]> = PileNode2_2.createFactory(
+
+	(db: DB, { id, master, dateFrom, dateTo }: Unit_Subordination) => [
+
+		id,
+
+		//() => r.unit.subunits?.map(a => UnitSubunitTenta(db, a)),
+		//() => [
+		//	(r.unit.hasSubunits || r.unit.hasMasters) && UnitSubordinationsTenta(db, r.unit),
+		//],
+
+		{
+			subunits: master.hasSubunits && {
+				title: () => <em>{gsm.Unit.hasSubunits.$one} {master.subunits?.length} {gsm.Unit.$noun(master.subunits?.length)}</em>,
+				tentas: () => master.subunits?.map(a => UnitSubunitTenta(db, a)),
+			},
+
+			//masters: master.hasMasters && {
+			//	title: () => <em>{gsm.Unit.hasMasters.$one} {master.masters?.length} {gsm.Unit.$noun3(master.masters?.length)}</em>,
+			//	tentas: () => master.masters?.map(a => UnitMasterTenta(db, a)),
+			//},
+		},
+
+
+		(tenta: PileNode2_2.Tenta) => (
+
+			<PileNode2_2 tenta={tenta}>
+
+				<>
+
+					<UnitBody tenta={tenta} db={db} unit={master} start />
+
+					<Pane flex0 p12>
+						<div>
+							<div><Txt.Date>{dateFrom}</Txt.Date></div>
+							<div><Txt.Date>{dateTo}</Txt.Date></div>
+						</div>
+					</Pane>
+
+					<UnitActions db={db} unit={master} end />
+
+				</>
+
+			</PileNode2_2>
+
+		)
+
+	]
+
+);
 
 
 //var UnitMasterTenta: PileNode2.TF<[DB, Unit_Subordination]> = PileNode2.createFactory((db: DB, r: Unit_Subordination) => [

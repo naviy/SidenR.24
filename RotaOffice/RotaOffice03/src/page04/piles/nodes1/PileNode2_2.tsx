@@ -1,6 +1,10 @@
-import { $log } from "@libs";
+import Tab from "@mui/material/Tab";
+import muiTabs from "@mui/material/Tabs";
+import { styled } from "@mui/material/styles";
 import { TentaStage, Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
+import { FillFade } from "@libs";
+import { PileNodeTail1 } from "./PileNodeTail1";
 
 
 
@@ -20,7 +24,14 @@ export function PileNode2_2(props: PileNode2_2.Props & {
 {
 	//$log("PileNode2_2 " + props.tenta)
 
-	return PileRowNode(props);
+	props.tenta.use();
+
+
+	return PileRowNode({
+		...props,
+		tailDecorator: PileNode2_2.defaultTailDecorator as PileRowNode.TailDecorator,
+	});
+
 }
 
 
@@ -37,7 +48,10 @@ export module PileNode2_2
 
 
 
-	export type Props = PileRowNode.Props;
+	export interface Props extends PileRowNode.Props<Tenta>
+	{
+		//tabCount?: number;
+	}
 
 
 
@@ -45,12 +59,50 @@ export module PileNode2_2
 	export class Tenta extends PileRowNode.Tenta
 	{
 
+		//---
+
+
+
+		override init()
+		{
+			this.initPhase({ maxPhase: 1 + Math.max(1, this.collectorCount) });
+		}
+
+
+
+		//---
+
+
+
+		get activeTabIndex() { return Math.max(0, this.phase - 2); }
+		get activeTabCollector() { return this.collectors?.[this.activeTabIndex] || null; }
+
+
+
+		activateTabByIndex(tabIndex: number)
+		{
+			this.setPhase(tabIndex + 2);
+		}
+
+
+
+		override collectorIsVisible(collector: Tenta_.Collector)
+		{
+			return this.tailIsVisible && collector === this.collectors?.[this.activeTabIndex];
+		}
+
+
+
+		//---
+
+
 
 		override getRestState(stage: TentaStage)
 		{
 
 			let collapsed = stage === "collapsed";
 			let opened = stage === "opened";
+
 
 			return {
 				//bodyIsSeparated: opened && this.hasSeparatedItems,
@@ -60,9 +112,10 @@ export module PileNode2_2
 				tailIsSeparated: opened || this.hasSeparatedItems,
 				isSeparated: opened,
 			};
+
 		}
 
-		
+
 		override onItemDeseparated()
 		{
 			this.refresh();
@@ -82,8 +135,10 @@ export module PileNode2_2
 		}
 
 
-	}
 
+		//---
+
+	}
 
 
 
@@ -105,6 +160,95 @@ export module PileNode2_2
 	): TentaFactory<TArgs>
 	{
 		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);
+	}
+
+
+
+	//---
+
+
+
+	export function Tabs({ tenta }: { tenta: Tenta })
+	{
+
+		return <NodeTabs
+			value={tenta.activeTabIndex}
+			onChange={(e, tabIndex) =>
+			{
+				e.stopPropagation();
+				tenta.focusBody();
+				tenta.activateTabByIndex(tabIndex);
+			}}
+		>
+
+			{tenta.collectors?.map(a =>
+				<NodeTab key={a.id} label={a.title() ?? (a.id + "")} />
+			)}
+
+		</NodeTabs>;
+
+	}
+
+
+
+
+	var NodeTabs = styled(muiTabs)({
+
+		minHeight: 24,
+
+		">.MuiTabs-indicator": {
+			height: "4px!important",
+		},
+
+	})
+
+
+
+	var NodeTab = styled(Tab)({
+
+		minHeight: 24,
+		padding: "6px 12px 6px 0",
+		minWidth: 24,
+		fontSize: "1em",
+	})
+
+
+
+
+	//---
+
+
+
+
+	export function defaultTailDecorator(tenta: Tenta)
+	{
+
+		let activeCol = tenta.activeTabCollector;
+		//$log("activeCol:", activeCol?.id)
+
+		return <>
+			{tenta.collectors?.map(col =>
+
+				<FillFade
+					key={col.id}
+					id={col.id + ""}
+					in={col === activeCol}
+					mountOnEnter
+					unmountOnExit
+				>
+
+					<PileNodeTail1
+						key={col.id}
+						collector={col}
+						cellIndent
+						children={col.defaultListElement()}
+					//children={<Tenta_.Collector.List bhv={col} />}
+					/>
+
+				</FillFade>
+
+			)}
+		</>;
 	}
 
 
