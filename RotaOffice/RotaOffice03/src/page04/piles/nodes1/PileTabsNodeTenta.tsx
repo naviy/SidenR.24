@@ -1,5 +1,4 @@
-import type React from "react";
-import { Tenta, TentaStage, type TentaInitState } from "../../tentas";
+import { Tenta } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
 
