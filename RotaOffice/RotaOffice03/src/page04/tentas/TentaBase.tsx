@@ -508,7 +508,7 @@ export class TentaBase extends Repaintable()
 	#stateChanged(priorState: TentaState)
 	{
 		//_$log("onPhaseChanging " + this);
-		this.onPhaseChanged();
+		this.onPhaseChanged(priorState.phase, priorState);
 
 
 		this.#recalcCollectors();
@@ -873,7 +873,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	onPhaseChanged() { }
+	onPhaseChanged(priorPhase: number, priorState: TentaState) { }
 
 	onDecPhase() { }
 	onIncPhase() { }

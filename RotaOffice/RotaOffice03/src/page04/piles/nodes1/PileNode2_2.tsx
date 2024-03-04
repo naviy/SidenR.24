@@ -3,7 +3,7 @@ import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
 import { TentaStage, Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
-import { FillFade } from "@libs";
+import { $log, FillFade } from "@libs";
 import { PileNodeTail1 } from "./PileNodeTail1";
 
 
@@ -28,8 +28,14 @@ export function PileNode2_2(props: PileNode2_2.Props & {
 
 
 	return PileRowNode({
+
+		//tailReexpand: true,
+
 		...props,
+
+		tailExpanderRef: props.tenta.tailExpanderRef,
 		tailDecorator: PileNode2_2.defaultTailDecorator as PileRowNode.TailDecorator,
+
 	});
 
 }
@@ -132,6 +138,20 @@ export module PileNode2_2
 		{
 			this.hasSeparatedItems && this.forEachTenta(a => a.bodyDeseparate());
 			this.parent?.refresh();
+		}
+
+
+
+		//---
+
+
+
+		@$log.m
+		override onPhaseChanged(priorPhase: number)
+		{
+			//$log("opened", this.opened);
+			if (priorPhase > this.openedPhase || this.phase > this.openedPhase)
+				this.tailExpanderRef.current?.mustReexpand();
 		}
 
 
