@@ -1,4 +1,4 @@
-import { ExpanderBaseBehavior, Focuser } from "@libs";
+import { $log, ExpanderBaseBehavior, Focuser } from "@libs";
 import { createRef, type RefObject } from "react";
 import { Tenta } from "../../tentas";
 
@@ -100,13 +100,6 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 
 	//---
-
-
-
-	async focusParent(): Promise<Focuser | null>
-	{
-		return this.ffRef.current && await this.ffRef.current.focusParentIfCan({ focusFirst: true });
-	}
 
 
 
@@ -308,7 +301,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		}
 		else if (!this.parent?.goToStage(-1, a => !a.tailIsSeparated && a.stage !== "collapsed"))
 		{
-			await this.focusParent() || await this.shakeBody(3);
+			await this.focusParentBody() || await this.shakeBody(3);
 		}
 
 	}

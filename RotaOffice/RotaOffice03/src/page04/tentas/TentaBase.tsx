@@ -1,4 +1,4 @@
-import { $log, GlobalState, Repaintable } from '@libs';
+import { $log, Focuser, GlobalState, Repaintable } from '@libs';
 import type React from "react";
 import { type ReactNode } from "react";
 import { TentaCollector, type TentaCollectorPropsAlias, type TentaCollectorPropsAliases } from "./TentaCollector";
@@ -1268,7 +1268,36 @@ export class TentaBase extends Repaintable()
 
 
 
-	focusBody() { }
+	async focusBody(): Promise<Focuser | null>
+	{
+		return null;
+	}
+
+
+
+	async focusParentBody(): Promise<Focuser | null>
+	{
+		//	let { ff } = this;
+		//	$log("ff", ff);
+		//	$log("ff.parent", ff?.parentBy(a => a.enabled));
+		//	$log("ff.parent.first", ff?.parentBy(a => a.enabled)?.first());
+		//	return ff && await ff.focusParentFirstIfCan();
+
+		let parent = this.parent;
+
+		while (parent)
+		{
+			let ff = await parent.focusBody();
+			if (ff)
+				return ff;
+
+			parent = parent.parent;
+		}
+
+
+		return null;
+
+	}
 
 
 

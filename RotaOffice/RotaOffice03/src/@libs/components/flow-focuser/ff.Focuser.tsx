@@ -3150,6 +3150,31 @@ export class Focuser extends Component<FocuserProps>
 
 
 
+	focusParentFirst(focusProps?: FocusActionProps | null)
+	{
+
+		let parentFirst = this.parentBy(a => a.enabled)?.first();
+
+		return parentFirst?.focus(focusProps) || null;
+
+	}
+
+
+
+	focusParentFirstIfCan(focusProps?: FocusActionProps | null)
+	{
+
+		let parentFirst = this.parentBy(a => a.enabled)?.first();
+
+		if (!parentFirst?.canFocus())
+			return null;
+
+		return parentFirst.focus(focusProps) || null;
+
+	}
+
+
+
 	async focusNearest(focusProps?: FocusActionProps | null)
 	{
 

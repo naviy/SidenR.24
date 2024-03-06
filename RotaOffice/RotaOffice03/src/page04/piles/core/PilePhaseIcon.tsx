@@ -43,7 +43,7 @@ export function PilePhaseIcon({
 
 	return <>
 
-		{<div style={{ position: "absolute", top: 0, color: "maroon" }}>#{tenta.iid}</div>}
+		{/*<div style={{ position: "absolute", top: 0, color: "maroon" }}>#{tenta.iid}</div>*/}
 
 		<Root
 			className="pile-phase-icon"

@@ -184,7 +184,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	async componentDidUpdate(prevProps: Props)
 	{
 
-		$log(this.id, "Expander.componentDidUpdate()")
+		//$log(this.id, "Expander.componentDidUpdate()")
 
 		//____$log("Expander.componentDidUpdate()"+ this.props.id)
 

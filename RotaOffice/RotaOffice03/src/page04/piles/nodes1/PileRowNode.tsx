@@ -96,7 +96,7 @@ export function PileRowNode({
 				ref={tenta.ffRef}
 				//name={`pile-node#${id}`}
 				ghost
-				focusable
+				//focusable
 			>
 
 				<Div relative>
