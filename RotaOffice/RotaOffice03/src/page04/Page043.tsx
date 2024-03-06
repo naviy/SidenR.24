@@ -74,7 +74,7 @@ var UnitsPileTenta = PileNode4.createFactory((db: DB, units: Unit[]) => [
 
 	"UnitsPile",
 
-	() => units.map(unit => UnitTenta(db, unit)),
+	() => units.map(unit => RootUnitTenta(db, unit)),
 
 	(tenta: PileNode4.Tenta) =>
 
@@ -110,7 +110,7 @@ var UnitsPileTenta = PileNode4.createFactory((db: DB, units: Unit[]) => [
 
 
 
-var UnitTenta: PileNode2_2.TF<[DB, Unit]> = PileNode2_2.createFactory((db: DB, unit: Unit) => [
+var RootUnitTenta: PileNode2_2.TF<[DB, Unit]> = PileNode2_2.createFactory((db: DB, unit: Unit) => [
 
 	unit.id,
 
@@ -234,8 +234,8 @@ var UnitSubunitTenta: PileNode2_2.TF<[DB, Unit_Subordination]> = PileNode2_2.cre
 		//() => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
 
 		{
-			subunits: unit.hasSubunits && {
-				title: () => <em>{gsm.Unit.hasSubunits.$one} {unit.subunits?.length} {gsm.Unit.$noun(unit.subunits?.length)}</em>,
+			subunits: {
+				title: () => <em>{gsm.Unit.hasSubunits.$one} {unit.subunits?.length || 0} {gsm.Unit.$noun(unit.subunits?.length || 0)}</em>,
 				tentas: () => unit.subunits?.map(a => UnitSubunitTenta(db, a)),
 			},
 

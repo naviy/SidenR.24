@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
+import { $log, Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
 import { useEffect, useMemo, useState, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
@@ -75,9 +75,15 @@ export function PileRowNode({
 
 	tailDecorator ??= PileRowNode.defaultTailDecorator;
 
+	//let hasVisibleTentas = tailIsVisible && tenta.hasVisibleTentas();
+	//$log(tenta + "")
+	//$log._("tailIsVisible:", tailIsVisible);
+	//$log._("hasVisibleTentas: ", hasVisibleTentas);
+	//$log._("btmMargin: ", btmMargin);
 
 	let tailMt = !tailIsVisible ? 0 : btmMargin * 12;
 	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsVisible && tailIsSeparated ? 24 : 0);
+	//$log._("tailM:", tailMt, tailMb);
 
 
 	return (
@@ -115,23 +121,24 @@ export function PileRowNode({
 						<Focuser ref={tenta.tailFfRef} ghost>
 
 							{/*<Div mt={tailMt as any} pb={tailMb as any} animated>*/}
-								<Pane.Col
+							<Pane.Col
 
-									expanderRef={tailExpanderRef}
+								expanderRef={tailExpanderRef}
 
-									start={tailIsSeparated}
-									expanded={tailIsVisible}
-									noreexpand={!tailReexpand}
+								start={tailIsSeparated}
+								expanded={tailIsVisible}
+								noreexpand
+								//noreexpand={!tailReexpand}
 
-									wrapperCls={`mt${tailMt}`}
-									mb={tailMb as any}
-									addExpandedHeight={tailMt + tailMb}
+								wrapperCls={`mt${tailMt}`}
+								mb={tailMb as any}
+								addExpandedHeight={tailMt + tailMb}
 
 
-								//borderGreen border4
-								>
-									{tailDecorator(tenta)}
-								</Pane.Col>
+							//borderGreen border4
+							>
+								{tailDecorator(tenta)}
+							</Pane.Col>
 							{/*</Div>*/}
 
 						</Focuser>

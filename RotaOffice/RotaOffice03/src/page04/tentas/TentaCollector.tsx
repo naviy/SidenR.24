@@ -78,6 +78,12 @@ export class TentaCollector extends Repaintable()
 	};
 
 
+	get itemCount(): number
+	{
+		return this.items?.length || 0;
+	};
+
+
 
 	//maxItemStage: TentaStage | null = null;
 

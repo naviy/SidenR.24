@@ -103,7 +103,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	mustReexpandCount: number = 0;
 
-	@$log.m
+	//@$log.m
 	mustReexpand(count: number = 1)
 	{
 		this.mustReexpandCount = count;

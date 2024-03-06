@@ -507,8 +507,15 @@ export class TentaBase extends Repaintable()
 
 	#stateChanged(priorState: TentaState)
 	{
+		let s0 = priorState;
+		let s1 = this.state;
+
+
 		//_$log("onPhaseChanging " + this);
-		this.onPhaseChanged(priorState.phase, priorState);
+		if (s0?.phase !== s1.phase)
+		{
+			this.onPhaseChanged(s0.phase, s0);
+		}
 
 
 		this.#recalcCollectors();
@@ -517,10 +524,6 @@ export class TentaBase extends Repaintable()
 
 
 		this.parentCollector?.itemPhaseChanged();
-
-
-		let s0 = priorState;
-		let s1 = this.state;
 
 
 		if (s0?.phase != null)
@@ -977,6 +980,12 @@ export class TentaBase extends Repaintable()
 	}
 
 
+	hasVisibleTentas(): boolean
+	{
+		return !!this.collectors?.find(a => a.isVisible() && a.itemCount);
+	}
+
+
 
 	//---
 
@@ -1073,7 +1082,7 @@ export class TentaBase extends Repaintable()
 			return 0;
 
 
-		if (!this.isLast || this.tailIsVisible && !this.tailIsSeparated)
+		if (!this.isLast || this.tailIsVisible && !this.tailIsSeparated && this.hasVisibleTentas())
 		{
 			return 0;
 		}

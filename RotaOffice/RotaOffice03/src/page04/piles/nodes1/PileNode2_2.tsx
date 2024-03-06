@@ -82,6 +82,7 @@ export module PileNode2_2
 
 		get activeTabIndex() { return Math.max(0, this.phase - 2); }
 		get activeTabCollector() { return this.collectors?.[this.activeTabIndex] || null; }
+		get activeTabHasTentas() { return !!this.activeTabCollector?.itemCount; }
 
 
 
@@ -96,6 +97,12 @@ export module PileNode2_2
 		{
 			return this.tailIsVisible && collector === this.collectors?.[this.activeTabIndex];
 		}
+
+
+		//override get tailIsVisible()
+		//{
+		//	return this.state.tailIsVisible && !!this.collectors?.[this.state.phase - 2]?.itemCount;
+		//}
 
 
 
@@ -146,12 +153,14 @@ export module PileNode2_2
 
 
 
-		@$log.m
 		override onPhaseChanged(priorPhase: number)
 		{
 			//$log("opened", this.opened);
 			if (priorPhase > this.openedPhase || this.phase > this.openedPhase)
+			{
+				$log(this + " mustReexpand")
 				this.tailExpanderRef.current?.mustReexpand();
+			}
 		}
 
 
