@@ -36,7 +36,7 @@ export interface ExpanderBaseProps
 	onCollapsed?: () => void;
 	onExpanding?: () => void;
 	onExpanded?: () => void;
-	
+
 }
 
 
@@ -79,6 +79,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	props!: Readonly<Props>;
 
+	get id() { return this.props.id; }
 
 	get expanded() { return this.props.expanded !== false; }
 	get timeout() { return this.props.timeout ?? $defaultAnimationDurationMs; }
@@ -183,6 +184,8 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	async componentDidUpdate(prevProps: Props)
 	{
 
+		$log(this.id, "Expander.componentDidUpdate()")
+
 		//____$log("Expander.componentDidUpdate()"+ this.props.id)
 
 		let props = this.props;
@@ -215,7 +218,17 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 			{
 				this.setExpanded();
 			}
+			else
+			{
+				this.priorAddExpandedHeight = props.addExpandedHeight || 0;
+				//$log(this.id, "set22 priorAddExpandedHeight =", this.priorAddExpandedHeight);
+			}
 
+		}
+		else
+		{
+			this.priorAddExpandedHeight = props.addExpandedHeight || 0;
+			//$log(this.id, "set2 priorAddExpandedHeight =", this.priorAddExpandedHeight);
 		}
 
 
@@ -309,7 +322,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	{
 
 		this.priorAddExpandedHeight = this.props.addExpandedHeight;
-
+		//$log(this.id, "set1 priorAddExpandedHeight =", this.priorAddExpandedHeight);
 		let maxSize = this.getMaxSize();
 
 		this.setSizes(
@@ -364,6 +377,8 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	private setCollapsed()
 	{
+		this.priorAddExpandedHeight = 0;
+		//$log(this.id, "set3 priorAddExpandedHeight =", this.priorAddExpandedHeight);
 		this.setSizes("hidden", "0", null);
 	};
 

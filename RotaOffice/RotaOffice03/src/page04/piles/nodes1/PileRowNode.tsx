@@ -85,6 +85,8 @@ export function PileRowNode({
 	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsVisible && tailIsSeparated ? 24 : 0);
 	//$log._("tailM:", tailMt, tailMb);
 
+	//tailMt *= 4;
+
 
 	return (
 
@@ -120,9 +122,10 @@ export function PileRowNode({
 
 						<Focuser ref={tenta.tailFfRef} ghost>
 
-							{/*<Div mt={tailMt as any} pb={tailMb as any} animated>*/}
+							{/*<Div borderGreen border4 m8>*/}
 							<Pane.Col
 
+								id={tenta + ""}
 								expanderRef={tailExpanderRef}
 
 								start={tailIsSeparated}
@@ -137,7 +140,9 @@ export function PileRowNode({
 
 							//borderGreen border4
 							>
+							{/*<Div borderBlue border4 m8>*/}
 								{tailDecorator(tenta)}
+							{/*</Div>*/}
 							</Pane.Col>
 							{/*</Div>*/}
 
