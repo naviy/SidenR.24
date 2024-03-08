@@ -210,9 +210,8 @@ function UnitRow({ children }: { children: ReactNode })
 				{children}
 			</Pane.Row>
 
-			<HR/>
 
-			<Pane.Row expanded={tenta.opened} end>
+			<Pane.Row expanded={tenta.opened} end bt="sm">
 				<Pane start end p8 pl48>
 					<PileNode2_2.Tabs tenta={tenta} />
 				</Pane>
