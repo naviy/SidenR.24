@@ -1,0 +1,20 @@
+.pile-node-backfill {
+
+	position: absolute;
+	inset: 0;
+	bottom: var(--mb, 24px);
+
+	min-height: 24px;
+	border-radius: 12px;
+	border: 2px dotted var(--blue-grey-400);
+	/*border-bottom-style: solid;*/
+
+	background: rgba(255,255,255,.4);
+
+	opacity: var(--op, 0);
+
+	transition: all var(--default-animation-duration) ease-in-out, opacity var(--default-animation-duration) linear;
+
+	will-change: bottom, opacity;
+
+}

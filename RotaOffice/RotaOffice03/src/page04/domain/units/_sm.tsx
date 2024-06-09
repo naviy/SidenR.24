@@ -1,34 +1,12 @@
-import { Semantic } from "../core/semantics";
-import { Unit, UnitType } from "../domain";
+import { Semantic } from "../../core/semantics";
+import type { Unit } from "./Unit";
+import { UnitType } from "./UnitType";
 
 
 
 
-export var units = Semantic.create(sm => ({
-
-
-	//UnitType: sm<UnitType>()({
-	//	one: "Тип підрозділу"
-	//}, {
-
-
-	//	/** полк */
-	//	Regiment: sm<UnitType.Regiment>()("Полк"),
-
-	//	/** батальйон */
-	//	Battalion: sm<UnitType.Battalion>()("Батальйон"),
-
-	//	/** рота */
-	//	Company: sm<UnitType.Company>()("Рота"),
-
-	//	/** взвод */
-	//	Platoon: sm<UnitType.Platoon>()("Взвод"),
-
-	//	/** відділення */
-	//	Squad: sm<UnitType.Squad>()("Відділення"),
-
-
-	//}),
+export var units = Semantic.create(sm =>
+({
 
 
 	UnitType: sm.enums(UnitType, "тип підрозділу", sm => ({
@@ -97,7 +75,8 @@ export var units = Semantic.create(sm => ({
 		hasMasters: sm("був підпорядкуван"),
 		hasSubunits: sm("у складі"),
 
-	})
+	}),
+
 
 
 }));

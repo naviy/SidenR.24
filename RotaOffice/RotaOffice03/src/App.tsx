@@ -15,6 +15,8 @@ import { Page04 } from "./page04/Page04";
 import { Page041 } from "./page04/Page041";
 import { Page042 } from "./page04/Page042";
 import { Page043 } from "./page04/Page043";
+import { Page053 } from "./page05/Page053";
+import { Page054 } from "./page051/Page054";
 
 
 
@@ -82,17 +84,21 @@ function AppDesktop()
 	let location = ReactRouter.useLocation();
 	let navigate = ReactRouter.useNavigate();
 
+	const routes = [
+		Page04.route,
+		Page041.route,
+		Page042.route,
+		Page043.route,
+		Page053.route,
+		Page054.route,
+	];
+
 
 	let router = Route.Router.useNew({
 
-		routes: [
-			Page04.route,
-			Page041.route,
-			Page042.route,
-			Page043.route,
-		],
+		routes,
 
-		activeKey: location.pathname.substring(1) || Page043.route.key,
+		activeKey: location.pathname.substring(1) || routes.at(-1)!.key,
 
 		onActivating: (route) => { navigate("/" + route.key) },
 
@@ -120,10 +126,9 @@ function AppDesktop()
 							<HR />
 
 							<List>
-								<MainMenuItem route={Page04.route} />
-								<MainMenuItem route={Page041.route} />
-								<MainMenuItem route={Page042.route} />
-								<MainMenuItem route={Page043.route} />
+								{routes.map(a =>
+									<MainMenuItem key={a.key} route={a} />
+								)}
 							</List>
 
 						</DesktopLayout.Sider>

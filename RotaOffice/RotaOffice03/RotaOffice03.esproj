@@ -11,4 +11,10 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     <BuildCommand>pnpm run build</BuildCommand>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\page05\core\**" />
+    <None Remove="src\page05\data\**" />
+    <TypeScriptConfiguration Remove="src\page05\core\**" />
+    <TypeScriptConfiguration Remove="src\page05\data\**" />
+  </ItemGroup>
 </Project>

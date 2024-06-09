@@ -3,12 +3,11 @@ import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import { useData } from "./db";
-import { DB, Unit_Subordination, type Unit } from "./domain";
+import { DB, gsm, Unit_Subordination, type Unit } from "./domain";
 import { Pile } from "./piles";
 import { PileNode1 } from './piles/nodes1/PileNode1';
 import { PileNode2_1 } from "./piles/nodes1/PileNode2_1";
 import { PileNode4 } from "./piles/nodes1/PileNode4";
-import { gsm } from "./semantics";
 
 
 

@@ -21,17 +21,21 @@ export class Soldier extends Entity
 
 
 
-	firstName?: string;
-	middleName?: string;
-	lastName?: string;
+	surname?: string;
+	name?: string;
+	patronymic?: string;
 
 	birthday?: Date;
 
+	militaryID?: string;
+
+	phone?: string;
+
 
 	battalion?: string;
-	company?: string;
-	platoon?: string | number;
-	squad?: number;
+	//company?: string;
+	//platoon?: string | number;
+	//squad?: number;
 
 	callSign?: string;
 	callSigns?: Soldier_CallSign[];

@@ -3,8 +3,9 @@ import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
 import { TentaStage, Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
-import { $log, FillFade } from "@libs";
+import { $log, Div, FillFade, Pane } from "@libs";
 import { PileNodeTail1 } from "./PileNodeTail1";
+import { usePileCellIndent } from "../core/PileCellIndent";
 
 
 
@@ -64,6 +65,22 @@ export module PileNode2_2
 
 	export class Tenta extends PileRowNode.Tenta
 	{
+
+		//---
+
+
+
+		static useByPhase(): Tenta
+		{
+			let tenta = Tenta_.useByPhase()!;
+
+			if (!tenta || !(tenta instanceof PileNode2_2.Tenta))
+				throw Error(`tenta is ${tenta}`);
+
+			return tenta;
+		}
+
+
 
 		//---
 
@@ -215,6 +232,26 @@ export module PileNode2_2
 			)}
 
 		</NodeTabs>;
+
+	}
+
+
+
+
+	export function TabsRow({ tenta }: { tenta: Tenta })
+	{
+
+		let indent = usePileCellIndent();
+
+
+		return (
+			<Pane.Row expanded={tenta.opened} end bt="sm" >
+				<Pane start end p8 pl48>
+					<Div style={{ width: indent + 8 }} animated />
+					<PileNode2_2.Tabs tenta={tenta} />
+				</Pane>
+			</Pane.Row>
+		);
 
 	}
 

@@ -1,16 +1,12 @@
-import { $log, Div, HR, Pane, Route, Txt, ValueFader } from '@libs';
+import { $log, Div, Pane, Route, Txt, ValueFader } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useState, type ReactNode } from "react";
 import { useData } from "./db";
-import { DB, Unit_Subordination, type Unit } from "./domain";
+import { DB, gsm, Unit_Subordination, type Unit } from "./domain";
 import { Pile } from "./piles";
 import { PileNode1 } from './piles/nodes1/PileNode1';
 import { PileNode2_2 } from "./piles/nodes1/PileNode2_2";
-import { PileNode4 } from "./piles/nodes1/PileNode4";
-import { gsm } from "./semantics";
-import { Tenta } from './tentas';
-import Alert from '@mui/material/Alert';
 
 
 
@@ -48,8 +44,10 @@ export module Page043
 
 		let [tenta] = useState(() => UnitsPileTenta(db, units));
 
-		tenta.use({ root: true });
+		tenta.use({ root: true, });
+		//tenta.initPhase({ defaultPhase: 1 });
 		tenta.useGlobalState();
+
 
 
 		return <>
@@ -70,27 +68,27 @@ export module Page043
 
 
 
-var UnitsPileTenta = PileNode4.createFactory((db: DB, units: Unit[]) => [
+var UnitsPileTenta = PileNode2_2.createFactory((db: DB, units: Unit[]) => [
 
 	"UnitsPile",
 
 	() => units.map(unit => RootUnitTenta(db, unit)),
 
-	(tenta: PileNode4.Tenta) =>
+	(tenta: PileNode2_2.Tenta) =>
 
 		<Pane.Col start end>
 
-			<PileNode4 tenta={tenta}>
+			<PileNode2_2 tenta={tenta}>
 
 				<>
 					<Pane start p12 vcenter>
 						<Pile.PhaseIcon />
-						<em>{gsm.Unit.$Many}</em>
+						<Txt.H4>{gsm.Unit.$Many}</Txt.H4>
 					</Pane>
 					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 				</>
 
-			</PileNode4>
+			</PileNode2_2>
 
 		</Pane.Col>
 
@@ -146,7 +144,17 @@ var RootUnitTenta: PileNode2_2.TF<[DB, Unit]> = PileNode2_2.createFactory((db: D
 
 
 
-function UnitBody({ tenta, db, unit, ...props }: { tenta: PileNode1.Tenta; db: DB, unit: Unit } & Pane.RowProps)
+function UnitBody(
+	{
+		tenta, db, unit, noindent,
+		...props
+	}: {
+		tenta: PileNode1.Tenta;
+		db: DB;
+		unit: Unit;
+		noindent?: true;
+	} & Pane.RowProps
+)
 {
 
 	let [name, ...masterNames] = unit.allNamesBy(db);
@@ -157,10 +165,13 @@ function UnitBody({ tenta, db, unit, ...props }: { tenta: PileNode1.Tenta; db: D
 		<Pane flex1 start end>
 
 			<Div vcenter pl8>
-				<Pile.PhaseIcon />
+				<Pile.PhaseIcon noindent={noindent} />
 			</Div>
 
-			<Div flex64px font54px vcenter textCenter>{gsm.UnitType.$item(unit.type)!.$icon}</Div>
+			<Div flex64px font54px vcenter textCenter>
+				{gsm.UnitType.$item(unit.type)!.$icon}
+			</Div>
+
 			<Div flex1 p12>
 				<Div fontLg><em>{name?.shortName}</em> {masterNames.map(a => a.shortName2).join(" ")}</Div>
 				<ValueFader value={tenta.collapsed} expander>
@@ -170,6 +181,7 @@ function UnitBody({ tenta, db, unit, ...props }: { tenta: PileNode1.Tenta; db: D
 					)}
 				</ValueFader>
 			</Div>
+
 		</Pane>
 
 	</Pane.Row>
@@ -195,11 +207,7 @@ function UnitActions({ db, unit, ...props }: { db: DB, unit: Unit } & Pane.Props
 function UnitRow({ children }: { children: ReactNode })
 {
 
-	let tenta = Tenta.useByPhase()!;
-
-	if (!(tenta instanceof PileNode2_2.Tenta))
-		return <Alert severity="error">tenta is {tenta + ''}</Alert>;
-
+	let tenta = PileNode2_2.Tenta.useByPhase();
 
 
 	return (
@@ -210,12 +218,7 @@ function UnitRow({ children }: { children: ReactNode })
 				{children}
 			</Pane.Row>
 
-
-			<Pane.Row expanded={tenta.opened} end bt="sm">
-				<Pane start end p8 pl48>
-					<PileNode2_2.Tabs tenta={tenta} />
-				</Pane>
-			</Pane.Row>
+			<PileNode2_2.TabsRow tenta={tenta} />
 
 		</Pane.Col>
 

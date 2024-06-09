@@ -1242,7 +1242,7 @@ export function Core()
 
 				opacity: "var(--opacity,0)",
 				borderRadius: 3,
-				borderWidth: 2,//Caret.defaultBorderWidth,
+				borderWidth: 3,//Caret.defaultBorderWidth,
 
 				inset: -1,
 

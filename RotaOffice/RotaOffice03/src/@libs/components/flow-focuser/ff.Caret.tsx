@@ -65,7 +65,7 @@ export module Caret
 
 
 
-	export var defaultBorderWidth = 2;
+	//export var defaultBorderWidth = 2;
 	export var defaultBorderRadius = "inherit";
 
 	//export var bordererMask = ", 0 0 0 100vw rgba(0,16,32, 0.05)";
