@@ -85,9 +85,6 @@ export class TentaCollector extends Repaintable()
 
 
 
-	//maxItemStage: TentaStage | null = null;
-
-
 	#globalState?: GlobalState;
 	get globalState() { return this.#globalState ??= GlobalState.node(this.parentTenta?.globalState, this.id + ""); }
 
@@ -97,8 +94,6 @@ export class TentaCollector extends Repaintable()
 	{
 		return this.#defaultListElement ??= <TentaCollector.List key={this.id} bhv={this} />;
 	}
-
-	//children?: ReactNode;
 
 
 
@@ -180,23 +175,8 @@ export class TentaCollector extends Repaintable()
 	{
 		//$log(this + ".itemPhaseChanged");
 
-		//this.recalcStages();
 		this.parentTenta?.collectorPhaseChanged();
 	}
-
-
-
-	//recalcStages()
-	//{
-
-	//	//_$log(this + ".recalcStages")
-
-	//	this.maxItemStage = this.#items?.reduce<TentaStage>(
-	//		(prior, cur) => TentaStage.max(prior, cur.stage),
-	//		TentaStage.Min
-	//	) || null;
-
-	//}
 
 
 
@@ -242,7 +222,7 @@ export class TentaCollector extends Repaintable()
 
 
 
-	priorSibling(): TentaCollector | null
+	priorVisibleSibling(): TentaCollector | null
 	{
 
 		let prior = this.#priorSibling;
@@ -259,7 +239,7 @@ export class TentaCollector extends Repaintable()
 	}
 
 
-	nextSibling(): TentaCollector | null
+	nextVisibleSibling(): TentaCollector | null
 	{
 
 		let next = this.#nextSibling;

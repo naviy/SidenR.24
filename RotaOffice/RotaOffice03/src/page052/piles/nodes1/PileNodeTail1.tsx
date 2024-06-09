@@ -37,10 +37,6 @@ export function PileNodeTail1({
 {
 
 
-	//return <>{children}</>;
-
-	//let indent = indent_ !== false;
-
 	let parentCellIndent = Pile.useCellIndent();
 
 
@@ -49,8 +45,6 @@ export function PileNodeTail1({
 	indent ??= isSeparated;
 
 	let myIndent = !indent ? 36 : 0;
-
-	//$log("Tail " + collector.parentTenta, indent)
 
 
 	return (

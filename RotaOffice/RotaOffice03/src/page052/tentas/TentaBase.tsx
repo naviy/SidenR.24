@@ -88,10 +88,6 @@ export class TentaBase extends Repaintable()
 	)
 	{
 		super();
-
-		//this.id = props.id;
-		//this.descriptor = props.descriptor;
-
 	}
 
 
@@ -115,7 +111,7 @@ export class TentaBase extends Repaintable()
 
 	parentCollector?: TentaCollector | null;
 
-	get parent(): TentaBase | null { return this.parentCollector?.parentTenta || null; }
+	get parentTenta(): TentaBase | null { return this.parentCollector?.parentTenta || null; }
 
 	#priorSibling?: TentaBase | null;
 	#nextSibling?: TentaBase | null;
@@ -143,7 +139,7 @@ export class TentaBase extends Repaintable()
 
 
 	#state?: TentaState;
-	#priorState?: TentaState;
+	//#priorState?: TentaState;
 
 
 	get _state(): TentaState | undefined
@@ -362,6 +358,7 @@ export class TentaBase extends Repaintable()
 
 
 		this.ensureState(cfg);
+
 	}
 
 
@@ -457,6 +454,7 @@ export class TentaBase extends Repaintable()
 			tailIsVisible: !collapsed,
 			tailIsSeparated: opened,
 		};
+
 	}
 
 
@@ -507,6 +505,7 @@ export class TentaBase extends Repaintable()
 
 	#stateChanged(priorState: TentaState)
 	{
+
 		let s0 = priorState;
 		let s1 = this.state;
 
@@ -532,12 +531,12 @@ export class TentaBase extends Repaintable()
 			if (s1.phase < s0.phase)
 			{
 				this.onDecPhase();
-				this.parent?.onItemDecPhase(this);
+				this.parentTenta?.onItemDecPhase(this);
 			}
 			else if (s1.phase > s0.phase)
 			{
 				this.onIncPhase();
-				this.parent?.onItemIncPhase(this);
+				this.parentTenta?.onItemIncPhase(this);
 			}
 
 		}
@@ -550,12 +549,12 @@ export class TentaBase extends Repaintable()
 			if (s1.bodyIsSeparated)
 			{
 				this.onBodySeparated();
-				this.parent?.onItemBodySeparated(this);
+				this.parentTenta?.onItemBodySeparated(this);
 			}
 			else
 			{
 				this.onBodyDeseparated();
-				this.parent?.onItemBodyDeseparated(this);
+				this.parentTenta?.onItemBodyDeseparated(this);
 			}
 
 		}
@@ -581,12 +580,12 @@ export class TentaBase extends Repaintable()
 			if (s1.isSeparated)
 			{
 				this.onSeparated();
-				this.parent?.onItemSeparated(this);
+				this.parentTenta?.onItemSeparated(this);
 			}
 			else
 			{
 				this.onDeseparated();
-				this.parent?.onItemDeseparated(this);
+				this.parentTenta?.onItemDeseparated(this);
 			}
 
 		}
@@ -623,13 +622,6 @@ export class TentaBase extends Repaintable()
 	recalcStages()
 	{
 
-		//_$log(this + ".recalcStages");
-		//this.maxItemStage = this.collectors?.reduce<TentaStage>(
-		//	(prior, cur) => TentaStage.max(prior, cur.maxItemStage),
-		//	TentaStage.Min
-		//) || null;
-
-
 		this.hasSeparatedItems = this.anyTenta(a => a.isSeparated)
 
 	}
@@ -644,8 +636,8 @@ export class TentaBase extends Repaintable()
 			this,
 			this.#priorSibling,
 			this.prior(),
-			this.first(),
-			this.last(),
+			this.firstVisibleTenta(),
+			this.lastVisibleTenta(),
 			this.#nextSibling,
 			this.next(),
 		]);
@@ -901,7 +893,7 @@ export class TentaBase extends Repaintable()
 
 	btmIsSeparated()
 	{
-		return this.bodyIsSeparated || !!this.next()?.bodyIsSeparated || this.isLast && !!this.parent?.tailIsSeparated;
+		return this.bodyIsSeparated || !!this.next()?.bodyIsSeparated || this.isLast && !!this.parentTenta?.tailIsSeparated;
 	}
 
 
@@ -972,7 +964,7 @@ export class TentaBase extends Repaintable()
 	parentTailBtmMargin(): number
 	{
 
-		let parent = this.parent;
+		let parent = this.parentTenta;
 
 		if (!parent)
 			return 0;
@@ -999,7 +991,7 @@ export class TentaBase extends Repaintable()
 
 			if (margin < TentaStage.MaxIndex && parent.isLast)
 			{
-				let parentMargin = getParentTailBtmMargin(parent.parent);
+				let parentMargin = getParentTailBtmMargin(parent.parentTenta);
 				margin = Math.max(margin, parentMargin);
 			}
 
@@ -1025,53 +1017,29 @@ export class TentaBase extends Repaintable()
 
 
 
-	//accent(): 0 | 1
-	//{
-
-	//	let accent = this.bodyIsAccented ? 1 as const : 0 as const;
-
-
-	//	if (accent === 1)
-	//		return accent;
-
-
-	//	let { parentCollector } = this;
-
-	//	if (parentCollector?.parentTenta && parentCollector.isVisibleAndNotSeparated())
-	//	{
-	//		return parentCollector.parentTenta.accent();
-	//	}
-
-
-	//	return accent;
-
-	//}
-
-
-
 	//---
 
 
 
-	firstCollector(): TentaCollector | null
+	firstVisibleCollector(): TentaCollector | null
 	{
 		return this.tailIsVisible ? this.collectors?.find(a => a.isVisible()) || null : null;
 	}
 
-	lastCollector(): TentaCollector | null
+	lastVisibleCollector(): TentaCollector | null
 	{
 		return this.tailIsVisible ? this.collectors?.findLast(a => a.isVisible()) || null : null;
 	}
 
 
-	priorCollector(): TentaCollector | null
+	priorVisibleCollector(): TentaCollector | null
 	{
-		return this.parentCollector?.priorSibling() || null;
+		return this.parentCollector?.priorVisibleSibling() || null;
 	}
 
-	nextCollector(): TentaCollector | null
+	nextVisibleCollector(): TentaCollector | null
 	{
-		return this.parentCollector?.nextSibling() || null;
+		return this.parentCollector?.nextVisibleSibling() || null;
 	}
 
 
@@ -1092,33 +1060,33 @@ export class TentaBase extends Repaintable()
 	}
 
 
-	first(): TentaBase | null
+	firstVisibleTenta(): TentaBase | null
 	{
-		return this.firstCollector()?.first() || null;
+		return this.firstVisibleCollector()?.first() || null;
 	}
 
-	firstOrMe(): TentaBase | null
+	firstVisibleTentaOrMe(): TentaBase
 	{
-		return this.first() || this;
+		return this.firstVisibleTenta() || this;
 	}
 
-	last(): TentaBase | null
+	lastVisibleTenta(): TentaBase | null
 	{
-		return this.lastCollector()?.last()?.lastOrMe() || null;
+		return this.lastVisibleCollector()?.last()?.lastVisibleTentaOrMe() || null;
 	}
 
-	lastOrMe(): TentaBase | null
+	lastVisibleTentaOrMe(): TentaBase
 	{
-		return this.last() || this;
+		return this.lastVisibleTenta() || this;
 	}
 
 
 	prior(): TentaBase | null
 	{
 		return (
-			this.priorSibling()?.lastOrMe() ||
-			this.priorCollector()?.last() ||
-			this.parent ||
+			this.priorSibling()?.lastVisibleTentaOrMe() ||
+			this.priorVisibleCollector()?.last() ||
+			this.parentTenta ||
 			null
 		);
 	}
@@ -1128,10 +1096,10 @@ export class TentaBase extends Repaintable()
 	{
 
 		let next = (
-			this.first() ||
+			this.firstVisibleTenta() ||
 			this.nextSibling() ||
-			this.nextCollector()?.first() ||
-			this.parent?.nextSibling() ||
+			this.nextVisibleCollector()?.first() ||
+			this.parentTenta?.nextSibling() ||
 			null
 		);
 
@@ -1139,7 +1107,7 @@ export class TentaBase extends Repaintable()
 			return next;
 
 
-		let parent = this.parent;
+		let parent = this.parentTenta;
 
 		while (parent)
 		{
@@ -1149,7 +1117,7 @@ export class TentaBase extends Repaintable()
 			if (next)
 				return next;
 
-			parent = parent.parent;
+			parent = parent.parentTenta;
 
 		}
 
@@ -1179,7 +1147,7 @@ export class TentaBase extends Repaintable()
 		//	$log("ff.parent.first", ff?.parentBy(a => a.enabled)?.first());
 		//	return ff && await ff.focusParentFirstIfCan();
 
-		let parent = this.parent;
+		let parent = this.parentTenta;
 
 		while (parent)
 		{
@@ -1187,7 +1155,7 @@ export class TentaBase extends Repaintable()
 			if (ff)
 				return ff;
 
-			parent = parent.parent;
+			parent = parent.parentTenta;
 		}
 
 
@@ -1276,12 +1244,6 @@ export class TentaBase extends Repaintable()
 
 
 
-	//getMargin()
-	//{
-	//	let me = this.placeholder?.getMargin();
-	//	let prior = this.priorSiblingPlaceholder();
-	//	let priorSiblingLast = this.priorSibling()?.last();
-	//}
 	render(): ReactNode
 	{
 		return null;
@@ -1317,19 +1279,8 @@ export module TentaBase
 	export interface UseConfig extends Repaintable.UseConfig
 	{
 
-		//readonly collectors?: React.Key[];
-
-		//readonly maxPhase?: TentaPhase;
-
-		//readonly defaultPhase?: TentaPhase;
-		//readonly defaultStage?: TentaStage;
 
 	}
-
-
-
-
-
 
 
 

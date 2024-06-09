@@ -161,7 +161,7 @@ export module PileNode2_2
 		override onDecPhase()
 		{
 			this.hasSeparatedItems && this.forEachTenta(a => a.bodyDeseparate());
-			this.parent?.refresh();
+			this.parentTenta?.refresh();
 		}
 
 

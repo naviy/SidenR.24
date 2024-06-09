@@ -26,26 +26,10 @@ export function usePileCellIndent()
 export function PileCellIndentProvider(
 	props: ({
 		indent: number;
-	//	addIndent?: never;
-	//} | {
-	//	indent?: never;
-	//	addIndent: number;
-	//}) & {
 		children: ReactNode;
 	}),
 )
 {
-
-	//let { indent, addIndent } = props as any as { indent?: number; addIndent?: number; };
-
-
-	//if (addIndent !== undefined)
-	//{
-	//	let parentIndent = useCellIndent();
-	//	indent = parentIndent + addIndent;
-	//}
-
-
 
 	return <IndentContext.Provider
 		value={props.indent || 0}

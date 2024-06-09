@@ -2,10 +2,10 @@ import { $log, Div, Pane, Route, Txt, ValueFader } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import Button from "@mui/material/Button";
 import { useState, type ReactNode } from "react";
+import { DB, Unit_Subordination, gsm, type Unit } from "../page04/domain";
 import { useData } from "./db";
-import { DB, gsm, Unit_Subordination, type Unit } from "../page04/domain";
 import { Pile } from "./piles";
-import { PileNode1 } from './piles/nodes1/PileNode1';
+//import { PileNode1 } from './piles/nodes1/PileNode1';
 import { PileNode2_2 } from "./piles/nodes1/PileNode2_2";
 
 
@@ -20,14 +20,14 @@ import { PileNode2_2 } from "./piles/nodes1/PileNode2_2";
 
 
 
-export module Page053
+export module Page052
 {
 
 
 	export var route = Route.create({
-		key: "page053",
+		key: "page052",
 		icon: <PageIcon />,
-		title: "Page 053",
+		title: "Page 052",
 		content: () => <Content />,
 	});
 
@@ -149,7 +149,7 @@ function UnitBody(
 		tenta, db, unit, noindent,
 		...props
 	}: {
-		tenta: PileNode1.Tenta;
+		tenta: PileNode2_2.Tenta;
 		db: DB;
 		unit: Unit;
 		noindent?: true;

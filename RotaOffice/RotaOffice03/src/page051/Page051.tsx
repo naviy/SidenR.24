@@ -20,14 +20,14 @@ import { PileNode2_2 } from "./piles/nodes1/PileNode2_2";
 
 
 
-export module Page054
+export module Page051
 {
 
 
 	export var route = Route.create({
-		key: "page054",
+		key: "page051",
 		icon: <PageIcon />,
-		title: "Page 054",
+		title: "Page 051",
 		content: () => <Content />,
 	});
 

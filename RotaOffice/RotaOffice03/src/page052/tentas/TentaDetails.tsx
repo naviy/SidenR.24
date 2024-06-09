@@ -41,9 +41,9 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 								)}
 							</VR.Stack>}
 						/>
-						<TentaRow label="parent" r={tenta.parent} />
-						<TentaRow label="first" r={tenta.first()} />
-						<TentaRow label="last" r={tenta.last()} />
+						<TentaRow label="parent" r={tenta.parentTenta} />
+						<TentaRow label="first" r={tenta.firstVisibleTenta()} />
+						<TentaRow label="last" r={tenta.lastVisibleTenta()} />
 						<BoolRow label="bodyIsSeparated" r={tenta.bodyIsSeparated} />
 						<BoolRow label="tailIsSeparated" r={tenta.tailIsSeparated} />
 						<BoolRow label="hasSeparatedItems" r={tenta.hasSeparatedItems} />
@@ -88,14 +88,14 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 						<TentaRow label="next" r={tenta.next()} />
 						<Row indent label="bodyTopMargin" r={tenta.next()?.bodyTopMargin()} />
 						<Row label="parentTailBtmMargin" r={tenta.parentTailBtmMargin()} />
-						<TentaRow indent label="parent" r={tenta.parent} />
-						<Row indent={2} label="parentTailBtmMargin" r={tenta.parent?.parentTailBtmMargin()} />
-						<Row indent={3} label="tailBtmMargin" r={tenta.parent?.tailBtmMargin()} />
-						<Row indent={3} label="bodyBtmMargin" r={tenta.parent?.bodyBtmMargin()} />
-						<TentaRow indent label="parent2" r={tenta.parent?.parent} />
-						<Row indent={2} label="parentTailBtmMargin" r={tenta.parent?.parent?.parentTailBtmMargin()} />
-						<Row indent={3} label="tailBtmMargin" r={tenta.parent?.parent?.tailBtmMargin()} />
-						<Row indent={3} label="bodyBtmMargin" r={tenta.parent?.parent?.bodyBtmMargin()} />
+						<TentaRow indent label="parent" r={tenta.parentTenta} />
+						<Row indent={2} label="parentTailBtmMargin" r={tenta.parentTenta?.parentTailBtmMargin()} />
+						<Row indent={3} label="tailBtmMargin" r={tenta.parentTenta?.tailBtmMargin()} />
+						<Row indent={3} label="bodyBtmMargin" r={tenta.parentTenta?.bodyBtmMargin()} />
+						<TentaRow indent label="parent2" r={tenta.parentTenta?.parentTenta} />
+						<Row indent={2} label="parentTailBtmMargin" r={tenta.parentTenta?.parentTenta?.parentTailBtmMargin()} />
+						<Row indent={3} label="tailBtmMargin" r={tenta.parentTenta?.parentTenta?.tailBtmMargin()} />
+						<Row indent={3} label="bodyBtmMargin" r={tenta.parentTenta?.parentTenta?.bodyBtmMargin()} />
 					</tbody>
 				</Table>
 			</Div>
@@ -106,10 +106,10 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 					<caption>prior: <TentaSpan r={tenta.prior()} /></caption>
 					<tbody>
 						<TentaRow label="priorSibling" r={tenta.priorSibling()} />
-						<TentaRow indent label="last" r={tenta.priorSibling()?.last()} />
-						<CollectorRow label="priorCollector" r={tenta.priorCollector()} />
-						<TentaRow indent label="last" r={tenta.priorCollector()?.last()} />
-						<TentaRow label="parent" r={tenta.parent} />
+						<TentaRow indent label="last" r={tenta.priorSibling()?.lastVisibleTenta()} />
+						<CollectorRow label="priorVisibleCollector" r={tenta.priorVisibleCollector()} />
+						<TentaRow indent label="last" r={tenta.priorVisibleCollector()?.last()} />
+						<TentaRow label="parent" r={tenta.parentTenta} />
 					</tbody>
 				</Table>
 			</Div>
@@ -118,11 +118,11 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 				<Table details>
 					<caption>next: <TentaSpan r={tenta.next()} /></caption>
 					<tbody>
-						<TentaRow label="nextSibling" r={tenta.nextSibling()} />
-						<CollectorRow label="nextCollector" r={tenta.nextCollector()} />
-						<TentaRow indent label="first" r={tenta.nextCollector()?.first()} />
-						<TentaRow label="parent" r={tenta.parent} />
-						<TentaRow indent label="nextSibling" r={tenta.parent?.nextSibling()} />
+						<TentaRow label="nextVisibleSibling" r={tenta.nextSibling()} />
+						<CollectorRow label="nextVisibleCollector" r={tenta.nextVisibleCollector()} />
+						<TentaRow indent label="first" r={tenta.nextVisibleCollector()?.first()} />
+						<TentaRow label="parent" r={tenta.parentTenta} />
+						<TentaRow indent label="nextSibling" r={tenta.parentTenta?.nextSibling()} />
 					</tbody>
 				</Table>
 			</Div>

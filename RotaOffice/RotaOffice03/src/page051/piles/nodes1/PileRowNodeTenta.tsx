@@ -77,12 +77,12 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	override created()
 	{
 
-		let { parent } = this;
+		let { parentTenta } = this;
 
 
 		if (this.rootFfRef === undefined)
 		{
-			this.rootFfRef = parent instanceof PileRowNodeTenta ? parent.rootFfRef || null : null;
+			this.rootFfRef = parentTenta instanceof PileRowNodeTenta ? parentTenta.rootFfRef || null : null;
 		}
 
 	}
@@ -261,7 +261,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		{
 			/*await*/ this.scrollIntoView();
 		}
-		else if (!this.parent?.goToStage(-1, a => !a.tailIsSeparated && a.stage !== "collapsed"))
+		else if (!this.parentTenta?.goToStage(-1, a => !a.tailIsSeparated && a.stage !== "collapsed"))
 		{
 			await this.focusParentBody() || await this.shakeBody(3);
 		}
@@ -312,7 +312,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 	override async onCtrlLeftKey()
 	{
-		await this.parent?.focusBody();
+		await this.parentTenta?.focusBody();
 	}
 
 	override async onCtrlRightKey()
@@ -322,7 +322,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 	override async onCtrlUpKey()
 	{
-		await (this.priorSibling() || this.parent)?.focusBody();
+		await (this.priorSibling() || this.parentTenta)?.focusBody();
 	}
 
 	override async onCtrlDownKey()
