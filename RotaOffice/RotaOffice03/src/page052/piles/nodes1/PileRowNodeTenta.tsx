@@ -1,6 +1,7 @@
 import { $log, ExpanderBaseBehavior, Focuser } from "@libs";
 import { createRef, type RefObject } from "react";
 import { Tenta } from "../../tentas";
+import type { TentaRestState, TentaState } from "../../tentas/TentaBase";
 
 
 
@@ -14,7 +15,9 @@ import { Tenta } from "../../tentas";
 
 
 
-export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
+export class PileRowNodeTenta<
+	TRestStateEx extends {} = {}
+> extends Tenta.Focusable<TRestStateEx>
 {
 
 	//---
@@ -31,7 +34,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		super.use(cfg);
 
 
-		Tenta.Focusable.use(this, cfg);
+		//Tenta.Focusable.use(this, cfg);
 
 		return this;
 
@@ -191,7 +194,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	protected override async onRightKey()
 	{
 
-		if (this.incPhase())
+		if (this.incOpenPhase())
 			return;
 
 
@@ -219,7 +222,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		}
 
 
-		if (this.incPhase())
+		if (this.incOpenPhase())
 			return;
 
 
@@ -233,10 +236,54 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 
 
+	//---
+
+
+
+	override  async onLeftKey()
+	{
+
+		if (this.decOpenPhase())
+		{
+			/*await*/ this.scrollIntoView();
+		}
+		//else if (!this.parentTenta?.goToStage(-1, a => !a.tailIsSeparated && a.stage !== "collapsed"))
+		//{
+		//	await this.focusParentBody() || await this.shakeBody(3);
+		//}
+
+	}
+
+
+
+	override async onRightClick()
+	{
+
+		if (!this.bodyIsFocused)
+		{
+			await this.focusBody();
+		}
+		else if (this.decOpenPhase())
+		{
+			await this.scrollIntoView();
+		}
+		else
+		{
+			await this.unfocusBody();
+		}
+
+	}
+
+
+
+	//---
+
+
+
 	override async onEnter()
 	{
 
-		if (this.incPhase())
+		if (this.incExpandPhase())
 		{
 			await this.scrollIntoViewTop();
 		}
@@ -250,50 +297,10 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	//---
-
-
-
-	override  async onLeftKey()
-	{
-
-		if (this.decPhase())
-		{
-			/*await*/ this.scrollIntoView();
-		}
-		else if (!this.parentTenta?.goToStage(-1, a => !a.tailIsSeparated && a.stage !== "collapsed"))
-		{
-			await this.focusParentBody() || await this.shakeBody(3);
-		}
-
-	}
-
-
-
-	override async onRightClick()
-	{
-
-		if (!this.bodyIsFocused)
-		{
-			await this.focusBody();
-		}
-		else if (this.decPhase())
-		{
-			await this.scrollIntoView();
-		}
-		else
-		{
-			await this.unfocusBody();
-		}
-
-	}
-
-
-
 	override async onExit()
 	{
 
-		if (this.decPhase())
+		if (this.decExpandPhase())
 		{
 			await this.scrollIntoView();
 		}

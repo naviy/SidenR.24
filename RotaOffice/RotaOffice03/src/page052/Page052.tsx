@@ -204,8 +204,10 @@ function UnitActions({ db, unit, ...props }: { db: DB, unit: Unit } & Pane.Props
 
 
 
-function UnitRow({ children }: { children: ReactNode })
+function UnitRow({ /*tenta0,*/ children }: { /*tenta0: PileNode2_2.Tenta;*/  children: ReactNode })
 {
+
+	//$log("UnitRow.tenta: " + tenta0);
 
 	let tenta = PileNode2_2.Tenta.useByPhase();
 

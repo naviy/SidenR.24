@@ -1,7 +1,7 @@
 import Tab from "@mui/material/Tab";
 import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
-import { TentaStage, Tenta as Tenta_ } from "../../tentas";
+import { Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 import { $log, Div, FillFade, Pane } from "@libs";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -63,7 +63,9 @@ export module PileNode2_2
 
 
 
-	export class Tenta extends PileRowNode.Tenta
+	export class Tenta extends PileRowNode.Tenta<{
+		tabsIsVisible: boolean
+	}>
 	{
 
 		//---
@@ -86,10 +88,7 @@ export module PileNode2_2
 
 
 
-		override init()
-		{
-			this.initPhase({ maxPhase: 1 + Math.max(1, this.collectorCount) });
-		}
+		override get maxOpenPhase() { return Math.max(0, this.collectorCount) }
 
 
 
@@ -97,15 +96,15 @@ export module PileNode2_2
 
 
 
-		get activeTabIndex() { return Math.max(0, this.phase - 2); }
+		get activeTabIndex() { return Math.max(0, this.openPhase - 1); }
 		get activeTabCollector() { return this.collectors?.[this.activeTabIndex] || null; }
 		get activeTabHasTentas() { return !!this.activeTabCollector?.itemCount; }
 
-
+		get tabsIsVisible() { return this.state.tabsIsVisible; }
 
 		activateTabByIndex(tabIndex: number)
 		{
-			this.setPhase(tabIndex + 2);
+			this.setOpenPhase(tabIndex + 2);
 		}
 
 
@@ -127,20 +126,28 @@ export module PileNode2_2
 
 
 
-		override getRestState(stage: TentaStage)
+		//@$log.m
+		override getRestState(
+			expandPhase: Tenta_.ExpandPhase,
+			openPhase: Tenta_.OpenPhase
+		)
 		{
 
-			let collapsed = stage === "collapsed";
-			let opened = stage === "opened";
+			let collapsed = !expandPhase;
+			let closed = !openPhase;
+
+			let tailIsVisible = !closed && this.hasCollectors;
+			let tailIsSeparated = !collapsed || this.hasSeparatedItems;
 
 
 			return {
 				//bodyIsSeparated: opened && this.hasSeparatedItems,
-				bodyIsSeparated: opened,
-				tailIsVisible: !collapsed && this.hasCollectors,
-				//tailIsSeparated: opened,
-				tailIsSeparated: opened || this.hasSeparatedItems,
-				isSeparated: opened,
+				bodyIsSeparated: !collapsed,
+				tailIsVisible,
+				tailIsSeparated,
+
+				tabsIsVisible: tailIsVisible && (tailIsSeparated || openPhase > 1),
+
 			};
 
 		}
@@ -158,7 +165,7 @@ export module PileNode2_2
 		}
 
 
-		override onDecPhase()
+		override onDecExpandPhase()
 		{
 			this.hasSeparatedItems && this.forEachTenta(a => a.bodyDeseparate());
 			this.parentTenta?.refresh();
@@ -170,10 +177,10 @@ export module PileNode2_2
 
 
 
-		override onPhaseChanged(priorPhase: number)
+		override onOpenPhaseChanged()
 		{
 			//$log("opened", this.opened);
-			if (priorPhase > this.openedPhase || this.phase > this.openedPhase)
+			if (this.tabsIsVisible || this.priorState?.tabsIsVisible)
 			{
 				$log(this + " mustReexpand")
 				this.tailExpanderRef.current?.mustReexpand();
@@ -243,9 +250,8 @@ export module PileNode2_2
 
 		let indent = usePileCellIndent();
 
-
 		return (
-			<Pane.Row expanded={!!tenta.activeTabIndex} end bt="sm" >
+			<Pane.Row expanded={tenta.tabsIsVisible} end bt="sm" >
 				<Pane start end p8 pl48>
 					<Div style={{ width: indent + 8 }} animated />
 					<CollectorTabs tenta={tenta} />

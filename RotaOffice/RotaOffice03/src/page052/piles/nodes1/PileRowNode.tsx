@@ -245,7 +245,7 @@ function PileRowNodeBody({
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
 
 	let children2 = (typeof children === "function"
-		? useMemo(children, [tenta.phase, tenta.stage])
+		? useMemo(children, [tenta.expandPhase, tenta.openPhase])
 		: children
 	);
 

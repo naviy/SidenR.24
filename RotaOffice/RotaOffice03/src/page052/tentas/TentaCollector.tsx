@@ -149,7 +149,6 @@ export class TentaCollector extends Repaintable()
 		});
 
 
-		//this.recalcStages();
 		this.parentTenta?.recalcStages();
 
 	}
@@ -171,11 +170,11 @@ export class TentaCollector extends Repaintable()
 
 
 
-	itemPhaseChanged()
+	itemStateChanged()
 	{
 		//$log(this + ".itemPhaseChanged");
 
-		this.parentTenta?.collectorPhaseChanged();
+		this.parentTenta?.collectorStateChanged();
 	}
 
 

@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { TentaBase } from "./TentaBase";
 import { TentaCollector } from "./TentaCollector";
+import { $log } from "@libs";
 
 
 
@@ -14,11 +15,16 @@ import { TentaCollector } from "./TentaCollector";
 
 
 
-export { TentaPhase as Phase } from "./TentaPhase";
-export { TentaStage as Stage } from "./TentaStage";
 export { TentaAccent as Accent } from "./TentaAccent";
 
-export { TentaBase as Base, isTenta } from "./TentaBase";
+export
+{
+	type TentaExpandPhase as ExpandPhase,
+	type TentaOpenPhase as OpenPhase,
+	TentaBase as Base,
+	isTenta,
+} from "./TentaBase";
+
 export { TentaFocusable as Focusable } from "./TentaFocusable";
 
 export import Collector = TentaCollector;
@@ -53,10 +59,9 @@ const ByPhaseContext = createContext<{ tenta: TentaBase | null }>({ tenta: null 
 export function ByPhaseProvider(props: { tenta: TentaBase; children: ReactNode })
 {
 
-	let { tenta } = props;
-
-	tenta = useMemo(() => tenta, [tenta.phase]);
-
+	let tenta0 = props.tenta;
+	let tenta = useMemo(() => tenta0, [tenta0, tenta0.expandPhase * 1000 + tenta0.openPhase]);
+	//$log("ByPhaseProvider.tenta: " + tenta)
 	return <ByPhaseContext.Provider
 		value={{ tenta }}
 		children={props.children}

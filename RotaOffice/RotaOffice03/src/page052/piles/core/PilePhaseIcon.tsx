@@ -36,7 +36,7 @@ export function PilePhaseIcon({
 		return null;
 
 
-	let { stage } = tenta;
+	let { openPhase, maxOpenPhase } = tenta;
 
 	let indent = noindent === undefined ? usePileCellIndent() : 0;
 
@@ -48,7 +48,7 @@ export function PilePhaseIcon({
 		<Root
 			className="pile-phase-icon"
 			indent={indent}
-			rotate={stage === "collapsed" ? 0 : stage === "expanded" ? 45 : 90}
+			rotate={Math.round(90.0 * openPhase / maxOpenPhase)}
 			children={<div>
 				<ArrowRightIcon />
 			</div>}
