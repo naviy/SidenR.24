@@ -1,7 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { TentaBase } from "./TentaBase";
 import { TentaCollector } from "./TentaCollector";
-import { $log } from "@libs";
 
 
 
@@ -17,12 +16,10 @@ import { $log } from "@libs";
 
 export { TentaAccent as Accent } from "./TentaAccent";
 
-export
-{
-	type TentaExpandPhase as ExpandPhase,
-	type TentaOpenPhase as OpenPhase,
+export {
 	TentaBase as Base,
-	isTenta,
+	isTenta, type TentaExpandPhase as ExpandPhase,
+	type TentaOpenPhase as OpenPhase
 } from "./TentaBase";
 
 export { TentaFocusable as Focusable } from "./TentaFocusable";
@@ -38,7 +35,7 @@ export { TentaDetails as Details } from "./TentaDetails";
 
 
 export {
-	TentaFunctional as Functional,
+	TentaFunctional as Functional
 } from "./TentaFunctional";
 
 

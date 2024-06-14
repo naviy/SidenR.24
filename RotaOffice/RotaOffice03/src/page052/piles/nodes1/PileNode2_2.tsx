@@ -96,7 +96,7 @@ export module PileNode2_2
 
 
 
-		get activeTabIndex() { return Math.max(0, this.openPhase - 1); }
+		get activeTabIndex() { return Math.max(-1, this.openPhase - 1); }
 		get activeTabCollector() { return this.collectors?.[this.activeTabIndex] || null; }
 		get activeTabHasTentas() { return !!this.activeTabCollector?.itemCount; }
 
@@ -137,39 +137,198 @@ export module PileNode2_2
 			let closed = !openPhase;
 
 			let tailIsVisible = !closed && this.hasCollectors;
-			let tailIsSeparated = !collapsed || this.hasSeparatedItems;
+			let tailIsSeparated = expandPhase === this.maxExpandPhase || this.hasBodySeparatedItems;
 
 
 			return {
-				//bodyIsSeparated: opened && this.hasSeparatedItems,
+
 				bodyIsSeparated: !collapsed,
+
 				tailIsVisible,
 				tailIsSeparated,
 
-				tabsIsVisible: tailIsVisible && (tailIsSeparated || openPhase > 1),
+				//tabsIsVisible: tailIsVisible && (tailIsSeparated || openPhase > 1),
+				tabsIsVisible: this.hasCollectors && (!collapsed || !closed && openPhase > 1),
 
 			};
 
 		}
 
 
-		override onItemDeseparated()
+		override onItemBodyDeseparated()
 		{
 			this.refresh();
 		}
 
 
-		override onItemSeparated()
+		override onItemBodySeparated()
 		{
 			this.refresh();
 		}
 
 
-		override onDecExpandPhase()
+		//@$log.m
+		treeCollapse()
 		{
-			this.hasSeparatedItems && this.forEachTenta(a => a.bodyDeseparate());
-			this.parentTenta?.refresh();
+
+			if (this.collapse())
+				return true;
+
+
+			if (this.hasBodySeparatedItems)
+			{
+				//this.forEachTenta(a => a.bodyDeseparate())
+				this.forEachTenta(treeBodyDesaparate);
+				return true;
+			}
+
+			//this.parentTenta?.refresh();
+
+			return false;
+
+
+			function treeBodyDesaparate(tenta: Tenta_.Base)
+			{
+				tenta.forEachTenta(treeBodyDesaparate)
+				tenta.bodyDeseparate();
+			}
+
 		}
+
+
+
+
+		//---
+
+
+
+		protected override async onRightKey()
+		{
+
+			if (!this.closed && this.collapsed)
+				this.expand();
+
+			if (this.open())
+				return;
+
+
+			if (await this.scrollIntoViewTop())
+				return;
+
+
+			if (await this.focusTail())
+				return;
+
+
+			await this.shakeBody();
+
+		}
+
+
+
+		protected override async onLeftClick()
+		{
+
+			if (!this.bodyIsFocused)
+			{
+				await this.focusBody();
+				return;
+			}
+
+
+			if (this.open())
+				return;
+
+
+			if (await this.scrollIntoViewTop())
+				return;
+
+
+			await this.shakeBody();
+
+		}
+
+
+
+		//---
+
+
+
+		override  async onLeftKey()
+		{
+
+			this.close();
+
+			if (this.closed && !this.collapsed)
+				this.collapse();
+
+			this.scrollIntoView();
+
+		}
+
+
+
+		override async onRightClick()
+		{
+
+			if (!this.bodyIsFocused)
+			{
+				await this.focusBody();
+			}
+			else if (this.close())
+			{
+				await this.scrollIntoView();
+			}
+			else
+			{
+				await this.unfocusBody();
+			}
+
+		}
+
+
+
+		//---
+
+
+
+		override async onEnter()
+		{
+
+			if (this.expand())
+			{
+				if (this.expanded)
+				{
+					this.closed && this.open();
+					await this.scrollIntoViewTop();
+				}
+			}
+			else
+			{
+				!this.opened && this.open();
+				await this.scrollIntoViewTop();
+			}
+
+		}
+
+
+
+		override async onExit()
+		{
+
+			if (this.collapse())
+			{
+				await this.scrollIntoView();
+			}
+			else
+			{
+				await this.unfocusBody();
+			}
+
+		}
+
+
+
 
 
 
@@ -182,7 +341,7 @@ export module PileNode2_2
 			//$log("opened", this.opened);
 			if (this.tabsIsVisible || this.priorState?.tabsIsVisible)
 			{
-				$log(this + " mustReexpand")
+				//$log(this + " mustReexpand")
 				this.tailExpanderRef.current?.mustReexpand();
 			}
 		}
@@ -234,8 +393,9 @@ export module PileNode2_2
 			}}
 		>
 
-			{tenta.collectors?.map(a =>
-				<NodeTab key={a.id} label={a.title() ?? (a.id + "")} />
+			<ZeroNodeTab value={-1} />
+			{tenta.collectors?.map((a, i) =>
+				<NodeTab key={a.id} value={i} label={a.title() ?? (a.id + "")} />
 			)}
 
 		</NodeTabs>;
@@ -251,9 +411,9 @@ export module PileNode2_2
 		let indent = usePileCellIndent();
 
 		return (
-			<Pane.Row expanded={tenta.tabsIsVisible} end bt="sm" >
+			<Pane.Row expanded={tenta.tabsIsVisible} end bt="xs" >
 				<Pane start end p8 pl48>
-					<Div style={{ width: indent + 8 }} animated />
+					<Div style={{ width: indent - 24 }} animated />
 					<CollectorTabs tenta={tenta} />
 				</Pane>
 			</Pane.Row>
@@ -284,6 +444,12 @@ export module PileNode2_2
 		fontSize: "1em",
 	})
 
+
+	var ZeroNodeTab = styled(Tab)({
+
+		padding: 0,
+		minWidth: 0,
+	})
 
 
 

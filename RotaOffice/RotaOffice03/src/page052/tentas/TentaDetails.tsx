@@ -42,13 +42,17 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 								)}
 							</VR.Stack>}
 						/>
+
 						<TentaRow label="parent" r={tenta.parentTenta} />
 						<TentaRow label="first" r={tenta.firstVisibleTenta()} />
 						<TentaRow label="last" r={tenta.lastVisibleTenta()} />
+
 						<BoolRow label="bodyIsSeparated" r={tenta.bodyIsSeparated} />
 						<BoolRow label="tailIsSeparated" r={tenta.tailIsSeparated} />
-						<BoolRow label="tailIsVisible" r={tenta.tailIsVisible} />
+						<BoolRow label="hasBodySeparatedItems" r={tenta.hasBodySeparatedItems} />
 						<BoolRow label="hasSeparatedItems" r={tenta.hasSeparatedItems} />
+
+						<BoolRow label="tailIsVisible" r={tenta.tailIsVisible} />
 					</tbody>
 				</Table>
 			</Div>

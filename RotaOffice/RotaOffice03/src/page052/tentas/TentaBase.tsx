@@ -396,7 +396,7 @@ export class TentaBase<
 			expandPhase,
 			openPhase,
 
-			defaultMargin: expandPhase,
+			defaultMargin: expandPhase === this.maxExpandPhase ? this.maxMargin : 1,
 
 			...restState,
 
@@ -482,7 +482,8 @@ export class TentaBase<
 			this.#saveToGlobalState();
 
 
-			this.parentCollector?.itemStateChanged();
+			//this.parentCollector?.itemStateChanged();
+			this.parentTenta?.recalcTentasInfo();
 
 
 			if (s0?.expandPhase != null)
@@ -490,13 +491,13 @@ export class TentaBase<
 
 				if (s1.expandPhase < s0.expandPhase)
 				{
-					this.onDecExpandPhase();
-					this.parentTenta?.onItemDecExpandPhase(this);
+					this.onCollapse();
+					this.parentTenta?.onItemCollapse(this);
 				}
 				else if (s1.expandPhase > s0.expandPhase)
 				{
-					this.onIncExpandPhase();
-					this.parentTenta?.onItemIncExpandPhase(this);
+					this.onExpand();
+					this.parentTenta?.onItemExpand(this);
 				}
 
 			}
@@ -507,13 +508,13 @@ export class TentaBase<
 
 				if (s1.openPhase < s0.openPhase)
 				{
-					this.onDecOpenPhase();
-					this.parentTenta?.onItemDecOpenPhase(this);
+					this.onClose();
+					this.parentTenta?.onItemClose(this);
 				}
 				else if (s1.openPhase > s0.openPhase)
 				{
-					this.onIncOpenPhase();
-					this.parentTenta?.onItemIncOpenPhase(this);
+					this.onOpen();
+					this.parentTenta?.onItemOpen(this);
 				}
 
 			}
@@ -589,23 +590,25 @@ export class TentaBase<
 
 
 	//maxItemStage: TentaStage | null = null;
+	hasBodySeparatedItems: boolean = false;
 	hasSeparatedItems: boolean = false;
 
-	collectorStateChanged()
-	{
+	//collectorStateChanged()
+	//{
 
-		//$log(this + ".collectorPhaseChanged");
+	//	//$log(this + ".collectorPhaseChanged");
 
-		this.recalcStages();
+	//	this.recalcTentasInfo();
 
-	}
+	//}
 
 
 
 	//@$log.m
-	recalcStages()
+	recalcTentasInfo()
 	{
 
+		this.hasBodySeparatedItems = this.anyTenta(a => a.bodyIsSeparated);
 		this.hasSeparatedItems = this.anyTenta(a => a.isSeparated);
 		//$log("hasSeparatedItems:", this.hasSeparatedItems)
 	}
@@ -738,7 +741,7 @@ export class TentaBase<
 
 	// TODO: this.update(() => this.incExpandPhase());
 
-	@$log.m
+
 	setExpandPhase(value: TentaExpandPhase | null | undefined): boolean
 	{
 
@@ -753,12 +756,12 @@ export class TentaBase<
 	}
 
 
-	incExpandPhase(): boolean
+	expand(): boolean
 	{
 		return this.setExpandPhase(this.expandPhase + 1);
 	}
 
-	decExpandPhase(): boolean
+	collapse(): boolean
 	{
 		return this.setExpandPhase(this.expandPhase - 1);
 	}
@@ -779,13 +782,13 @@ export class TentaBase<
 
 	}
 
-	incOpenPhase(): boolean
+	open(): boolean
 	{
 		return this.setOpenPhase(this.openPhase + 1);
 	}
 
 
-	decOpenPhase(): boolean
+	close(): boolean
 	{
 		return this.setOpenPhase(this.openPhase - 1);
 	}
@@ -799,15 +802,15 @@ export class TentaBase<
 	onExpandPhaseChanged(priorExpandPhase: number) { }
 	onOpenPhaseChanged(priorOpenPhase: number) { }
 
-	onDecExpandPhase() { }
-	onIncExpandPhase() { }
-	onItemDecExpandPhase(item: TentaBase) { }
-	onItemIncExpandPhase(item: TentaBase) { }
+	onCollapse() { }
+	onExpand() { }
+	onItemCollapse(item: TentaBase) { }
+	onItemExpand(item: TentaBase) { }
 
-	onDecOpenPhase() { }
-	onIncOpenPhase() { }
-	onItemDecOpenPhase(item: TentaBase) { }
-	onItemIncOpenPhase(item: TentaBase) { }
+	onClose() { }
+	onOpen() { }
+	onItemClose(item: TentaBase) { }
+	onItemOpen(item: TentaBase) { }
 
 
 

@@ -1,7 +1,6 @@
-import { $log, ExpanderBaseBehavior, Focuser } from "@libs";
+import { ExpanderBaseBehavior, Focuser } from "@libs";
 import { createRef, type RefObject } from "react";
 import { Tenta } from "../../tentas";
-import type { TentaRestState, TentaState } from "../../tentas/TentaBase";
 
 
 
@@ -154,7 +153,7 @@ export class PileRowNodeTenta<
 	}
 
 
-	override onItemSeparated()
+	override onItemBodySeparated()
 	{
 		this.tailSeparate();
 	}
@@ -194,7 +193,7 @@ export class PileRowNodeTenta<
 	protected override async onRightKey()
 	{
 
-		if (this.incOpenPhase())
+		if (this.open())
 			return;
 
 
@@ -222,7 +221,7 @@ export class PileRowNodeTenta<
 		}
 
 
-		if (this.incOpenPhase())
+		if (this.open())
 			return;
 
 
@@ -243,7 +242,7 @@ export class PileRowNodeTenta<
 	override  async onLeftKey()
 	{
 
-		if (this.decOpenPhase())
+		if (this.close())
 		{
 			/*await*/ this.scrollIntoView();
 		}
@@ -263,7 +262,7 @@ export class PileRowNodeTenta<
 		{
 			await this.focusBody();
 		}
-		else if (this.decOpenPhase())
+		else if (this.close())
 		{
 			await this.scrollIntoView();
 		}
@@ -283,13 +282,14 @@ export class PileRowNodeTenta<
 	override async onEnter()
 	{
 
-		if (this.incExpandPhase())
+		if (this.expand())
 		{
-			await this.scrollIntoViewTop();
+			//await this.scrollIntoViewTop();
 		}
 		else
 		{
-			await this.shakeBody();
+			await this.scrollIntoViewTop();
+			//await this.shakeBody();
 			//	await this.focusItems();
 		}
 
@@ -300,7 +300,7 @@ export class PileRowNodeTenta<
 	override async onExit()
 	{
 
-		if (this.decExpandPhase())
+		if (this.collapse())
 		{
 			await this.scrollIntoView();
 		}

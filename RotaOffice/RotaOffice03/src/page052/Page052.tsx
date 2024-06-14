@@ -216,7 +216,7 @@ function UnitRow({ /*tenta0,*/ children }: { /*tenta0: PileNode2_2.Tenta;*/  chi
 
 		<Pane.Col start end>
 
-			<Pane.Row start end={!tenta.activeTabIndex}>
+			<Pane.Row start end={!tenta.tabsIsVisible}>
 				{children}
 			</Pane.Row>
 
