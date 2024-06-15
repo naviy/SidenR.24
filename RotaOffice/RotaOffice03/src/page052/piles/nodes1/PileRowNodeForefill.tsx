@@ -80,6 +80,10 @@ export function PileRowNodeForefill({
 	let bwt0 = width(bt);
 	let bwt = bwt0 === 1 ? 0 : bwt0;
 
+	let bwb0 = width(bb);
+	let bwb = bwb0;
+	//let bwb = tenta.btmMargin() === 0 ? 1 : bwb0
+
 
 	return <div
 
@@ -90,7 +94,8 @@ export function PileRowNodeForefill({
 		)}
 
 		style={{
-			borderWidth: `${bwt}px ${width(br)}px ${width(bb)}px ${width(bl)}px`
+			borderWidth: `${bwt}px ${width(br)}px ${bwb}px ${width(bl)}px`,
+			//marginBottom: tenta.btmMargin() === 0 ? -1 : 0
 		}}
 
 		//children={<div />}

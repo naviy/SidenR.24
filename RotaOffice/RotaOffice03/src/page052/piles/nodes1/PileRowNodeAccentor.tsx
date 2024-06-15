@@ -1,5 +1,3 @@
-import { Focuser } from '@libs';
-import { useEffect, useState } from "react";
 import { Tenta } from "../../tentas";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";
 
