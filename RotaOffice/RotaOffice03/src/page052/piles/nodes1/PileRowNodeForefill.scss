@@ -1,0 +1,38 @@
+.pile-row-node-forefill {
+
+	position: absolute !important;
+	inset: 0 0 0 0 !important;
+	border-radius: inherit;
+
+	border: 0 solid transparent;
+
+	transition: all 150ms ease-in-out;
+
+
+	> div {
+
+		position: absolute !important;
+		inset: 0 0 0 0 !important;
+		border-radius: inherit;
+
+		background: black;
+		opacity: 0;
+
+		transition: all 150ms ease-in-out;
+
+		pointer-events: none;
+
+	}
+
+
+	&.brd {
+		border-color: #455a64;
+	}
+
+	&.bg {
+		> div {
+			opacity: .03;
+		}
+	}
+
+}

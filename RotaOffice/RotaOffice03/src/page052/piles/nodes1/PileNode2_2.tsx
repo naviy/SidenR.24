@@ -316,7 +316,7 @@ export module PileNode2_2
 		override async onExit()
 		{
 
-			if (this.collapse())
+			if (this.treeCollapse())
 			{
 				await this.scrollIntoView();
 			}
@@ -439,7 +439,7 @@ export module PileNode2_2
 	var NodeTab = styled(Tab)({
 
 		minHeight: 24,
-		padding: "6px 12px 6px 0",
+		padding: "6px 24px 6px 0",
 		minWidth: 24,
 		fontSize: "1em",
 	})

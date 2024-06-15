@@ -1237,7 +1237,7 @@ export function Core()
 				color: "rgb(var(--color))",
 				borderColor: "rgb(var(--color))",
 				//boxShadow: `0px 7px 8px -4px rgba(var(--color), .25), 0px 12px 17px 2px rgba(var(--color), .18), 0px 5px 22px 4px rgba(var(--color), .16)`,
-				boxShadow: `0px 7px 8px -4px rgba(var(--color), .25)`,
+				boxShadow: `0px 7px 8px -4px rgba(var(--color), .25), 0px 12px 17px 2px rgba(var(--color), .18)`,
 
 				borderStyle: "solid",
 
