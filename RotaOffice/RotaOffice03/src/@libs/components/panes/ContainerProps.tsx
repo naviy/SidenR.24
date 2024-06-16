@@ -57,6 +57,8 @@ export interface ContainerBaseProps extends Block.Props
 	rbl?: PaneRadius;
 	rbr?: PaneRadius;
 
+	bg?: string;
+
 
 	//---
 
@@ -102,6 +104,8 @@ export module ContainerBaseProps
 		rb: true,
 		rbr: true,
 		rbl: true,
+
+		bg: true,
 
 		debug: true,
 		ff: true,

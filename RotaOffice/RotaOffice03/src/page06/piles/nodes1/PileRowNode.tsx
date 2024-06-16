@@ -28,11 +28,13 @@ export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeT
 
 	linkToNext?: boolean;
 	hideChildrenLinks?: boolean;
+
+	border?: boolean;
 	backfill?: boolean;
+	forefill?: boolean;
 
 
 	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
-	tailReexpand?: boolean;
 
 	tailDecorator?: PileRowNode.TailDecorator<TTenta>;
 
@@ -48,10 +50,12 @@ export function PileRowNode({
 
 	linkToNext,
 	hideChildrenLinks,
+
+	border,
 	backfill,
+	forefill,
 
 	tailExpanderRef,
-	tailReexpand,
 	tailDecorator,
 
 	children,
@@ -96,7 +100,7 @@ export function PileRowNode({
 
 					{backfill && <Pile.Node.Backfill
 						mb={tailIsVisible ? 24 : 48}
-						visible={tailIsSeparated}
+						visible={tailIsVisible && tailIsSeparated}
 					/>}
 
 
@@ -106,6 +110,8 @@ export function PileRowNode({
 						<PileRowNodeBody
 							tenta={tenta}
 							rowProps={rowProps}
+							border={border}
+							forefill={forefill}
 							children={children}
 						/>
 
@@ -121,7 +127,6 @@ export function PileRowNode({
 								start={tailIsSeparated}
 								expanded={tailIsVisible}
 								noreexpand
-								//noreexpand={!tailReexpand}
 
 								wrapperCls={`mt${tailMt}`}
 								mb={tailMb as any}
@@ -157,10 +162,14 @@ export function PileRowNode({
 function PileRowNodeBody({
 	tenta,
 	rowProps,
+	border,
+	forefill,
 	children,
 }: {
 	tenta: PileRowNodeTenta;
 	rowProps: Pane.RowProps;
+	border?: boolean;
+	forefill?: boolean;
 	children?: JSX.Element | (() => JSX.Element)
 })
 {
@@ -177,10 +186,10 @@ function PileRowNodeBody({
 	);
 
 
-	let bl: Pane.Border = accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
-	let br: Pane.Border = accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
-	let bt: Pane.Border = topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm";
-	let bb: Pane.Border = btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : "";
+	let bl: Pane.Border = !border ? "" : accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
+	let br: Pane.Border = !border ? "" : accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
+	let bt: Pane.Border = !border ? "" : topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm";
+	let bb: Pane.Border = !border ? "" : btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : "";
 
 
 	return (
@@ -214,13 +223,13 @@ function PileRowNodeBody({
 					{tenta.toolsIsVisible ? Tenta.Details.wrap(tenta, children2) : children2}
 				</ErrorBoundary>
 
-				<PileRowNodeForefill
+				{forefill && <PileRowNodeForefill
 					tenta={tenta}
 					bl={bl}
 					br={br}
 					bt={bt}
 					bb={bb}
-				/>
+				/>}
 
 			</Pane.Row>
 

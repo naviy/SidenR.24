@@ -52,24 +52,6 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 	}
 
 
-	//if (typeof body === "string")
-	//{
-	//	body = <>
-	//		{body}
-	//		<div className="pane-border"/>
-	//	</>
-	//}
-
-
-	//if (props.ff)
-	//{
-	//	body = <>
-	//		<Focuser.Caret use={Pane.useCaretProps} />
-	//		{body}
-	//	</>;
-	//}
-
-
 	if (containerInfo?.debug)
 	{
 		body = <>
@@ -90,12 +72,12 @@ export function Pane(props: Pane.Props & PrimitiveProps<HTMLDivElement>)
 		{
 			debug: containerInfo?.debug,
 			//className: "pane",
-			//bgcolor: props.bgcolor,
 			r: PaneRadius.css(v.rtl, v.rtr, v.rbr, v.rbl),
 			bt: v.bt,
 			br: v.br,
 			bb: v.bb,
 			bl: v.bl,
+			bg: v.bg,
 			...sizes,
 			children: body,
 		} as RootProps,
@@ -176,21 +158,6 @@ export module Pane
 
 
 
-
-	//---
-
-
-
-
-	//export function useCaretProps()
-	//{
-	//	let row = Pane.ContainerInfo.use();
-	//	return { borderRadius: row && Pane.Radius.css(row.rtl, row.rtr, row.rbr, row.rbl) };
-	//}
-
-
-
-
 	//---
 
 
@@ -218,6 +185,8 @@ export interface RootProps
 	bb: PaneBorder;
 	bl: PaneBorder;
 
+	bg?: string;
+
 	flex?: number | string;
 
 	width?: number | string;
@@ -240,6 +209,7 @@ const rootPropNames: PropNames<RootProps> =
 	br: true,
 	bb: true,
 	bl: true,
+	bg: true,
 	flex: true,
 	width: true,
 	minWidth: true,
@@ -251,63 +221,6 @@ const rootPropNames: PropNames<RootProps> =
 
 
 
-
-
-
-//export var Root = styled(
-//	"div",
-//	{
-//		shouldForwardProp: p =>
-//			p !== "isFlex" && !(rootPropNames as any)[p]
-//		,
-//	}
-//)<RootProps>((props) =>
-//{
-
-//	return {
-
-//		//background: Pane.BgColor(props.theme, props.bgcolor),
-
-//		"--b-r": SCSS.value(props.r),
-
-//		"--flex": SCSS.value(props.flex),
-
-//		"--width": SCSS.px(props.width),
-//		"--min-width": SCSS.px(props.minWidth),
-//		"--max-width": SCSS.px(props.maxWidth),
-
-//		"--height": SCSS.px(props.height),
-//		"--min-height": SCSS.px(props.minHeight),
-//		"--max-height": SCSS.px(props.maxHeight),
-
-//		"&::before": {
-//			"--bt": SCSS.value(PaneBorder.borderCss(props.bt)),
-//			"--br": SCSS.value(PaneBorder.borderCss(props.br)),
-//			"--bb": SCSS.value(PaneBorder.borderCss(props.bb)),
-//			"--bl": SCSS.value(PaneBorder.borderCss(props.bl)),
-//		}
-
-//	};
-//});
-
-
-
-//export module SCSS
-//{
-
-
-//	export function value(value: string | number | undefined, defaultValue: string | undefined = "initial"): string | undefined
-//	{
-//		return value != null ? value + "" : defaultValue;
-//	}
-
-//	export function px(value: string | number | undefined, defaultValue: string | undefined = "initial"): string | undefined
-//	{
-//		return value == null ? defaultValue : typeof value === "number" ? value + "px" : value;
-//	}
-
-
-//}
 
 
 
@@ -331,7 +244,7 @@ export var Root = styled(
 		display: "flex",
 		position: "relative",
 
-		background: props.theme.palette.background.paper,
+		background: props.bg || props.theme.palette.background.paper,
 		//background: Pane.BgColor(props.theme, props.bgcolor),
 
 		borderRadius: props.r,
@@ -380,44 +293,3 @@ export var Root = styled(
 
 	};
 });
-
-
-
-
-
-
-//===
-
-
-
-
-
-
-//export var DebugBox = styled("div")(() =>
-//{
-
-//	let color = "rgba(100,30,30, .5)";
-
-//	return {
-//		position: "absolute",
-//		inset: "-1px",
-//		overflow: "hidden",
-//		border: `1px dotted ${color}`,
-//		borderRadius: "inherit",
-
-//		"> div": {
-//			position: "absolute",
-//			top: 0,
-//			left: 0,
-//			fontSize: "8px",
-//			padding: "0px 8px 2px 6px",
-//			background: color,
-//			color: "white",
-//			borderBottomRightRadius: 3,
-
-//			whiteSpace: "nowrap",
-
-//		}
-//	};
-
-//});

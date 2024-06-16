@@ -26,7 +26,6 @@ export interface ContainerInfo
 	end?: boolean;   // must have
 	rounded?: boolean;
 
-
 	/** border */
 	b?: PaneBorder;
 
@@ -43,6 +42,8 @@ export interface ContainerInfo
 	rtr: PaneRadius;
 	rbl: PaneRadius;
 	rbr: PaneRadius;
+
+	bg?: string;
 
 }
 
@@ -83,6 +84,8 @@ export module ContainerInfo
 		rtr: true,
 		rbr: true,
 		rbl: true,
+
+		bg: true,
 
 	};
 
@@ -175,6 +178,9 @@ export module ContainerInfo
 			v.rbl = props.rbl ?? props.rb ?? (inRow && start || inCol && end ? parentInfo.rbl : r);
 
 		}
+
+
+		v.bg = props.bg || parentInfo?.bg || undefined;
 
 
 		return v as ContainerInfo;

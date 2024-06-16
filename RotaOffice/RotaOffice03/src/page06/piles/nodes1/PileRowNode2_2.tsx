@@ -33,6 +33,9 @@ export function PileRowNode2_2(props: PileRowNode2_2.Props & {
 
 		//tailReexpand: true,
 
+		border: true,
+		forefill: true,
+
 		...props,
 
 		tailExpanderRef: props.tenta.tailExpanderRef,

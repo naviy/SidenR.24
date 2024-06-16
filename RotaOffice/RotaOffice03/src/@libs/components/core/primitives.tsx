@@ -180,31 +180,31 @@ type FlexProps = {
 
 
 
-type Bg = (
-	"0" | "1" | "2" | "3" | "4" |
-	`blueGrey${keyof typeof muiColors.blueGrey}`
-);
+//type Bg = (
+//	"0" | "1" | "2" | "3" | "4" |
+//	`blueGrey${keyof typeof muiColors.blueGrey}`
+//);
 
-type BgProps = (
-	{ bg?: Bg; } &
-	{ [P in Capitalize<Bg> as `bg${P}`]?: boolean; }
-);
+//type BgProps = (
+//	{ bg?: Bg; } &
+//	{ [P in Capitalize<Bg> as `bg${P}`]?: boolean; }
+//);
 
 
-export var bgColors = {
+//export var bgColors = {
 
-	[0]: "#ffffff",
-	[1]: "#f0f2f5",
-	[2]: muiColors.blueGrey[200],
-	[3]: muiColors.blueGrey[400],
-	[4]: muiColors.blueGrey[500],
-	//[2]: muiColors.blueGrey[100],
-	//[3]: muiColors.blueGrey[200],
-	//[4]: muiColors.blueGrey[300],
+//	[0]: "#ffffff",
+//	[1]: "#f0f2f5",
+//	[2]: muiColors.blueGrey[200],
+//	[3]: muiColors.blueGrey[400],
+//	[4]: muiColors.blueGrey[500],
+//	//[2]: muiColors.blueGrey[100],
+//	//[3]: muiColors.blueGrey[200],
+//	//[4]: muiColors.blueGrey[300],
 
-	...rangeOP("blueGrey", muiColors.blueGrey, v => v),
+//	...rangeOP("blueGrey", muiColors.blueGrey, v => v),
 
-} as ({ [P in Bg]: string });
+//} as ({ [P in Bg]: string });
 
 
 
@@ -337,7 +337,7 @@ export interface PrimitiveClassesProps extends
 	WidthProps, HeightProps, 
 	FlexProps,
 	Gaps, GapXs, GapYs,
-	BgProps, FontSizeProps, ElevationProps,
+	/*BgProps,*/ FontSizeProps, ElevationProps,
 	RotateProps
 {
 
@@ -821,7 +821,7 @@ export function GlobalStylesOfPrimitives(props: {
 
 
 
-		...rangeOP("bg", bgColors, v => ({ background: v })),
+		//...rangeOP("bg", bgColors, v => ({ background: v })),
 
 		...rangeOP("e", elevaltionShadows, v => ({ boxShadow: v })),
 

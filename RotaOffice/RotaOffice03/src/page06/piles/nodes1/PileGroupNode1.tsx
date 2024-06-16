@@ -1,5 +1,5 @@
 import { Tenta as Tenta_ } from "../../tentas";
-import { PileGroupNode } from "./PileGroupNode";
+import { PileRowNode } from "./PileRowNode";
 
 
 
@@ -22,7 +22,14 @@ export function PileGroupNode1(props: PileGroupNode1.Props & {
 	props.tenta.use();
 
 
-	return PileGroupNode(props);
+	//return PileGroupNode(props);
+	return PileRowNode({
+
+		...props,
+
+		bg: "transparent",
+
+	});
 
 }
 
@@ -40,14 +47,14 @@ export module PileGroupNode1
 
 
 
-	export interface Props extends PileGroupNode.Props<Tenta>
+	export interface Props extends PileRowNode.Props<Tenta>
 	{
 	}
 
 
 
 
-	export class Tenta extends PileGroupNode.Tenta
+	export class Tenta extends PileRowNode.Tenta
 	{
 
 		//---

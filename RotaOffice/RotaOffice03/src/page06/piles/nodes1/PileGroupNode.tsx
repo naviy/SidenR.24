@@ -28,10 +28,6 @@ export interface PileGroupNodeProps<TTenta extends PileRowNodeTenta = PileRowNod
 	hideChildrenLinks?: boolean;
 	backfill?: boolean;
 
-
-	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
-	tailReexpand?: boolean;
-
 	tailDecorator?: PileGroupNode.TailDecorator<TTenta>;
 
 }
@@ -48,8 +44,6 @@ export function PileGroupNode({
 	hideChildrenLinks,
 	backfill,
 
-	tailExpanderRef,
-	tailReexpand,
 	tailDecorator,
 
 	children,
@@ -111,12 +105,10 @@ export function PileGroupNode({
 							<Pane.Col
 
 								id={tenta + ""}
-								expanderRef={tailExpanderRef}
 
 								start={tailIsSeparated}
 								expanded={tailIsVisible}
 								noreexpand
-								//noreexpand={!tailReexpand}
 
 								wrapperCls={`mt${tailMt}`}
 								mb={tailMb as any}
@@ -158,8 +150,6 @@ function GroupAreaNodeBody({
 })
 {
 
-	let accent = Tenta.Accent.use();
-
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
@@ -168,12 +158,6 @@ function GroupAreaNodeBody({
 		? useMemo(children, [tenta.expandPhase, tenta.openPhase])
 		: children
 	);
-
-
-	let bl: Pane.Border = accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
-	let br: Pane.Border = accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
-	let bt: Pane.Border = topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm";
-	let bb: Pane.Border = btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : "";
 
 
 	return (
@@ -193,10 +177,7 @@ function GroupAreaNodeBody({
 				rt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : ""}
 				rb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
 
-				bl={bl}
-				br={br}
-				bt={bt}
-				bb={bb}
+				bg="transparent"
 
 				{...rowProps}
 
@@ -246,7 +227,6 @@ export module PileGroupNode
 				<GroupAreaNodeTail
 					key={col.id}
 					collector={col}
-					cellIndent
 					children={col.defaultListElement()}
 				/>
 			)}
