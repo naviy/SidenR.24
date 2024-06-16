@@ -3,7 +3,7 @@ import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
 import { useMemo, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
-import { PileNodeTail1 } from "./PileNodeTail1";
+import { PileNodeTail1 } from "./PileRowNodeTail1";
 import { PileRowNodeAccentor } from "./PileRowNodeAccentor";
 import { PileRowNodeForefill } from "./PileRowNodeForefill";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";

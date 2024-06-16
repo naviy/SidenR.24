@@ -4,7 +4,7 @@ import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
 import { Tenta as Tenta_ } from "../../tentas";
 import { usePileCellIndent } from "../core/PileCellIndent";
-import { PileNodeTail1 } from "./PileNodeTail1";
+import { PileNodeTail1 } from "./PileRowNodeTail1";
 import { PileRowNode } from "./PileRowNode";
 import { createRef } from "react";
 
@@ -20,7 +20,7 @@ import { createRef } from "react";
 
 
 
-export function PileNode2_2(props: PileNode2_2.Props & {
+export function PileRowNode2_2(props: PileRowNode2_2.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
@@ -36,7 +36,7 @@ export function PileNode2_2(props: PileNode2_2.Props & {
 		...props,
 
 		tailExpanderRef: props.tenta.tailExpanderRef,
-		tailDecorator: PileNode2_2.defaultTailDecorator as PileRowNode.TailDecorator,
+		tailDecorator: PileRowNode2_2.defaultTailDecorator as PileRowNode.TailDecorator,
 
 	});
 
@@ -47,7 +47,7 @@ export function PileNode2_2(props: PileNode2_2.Props & {
 
 
 
-export module PileNode2_2
+export module PileRowNode2_2
 {
 
 

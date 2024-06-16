@@ -3,8 +3,8 @@ import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
 import { useMemo, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
-import { GroupAreaNodeTail } from "./GroupAreaNodeTail";
-import { GroupAreaNodeTenta } from "./GroupAreaNodeTenta";
+import { GroupAreaNodeTail } from "./PileGroupNodeTail";
+import { PileRowNodeTenta } from "./PileRowNodeTenta";
 
 
 
@@ -18,7 +18,7 @@ import { GroupAreaNodeTenta } from "./GroupAreaNodeTenta";
 
 
 
-export interface GroupAreaNodeProps<TTenta extends GroupAreaNodeTenta = GroupAreaNodeTenta>
+export interface PileGroupNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeTenta>
 	extends Omit<Pane.RowProps, /*"id" | */"children">
 {
 
@@ -32,7 +32,7 @@ export interface GroupAreaNodeProps<TTenta extends GroupAreaNodeTenta = GroupAre
 	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
 	tailReexpand?: boolean;
 
-	tailDecorator?: GroupAreaNode.TailDecorator<TTenta>;
+	tailDecorator?: PileGroupNode.TailDecorator<TTenta>;
 
 }
 
@@ -40,7 +40,7 @@ export interface GroupAreaNodeProps<TTenta extends GroupAreaNodeTenta = GroupAre
 
 
 
-export function GroupAreaNode({
+export function PileGroupNode({
 
 	tenta,
 
@@ -56,7 +56,7 @@ export function GroupAreaNode({
 
 	...rowProps
 
-}: GroupAreaNodeProps & {
+}: PileGroupNodeProps & {
 
 	children?: JSX.Element | (() => JSX.Element)
 
@@ -73,7 +73,7 @@ export function GroupAreaNode({
 
 	let linkLine = tenta.parentTenta?.hideChildrenLinks !== true;
 
-	tailDecorator ??= GroupAreaNode.defaultTailDecorator;
+	tailDecorator ??= PileGroupNode.defaultTailDecorator;
 
 	let tailMt = !tailIsVisible ? 0 : btmMargin * 12;
 	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsVisible && tailIsSeparated ? 24 : 0);
@@ -152,7 +152,7 @@ function GroupAreaNodeBody({
 	rowProps,
 	children,
 }: {
-	tenta: GroupAreaNodeTenta;
+	tenta: PileRowNodeTenta;
 	rowProps: Pane.RowProps;
 	children?: JSX.Element | (() => JSX.Element)
 })
@@ -220,7 +220,7 @@ function GroupAreaNodeBody({
 
 
 
-export module GroupAreaNode
+export module PileGroupNode
 {
 
 
@@ -229,9 +229,9 @@ export module GroupAreaNode
 
 
 
-	export type Props<TTenta extends Tenta = Tenta> = GroupAreaNodeProps<TTenta>;
+	export type Props<TTenta extends Tenta = Tenta> = PileGroupNodeProps<TTenta>;
 
-	export import Tenta = GroupAreaNodeTenta;
+	export import Tenta = PileRowNodeTenta;
 
 
 	export type TailDecorator<TTenta extends Tenta_.Base = Tenta_.Base> = (tenta: TTenta) => ReactNode;

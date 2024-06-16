@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useData } from "./db";
 import { Db, Entity, EntityProperty } from "./domain";
 import { Pile } from "./piles";
-import { PileNode2_2 } from "./piles/nodes1/PileNode2_2";
-import { GroupAreaNode1 } from './piles/groupAreas/GroupAreaNode1';
+import { PileRowNode2_2 } from "./piles/nodes1/PileRowNode2_2";
+import { PileGroupNode1 } from './piles/nodes1/PileGroupNode1';
 
 
 
@@ -77,17 +77,17 @@ export module Page061
 
 
 
-var EntitiesPileTenta = GroupAreaNode1.createFactory((db: Db, entities: Entity[]) => [
+var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]) => [
 
 	"EntitiesPile",
 
 	() => entities.map(entity => EntityTenta(db, entity)),
 
-	(tenta: GroupAreaNode1.Tenta) =>
+	(tenta: PileGroupNode1.Tenta) =>
 
 		<Pane.Col start end>
 
-			<GroupAreaNode1 tenta={tenta} backfill>
+			<PileGroupNode1 tenta={tenta} backfill>
 
 				<>
 					<Pane start p12 vcenter>
@@ -97,7 +97,7 @@ var EntitiesPileTenta = GroupAreaNode1.createFactory((db: Db, entities: Entity[]
 					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 				</>
 
-			</GroupAreaNode1>
+			</PileGroupNode1>
 
 		</Pane.Col>
 
@@ -117,20 +117,20 @@ var EntitiesPileTenta = GroupAreaNode1.createFactory((db: Db, entities: Entity[]
 
 
 
-var EntityTenta: PileNode2_2.TF<[Db, Entity]> = PileNode2_2.createFactory((db: Db, entity: Entity) => [
+var EntityTenta: PileRowNode2_2.TF<[Db, Entity]> = PileRowNode2_2.createFactory((db: Db, entity: Entity) => [
 
 	entity.id,
 
 	() => entity.props?.map(a => EntityPropertyTenta(db, a)),
 
 
-	(tenta: PileNode2_2.Tenta) =>
+	(tenta: PileRowNode2_2.Tenta) =>
 	{
 
 		//$log("Unit Row " + tenta);
 
 
-		return <PileNode2_2 backfill tenta={tenta}>
+		return <PileRowNode2_2 backfill tenta={tenta}>
 
 			<>
 
@@ -148,7 +148,7 @@ var EntityTenta: PileNode2_2.TF<[Db, Entity]> = PileNode2_2.createFactory((db: D
 
 			</>
 
-		</PileNode2_2>;
+		</PileRowNode2_2>;
 
 	},
 
@@ -159,15 +159,15 @@ var EntityTenta: PileNode2_2.TF<[Db, Entity]> = PileNode2_2.createFactory((db: D
 
 
 
-var EntityPropertyTenta: PileNode2_2.TF<[Db, EntityProperty]> = PileNode2_2.createFactory(
+var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_2.createFactory(
 
 	(db: Db, prop: EntityProperty) => [
 
 		prop.id,
 
-		(tenta: PileNode2_2.Tenta) => (
+		(tenta: PileRowNode2_2.Tenta) => (
 
-			<PileNode2_2 tenta={tenta}>
+			<PileRowNode2_2 tenta={tenta}>
 
 				<>
 
@@ -185,7 +185,7 @@ var EntityPropertyTenta: PileNode2_2.TF<[Db, EntityProperty]> = PileNode2_2.crea
 
 				</>
 
-			</PileNode2_2>
+			</PileRowNode2_2>
 
 		)
 

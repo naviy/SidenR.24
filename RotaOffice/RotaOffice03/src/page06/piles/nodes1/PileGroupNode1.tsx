@@ -1,5 +1,5 @@
 import { Tenta as Tenta_ } from "../../tentas";
-import { GroupAreaNode } from "../groupAreas/GroupAreaNode";
+import { PileGroupNode } from "./PileGroupNode";
 
 
 
@@ -13,7 +13,7 @@ import { GroupAreaNode } from "../groupAreas/GroupAreaNode";
 
 
 
-export function GroupAreaNode1(props: GroupAreaNode1.Props & {
+export function PileGroupNode1(props: PileGroupNode1.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
@@ -22,7 +22,7 @@ export function GroupAreaNode1(props: GroupAreaNode1.Props & {
 	props.tenta.use();
 
 
-	return GroupAreaNode(props);
+	return PileGroupNode(props);
 
 }
 
@@ -31,7 +31,7 @@ export function GroupAreaNode1(props: GroupAreaNode1.Props & {
 
 
 
-export module GroupAreaNode1
+export module PileGroupNode1
 {
 
 
@@ -40,14 +40,14 @@ export module GroupAreaNode1
 
 
 
-	export interface Props extends GroupAreaNode.Props<Tenta>
+	export interface Props extends PileGroupNode.Props<Tenta>
 	{
 	}
 
 
 
 
-	export class Tenta extends GroupAreaNode.Tenta
+	export class Tenta extends PileGroupNode.Tenta
 	{
 
 		//---
