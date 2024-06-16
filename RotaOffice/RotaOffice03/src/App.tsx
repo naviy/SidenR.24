@@ -17,6 +17,7 @@ import { Page042 } from "./page04/Page042";
 import { Page043 } from "./page04/Page043";
 import { Page051 } from "./page051/Page051";
 import { Page052 } from "./page052/Page052";
+import { Page061 } from "./page06/Page061";
 
 
 
@@ -91,6 +92,7 @@ function AppDesktop()
 		Page043.route,
 		Page051.route,
 		Page052.route,
+		Page061.route,
 	];
 
 
