@@ -1,3 +1,7 @@
+import { ErrorBoundary } from "@app";
+import { Pane } from '@libs';
+import type { Color } from "@mui/material";
+import clsx from "clsx";
 import { Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
@@ -13,7 +17,10 @@ import { PileRowNode } from "./PileRowNode";
 
 
 
-export function PileGroupNode1(props: PileGroupNode1.Props & {
+export function PileGroupNode1({
+	color,
+	...props
+}: PileGroupNode1.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
@@ -23,11 +30,22 @@ export function PileGroupNode1(props: PileGroupNode1.Props & {
 
 
 	//return PileGroupNode(props);
-	return PileRowNode({
+	return PileRowNode<PileGroupNode1.Tenta>({
+
+		tailDecorator: PileGroupNode1.defaultTailDecorator,
 
 		...props,
 
+		backfill: (props.backfill === true
+			? ((tenta) => PileRowNode.defaultBackfill(tenta, color))
+			: props.backfill
+		),
+
 		bg: "transparent",
+		//pl: 32,
+		pr: 24,
+
+		style: color ? { color: color[700], ...props.style } : props.style,
 
 	});
 
@@ -49,6 +67,7 @@ export module PileGroupNode1
 
 	export interface Props extends PileRowNode.Props<Tenta>
 	{
+		color?: Color;
 	}
 
 
@@ -121,6 +140,78 @@ export module PileGroupNode1
 	): TentaFactory<TArgs>
 	{
 		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);
+	}
+
+
+
+	//---
+
+
+
+	export function defaultTailDecorator(tenta: Tenta_.Base)
+	{
+
+		return <>
+			{tenta.collectors?.map(col =>
+				<Tail
+					key={col.id}
+					collector={col}
+					children={col.defaultListElement()}
+				/>
+			)}
+		</>;
+	}
+
+
+
+	//---
+
+
+
+	export function Tail({
+
+		collector,
+
+		children,
+
+		...colProps
+
+	}: Pane.ColProps & {
+
+		collector: Tenta_.Collector;
+
+	})
+	{
+
+
+		let isSeparated = collector.isSeparated();
+
+
+		return (
+
+			<ErrorBoundary>
+
+				<Pane.Col
+
+					start
+					end
+
+					rt={isSeparated ? "lg" : undefined}
+					rb={isSeparated ? "lg" : undefined}
+
+					{...colProps}
+
+					wrapperCls={clsx(`px36 pb12`, colProps.wrapperCls)}
+				>
+
+					{children}
+
+				</Pane.Col>
+
+			</ErrorBoundary>
+
+		);
+
 	}
 
 

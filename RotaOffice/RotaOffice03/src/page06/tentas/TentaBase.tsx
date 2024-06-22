@@ -361,7 +361,6 @@ export class TentaBase<
 
 
 
-	@$log.m
 	ensureState(cfg?: {
 		readonly defaultExpandPhase?: TentaExpandPhase;
 		readonly defaultOpenPhase?: TentaOpenPhase;

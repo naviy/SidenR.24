@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
+import { $log, Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
 import { useMemo, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
@@ -7,6 +7,8 @@ import { PileNodeTail1 } from "./PileRowNodeTail1";
 import { PileRowNodeAccentor } from "./PileRowNodeAccentor";
 import { PileRowNodeForefill } from "./PileRowNodeForefill";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";
+import { PileRowNodeBackfill } from "./PileRowNodeBackfill";
+import type { Color } from "@mui/material";
 
 
 
@@ -30,7 +32,7 @@ export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeT
 	hideChildrenLinks?: boolean;
 
 	border?: boolean;
-	backfill?: boolean;
+	backfill?: boolean | ((tenta: TTenta) => JSX.Element);
 	forefill?: boolean;
 
 
@@ -44,7 +46,7 @@ export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeT
 
 
 
-export function PileRowNode({
+export function PileRowNode<TTenta extends PileRowNodeTenta = PileRowNodeTenta>({
 
 	tenta,
 
@@ -62,7 +64,7 @@ export function PileRowNode({
 
 	...rowProps
 
-}: PileRowNodeProps & {
+}: PileRowNodeProps<TTenta> & {
 
 	children?: JSX.Element | (() => JSX.Element)
 
@@ -81,6 +83,13 @@ export function PileRowNode({
 
 	tailDecorator ??= PileRowNode.defaultTailDecorator;
 
+	let backfillRender = (
+		backfill === true ? PileRowNode.defaultBackfill :
+			typeof backfill === "function" ? backfill :
+				null
+	);
+
+
 	let tailMt = !tailIsVisible ? 0 : btmMargin * 12;
 	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsVisible && tailIsSeparated ? 24 : 0);
 
@@ -98,10 +107,7 @@ export function PileRowNode({
 
 					{linkLine && <Pile.Node.LinkLine tenta={tenta} lineToNext={linkToNext} />}
 
-					{backfill && <Pile.Node.Backfill
-						mb={tailIsVisible ? 24 : 48}
-						visible={tailIsVisible && tailIsSeparated}
-					/>}
+					{backfillRender?.(tenta)}
 
 
 					<PileRowNodeAccentor tenta={tenta}>
@@ -263,7 +269,7 @@ export module PileRowNode
 
 
 
-	export function defaultTailDecorator(tenta: Tenta_.Base)
+	export function defaultTailDecorator(tenta: PileRowNodeTenta)
 	{
 		return <>
 			{tenta.collectors?.map(col =>
@@ -277,6 +283,10 @@ export module PileRowNode
 		</>;
 	}
 
+
+
+
+	export var defaultBackfill = PileRowNodeBackfill.render;
 
 
 

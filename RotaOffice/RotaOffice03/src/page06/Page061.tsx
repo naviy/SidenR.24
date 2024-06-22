@@ -6,6 +6,7 @@ import { Db, Entity, EntityProperty } from "./domain";
 import { Pile } from "./piles";
 import { PileRowNode2_2 } from "./piles/nodes1/PileRowNode2_2";
 import { PileGroupNode1 } from './piles/nodes1/PileGroupNode1';
+import * as colors from '@mui/material/colors';
 
 
 
@@ -47,7 +48,6 @@ export module Page061
 
 			root: true,
 
-			defaultExpandPhase: 2,
 			defaultOpenPhase: 1,
 
 			hideChildrenLinks: true,
@@ -87,7 +87,7 @@ var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]
 
 		<Pane.Col start end>
 
-			<PileGroupNode1 tenta={tenta} backfill>
+			<PileGroupNode1 tenta={tenta} backfill color={colors.lime}>
 
 				<>
 					<Pane start p12 vcenter>

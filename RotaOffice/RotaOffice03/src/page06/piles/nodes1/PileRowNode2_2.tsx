@@ -29,7 +29,7 @@ export function PileRowNode2_2(props: PileRowNode2_2.Props & {
 	props.tenta.use();
 
 
-	return PileRowNode({
+	return PileRowNode<PileRowNode2_2.Tenta>({
 
 		//tailReexpand: true,
 

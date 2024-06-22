@@ -1,4 +1,4 @@
-.pile-node-backfill {
+.pile-row-node-backfill {
 
 	position: absolute;
 	inset: 0;
@@ -9,7 +9,10 @@
 	border: 2px dotted var(--blue-grey-400);
 	/*border-bottom-style: solid;*/
 
-	background: rgba(255,255,255,.4);
+	background: var(--bg, rgba(255,255,255,.4));
+	border-radius: 12px;
+	border: var(--brd, 2px dotted var(--blue-grey-400));
+	color: var(--color, inherit);
 
 	opacity: var(--op, 0);
 
