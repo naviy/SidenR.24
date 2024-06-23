@@ -1,6 +1,7 @@
+import { $log } from "../../@libs";
+$log("domain\index");
 import { Semantic } from "../core/semantics";
 import { entities } from "./entities/_sm";
-
 
 
 
@@ -22,6 +23,6 @@ export var gsm = Semantic.create(sm => ({
 
 
 
-export * from "./_db";
+export * from "./db";
 
 export * from "./entities";

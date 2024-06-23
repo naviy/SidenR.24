@@ -2,7 +2,7 @@ import { Div, Pane, Route, Txt } from '@libs';
 import PageIcon from '@mui/icons-material/Analytics';
 import { useState } from "react";
 import { useData } from "./db";
-import { Db, Entity, EntityProperty } from "./domain";
+import type { Db, Entity, EntityProperty } from "./domain";
 import { Pile } from "./piles";
 import { PileRowNode2_2 } from "./piles/nodes1/PileRowNode2_2";
 import { PileGroupNode1 } from './piles/nodes1/PileGroupNode1';
@@ -45,13 +45,7 @@ export module Page061
 
 
 		tenta.use({
-
 			root: true,
-
-			defaultOpenPhase: 1,
-
-			hideChildrenLinks: true,
-
 		});
 
 
@@ -83,7 +77,11 @@ var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]
 
 	() => entities.map(entity => EntityTenta(db, entity)),
 
-	(tenta: PileGroupNode1.Tenta) =>
+	tenta => tenta.init({
+		defaultOpenPhase: 1,
+	}),
+
+	tenta =>
 
 		<Pane.Col start end>
 
@@ -119,12 +117,23 @@ var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]
 
 var EntityTenta: PileRowNode2_2.TF<[Db, Entity]> = PileRowNode2_2.createFactory((db: Db, entity: Entity) => [
 
-	entity.id,
+	`Entity ${entity.id}`,
 
 	() => entity.props?.map(a => EntityPropertyTenta(db, a)),
 
+	tenta => tenta.init({
 
-	(tenta: PileRowNode2_2.Tenta) =>
+		maxExpandPhase: 1,
+
+		defaultOpenPhase: 1,
+
+		restState: () => ({
+			bodyIsSeparated: true,
+		}),
+
+	}),
+
+	tenta =>
 	{
 
 		//$log("Unit Row " + tenta);
@@ -165,7 +174,11 @@ var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_
 
 		prop.id,
 
-		(tenta: PileRowNode2_2.Tenta) => (
+		null,
+
+		tenta => { },
+
+		tenta => (
 
 			<PileRowNode2_2 tenta={tenta}>
 
@@ -178,7 +191,7 @@ var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_
 						</Div>
 
 						<Div flex1 p12>
-							<Div fontLg><em>{prop.title}</em></Div>
+							{prop.title}
 						</Div>
 
 					</Pane>

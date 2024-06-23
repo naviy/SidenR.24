@@ -26,7 +26,8 @@ export function PileRowNode2_2(props: PileRowNode2_2.Props & {
 {
 	//$log("PileNode2_2 " + props.tenta)
 
-	props.tenta.use();
+	props.tenta.ensureUse();
+	//props.tenta.use();
 
 
 	return PileRowNode<PileRowNode2_2.Tenta>({
@@ -142,19 +143,20 @@ export module PileRowNode2_2
 			let collapsed = !expandPhase;
 			let closed = !openPhase;
 
-			let tailIsVisible = !closed && this.hasCollectors;
-			let tailIsSeparated = expandPhase === this.maxExpandPhase || this.hasBodySeparatedItems;
+			//let tailIsVisible = !closed && this.hasCollectors;
+			//let tailIsSeparated = expandPhase === this.maxExpandPhase || this.hasBodySeparatedItems;
 
 
 			return {
 
 				bodyIsSeparated: !collapsed,
+				//bodyIsSeparated: this.maxExpandPhase ===1,
 
-				tailIsVisible,
-				tailIsSeparated,
+				tailIsVisible: !closed && this.hasCollectors,
+				tailIsSeparated: expandPhase === this.maxExpandPhase || this.hasBodySeparatedItems,
 
 				//tabsIsVisible: tailIsVisible && (tailIsSeparated || openPhase > 1),
-				tabsIsVisible: this.hasCollectors && (!collapsed || !closed && openPhase > 1),
+				tabsIsVisible: this.hasCollectors && (!collapsed || openPhase > 1),
 
 			};
 

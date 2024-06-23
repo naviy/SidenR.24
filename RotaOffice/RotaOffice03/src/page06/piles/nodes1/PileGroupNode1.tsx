@@ -26,7 +26,7 @@ export function PileGroupNode1({
 {
 	//$log("GroupNode1 " + props.tenta)
 
-	props.tenta.use();
+	props.tenta.ensureUse();
 
 
 	//return PileGroupNode(props);

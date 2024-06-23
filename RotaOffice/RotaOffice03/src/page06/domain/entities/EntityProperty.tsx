@@ -1,4 +1,6 @@
-import { DbEntity } from "../_dbEntity";
+import { type Db } from "../db";
+import { DbEntity } from "../dbEntity";
+import type { ValueType } from "../valueTypes";
 import type { Entity } from "./Entity";
 
 
@@ -18,7 +20,8 @@ export class EntityProperty extends DbEntity
 
 	constructor(
 		public entity: Entity,
-		public title: string
+		public title: string,
+		public valueType?: ValueType,
 	)
 	{
 		super();

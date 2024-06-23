@@ -1,5 +1,6 @@
-import type { Db } from "../_db";
-import { DbEntity } from "../_dbEntity";
+import { type Db } from "../db";
+import { DbEntity } from "../dbEntity";
+import type { ValueType } from "../valueTypes";
 import { EntityProperty } from "./EntityProperty";
 
 
@@ -20,7 +21,6 @@ export class Entity extends DbEntity
 	//---
 
 
-
 	constructor(
 		public title: string
 	)
@@ -29,9 +29,7 @@ export class Entity extends DbEntity
 	}
 
 
-
 	//---
-
 
 
 	props: EntityProperty[] = [];
@@ -39,22 +37,16 @@ export class Entity extends DbEntity
 
 	addProp(
 		title: string,
+		valueType?: ValueType,
 		fields?: EntityProperty.RestFields | null,
 		init?: (prop: EntityProperty) => void
 	)
 	{
-		let prop = new EntityProperty(this, title);
-
-		fields && Object.assign(prop, fields);
-
-		init?.(prop);
-
-
-		this.props.push(prop);
-
-
-		return prop;
-
+		return DbEntity.addTo(
+			new EntityProperty(this, title, valueType),
+			this.props,
+			fields, init
+		);
 	}
 
 
@@ -96,23 +88,11 @@ export module Entity
 
 			add(
 				title: string,
-				fields?: Partial<Entity> | null,
+				fields?: RestFields | null,
 				init?: (entity: Entity) => void
 			): Entity
 			{
-
-				let entity = new Entity(title);
-
-				fields && Object.assign(this, fields);
-
-				init?.(entity);
-
-
-				all.push(entity);
-
-
-				return entity;
-
+				return DbEntity.addTo(new Entity(title), all, fields, init);
 			},
 
 

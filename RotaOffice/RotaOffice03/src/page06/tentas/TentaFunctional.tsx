@@ -109,9 +109,13 @@ export module TentaFunctional
 	export interface Config<TTenta extends TentaBase = TentaBase>
 	{
 		id: React.Key;
+
 		collectors?: TentaCollectorPropsAliases;
+		init?: (tenta: TTenta) => void;
+
 		render?: (tenta: TTenta) => ReactNode;
 		component?: FC<{ tenta: TTenta }>;
+
 	}
 
 
@@ -121,13 +125,15 @@ export module TentaFunctional
 
 		id: React.Key,
 
-		collectors: TentaCollectorPropsAliases | TentaCollectorProps["tentas"],
+		collectors: TentaCollectorPropsAliases | TentaCollectorProps["tentas"] | null,
+		init: ((tenta: TTenta) => void) | null,
+
 
 		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
 
-	] | [
-		id: React.Key,
-		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
+	//] | [
+	//	id: React.Key,
+	//	componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
 	];
 
 
@@ -160,9 +166,12 @@ export module TentaFunctional
 
 		let id = cfg[0];
 
-		let componentOrRender = cfg.length === 3 ? cfg[2] : cfg[1];
+		//let componentOrRender = cfg.length === 3 ? cfg[2] : cfg[1];
+		//let collectors0 = cfg.length === 3 ? cfg[1] : undefined;
 
-		let collectors0 = cfg.length === 3 ? cfg[1] : undefined;
+		let componentOrRender = cfg[3];
+		let init = cfg[2] || undefined;
+		let collectors0 = cfg[1] || undefined;
 
 		let collectors = typeof collectors0 === "function" ? { items: collectors0 } : collectors0;
 
@@ -171,16 +180,18 @@ export module TentaFunctional
 		{
 			return {
 				id,
-				component: componentOrRender,
 				collectors,
+				init, 
+				component: componentOrRender,
 			};
 		}
 		else
 		{
 			return {
 				id,
-				render: componentOrRender,
 				collectors,
+				init, 
+				render: componentOrRender,
 			};
 		}
 
@@ -211,6 +222,7 @@ export module TentaFunctional
 		TArgs extends any[]
 	>(
 		tentaClass: Constructor<TTenta & TentaFunctional>,
+		//init: null | ((tenta: TTenta & TentaFunctional) => void),
 		configGetter: ConfigAlias<TTenta, TArgs>
 	):
 		(/*id: React.Key,*/ ...args: TArgs) => TTenta
@@ -225,7 +237,9 @@ export module TentaFunctional
 
 			tenta.cfg = cfg as any;
 			cfg.collectors && tenta.addCollectors(cfg.collectors);
-			tenta.init();
+			//tenta.init();
+			cfg.init?.(tenta);
+			//init?.(tenta);
 
 			return tenta;
 

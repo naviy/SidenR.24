@@ -96,11 +96,11 @@ export class TentaBase<
 	}
 
 
-	/** Вызывается вручную после создания и добавления коллекторов */
-	init()
-	{
+	///** Вызывается вручную после создания и добавления коллекторов */
+	//init()
+	//{
 
-	}
+	//}
 
 
 	//---
@@ -167,9 +167,8 @@ export class TentaBase<
 	get expandPhase(): TentaExpandPhase { return this.#state?.expandPhase || 0; }
 	get openPhase(): TentaOpenPhase { return this.#state?.openPhase || 0; }
 
-
-	get maxExpandPhase(): TentaExpandPhase { return 2; }
-	get maxOpenPhase(): TentaOpenPhase { return 1; }
+	accessor maxExpandPhase: TentaOpenPhase = 2;
+	accessor maxOpenPhase: TentaOpenPhase = 1;
 
 
 	get defaultMargin(): number { return this.state.defaultMargin; }
@@ -221,26 +220,47 @@ export class TentaBase<
 
 
 
+	#used = false;
+
+
+	//@$log.m
 	use(cfg?: TentaBase.UseConfig)
 	{
 
 		Repaintable.use(this, cfg);
 
-		this.ensureState(cfg);
+		this.ensureState();
 
 		this.#recalcCollectors();
 
 
-		if (cfg?.hideChildrenLinks != null)
-		{
-			this.hideChildrenLinks = cfg.hideChildrenLinks;
-		}
+		//if (cfg?.hideChildrenLinks != null)
+		//{
+		//	this.hideChildrenLinks = cfg.hideChildrenLinks;
+		//}
+
+
+		this.#used = true;
 
 
 		return this;
 
 	}
 
+
+	//@$log.m
+	ensureUse(cfg?: TentaBase.UseConfig)
+	{
+
+		if (!this.#used)
+		{
+			this.use(cfg);
+		}
+
+
+		this.#used = false;
+
+	}
 
 
 	addCollector(id: React.Key, propsAlias: TentaCollectorPropsAlias)
@@ -336,28 +356,39 @@ export class TentaBase<
 
 
 
-	//initPhase(cfg?: {
-	//	//readonly maxExpandPhase?: TentaExpandPhase;
-	//	//readonly maxOpenPhase?: TentaOpenPhase;
-	//	readonly defaultExpandPhase?: TentaExpandPhase;
-	//	readonly defaultOpenPhase?: TentaOpenPhase;
-	//})
-	//{
+	init(cfg?: {
 
-	//	//if (cfg?.maxExpandPhase != null)
-	//	//{
-	//	//	this.maxExpandPhase = cfg.maxExpandPhase;
-	//	//}
+		readonly maxExpandPhase?: TentaExpandPhase;
+		readonly maxOpenPhase?: TentaOpenPhase;
 
-	//	//if (cfg?.maxOpenPhase != null)
-	//	//{
-	//	//	this.maxOpenPhase = cfg.maxOpenPhase;
-	//	//}
+		readonly defaultExpandPhase?: TentaExpandPhase;
+		readonly defaultOpenPhase?: TentaOpenPhase;
+
+		readonly restState?: () => Partial<TentaRestState & TRestStateEx>;
+
+	})
+	{
+
+		if (cfg?.maxExpandPhase != null)
+		{
+			this.maxExpandPhase = cfg.maxExpandPhase;
+		}
+
+		if (cfg?.maxOpenPhase != null)
+		{
+			this.maxOpenPhase = cfg.maxOpenPhase;
+		}
 
 
-	//	this.ensureState(cfg);
+		if (cfg?.restState != null)
+		{
+			this.#restStateGetter = cfg.restState;
+		}
 
-	//}
+
+		this.ensureState(cfg);
+
+	}
 
 
 
@@ -403,6 +434,13 @@ export class TentaBase<
 
 		let restState = this.getRestState(expandPhase, openPhase);
 
+		if (this.#restStateGetter != null)
+		{
+			let addRestState = this.#restStateGetter();
+
+			addRestState && Object.assign(restState, addRestState)
+		}
+
 
 		return {
 
@@ -422,6 +460,10 @@ export class TentaBase<
 		} as TTentaState;
 
 	}
+
+
+
+	#restStateGetter?: () => Partial<TentaRestState & TRestStateEx>;
 
 
 	getRestState(
@@ -1369,10 +1411,10 @@ export module TentaBase
 	export interface UseConfig extends Repaintable.UseConfig
 	{
 
-		readonly defaultExpandPhase?: TentaExpandPhase;
-		readonly defaultOpenPhase?: TentaOpenPhase;
+		//readonly defaultExpandPhase?: TentaExpandPhase;
+		//readonly defaultOpenPhase?: TentaOpenPhase;
 
-		readonly hideChildrenLinks?: boolean;
+		//readonly hideChildrenLinks?: boolean;
 
 	}
 
