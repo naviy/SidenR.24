@@ -78,6 +78,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 					<caption>topMargin: {tenta.topMargin()}</caption>
 					<tbody>
 						<Row label="bodyTopMargin" r={tenta.bodyTopMargin()} />
+						<BoolRow indent label="bodyIsSeparated" r={tenta.bodyIsSeparated} />
 						<TentaRow label="prior" r={tenta.prior()} />
 						<Row indent label="btmMargin" r={tenta.prior()?.btmMargin()} />
 					</tbody>

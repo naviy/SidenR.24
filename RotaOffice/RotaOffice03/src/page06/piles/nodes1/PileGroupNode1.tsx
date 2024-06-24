@@ -92,7 +92,7 @@ export module PileGroupNode1
 
 			return {
 
-				bodyIsSeparated: !openPhase,
+				bodyIsSeparated: !!openPhase,
 
 				tailIsVisible: !!openPhase && this.hasCollectors,
 				tailIsSeparated: !!openPhase,

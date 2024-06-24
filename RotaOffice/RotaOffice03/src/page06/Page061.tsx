@@ -47,13 +47,13 @@ export module Page061
 		]);
 
 
-		return <>
+		return (
 
 			<Div mx200 m100>
 				<Tenta.Collector.List bhv={col} />
 			</Div>
 
-		</>;
+		);
 
 	}
 
