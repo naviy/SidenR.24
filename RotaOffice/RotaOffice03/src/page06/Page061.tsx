@@ -41,11 +41,6 @@ export module Page061
 		let { db } = useData();
 
 
-		//let entitiesTenta = EntitiesPileTenta.use(db, db.Entity.all);
-
-		//let valueTypesTenta = ValueTypesPileTenta.use(db, db.ValueType.all);
-
-
 		let col = Tenta.Collector.use("root", () => [
 			EntitiesPileTenta(db, db.Entity.all),
 			ValueTypesPileTenta(db, db.ValueType.all),
@@ -56,8 +51,6 @@ export module Page061
 
 			<Div mx200 m100>
 				<Tenta.Collector.List bhv={col} />
-				{/*{entitiesTenta.render()}*/}
-				{/*{valueTypesTenta.render()}*/}
 			</Div>
 
 		</>;
