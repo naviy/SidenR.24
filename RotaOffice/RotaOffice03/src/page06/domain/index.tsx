@@ -26,3 +26,4 @@ export var gsm = Semantic.create(sm => ({
 export * from "./db";
 
 export * from "./entities";
+export * from "./valueTypes";

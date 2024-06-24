@@ -1,6 +1,7 @@
-import { ValueType } from "./_ValueType";
+import type { ReactNode } from "react";
 import { type Db } from "../db";
 import { DbEntity } from "../dbEntity";
+import { ValueType } from "./_ValueType";
 
 
 
@@ -26,6 +27,30 @@ export class StringType extends ValueType
 	{
 		super();
 	}
+
+
+	override renderTitle()
+	{
+
+		let { title, length, minLength, maxLength } = this;
+
+		let lens: ReactNode = undefined;
+
+
+		if (length != null)
+		{
+			lens = <>({length})</>;
+		}
+		else if (minLength != null || maxLength != null)
+		{
+			lens = <>({minLength || ""}..{maxLength || ""})</>;
+		}
+		
+
+		return <>{title} = string{lens}</>;
+
+	}
+
 
 }
 

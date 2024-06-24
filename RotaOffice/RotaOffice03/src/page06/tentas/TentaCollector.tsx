@@ -1,6 +1,6 @@
 import { GlobalState, Repaintable } from "@libs";
 import type React from "react";
-import { type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { type TentaBase } from "./TentaBase";
 
 
@@ -284,6 +284,23 @@ export module TentaCollector
 
 
 
+	export function use(id: React.Key,  propsAlias: TentaCollectorPropsAlias)
+	{
+
+		let props = typeof propsAlias === "function" ? { tentas: propsAlias } : propsAlias;
+
+		let [col] = useState(() => new TentaCollector(id, null, props));
+
+		return col;
+
+	};
+
+
+
+	//---
+
+
+
 	export function List(
 		props: {
 			bhv: TentaCollector;
@@ -327,4 +344,8 @@ export module TentaCollector
 
 	//---
 
+}
+
+function EntitiesPileTenta(db: any, all: any) {
+	throw new Error("Function not implemented.");
 }

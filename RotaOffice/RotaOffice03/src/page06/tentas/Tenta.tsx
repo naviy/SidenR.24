@@ -18,9 +18,12 @@ export { TentaAccent as Accent } from "./TentaAccent";
 
 export {
 	TentaBase as Base,
-	isTenta, type TentaExpandPhase as ExpandPhase,
-	type TentaOpenPhase as OpenPhase
+	isTenta,
+	type TentaExpandPhase as ExpandPhase,
+	type TentaOpenPhase as OpenPhase,
+	type TentaGlobalState as GlobalState,
 } from "./TentaBase";
+
 
 export { TentaFocusable as Focusable } from "./TentaFocusable";
 

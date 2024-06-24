@@ -14,53 +14,49 @@ import "./PileRowNodeBackfill.scss";
 
 
 
-export module PileRowNodeBackfill
-{
-
-
-
-	export var Root = styled(
-		"div",
-		{
-			//name: "pile-row-node-backfill",
-			shouldForwardProp: p => p !== "bg" && p !== "color" && p !== "brd" && p !== "mb" && p !== "visible",
-		}
-	)<{
-		bg?: string;
-		brd?: string;
-		color?: string;
-		mb?: number;
-		visible?: boolean;
-	}>(props => ({
-
-		"--bg": props.bg,
-		"--brd": props.brd,
-		"--color": props.color,
-
-		"--mb": `${props.mb}px`,
-		"--op": props.visible !== false ? 1 : undefined
-
-	}));
-
-
-	export function render(tenta: TentaBase, color?: Color | null)
+export var PileRowNodeBackfill = styled(
+	"div",
 	{
-
-		let { tailIsVisible, tailIsSeparated } = tenta;
-
-
-		return (
-			<Root
-				className="pile-row-node-backfill"
-				bg={color ? lighten(color[50], .5) : undefined}
-				brd={color ? `2px solid ${color?.[200]}` : undefined}
-				color={color?.[400]}
-				mb={tailIsVisible ? 24 : 48}
-				visible={tailIsVisible && tailIsSeparated}
-			/>
-		);
-
+		target: "pile-row-node-backfill",
+		
+		shouldForwardProp: p => p !== "bg" && p !== "color" && p !== "brd" && p !== "mb" && p !== "visible",
 	}
+)<{
+	bg?: string;
+	brd?: string;
+	color?: string;
+	mb?: number;
+	visible?: boolean;
+}>(props => ({
+
+	"--bg": props.bg,
+	"--brd": props.brd,
+	"--color": props.color,
+
+	"--mb": `${props.mb}px`,
+	"--op": props.visible !== false ? 1 : undefined
+
+}));
 
 
-}
+//	export function render(tenta: TentaBase, color?: Color | null)
+//	{
+
+//		let { tailIsVisible, tailIsSeparated } = tenta;
+
+
+//		return (
+//			<Root
+//				className="pile-row-node-backfill"
+//				bg={color ? lighten(color[50], .5) : undefined}
+//				brd={color ? `2px solid ${color?.[200]}` : undefined}
+//				color={color?.[400]}
+//				mb={tailIsVisible ? 24 : 48}
+//				visible={tailIsVisible && tailIsSeparated}
+//			/>
+//		);
+
+//	}
+
+
+//}

@@ -8,7 +8,7 @@ import { PileRowNodeAccentor } from "./PileRowNodeAccentor";
 import { PileRowNodeForefill } from "./PileRowNodeForefill";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";
 import { PileRowNodeBackfill } from "./PileRowNodeBackfill";
-import type { Color } from "@mui/material";
+import { lighten, type Color } from "@mui/material";
 
 
 
@@ -92,7 +92,12 @@ export function PileRowNode<TTenta extends PileRowNodeTenta = PileRowNodeTenta>(
 
 	let tailMt = !tailIsVisible ? 0 : btmMargin * 12;
 	let tailMb = (tailIsVisible ? 0 : btmMargin * 12) + (backfill && tailIsVisible && tailIsSeparated ? 24 : 0);
+	//tailMb *= 3;
 
+	//$log._("btmMargin:", btmMargin);
+	//$log._("tailIsVisible:", tailIsVisible);
+	//$log._("tailIsSeparated:", tailIsSeparated);
+	//$log._("tailMb:", tailMb);
 
 	return (
 
@@ -136,7 +141,11 @@ export function PileRowNode<TTenta extends PileRowNodeTenta = PileRowNodeTenta>(
 
 								wrapperCls={`mt${tailMt}`}
 								mb={tailMb as any}
-								addExpandedHeight={tailMt + tailMb}
+								addExpandedHeight={tailMt}
+
+								//wrapperCls={`mt${tailMt}`}
+								//mb={tailMb as any}
+								//addExpandedHeight={tailMt + tailMb}
 
 
 							//borderGreen border4
@@ -286,7 +295,25 @@ export module PileRowNode
 
 
 
-	export var defaultBackfill = PileRowNodeBackfill.render;
+	export function defaultBackfill(tenta: Tenta_.Base, color?: Color | null)
+	{
+
+		let { tailIsVisible, tailIsSeparated } = tenta;
+
+
+		return (
+			<PileRowNodeBackfill
+				//className="pile-row-node-backfill"
+				bg={color ? lighten(color[50], .5) : undefined}
+				brd={color ? `2px solid ${color?.[200]}` : undefined}
+				color={color?.[400]}
+				mb={tailIsVisible ? 24 : 48}
+				visible={tailIsVisible && tailIsSeparated}
+			/>
+		);
+
+	}
+
 
 
 

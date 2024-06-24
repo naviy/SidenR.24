@@ -249,7 +249,7 @@ export class TentaBase<
 
 
 	//@$log.m
-	ensureUse(cfg?: TentaBase.UseConfig)
+	useInNode(cfg?: TentaBase.UseConfig): void
 	{
 
 		if (!this.#used)
@@ -261,6 +261,10 @@ export class TentaBase<
 		this.#used = false;
 
 	}
+
+
+
+	//---
 
 
 	addCollector(id: React.Key, propsAlias: TentaCollectorPropsAlias)

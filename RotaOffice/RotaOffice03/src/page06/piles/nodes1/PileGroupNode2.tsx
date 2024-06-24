@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { $log, Pane } from '@libs';
+import { Pane } from '@libs';
 import type { Color } from "@mui/material";
 import clsx from "clsx";
 import { Tenta as Tenta_ } from "../../tentas";
@@ -17,22 +17,22 @@ import { PileRowNode } from "./PileRowNode";
 
 
 
-export function PileGroupNode1({
+export function PileGroupNode2({
 	color,
 	...props
-}: PileGroupNode1.Props & {
+}: PileGroupNode2.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
-	//$log("PileGroupNode1 " + props.tenta)
+	//$log("GroupNode1 " + props.tenta)
 
 	props.tenta.useInNode();
 
 
 	//return PileGroupNode(props);
-	return PileRowNode<PileGroupNode1.Tenta>({
+	return PileRowNode<PileGroupNode2.Tenta>({
 
-		tailDecorator: PileGroupNode1.defaultTailDecorator,
+		tailDecorator: PileGroupNode2.defaultTailDecorator,
 
 		...props,
 
@@ -56,7 +56,7 @@ export function PileGroupNode1({
 
 
 
-export module PileGroupNode1
+export module PileGroupNode2
 {
 
 
@@ -83,7 +83,6 @@ export module PileGroupNode1
 		override get maxExpandPhase() { return 0; }
 
 
-		//@$log.m
 		override getRestState(
 			expandPhase: Tenta_.ExpandPhase,
 			openPhase: Tenta_.OpenPhase
@@ -92,33 +91,21 @@ export module PileGroupNode1
 
 			return {
 
-				bodyIsSeparated: !openPhase,
+				bodyIsSeparated: true,
 
 				tailIsVisible: !!openPhase && this.hasCollectors,
-				tailIsSeparated: !!openPhase,
+				tailIsSeparated: true,
 
 			};
 
 		}
 
 
-		//override onItemBodyDeseparated()
-		//{
-		//	this.refresh();
-		//}
-
-
-		//override onItemBodySeparated()
-		//{
-		//	this.refresh();
-		//}
-
-
-
 
 		//---
 
 	}
+
 
 
 
@@ -144,7 +131,9 @@ export module PileGroupNode1
 
 
 
+
 	//---
+
 
 
 
@@ -164,7 +153,9 @@ export module PileGroupNode1
 
 
 
+
 	//---
+
 
 
 
@@ -184,9 +175,6 @@ export module PileGroupNode1
 	{
 
 
-		let isSeparated = collector.isSeparated();
-
-
 		return (
 
 			<ErrorBoundary>
@@ -196,12 +184,9 @@ export module PileGroupNode1
 					start
 					end
 
-					rt={isSeparated ? "lg" : undefined}
-					rb={isSeparated ? "lg" : undefined}
-
 					{...colProps}
 
-					wrapperCls={clsx(`px36`, colProps.wrapperCls)}
+					wrapperCls={clsx(`px36 pb12`, colProps.wrapperCls)}
 				>
 
 					{children}
@@ -213,6 +198,7 @@ export module PileGroupNode1
 		);
 
 	}
+
 
 
 

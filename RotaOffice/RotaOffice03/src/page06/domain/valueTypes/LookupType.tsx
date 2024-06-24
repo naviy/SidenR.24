@@ -2,6 +2,7 @@ import type { Constructor } from "@libs";
 import { type Db } from "../db";
 import { DbEntity } from "../dbEntity";
 import { ValueType } from "./_ValueType";
+import type { ReactNode } from "react";
 
 
 
@@ -18,6 +19,10 @@ import { ValueType } from "./_ValueType";
 export class LookupType<TLookup extends DbEntity = DbEntity> extends ValueType
 {
 
+	//---
+
+
+
 	constructor(
 		//title: string,
 		public lookupClass: Constructor<TLookup>,
@@ -26,6 +31,34 @@ export class LookupType<TLookup extends DbEntity = DbEntity> extends ValueType
 	{
 		super();
 	}
+
+
+
+	//---
+
+
+
+	override renderTitle()
+	{
+
+		let { lookupClass, keyProp } = this;
+
+		let keys: ReactNode = undefined;
+
+
+		if (keyProp !== "id")
+		{
+			keys = <>[{keyProp}]</>;
+		}
+		
+
+		return <>{lookupClass.name}{keys}</>;
+
+	}
+
+
+
+	//---
 
 }
 

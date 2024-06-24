@@ -1,4 +1,4 @@
-import { Div, ExpanderBaseBehavior, FillFade, Pane } from "@libs";
+import { $log, Div, ExpanderBaseBehavior, FillFade, Pane } from "@libs";
 import Tab from "@mui/material/Tab";
 import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
@@ -24,10 +24,9 @@ export function PileRowNode2_2(props: PileRowNode2_2.Props & {
 	children: JSX.Element | (() => JSX.Element)
 })
 {
-	//$log("PileNode2_2 " + props.tenta)
+	//$log("PileRowNode2_2 " + props.tenta)
 
-	props.tenta.ensureUse();
-	//props.tenta.use();
+	props.tenta.useInNode();
 
 
 	return PileRowNode<PileRowNode2_2.Tenta>({
@@ -207,7 +206,7 @@ export module PileRowNode2_2
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = (/*id: React.Key,*/ ...args: TArgs) => FunctionalTenta;
+	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<FunctionalTenta, TArgs>;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 

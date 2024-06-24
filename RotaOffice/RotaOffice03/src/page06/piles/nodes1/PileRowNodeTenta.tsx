@@ -32,6 +32,11 @@ export class PileRowNodeTenta<
 
 		super.use(cfg);
 
+		if (cfg?.globalState)
+		{
+			this.useGlobalState(cfg.globalState === true ? undefined : cfg.globalState);
+		}
+
 
 		//Tenta.Focusable.use(this, cfg);
 
@@ -358,6 +363,8 @@ export module PileRowNodeTenta
 	{
 
 		root?: boolean;
+
+		globalState?: boolean | string | Tenta.GlobalState;
 
 	}
 

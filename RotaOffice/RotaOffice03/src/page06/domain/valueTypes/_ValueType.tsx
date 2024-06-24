@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { type Db } from "../db";
 import { DbEntity } from "../dbEntity";
 
@@ -19,11 +20,14 @@ export abstract class ValueType extends DbEntity
 	//---
 
 
-	//constructor(		
+	//constructor(
 	//)
 	//{
 	//	super();
 	//}
+
+	abstract renderTitle(): ReactNode;	
+
 
 
 	//---
