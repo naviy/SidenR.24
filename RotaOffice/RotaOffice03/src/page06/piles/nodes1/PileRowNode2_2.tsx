@@ -202,19 +202,24 @@ export module PileRowNode2_2
 
 
 
-	export class FunctionalTenta extends Tenta_.Functional(Tenta) { }
+	export class FunctionalTenta extends Tenta_.Functional<
+		typeof Tenta, Tenta, typeof PileRowNode2_2
+	>(Tenta) { }
+
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<FunctionalTenta, TArgs>;
+	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<
+		FunctionalTenta, typeof PileRowNode2_2, TArgs
+	>;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 
 	export function createFactory<TArgs extends any[] = []>(
-		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, TArgs>
+		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, typeof PileRowNode2_2, TArgs>
 	): TentaFactory<TArgs>
 	{
-		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);
+		return Tenta_.Functional.createFactory(FunctionalTenta, PileRowNode2_2, configGetter);
 	}
 
 

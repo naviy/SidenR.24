@@ -1,8 +1,8 @@
-import type React from "react";
-import type { TentaBase } from "./TentaBase";
-import { createElement, useState, type FC, type ReactNode } from "react";
 import type { Constructor } from "@libs";
-import type { TentaCollectorProps, TentaCollectorPropsAlias, TentaCollectorPropsAliases } from "./TentaCollector";
+import type React from "react";
+import { type FC, type ReactNode } from "react";
+import type { TentaBase } from "./TentaBase";
+import type { TentaCollectorProps, TentaCollectorPropsAliases } from "./TentaCollector";
 
 
 
@@ -16,18 +16,28 @@ import type { TentaCollectorProps, TentaCollectorPropsAlias, TentaCollectorProps
 
 
 
-export interface TentaFunctional
+export interface TentaFunctional<
+	TTenta extends TentaBase,
+	TComponent
+>
 {
-	cfg: TentaFunctional.Config;
+	cfg: TentaFunctional.Config<TTenta, TComponent>;
+	component: TComponent;
 }
 
 
 
 
-export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBase)
+export function TentaFunctional<
+	TBaseClass extends Constructor<TentaBase>,
+	TBaseTenta extends TentaBase,
+	TComponent,
+>(
+	BaseClass: TBaseClass
+)
 {
 
-	return class FunctionalTenta extends Base
+	return class FunctionalTenta extends BaseClass
 	{
 
 		//constructor(
@@ -42,12 +52,13 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 		//}
 
 
-		cfg!: TentaFunctional.Config;
+		cfg!: TentaFunctional.Config<TBaseTenta, TComponent>;
+		component!: TComponent;
 
 
 		override useInNode(cfg?: TentaBase.UseConfig)
 		{
-			this.cfg.use?.(this);
+			this.cfg.use?.(this as any as TBaseTenta);
 
 			super.useInNode(cfg);
 		}
@@ -61,47 +72,63 @@ export function TentaFunctional<TBase extends Constructor<TentaBase>>(Base: TBas
 
 			var { render } = cfg;
 
-			if (render)
-			{
-				return <Renderer key={this.id} tenta={this} render={render} />;
-			}
+			if (!render)
+				return null;
+
+			return <Renderer<TBaseTenta, TComponent>
+				key={this.id}
+				tenta={this as any as TBaseTenta}
+				component={this.component}
+				render={render}
+			/>;
 
 
-			if (cfg.component)
-			{
-				return createElement(
-					cfg.component,
-					{
-						key: this.id,
-						tenta: this,
-					}
-				);
-			}
+
+			//if (cfg.component)
+			//{
+			//	return createElement(
+			//		cfg.component,
+			//		{
+			//			key: this.id,
+			//			tenta: this,
+			//		}
+			//	);
+			//}
 
 
-			return undefined;
+			//return undefined;
 
 		}
 
 	};
 
+}
 
 
-	function Renderer({ tenta, render }: { tenta: TentaBase, render: (tenta: TentaBase) => ReactNode })
+
+
+function Renderer<
+	TTenta extends TentaBase,
+	TComponent
+>({
+	tenta,
+	component,
+	render
+}: {
+	tenta: TTenta,
+	component: TComponent,
+	render: (tenta: TTenta, component: TComponent) => ReactNode
+})
+{
+	if (tenta == null || render == null)
 	{
-		if (tenta == null || render == null)
-		{
-			return null;
-		}
-
-
-		return render(tenta);
-
+		return null;
 	}
 
 
-}
+	return render(tenta, component);
 
+}
 
 
 
@@ -116,7 +143,10 @@ export module TentaFunctional
 
 
 
-	export interface Config<TTenta extends TentaBase = TentaBase>
+	export interface Config<
+		TTenta extends TentaBase /*= TentaBase*/,
+		TComponent,
+	>
 	{
 		id: React.Key;
 
@@ -124,15 +154,19 @@ export module TentaFunctional
 		init?: (tenta: TTenta) => void;
 		use?: (tenta: TTenta) => void;
 
-		render?: (tenta: TTenta) => ReactNode;
-		component?: FC<{ tenta: TTenta }>;
+		//component?: TComponent;
+
+		render?: (tenta: TTenta, component: TComponent) => ReactNode;
 
 	}
 
 
 
 
-	type ArrayConfig<TTenta extends TentaBase = TentaBase> = [
+	type ArrayConfig<
+		TTenta extends TentaBase /*= TentaBase*/,
+		TComponent,
+	> = [
 
 		id: React.Key,
 
@@ -142,31 +176,36 @@ export module TentaFunctional
 			use?: (tenta: TTenta) => void;
 		},
 
-		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
+		render: Config<TTenta, TComponent>["render"],
 
 	] | [
 		id: React.Key,
-		componentOrRender: /*FC<{ tenta: TTenta }> |*/ ((tenta: TTenta) => ReactNode),
+		render: Config<TTenta, TComponent>["render"],
 	];
 
 
 
 
-	export type ConfigAlias<TTenta extends TentaBase, TArgs extends any[]> = (
-		Config<TTenta> |
-		ArrayConfig<TTenta> |
-		((...args: TArgs) => Config<TTenta> | ArrayConfig<TTenta>)
-	);
+	export type ConfigAlias<
+		TTenta extends TentaBase,
+		TComponent,
+		TArgs extends any[]
+	> = (
+			Config<TTenta, TComponent> |
+			ArrayConfig<TTenta, TComponent> |
+			((...args: TArgs) => Config<TTenta, TComponent> | ArrayConfig<TTenta, TComponent>)
+		);
 
 
 
 	export function Config<
 		TTenta extends TentaBase,
+		TComponent,
 		TArgs extends any[]
 	>(
-		configGetter: ConfigAlias<TTenta, TArgs>,
+		configGetter: ConfigAlias<TTenta, TComponent, TArgs>,
 		args: TArgs
-	): Config<TTenta>
+	): Config<TTenta, TComponent>
 	{
 
 		let cfg = typeof configGetter === "function" ? configGetter(...args) : configGetter;
@@ -194,40 +233,40 @@ export module TentaFunctional
 		let collectors = typeof collectors0 === "function" ? { items: collectors0 } : collectors0;
 
 
-		if (isFC<TTenta>(componentOrRender))
-		{
-			return {
-				id,
-				collectors,
-				init,
-				use,
-				component: componentOrRender,
-			};
-		}
-		else
-		{
-			return {
-				id,
-				collectors,
-				init, 
-				use,
-				render: componentOrRender,
-			};
-		}
+		//if (isFC<TTenta>(componentOrRender))
+		//{
+		//	return {
+		//		id,
+		//		collectors,
+		//		init,
+		//		use,
+		//		component: componentOrRender,
+		//	};
+		//}
+		//else
+		//{
+		return {
+			id,
+			collectors,
+			init,
+			use,
+			render: componentOrRender,
+		};
+		//}
 
 	}
 
 
-	function isFC<TTenta extends TentaBase>(func: Function | null | undefined): func is FC<{ tenta: TTenta }>
-	{
+	//function isFC<TTenta extends TentaBase>(func: Function | null | undefined): func is FC<{ tenta: TTenta }>
+	//{
 
-		if (!func)
-			return false;
+	//	if (!func)
+	//		return false;
 
-		let firstChar = func.name.charCodeAt(0);
+	//	let firstChar = func.name.charCodeAt(0);
 
-		return firstChar >= 65 && firstChar <= 90;
-	}
+	//	return firstChar >= 65 && firstChar <= 90;
+	//}
 
 
 
@@ -239,11 +278,12 @@ export module TentaFunctional
 
 	export interface Factory<
 		TTenta extends TentaBase,
+		TComponent,
 		TArgs extends any[] = []
 	>
 	{
 
-		(/*id: React.Key,*/ ...args: TArgs): TTenta & TentaFunctional;
+		(/*id: React.Key,*/ ...args: TArgs): TTenta & TentaFunctional<TTenta, TComponent>;
 
 		//use: (...args: TArgs) => TTenta & TentaFunctional;
 
@@ -254,13 +294,15 @@ export module TentaFunctional
 
 	export function createFactory<
 		TTenta extends TentaBase,
+		TComponent,
 		TArgs extends any[]
 	>(
-		tentaClass: Constructor<TTenta & TentaFunctional>,
+		tentaClass: Constructor<TTenta & TentaFunctional<TTenta, TComponent>>,
+		component: TComponent,
 		//init: null | ((tenta: TTenta & TentaFunctional) => void),
-		configGetter: ConfigAlias<TTenta, TArgs>
+		configGetter: ConfigAlias<TTenta, TComponent, TArgs>
 	):
-		Factory<TTenta, TArgs>
+		Factory<TTenta, TComponent, TArgs>
 	{
 
 
@@ -271,6 +313,8 @@ export module TentaFunctional
 
 			let tenta = new tentaClass(cfg.id);
 
+			tenta.component = component;
+
 			tenta.cfg = cfg as any;
 			cfg.collectors && tenta.addCollectors(cfg.collectors);
 			//tenta.init();
@@ -279,7 +323,7 @@ export module TentaFunctional
 
 			return tenta;
 
-		}) as Factory<TTenta, TArgs>;
+		}) as Factory<TTenta, TComponent, TArgs>;
 
 
 

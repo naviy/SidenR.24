@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { Pane } from '@libs';
+import { $log, Pane } from '@libs';
 import type { Color } from "@mui/material";
 import clsx from "clsx";
 import { Tenta as Tenta_ } from "../../tentas";
@@ -24,7 +24,7 @@ export function PileGroupNode2({
 	children: JSX.Element | (() => JSX.Element)
 })
 {
-	//$log("GroupNode1 " + props.tenta)
+	//$log("PileGroupNode2 " + props.tenta)
 
 	props.tenta.useInNode();
 
@@ -83,6 +83,7 @@ export module PileGroupNode2
 		override get maxExpandPhase() { return 0; }
 
 
+		//@$log.m
 		override getRestState(
 			expandPhase: Tenta_.ExpandPhase,
 			openPhase: Tenta_.OpenPhase
@@ -91,14 +92,27 @@ export module PileGroupNode2
 
 			return {
 
-				bodyIsSeparated: true,
+				bodyIsSeparated: !!openPhase,
 
 				tailIsVisible: !!openPhase && this.hasCollectors,
-				tailIsSeparated: true,
+				tailIsSeparated: !!openPhase,
 
 			};
 
 		}
+
+
+		//override onItemBodyDeseparated()
+		//{
+		//	this.refresh();
+		//}
+
+
+		//override onItemBodySeparated()
+		//{
+		//	this.refresh();
+		//}
+
 
 
 
@@ -108,32 +122,34 @@ export module PileGroupNode2
 
 
 
-
 	//---
 
 
 
 
-	export class FunctionalTenta extends Tenta_.Functional(Tenta) { }
+	export class FunctionalTenta extends Tenta_.Functional<
+		typeof Tenta, Tenta, typeof PileGroupNode2
+	>(Tenta) { }
+
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<FunctionalTenta, TArgs>;
+	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<
+		FunctionalTenta, typeof PileGroupNode2, TArgs
+	>;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 
 	export function createFactory<TArgs extends any[] = []>(
-		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, TArgs>
+		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, typeof PileGroupNode2, TArgs>
 	): TentaFactory<TArgs>
 	{
-		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);
+		return Tenta_.Functional.createFactory(FunctionalTenta, PileGroupNode2, configGetter);
 	}
 
 
 
-
 	//---
-
 
 
 
@@ -153,9 +169,7 @@ export module PileGroupNode2
 
 
 
-
 	//---
-
 
 
 
@@ -175,6 +189,9 @@ export module PileGroupNode2
 	{
 
 
+		let isSeparated = collector.isSeparated();
+
+
 		return (
 
 			<ErrorBoundary>
@@ -184,9 +201,12 @@ export module PileGroupNode2
 					start
 					end
 
+					rt={isSeparated ? "lg" : undefined}
+					rb={isSeparated ? "lg" : undefined}
+
 					{...colProps}
 
-					wrapperCls={clsx(`px36 pb12`, colProps.wrapperCls)}
+					wrapperCls={clsx(`px36`, colProps.wrapperCls)}
 				>
 
 					{children}
@@ -198,7 +218,6 @@ export module PileGroupNode2
 		);
 
 	}
-
 
 
 

@@ -306,7 +306,7 @@ export module PileRowNode
 				//className="pile-row-node-backfill"
 				bg={color ? lighten(color[50], .5) : undefined}
 				brd={color ? `2px solid ${color?.[200]}` : undefined}
-				color={color?.[400]}
+				//color={color?.[400]}
 				mb={tailIsVisible ? 24 : 48}
 				visible={tailIsVisible && tailIsSeparated}
 			/>

@@ -1,6 +1,4 @@
-import { lighten, styled } from "@mui/material/styles";
-import type { Color } from "@mui/material";
-import type { TentaBase } from "../../tentas/TentaBase";
+import { styled } from "@mui/material/styles";
 import "./PileRowNodeBackfill.scss";
 
 
@@ -37,26 +35,3 @@ export var PileRowNodeBackfill = styled(
 	"--op": props.visible !== false ? 1 : undefined
 
 }));
-
-
-//	export function render(tenta: TentaBase, color?: Color | null)
-//	{
-
-//		let { tailIsVisible, tailIsSeparated } = tenta;
-
-
-//		return (
-//			<Root
-//				className="pile-row-node-backfill"
-//				bg={color ? lighten(color[50], .5) : undefined}
-//				brd={color ? `2px solid ${color?.[200]}` : undefined}
-//				color={color?.[400]}
-//				mb={tailIsVisible ? 24 : 48}
-//				visible={tailIsVisible && tailIsSeparated}
-//			/>
-//		);
-
-//	}
-
-
-//}

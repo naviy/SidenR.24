@@ -122,29 +122,37 @@ export module PileGroupNode1
 
 
 
+
 	//---
 
 
 
 
-	export class FunctionalTenta extends Tenta_.Functional(Tenta) { }
+	export class FunctionalTenta extends Tenta_.Functional<
+		typeof Tenta, Tenta, typeof PileGroupNode1
+	>(Tenta) { }
+
 	export type FT = FunctionalTenta;
 
 
-	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<FunctionalTenta, TArgs>;
+	export type TentaFactory<TArgs extends any[] = []> = Tenta_.Functional.Factory<
+		FunctionalTenta, typeof PileGroupNode1, TArgs
+	>;
 	export type TF<TArgs extends any[] = []> = TentaFactory<TArgs>;
 
 
 	export function createFactory<TArgs extends any[] = []>(
-		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, TArgs>
+		configGetter: Tenta_.Functional.ConfigAlias<FunctionalTenta, typeof PileGroupNode1, TArgs>
 	): TentaFactory<TArgs>
 	{
-		return Tenta_.Functional.createFactory<FunctionalTenta, TArgs>(FunctionalTenta, configGetter);
+		return Tenta_.Functional.createFactory(FunctionalTenta, PileGroupNode1, configGetter);
 	}
 
 
 
+
 	//---
+
 
 
 

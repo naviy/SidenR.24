@@ -89,11 +89,11 @@ var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]
 		})
 	},
 
-	tenta =>
+	(tenta, Node) =>
 
 		<Pane.Col start end>
 
-			<PileGroupNode1 tenta={tenta} backfill color={colors.lime}>
+			<Node tenta={tenta} backfill color={colors.lime}>
 
 				<>
 					<Pane start p12 vcenter>
@@ -103,7 +103,7 @@ var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]
 					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 				</>
 
-			</PileGroupNode1>
+			</Node>
 
 		</Pane.Col>
 
@@ -136,9 +136,9 @@ var EntityTenta: PileRowNode2_2.TF<[Db, Entity]> = PileRowNode2_2.createFactory(
 		}),
 	},
 
-	tenta => (
+	(tenta, Node) => (
 
-		<PileRowNode2_2 backfill tenta={tenta}>
+		<Node backfill tenta={tenta}>
 
 			<>
 
@@ -156,7 +156,7 @@ var EntityTenta: PileRowNode2_2.TF<[Db, Entity]> = PileRowNode2_2.createFactory(
 
 			</>
 
-		</PileRowNode2_2>
+		</Node>
 
 	),
 
@@ -173,9 +173,9 @@ var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_
 
 	prop.id,
 
-	tenta => (
+	(tenta, Node) => (
 
-		<PileRowNode2_2 tenta={tenta}>
+		<Node tenta={tenta}>
 
 			<>
 
@@ -197,7 +197,7 @@ var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_
 
 			</>
 
-		</PileRowNode2_2>
+		</Node>
 
 	)
 
@@ -227,11 +227,11 @@ var ValueTypesPileTenta = PileGroupNode1.createFactory((db: Db, types: ValueType
 		}),
 	},
 
-	tenta =>
+	(tenta, Node) =>
 
 		<Pane.Col start end>
 
-			<PileGroupNode1 tenta={tenta} backfill color={colors.deepPurple}>
+			<Node tenta={tenta} backfill color={colors.deepPurple}>
 
 				<>
 					<Pane start p12 vcenter>
@@ -241,7 +241,7 @@ var ValueTypesPileTenta = PileGroupNode1.createFactory((db: Db, types: ValueType
 					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 				</>
 
-			</PileGroupNode1>
+			</Node>
 
 		</Pane.Col>
 

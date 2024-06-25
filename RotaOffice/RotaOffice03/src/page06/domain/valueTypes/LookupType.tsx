@@ -25,7 +25,7 @@ export class LookupType<TLookup extends DbEntity = DbEntity> extends ValueType
 
 	constructor(
 		//title: string,
-		public lookupClass: Constructor<TLookup>,
+		public lookupClass: Constructor.A<TLookup>,
 		public keyProp: string,
 	)
 	{
@@ -107,7 +107,7 @@ export module LookupType
 
 
 		function add<TLookup extends DbEntity>(
-			lookupClass: Constructor<TLookup>,
+			lookupClass: Constructor.A<TLookup>,
 			keyProp?: string | null | undefined,
 			fields?: RestFields | null,
 			init?: (entity: LookupType) => void
