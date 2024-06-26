@@ -1,6 +1,6 @@
 import { $log, Focuser, GlobalState, Repaintable } from '@libs';
 import type React from "react";
-import { type ReactNode } from "react";
+import { type ReactNode, type RefObject } from "react";
 import { TentaCollector, type TentaCollectorPropsAlias, type TentaCollectorPropsAliases } from "./TentaCollector";
 import type { TentaAccent } from './TentaAccent';
 
@@ -196,6 +196,7 @@ export class TentaBase<
 
 	get tailIsVisible() { return this.state.tailIsVisible; }
 	get tailIsSeparated() { return this.state.tailIsSeparated; }
+	get tailIsVisibleAndSeparated() { return this.state.tailIsVisible && this.#state!.tailIsSeparated; }
 
 
 
@@ -203,6 +204,13 @@ export class TentaBase<
 
 
 	hideChildrenLinks = false;
+
+
+	//---
+
+
+	rootFfRef?: RefObject<Focuser> | null;
+	get rootFf(): Focuser | null { return this.rootFfRef?.current || null; }
 
 
 	//---
@@ -1056,7 +1064,7 @@ export class TentaBase<
 		if (margin < maxMargin)
 		{
 			let next = this.next();
-			margin = !next ? maxMargin : Math.max(margin, next.bodyTopMargin() || 0);
+			margin = !next ? 0 : Math.max(margin, next.bodyTopMargin() || 0);
 		}
 
 
@@ -1414,9 +1422,6 @@ export module TentaBase
 
 	export interface UseConfig extends Repaintable.UseConfig
 	{
-
-		//readonly defaultExpandPhase?: TentaExpandPhase;
-		//readonly defaultOpenPhase?: TentaOpenPhase;
 
 		//readonly hideChildrenLinks?: boolean;
 

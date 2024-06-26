@@ -91,7 +91,7 @@ export function TentaDetails({ tenta }: { tenta: TentaBase })
 					<caption>btmMargin: {tenta.btmMargin()}</caption>
 					<tbody>
 						<Row label="bodyBtmMargin" r={tenta.bodyBtmMargin()} />
-						<Row label="stageIndex" r={tenta.defaultMargin} />
+						<Row label="defaultMargin" r={tenta.defaultMargin} />
 						<TentaRow label="next" r={tenta.next()} />
 						<Row indent label="bodyTopMargin" r={tenta.next()?.bodyTopMargin()} />
 						<Row label="parentTailBtmMargin" r={tenta.parentTailBtmMargin()} />

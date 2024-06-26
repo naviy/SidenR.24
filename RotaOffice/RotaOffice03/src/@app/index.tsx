@@ -1,2 +1,2 @@
 export * from "./DesktopLayout";
-export * from "./AppTheme";
+export * from "./AppThemes";

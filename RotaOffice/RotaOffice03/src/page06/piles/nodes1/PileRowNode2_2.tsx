@@ -4,9 +4,9 @@ import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
 import { Tenta as Tenta_ } from "../../tentas";
 import { usePileCellIndent } from "../core/PileCellIndent";
-import { PileNodeTail1 } from "./PileRowNodeTail1";
 import { PileRowNode } from "./PileRowNode";
-import { createRef } from "react";
+import { createRef, type ReactNode } from "react";
+import { ErrorBoundary } from "../../../@app";
 
 
 
@@ -25,9 +25,6 @@ export function PileRowNode2_2(props: PileRowNode2_2.Props & {
 })
 {
 	//$log("PileRowNode2_2 " + props.tenta)
-
-	props.tenta.useInNode();
-
 
 	return PileRowNode<PileRowNode2_2.Tenta>({
 
@@ -197,6 +194,7 @@ export module PileRowNode2_2
 
 
 
+
 	//---
 
 
@@ -224,7 +222,9 @@ export module PileRowNode2_2
 
 
 
+
 	//---
+
 
 
 
@@ -301,13 +301,38 @@ export module PileRowNode2_2
 
 
 
+
 	//---
 
 
 
 
-	export function defaultTailDecorator(tenta: Tenta)
+	export function defaultTailDecorator(
+		tenta: Tenta,
+		renderCol?: (col: Tenta_.Collector) => ReactNode,
+	)
 	{
+
+		renderCol ??= col => (
+			<PileRowNode.Tail
+				collector={col}
+				cellIndent
+				children={col.defaultListElement()}
+			/>
+		);
+
+
+		if (tenta.collectorCount === 1)
+		{
+			let col = tenta.collectors![0];
+
+			return (
+				<ErrorBoundary key={col.id}>
+					{renderCol!(col)}
+				</ErrorBoundary>
+			);
+		}
+
 
 		let activeCol = tenta.activeTabCollector;
 		//$log("activeCol:", activeCol?.id)
@@ -323,13 +348,9 @@ export module PileRowNode2_2
 					unmountOnExit
 				>
 
-					<PileNodeTail1
-						key={col.id}
-						collector={col}
-						cellIndent
-						children={col.defaultListElement()}
-					//children={<Tenta_.Collector.List bhv={col} />}
-					/>
+					<ErrorBoundary key={col.id}>
+						{renderCol!(col)}
+					</ErrorBoundary>
 
 				</FillFade>
 

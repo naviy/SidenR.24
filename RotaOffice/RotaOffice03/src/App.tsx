@@ -1,6 +1,10 @@
-import { AppThemes, DesktopLayout } from "@app";
+import "./AppThemes";
+
+
+import { DesktopLayout } from "@app";
 import { $log, Div, HR, Route, Txt, useForceUpdate } from "@libs";
-import { Button, createTheme } from "@mui/material";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { Button } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem, { type ListItemProps } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -10,7 +14,6 @@ import { useState } from "react";
 import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { Page04 } from "./page04/Page04";
 import { Page041 } from "./page04/Page041";
 import { Page042 } from "./page04/Page042";
@@ -57,16 +60,27 @@ export function App()
 
 
 
-export var darkTheme = createTheme({
-	palette: {
-		mode: 'dark',
-		background: {
-			//paper: "#1a200e",
-			//paper: "#222b13",
-			paper: "#2b3618",
-		},
-	},
-});
+//AppThemes.init({
+
+//	darkTheme: {
+//		palette: {
+//			mode: 'dark',
+//			background: {
+//				//paper: "#1a200e",
+//				//paper: "#222b13",
+//				paper: "#2b3618",
+//			},
+//		},
+//	},
+
+//});
+
+
+
+
+
+
+//===
 
 
 
@@ -114,71 +128,66 @@ function AppDesktop()
 
 			<Route.Router.Provider router={router}>
 
-				<AppThemes darkTheme={darkTheme}>
+				<DesktopLayout>
 
 
-					<DesktopLayout>
+					<Route.SelectorModal />
 
 
-						<Route.SelectorModal />
+					<DesktopLayout.Sider logo={<BigLogo />}>
+
+						<HR />
+
+						<List>
+							{routes.map(a =>
+								<MainMenuItem key={a.key} route={a} />
+							)}
+						</List>
+
+					</DesktopLayout.Sider>
 
 
-						<DesktopLayout.Sider logo={<BigLogo />}>
-
-							<HR />
-
-							<List>
-								{routes.map(a =>
-									<MainMenuItem key={a.key} route={a} />
-								)}
-							</List>
-
-						</DesktopLayout.Sider>
+					<DesktopLayout.Container>
 
 
-						<DesktopLayout.Container>
+						<DesktopLayout.Header logo={<SmallLogo />}>
+
+							<Route.Slider router={router} flex flex1 vertical offset={24} hidden>
+
+								<DesktopLayout.Header.Icon>
+									<Route.Icon />
+								</DesktopLayout.Header.Icon>
+
+								<DesktopLayout.Header.Title>
+									<Route.Title />
+								</DesktopLayout.Header.Title>
+
+							</Route.Slider>
 
 
-							<DesktopLayout.Header logo={<SmallLogo />}>
+							<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
+							<Button onClick={forceUpdate}><RefreshIcon /></Button>
 
-								<Route.Slider router={router} flex flex1 vertical offset={24} hidden>
-
-									<DesktopLayout.Header.Icon>
-										<Route.Icon />
-									</DesktopLayout.Header.Icon>
-
-									<DesktopLayout.Header.Title>
-										<Route.Title />
-									</DesktopLayout.Header.Title>
-
-								</Route.Slider>
+						</DesktopLayout.Header>
 
 
-								<Button onClick={() => $log("globalState:", globalState)}>LOG globalState</Button>
-								<Button onClick={forceUpdate}><RefreshIcon /></Button>
+						<DesktopLayout.Main>
 
-							</DesktopLayout.Header>
+							<Route.Slider router={router} fill vertical offset={64}>
 
+								<DesktopLayout.Content>
+									<Route.Content globalState />
+								</DesktopLayout.Content>
 
-							<DesktopLayout.Main>
+							</Route.Slider>
 
-								<Route.Slider router={router} fill vertical offset={64}>
-
-									<DesktopLayout.Content>
-										<Route.Content globalState />
-									</DesktopLayout.Content>
-
-								</Route.Slider>
-
-							</DesktopLayout.Main>
+						</DesktopLayout.Main>
 
 
-						</DesktopLayout.Container>
+					</DesktopLayout.Container>
 
 
-					</DesktopLayout>
-
-				</AppThemes>
+				</DesktopLayout>
 
 			</Route.Router.Provider>
 

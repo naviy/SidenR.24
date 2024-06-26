@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { type ReactNode } from "react";
-import { AppThemes } from "../AppTheme";
+import { AppThemes } from "../AppThemes";
 
 
 

@@ -4,6 +4,7 @@ import * as colors from '@mui/material/colors';
 import { useData } from "./db";
 import type { Db, Entity, EntityProperty, ValueType } from "./domain";
 import { Pile } from "./piles";
+import { PileRootNode } from './piles/nodes1/PileRootNode';
 import { PileGroupNode1 } from './piles/nodes1/PileGroupNode1';
 import { PileGroupNode2 } from './piles/nodes1/PileGroupNode2';
 import { PileRowNode2_2 } from "./piles/nodes1/PileRowNode2_2";
@@ -41,16 +42,20 @@ export module Page061
 		let { db } = useData();
 
 
-		let col = Tenta.Collector.use("root", () => [
-			EntitiesPileTenta(db, db.Entity.all),
-			ValueTypesPileTenta(db, db.ValueType.all),
-		]);
+		let root = RootTenta.use(db);
+
+
+		//let col = Tenta.Collector.use("root", () => [
+		//	EntitiesPileTenta(db, db.Entity.all),
+		//	ValueTypesPileTenta(db, db.ValueType.all),
+		//]);
 
 
 		return (
 
-			<Div mx200 m100>
-				<Tenta.Collector.List bhv={col} />
+			<Div >
+				{/*<Tenta.Collector.List bhv={col} />*/}
+				{root.render()}
 			</Div>
 
 		);
@@ -72,7 +77,16 @@ export module Page061
 
 
 
-var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]) => [
+var RootTenta = PileRootNode.createFactory((db: Db) => [
+	EntitiesPileTenta(db, db.Entity.all),
+	ValueTypesPileTenta(db, db.ValueType.all),
+]);
+
+
+
+
+
+var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]) => [
 
 	"EntitiesPile",
 
@@ -84,7 +98,6 @@ var EntitiesPileTenta = PileGroupNode1.createFactory((db: Db, entities: Entity[]
 		}),
 
 		use: tenta => tenta.use({
-			root: true,
 			globalState: true,
 		})
 	},
@@ -215,7 +228,7 @@ var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_
 
 
 
-var ValueTypesPileTenta = PileGroupNode1.createFactory((db: Db, types: ValueType[]) => [
+var ValueTypesPileTenta = PileGroupNode2.createFactory((db: Db, types: ValueType[]) => [
 
 	"ValueTypesPile",
 

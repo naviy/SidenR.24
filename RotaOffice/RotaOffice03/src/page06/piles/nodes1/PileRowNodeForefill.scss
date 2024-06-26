@@ -14,9 +14,9 @@
 
 		position: absolute !important;
 		inset: 0 0 0 0 !important;
-		border-radius: inherit;
 
 		background: black;
+		border-radius: inherit;
 		opacity: 0;
 
 		transition: all 150ms ease-in-out;
@@ -32,7 +32,7 @@
 
 	&.bg {
 		> div {
-			opacity: .03;
+			opacity: .02;
 		}
 	}
 

@@ -3,7 +3,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Drawer from "@mui/material/Drawer";
 import { styled, type Theme } from "@mui/material/styles";
 import type { ReactNode } from "react";
-import { AppThemes } from "../AppTheme";
+import { AppThemes } from "../AppThemes";
 import { DesktopIconButton } from "./DesktopButtons";
 import { DesktopLayout } from "./DesktopLayout";
 

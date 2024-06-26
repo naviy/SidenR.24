@@ -1,8 +1,10 @@
 import { ErrorBoundary } from "@app";
-import { $log, Pane } from '@libs';
+import { Pane } from "@libs";
 import type { Color } from "@mui/material";
-import clsx from "clsx";
+import { lighten, styled } from "@mui/material/styles";
+import type { ReactNode } from "react";
 import { Tenta as Tenta_ } from "../../tentas";
+import "./PileGroupNode1.scss";
 import { PileRowNode } from "./PileRowNode";
 
 
@@ -26,10 +28,7 @@ export function PileGroupNode1({
 {
 	//$log("PileGroupNode1 " + props.tenta)
 
-	props.tenta.useInNode();
 
-
-	//return PileGroupNode(props);
 	return PileRowNode<PileGroupNode1.Tenta>({
 
 		tailDecorator: PileGroupNode1.defaultTailDecorator,
@@ -37,7 +36,7 @@ export function PileGroupNode1({
 		...props,
 
 		backfill: (props.backfill === true
-			? ((tenta) => PileRowNode.defaultBackfill(tenta, color))
+			? ((tenta) => PileGroupNode1.defaultBackfill(tenta, color))
 			: props.backfill
 		),
 
@@ -102,19 +101,6 @@ export module PileGroupNode1
 		}
 
 
-		//override onItemBodyDeseparated()
-		//{
-		//	this.refresh();
-		//}
-
-
-		//override onItemBodySeparated()
-		//{
-		//	this.refresh();
-		//}
-
-
-
 
 		//---
 
@@ -156,19 +142,30 @@ export module PileGroupNode1
 
 
 
-	export function defaultTailDecorator(tenta: Tenta_.Base)
+	export function defaultTailDecorator(
+		tenta: Tenta,
+		renderCol?: (col: Tenta_.Collector) => ReactNode,
+	)
 	{
+
+		renderCol ??= col => <Pane.Col
+			start
+			end
+			wrapperCls="px36"
+			children={col.defaultListElement()}
+		/>;
+
 
 		return <>
 			{tenta.collectors?.map(col =>
-				<Tail
-					key={col.id}
-					collector={col}
-					children={col.defaultListElement()}
-				/>
+				<ErrorBoundary key={col.id}>
+					{renderCol!(col)}
+				</ErrorBoundary>
 			)}
 		</>;
+
 	}
+
 
 
 
@@ -176,51 +173,38 @@ export module PileGroupNode1
 
 
 
-	export function Tail({
 
-		collector,
-
-		children,
-
-		...colProps
-
-	}: Pane.ColProps & {
-
-		collector: Tenta_.Collector;
-
-	})
+	export function defaultBackfill(tenta: Tenta_.Base, color?: Color | null)
 	{
-
-
-		let isSeparated = collector.isSeparated();
-
-
 		return (
-
-			<ErrorBoundary>
-
-				<Pane.Col
-
-					start
-					end
-
-					rt={isSeparated ? "lg" : undefined}
-					rb={isSeparated ? "lg" : undefined}
-
-					{...colProps}
-
-					wrapperCls={clsx(`px36`, colProps.wrapperCls)}
-				>
-
-					{children}
-
-				</Pane.Col>
-
-			</ErrorBoundary>
-
+			<Backfill
+				bg={color ? lighten(color[50], .5) : undefined}
+				brd={color ? `2px solid ${color?.[200]}` : undefined}
+				visible={tenta.tailIsVisibleAndSeparated}
+			/>
 		);
-
 	}
+
+
+
+	export var Backfill = styled(
+		"div",
+		{
+			target: "pile-group-node-1-backfill",
+			shouldForwardProp: p => p !== "bg" && p !== "brd" && p !== "visible",
+		}
+	)<{
+		bg?: string;
+		brd?: string;
+		visible?: boolean;
+	}>(props => ({
+
+		"--bg": props.bg,
+		"--brd": props.brd,
+		"--op": props.visible !== false ? 1 : undefined
+
+	}));
+
 
 
 

@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
 import type { ReactNode } from 'react';
-import { AppThemes } from "../AppTheme";
+import { AppThemes } from "../AppThemes";
 import { DesktopIconButton } from "./DesktopButtons";
 import { DesktopLayout } from "./DesktopLayout";
 

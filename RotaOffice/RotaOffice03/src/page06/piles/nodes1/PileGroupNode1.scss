@@ -1,19 +1,15 @@
-.pile-row-node-backfill {
+.pile-group-node-1-backfill {
 
 	position: absolute;
 	inset: 0;
-	bottom: var(--mb, 24px);
+	bottom: calc(var(--op, 0) * 24px);
 
 
 	min-height: 24px;
-	border-radius: 12px;
-	border: 2px dotted var(--blue-grey-400);
-	/*border-bottom-style: solid;*/
 
 	background: var(--bg, rgba(255,255,255,.4));
 	border-radius: 12px;
 	border: var(--brd, 2px dotted var(--blue-grey-400));
-	color: var(--color, inherit);
 
 	opacity: var(--op, 0);
 

@@ -1,4 +1,4 @@
-import { Focuser } from "@libs";
+import { $log, Focuser } from "@libs";
 import { createRef, type RefObject } from "react";
 import { Tenta } from "../../tentas";
 
@@ -51,12 +51,10 @@ export class PileRowNodeTenta<
 
 
 
-	isRoot?: boolean;
+	//isRoot?: boolean;
 
-
-
-	rootFfRef?: RefObject<Focuser> | null;
-	get rootFf(): Focuser | null { return this.rootFfRef?.current || null; }
+	//rootFfRef?: RefObject<Focuser> | null;
+	//get rootFf(): Focuser | null { return this.rootFfRef?.current || null; }
 
 
 	ffRef = createRef<Focuser>();
@@ -79,15 +77,16 @@ export class PileRowNodeTenta<
 
 
 
+	@$log.m
 	override created()
 	{
 
 		let { parentTenta } = this;
-
+		$log("parentTenta:", parentTenta)
 
 		if (this.rootFfRef === undefined)
 		{
-			this.rootFfRef = parentTenta instanceof PileRowNodeTenta ? parentTenta.rootFfRef || null : null;
+			this.rootFfRef = parentTenta?.rootFfRef || null;
 		}
 
 	}

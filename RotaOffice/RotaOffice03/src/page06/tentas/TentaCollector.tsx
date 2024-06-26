@@ -19,13 +19,24 @@ export interface TentaCollectorProps
 {
 
 	title?: (collector: TentaCollector) => ReactNode;
-	tentas: (collector: TentaCollector) => Array<TentaBase | null | undefined | false | 0 | ""> | null | undefined | false | 0 | "";
+	tentas: TentaCollectorTentasGetter;
 
 }
 
 
 
-export type TentaCollectorPropsAlias = TentaCollectorProps | TentaCollectorProps["tentas"];
+export type TentaCollectorTentas = (
+	Array<TentaBase | null | undefined | false | 0 | ""> | null | undefined | false | 0 | ""
+);
+
+
+export type TentaCollectorTentasGetter = ((collector: TentaCollector) =>
+	TentaCollectorTentas
+);
+
+
+export type TentaCollectorPropsAlias = TentaCollectorProps | TentaCollectorTentasGetter;
+
 
 export type TentaCollectorPropsAliases = Record<
 	string | number | symbol,
@@ -346,6 +357,3 @@ export module TentaCollector
 
 }
 
-function EntitiesPileTenta(db: any, all: any) {
-	throw new Error("Function not implemented.");
-}
