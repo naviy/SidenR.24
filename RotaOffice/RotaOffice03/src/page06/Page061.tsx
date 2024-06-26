@@ -8,8 +8,6 @@ import { PileRootNode } from './piles/nodes1/PileRootNode';
 import { PileGroupNode1 } from './piles/nodes1/PileGroupNode1';
 import { PileGroupNode2 } from './piles/nodes1/PileGroupNode2';
 import { PileRowNode2_2 } from "./piles/nodes1/PileRowNode2_2";
-import { useState } from 'react';
-import { Tenta } from './tentas';
 
 
 
@@ -40,21 +38,12 @@ export module Page061
 	{
 
 		let { db } = useData();
-
-
 		let root = RootTenta.use(db);
-
-
-		//let col = Tenta.Collector.use("root", () => [
-		//	EntitiesPileTenta(db, db.Entity.all),
-		//	ValueTypesPileTenta(db, db.ValueType.all),
-		//]);
 
 
 		return (
 
-			<Div >
-				{/*<Tenta.Collector.List bhv={col} />*/}
+			<Div>
 				{root.render()}
 			</Div>
 
@@ -86,6 +75,7 @@ var RootTenta = PileRootNode.createFactory((db: Db) => [
 
 
 
+
 var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]) => [
 
 	"EntitiesPile",
@@ -97,16 +87,16 @@ var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]
 			defaultOpenPhase: 1,
 		}),
 
-		use: tenta => tenta.use({
-			globalState: true,
-		})
+		//use: tenta => tenta.use({
+		//	globalState: true,
+		//})
 	},
 
 	(tenta, Node) =>
 
 		<Pane.Col start end>
 
-			<Node tenta={tenta} backfill color={colors.lime}>
+			<Node tenta={tenta} color={colors.lime}>
 
 				<>
 					<Pane start p12 vcenter>
@@ -244,7 +234,7 @@ var ValueTypesPileTenta = PileGroupNode2.createFactory((db: Db, types: ValueType
 
 		<Pane.Col start end>
 
-			<Node tenta={tenta} backfill color={colors.deepPurple}>
+			<Node tenta={tenta} color={colors.deepPurple}>
 
 				<>
 					<Pane start p12 vcenter>

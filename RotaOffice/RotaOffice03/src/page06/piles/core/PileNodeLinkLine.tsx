@@ -43,9 +43,9 @@ export function PileNodeLinkLine(props: {
 			//thickness={thickness}			
 		>
 
-			{<div className={clsx("line-to-parent", (props.lineToParent ?? tenta.isFirst) && "opacity10")} />}
+			{<div className={clsx("line-to-parent", (props.lineToParent ?? tenta.isFirstSibling) && "opacity10")} />}
 			<div className="angle" />
-			<div className={clsx("line-to-next", (props.lineToNext ?? !tenta.isLast) && "opacity10")} />
+			<div className={clsx("line-to-next", (props.lineToNext ?? !tenta.isLastSibling) && "opacity10")} />
 
 		</PileNodeLinkLine.Root>
 

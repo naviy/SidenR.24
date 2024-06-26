@@ -27,6 +27,8 @@ export function PileGroupNode2({
 })
 {
 	//$log("PileGroupNode2 " + props.tenta)
+	let { backfill } = props;
+
 
 	return PileRowNode<PileGroupNode2.Tenta>({
 
@@ -36,9 +38,9 @@ export function PileGroupNode2({
 
 		...props,
 
-		backfill: (props.backfill === true
-			? ((tenta) => PileGroupNode2.defaultBackfill(tenta, color))
-			: props.backfill
+		backfill: (typeof backfill === "function"
+			? props.backfill
+			: ((tenta) => PileGroupNode2.defaultBackfill(tenta, color, backfill as boolean))
 		),
 
 		bg: "transparent",
@@ -92,7 +94,8 @@ export module PileGroupNode2
 
 			return {
 
-				bodyIsSeparated: !!openPhase,
+				bodyIsSeparated: false,
+				//bodyIsSeparated: !!openPhase,
 
 				tailIsVisible: !!openPhase && this.hasCollectors,
 				tailIsSeparated: !!openPhase,
@@ -145,7 +148,8 @@ export module PileGroupNode2
 			relative
 			animated
 			px24
-			pt={tenta.tailIsVisibleAndSeparated ? 24 : 0}
+			pt={tenta.tailIsVisibleAndSeparated /*&& !tenta.isFirstSibling*/ ? 24 : 8}
+			pb={tenta.tailIsVisibleAndSeparated ? 0 : 8}
 			children={children}
 		/>;
 	}
@@ -161,7 +165,7 @@ export module PileGroupNode2
 		renderCol ??= col => <Pane.Col
 			start
 			end
-			wrapperCls="px36"
+			wrapperCls="pl36"
 			children={col.defaultListElement()}
 		/>;
 
@@ -180,8 +184,24 @@ export module PileGroupNode2
 
 
 
-	export function defaultBackfill(tenta: Tenta_.Base, color?: Color | null)
+	export function defaultBackfill(
+		tenta: Tenta_.Base,
+		color?: Color | null,
+		bg?: boolean
+	)
 	{
+
+		if (!bg)
+		{
+			return (
+				<Backfill
+					brd={color ? `1px solid ${color?.[100]}` : undefined}
+					visible={tenta.tailIsVisibleAndSeparated}
+				/>
+			);
+		}
+
+
 		return (
 			<Backfill
 				bg={color ? lighten(color[50], .5) : undefined}

@@ -117,7 +117,7 @@ export module PileRootNode
 			return {
 				bodyIsSeparated: false,
 				tailIsVisible: true,
-				tailIsSeparated: false,
+				tailIsSeparated: true,
 			};
 		}
 

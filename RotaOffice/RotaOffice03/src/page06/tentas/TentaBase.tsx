@@ -121,8 +121,8 @@ export class TentaBase<
 	#priorSibling?: TentaBase | null;
 	#nextSibling?: TentaBase | null;
 
-	get isFirst() { return !this.#priorSibling; }
-	get isLast() { return !this.#nextSibling; }
+	get isFirstSibling() { return !this.#priorSibling; }
+	get isLastSibling() { return !this.#nextSibling; }
 
 
 	collectors?: TentaCollector[];
@@ -1028,7 +1028,7 @@ export class TentaBase<
 
 	btmIsSeparated()
 	{
-		return this.bodyIsSeparated || !!this.next()?.bodyIsSeparated || this.isLast && !!this.parentTenta?.tailIsSeparated;
+		return this.bodyIsSeparated || !!this.next()?.bodyIsSeparated || this.isLastSibling && !!this.parentTenta?.tailIsSeparated;
 	}
 
 
@@ -1107,7 +1107,7 @@ export class TentaBase<
 			return 0;
 
 
-		if (!this.isLast || this.tailIsVisible && !this.tailIsSeparated && this.hasVisibleTentas())
+		if (!this.isLastSibling || this.tailIsVisible && !this.tailIsSeparated && this.hasVisibleTentas())
 		{
 			return 0;
 		}
@@ -1129,7 +1129,7 @@ export class TentaBase<
 			let margin = Math.max(parent.tailBtmMargin(), parent.bodyBtmMargin());
 
 
-			if (margin < maxMargin && parent.isLast)
+			if (margin < maxMargin && parent.isLastSibling)
 			{
 				let parentMargin = getParentTailBtmMargin(parent.parentTenta);
 				margin = Math.max(margin, parentMargin);
