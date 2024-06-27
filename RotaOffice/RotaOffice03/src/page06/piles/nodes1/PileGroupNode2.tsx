@@ -191,6 +191,12 @@ export module PileGroupNode2
 	)
 	{
 
+		if (color && (color as any)["10"] == null)
+		{
+			(color as any)["10"] = lighten(color[50], .75);
+		}
+
+
 		if (!bg)
 		{
 			return (
@@ -204,7 +210,7 @@ export module PileGroupNode2
 
 		return (
 			<Backfill
-				bg={color ? lighten(color[50], .5) : undefined}
+				bg={color ? (color as any)["10"] : undefined}
 				brd={color ? `2px solid ${color?.[200]}` : undefined}
 				visible={tenta.tailIsVisibleAndSeparated}
 			/>

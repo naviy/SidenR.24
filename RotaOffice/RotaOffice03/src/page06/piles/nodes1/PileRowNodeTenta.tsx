@@ -77,12 +77,10 @@ export class PileRowNodeTenta<
 
 
 
-	@$log.m
 	override created()
 	{
 
 		let { parentTenta } = this;
-		$log("parentTenta:", parentTenta)
 
 		if (this.rootFfRef === undefined)
 		{
@@ -128,17 +126,17 @@ export class PileRowNodeTenta<
 	}
 
 
-	async scrollIntoView(): Promise<boolean>
+	scrollIntoView(): boolean
 	{
 		let { bodyFf } = this;
-		return !!bodyFf && await bodyFf.scrollIntoView();
+		return !!bodyFf && bodyFf.scrollIntoView();
 	}
 
 
-	async scrollIntoViewTop(): Promise<boolean>
+	scrollIntoViewTop(): boolean
 	{
 		let { bodyFf } = this;
-		return !!bodyFf && await bodyFf.scrollIntoViewTop({ topOffset: 80 });
+		return !!bodyFf && bodyFf.scrollIntoViewTop({ topOffset: 80 });
 	}
 
 
@@ -192,51 +190,51 @@ export class PileRowNodeTenta<
 
 
 
-		protected override async onRightKey()
+	protected override async onRightKey()
+	{
+
+		if (!this.closed && this.collapsed)
+			this.expand();
+
+		if (this.open())
+			return;
+
+
+		if (this.scrollIntoViewTop())
+			return;
+
+
+		if (await this.focusTail())
+			return;
+
+
+		await this.shakeBody();
+
+	}
+
+
+
+	protected override async onLeftClick()
+	{
+
+		if (!this.bodyIsFocused)
 		{
-
-			if (!this.closed && this.collapsed)
-				this.expand();
-
-			if (this.open())
-				return;
-
-
-			if (await this.scrollIntoViewTop())
-				return;
-
-
-			if (await this.focusTail())
-				return;
-
-
-			await this.shakeBody();
-
+			await this.focusBody();
+			return;
 		}
 
 
-
-		protected override async onLeftClick()
-		{
-
-			if (!this.bodyIsFocused)
-			{
-				await this.focusBody();
-				return;
-			}
+		if (this.open())
+			return;
 
 
-			if (this.open())
-				return;
+		if (this.scrollIntoViewTop())
+			return;
 
 
-			if (await this.scrollIntoViewTop())
-				return;
+		await this.shakeBody();
 
-
-			await this.shakeBody();
-
-		}
+	}
 
 
 
@@ -247,10 +245,13 @@ export class PileRowNodeTenta<
 	override  async onLeftKey()
 	{
 
-		this.close();
+		//if (this.collectorCount > 1)
+			this.close();
+
 
 		if (this.closed && !this.collapsed)
 			this.collapse();
+
 
 		this.scrollIntoView();
 
@@ -267,7 +268,7 @@ export class PileRowNodeTenta<
 		}
 		else if (this.close())
 		{
-			await this.scrollIntoView();
+			this.scrollIntoView();
 		}
 		else
 		{
@@ -290,13 +291,13 @@ export class PileRowNodeTenta<
 			if (this.expanded)
 			{
 				this.closed && this.open();
-				await this.scrollIntoViewTop();
+				this.scrollIntoViewTop();
 			}
 		}
 		else
 		{
 			!this.opened && this.open();
-			await this.scrollIntoViewTop();
+			this.scrollIntoViewTop();
 		}
 
 	}
@@ -308,7 +309,7 @@ export class PileRowNodeTenta<
 
 		if (this.treeCollapse())
 		{
-			await this.scrollIntoView();
+			this.scrollIntoView();
 		}
 		else
 		{

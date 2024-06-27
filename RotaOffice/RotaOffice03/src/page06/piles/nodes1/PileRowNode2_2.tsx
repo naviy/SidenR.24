@@ -1,12 +1,12 @@
-import { $log, Div, ExpanderBaseBehavior, FillFade, Pane } from "@libs";
+import { Div, ExpanderBaseBehavior, FillFade, Pane } from "@libs";
 import Tab from "@mui/material/Tab";
 import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
+import { createRef, type ReactNode } from "react";
+import { ErrorBoundary } from "../../../@app";
 import { Tenta as Tenta_ } from "../../tentas";
 import { usePileCellIndent } from "../core/PileCellIndent";
 import { PileRowNode } from "./PileRowNode";
-import { createRef, type ReactNode } from "react";
-import { ErrorBoundary } from "../../../@app";
 
 
 
@@ -68,22 +68,6 @@ export module PileRowNode2_2
 		tabsIsVisible: boolean
 	}>
 	{
-
-		//---
-
-
-
-		//static useByPhase(): Tenta
-		//{
-		//	let tenta = Tenta_.useByPhase()!;
-
-		//	if (!tenta || !(tenta instanceof Tenta))
-		//		throw Error(`tenta is ${tenta}`);
-
-		//	return tenta;
-		//}
-
-
 
 		//---
 

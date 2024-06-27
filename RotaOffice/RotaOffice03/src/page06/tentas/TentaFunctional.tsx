@@ -2,7 +2,7 @@ import type { Constructor } from "@libs";
 import type React from "react";
 import { useState, type FC, type ReactNode } from "react";
 import type { TentaBase } from "./TentaBase";
-import type { TentaCollectorProps, TentaCollectorPropsAliases, TentaCollectorTentasGetter } from "./TentaCollector";
+import type { TentaCollector } from "./TentaCollector";
 
 
 
@@ -132,13 +132,12 @@ export module TentaFunctional
 		TComponent,
 	>
 	{
+
 		id: React.Key;
 
-		collectors?: TentaCollectorPropsAliases;
+		collectors?: TentaCollector.PropsAliases;
 		init?: (tenta: TTenta) => void;
 		use?: (tenta: TTenta) => void;
-
-		//component?: TComponent;
 
 		render?: (tenta: TTenta, component: TComponent) => ReactNode;
 
@@ -147,7 +146,7 @@ export module TentaFunctional
 
 
 
-	export type CollectorAliases = TentaCollectorPropsAliases | TentaCollectorTentasGetter;
+	export type CollectorAliases = TentaCollector.PropsAliases | TentaCollector.TentasGetter;
 
 
 

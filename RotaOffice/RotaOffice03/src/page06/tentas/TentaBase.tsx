@@ -1,7 +1,7 @@
 import { $log, Focuser, GlobalState, Repaintable } from '@libs';
 import type React from "react";
 import { type ReactNode, type RefObject } from "react";
-import { TentaCollector, type TentaCollectorPropsAlias, type TentaCollectorPropsAliases } from "./TentaCollector";
+import { TentaCollector } from "./TentaCollector";
 import type { TentaAccent } from './TentaAccent';
 
 
@@ -275,7 +275,7 @@ export class TentaBase<
 	//---
 
 
-	addCollector(id: React.Key, propsAlias: TentaCollectorPropsAlias)
+	addCollector(id: React.Key, propsAlias: TentaCollector.PropsAlias)
 	{
 
 		if (!propsAlias)
@@ -307,12 +307,12 @@ export class TentaBase<
 
 
 
-	addCollectors(cfg: TentaCollectorPropsAliases)
+	addCollectors(cfg: TentaCollector.PropsAliases)
 	{
 
 		for (let id of Object.keys(cfg))
 		{
-			cfg[id] && this.addCollector(id, cfg[id] as TentaCollectorPropsAlias);
+			cfg[id] && this.addCollector(id, cfg[id] as TentaCollector.PropsAlias);
 		}
 
 	}

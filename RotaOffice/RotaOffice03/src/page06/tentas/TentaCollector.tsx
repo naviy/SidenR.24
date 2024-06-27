@@ -15,39 +15,6 @@ import { type TentaBase } from "./TentaBase";
 
 
 
-export interface TentaCollectorProps
-{
-
-	title?: (collector: TentaCollector) => ReactNode;
-	tentas: TentaCollectorTentasGetter;
-
-}
-
-
-
-export type TentaCollectorTentas = (
-	Array<TentaBase | null | undefined | false | 0 | ""> | null | undefined | false | 0 | ""
-);
-
-
-export type TentaCollectorTentasGetter = ((collector: TentaCollector) =>
-	TentaCollectorTentas
-);
-
-
-export type TentaCollectorPropsAlias = TentaCollectorProps | TentaCollectorTentasGetter;
-
-
-export type TentaCollectorPropsAliases = Record<
-	string | number | symbol,
-	TentaCollectorPropsAlias | null | undefined | false | 0 | ""
->;
-
-
-
-
-
-
 export class TentaCollector extends Repaintable()
 {
 
@@ -58,7 +25,7 @@ export class TentaCollector extends Repaintable()
 	constructor(
 		public id: React.Key,
 		public parentTenta: TentaBase | null,
-		public props: TentaCollectorProps
+		public props: TentaCollector.Props
 	)
 	{
 		super();
@@ -295,7 +262,44 @@ export module TentaCollector
 
 
 
-	export function use(id: React.Key,  propsAlias: TentaCollectorPropsAlias)
+
+	export interface Props
+	{
+
+		title?: (collector: TentaCollector) => ReactNode;
+		tentas: TentasGetter;
+
+	}
+
+
+
+	export type Tentas = (
+		Array<TentaBase | null | undefined | false | 0 | ""> | null | undefined | false | 0 | ""
+	);
+
+
+	export type TentasGetter = ((collector: TentaCollector) =>
+		Tentas
+	);
+
+
+	export type PropsAlias = Props | TentasGetter;
+
+
+	export type PropsAliases = Record<
+		string | number | symbol,
+		PropsAlias | null | undefined | false | 0 | ""
+	>;
+
+
+
+
+	//---
+
+
+
+
+	export function use(id: React.Key, propsAlias: PropsAlias)
 	{
 
 		let props = typeof propsAlias === "function" ? { tentas: propsAlias } : propsAlias;
@@ -308,7 +312,9 @@ export module TentaCollector
 
 
 
+
 	//---
+
 
 
 
@@ -350,6 +356,7 @@ export module TentaCollector
 	export interface CollectorConfig
 	{
 	}
+
 
 
 

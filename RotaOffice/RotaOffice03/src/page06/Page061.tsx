@@ -8,6 +8,7 @@ import { PileRootNode } from './piles/nodes1/PileRootNode';
 import { PileGroupNode1 } from './piles/nodes1/PileGroupNode1';
 import { PileGroupNode2 } from './piles/nodes1/PileGroupNode2';
 import { PileRowNode2_2 } from "./piles/nodes1/PileRowNode2_2";
+import { PileRowNode2 } from './piles/nodes1/PileRowNode2';
 
 
 
@@ -39,7 +40,6 @@ export module Page061
 
 		let { db } = useData();
 		let root = RootTenta.use(db);
-
 
 		return (
 
@@ -96,7 +96,7 @@ var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]
 
 		<Pane.Col start end>
 
-			<Node tenta={tenta} color={colors.lime}>
+			<Node tenta={tenta} backfill color={colors.lime}>
 
 				<>
 					<Pane start p12 vcenter>
@@ -119,7 +119,7 @@ var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]
 
 
 
-var EntityTenta: PileRowNode2_2.TF<[Db, Entity]> = PileRowNode2_2.createFactory((db: Db, entity: Entity) => [
+var EntityTenta = PileRowNode2.createFactory((db: Db, entity: Entity) => [
 
 	`Entity ${entity.id}`,
 
@@ -172,7 +172,7 @@ var EntityTenta: PileRowNode2_2.TF<[Db, Entity]> = PileRowNode2_2.createFactory(
 
 
 
-var EntityPropertyTenta: PileRowNode2_2.TF<[Db, EntityProperty]> = PileRowNode2_2.createFactory((db: Db, prop: EntityProperty) => [
+var EntityPropertyTenta = PileRowNode2.createFactory((db: Db, prop: EntityProperty) => [
 
 	prop.id,
 
@@ -234,7 +234,7 @@ var ValueTypesPileTenta = PileGroupNode2.createFactory((db: Db, types: ValueType
 
 		<Pane.Col start end>
 
-			<Node tenta={tenta} color={colors.deepPurple}>
+			<Node tenta={tenta} backfill color={colors.deepPurple}>
 
 				<>
 					<Pane start p12 vcenter>
@@ -257,7 +257,7 @@ var ValueTypesPileTenta = PileGroupNode2.createFactory((db: Db, types: ValueType
 
 
 
-var ValueTypeTenta: PileRowNode2_2.TF<[Db, ValueType]> = PileRowNode2_2.createFactory((db: Db, type: ValueType) => [
+var ValueTypeTenta = PileRowNode2.createFactory((db: Db, type: ValueType) => [
 
 	`ValueType ${type.id}`,
 
@@ -275,13 +275,13 @@ var ValueTypeTenta: PileRowNode2_2.TF<[Db, ValueType]> = PileRowNode2_2.createFa
 		}),
 	},
 
-	tenta =>
+	(tenta, Node) =>
 	{
 
 		//$log("Unit Row " + tenta);
 
 
-		return <PileRowNode2_2 backfill tenta={tenta}>
+		return <Node backfill tenta={tenta}>
 
 			<>
 
@@ -299,7 +299,7 @@ var ValueTypeTenta: PileRowNode2_2.TF<[Db, ValueType]> = PileRowNode2_2.createFa
 
 			</>
 
-		</PileRowNode2_2>;
+		</Node>;
 
 	},
 

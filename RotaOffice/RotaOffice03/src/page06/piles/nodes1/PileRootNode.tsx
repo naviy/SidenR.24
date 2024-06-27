@@ -2,7 +2,6 @@ import { Focuser } from '@libs';
 import { createRef, type ReactNode } from "react";
 import { ErrorBoundary } from '../../../@app';
 import { Tenta as Tenta_ } from "../../tentas";
-import type { TentaCollectorTentas } from '../../tentas/TentaCollector';
 
 
 
@@ -149,7 +148,7 @@ export module PileRootNode
 
 
 	export function createFactory<TArgs extends any[] = []>(
-		colsGetter: (...args: TArgs) => TentaCollectorTentas
+		colsGetter: (...args: TArgs) => Tenta_.Collector.Tentas
 	): TentaFactory<TArgs>
 	{
 
