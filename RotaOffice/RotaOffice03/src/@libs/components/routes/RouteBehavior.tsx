@@ -160,7 +160,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 
 
-	icon(): React.ReactElement | undefined
+	icon(): React.ReactNode | undefined
 	{
 		return (typeof this.props.icon === 'function'
 			? (this.props.icon as any)?.(this) || undefined

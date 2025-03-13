@@ -1,20 +1,12 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.271090-alpha">
-  <PropertyGroup>
-    <StartupCommand>pnpm run dev</StartupCommand>
-    <JavaScriptTestRoot>src\</JavaScriptTestRoot>
-    <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
-    <!-- Allows the build (or compile) script located on package.json to run on Build -->
-    <ShouldRunBuildScript>false</ShouldRunBuildScript>
-    <!-- Command to create an optimized build of the project that's ready for publishing -->
-    <ProductionBuildCommand>pnpm run build</ProductionBuildCommand>
-    <!-- Folder where production build objects will be placed -->
-    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
-    <BuildCommand>pnpm run build</BuildCommand>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="src\page05\core\**" />
-    <None Remove="src\page05\data\**" />
-    <TypeScriptConfiguration Remove="src\page05\core\**" />
-    <TypeScriptConfiguration Remove="src\page05\data\**" />
-  </ItemGroup>
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2191419">
+	<PropertyGroup>
+
+		<StartupCommand>pnpm run dev</StartupCommand>
+		<JavaScriptTestRoot>src\</JavaScriptTestRoot>
+		<JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
+		<ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+		<ShouldRunBuildScript>true</ShouldRunBuildScript>
+		<BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
+
+	</PropertyGroup>
 </Project>
