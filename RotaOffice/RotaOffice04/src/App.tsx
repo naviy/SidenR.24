@@ -14,13 +14,13 @@ import { useState } from "react";
 import * as ReactRouter from "react-router-dom";
 import NguIcon from "./@icons/ngu";
 import { GlobalState } from "./@libs/components/core/GlobalState";
-import { Page04 } from "./page04/Page04";
-import { Page041 } from "./page04/Page041";
-import { Page042 } from "./page04/Page042";
+//import { Page04 } from "./page04/Page04";
+//import { Page041 } from "./page04/Page041";
+//import { Page042 } from "./page04/Page042";
 import { Page043 } from "./page04/Page043";
-import { Page051 } from "./page051/Page051";
-import { Page052 } from "./page052/Page052";
-import { Page061 } from "./page06/Page061";
+//import { Page051 } from "./page051/Page051";
+//import { Page052 } from "./page052/Page052";
+//import { Page061 } from "./page06/Page061";
 
 
 
@@ -100,12 +100,12 @@ function AppDesktop()
 	let navigate = ReactRouter.useNavigate();
 
 	const routes = [
-		Page04.route,
-		Page041.route,
-		Page042.route,
+		//Page04.route,
+		//Page041.route,
+		//Page042.route,
 		Page043.route,
-		Page051.route,
-		Page052.route,
+		//Page051.route,
+		//Page052.route,
 		//Page061.route,
 	];
 
@@ -211,8 +211,8 @@ function BigLogo()
 	return <Div mt24 mb16 flex1 vflex textCenter>
 		<Div>
 			<NguIcon sx={{
-				fontSize: 128,
-				width: `128px !important`,
+				fontSize: 80,
+				width: `96px !important`,
 				filter: "drop-shadow(0px 3px 12px rgba(241, 235, 211, 0.4))",
 			}} />
 		</Div>
@@ -265,7 +265,7 @@ function MainMenuItem({
 
 			<ListItemButton onClick={route.activate} selected={route.active}>
 
-				{icon ? <ListItemIcon children={icon} /> : null}
+				{icon ? <ListItemIcon children={icon} sx={{ minWidth: 36 }} /> : null}
 
 				<ListItemText
 					primary={<Txt.Button>{title}</Txt.Button>}

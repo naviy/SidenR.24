@@ -81,6 +81,7 @@ var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]
 	"EntitiesPile",
 
 	{
+
 		cols: () => entities.map(entity => EntityTenta(db, entity)),
 
 		init: tenta => tenta.init({
@@ -90,6 +91,7 @@ var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]
 		//use: tenta => tenta.use({
 		//	globalState: true,
 		//})
+
 	},
 
 	(tenta, Node) =>

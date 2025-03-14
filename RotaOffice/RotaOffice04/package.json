@@ -1,0 +1,61 @@
+{
+	"name": "rota-office",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "pnpm install && tsc -b",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"@emotion/react": "latest",
+		"@emotion/styled": "latest",
+		"@fontsource/roboto": "latest",
+		"@mui/icons-material": "5.16.14",
+		"@mui/material": "5.16.14",
+		"clsx": "latest",
+		"csstype": "latest",
+		"lodash": "latest",
+		"moment": "latest",
+		"numeral": "latest",
+		"react": "18.3.1",
+		"react-dom": "18.3.1",
+		"react-router-dom": "latest",
+		"react-transition-group": "latest",
+		"react-world-flags": "latest"
+	},
+	"devDependencies": {
+		"@babel/plugin-proposal-decorators": "latest",
+		"@types/lodash": "latest",
+		"@types/node": "latest",
+		"@types/numeral": "latest",
+		"@types/react": "18.3.18",
+		"@types/react-dom": "18.3.5",
+		"@types/react-transition-group": "latest",
+		"@typescript-eslint/eslint-plugin": "latest",
+		"@typescript-eslint/parser": "latest",
+		"@vitejs/plugin-react": "latest",
+		"eslint": "latest",
+		"eslint-plugin-react-hooks": "latest",
+		"eslint-plugin-react-refresh": "latest",
+		"sass": "latest",
+		"typescript": "latest",
+		"vite": "latest",
+		"vite-plugin-checker": "latest",
+		"vite-plugin-singlefile": "latest",
+		"vite-tsconfig-paths": "latest"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		],
+		"rules": {
+			"no-mixed-operators": "off",
+			"react-hooks/rules-of-hooks": "off",
+			"@typescript-eslint/no-redeclare": "off"
+		}
+	}
+}

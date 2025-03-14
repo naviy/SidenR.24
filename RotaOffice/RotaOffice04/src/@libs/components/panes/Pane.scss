@@ -1,0 +1,84 @@
+/*.pane {
+
+	display: flex;
+	position: relative;
+
+	background: var(--bgcolor, white);
+
+	border-radius: var(--b-r);
+
+	box-sizing: border-box;
+
+	flex: var(--flex);
+
+	width: var(--width);
+	min-width: var(--min-width);
+	max-width: var(--max-width);
+
+	height: var(--height);
+	min-height: var(--min-height);
+	max-height: var(--max-height);
+
+	transition: all var(--default-animation-duration) ease-in-out;
+
+	user-select: none;
+
+	will-change: border-radius, flex, width, min-width, max-width, height, min-height, max-height;
+
+
+	> * {
+		user-select: text;
+	}
+
+
+	&::before {
+
+		position: absolute;
+		inset: 0;
+		content: "";
+
+		border-radius: inherit;
+
+		border: 0 solid transparent;
+		border-top: var(--bt);
+		border-right: var(--br);
+		border-bottom: var(--bb);
+		border-left: var(--bl);
+
+		transition: all var(--default-animation-duration) ease-in-out;
+
+		pointer-events: none;
+		will-change: border-radius, border;
+
+	}
+
+}*/
+
+
+
+.pane-debug-box {
+
+	--color: rgba(100,30,30, .5);
+
+	position: absolute;
+	inset: -1px;
+	overflow: hidden;
+	border: 1px dotted var(--color);
+	border-radius: inherit;
+
+	> div {
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-size: 8px;
+		padding: 0px 8px 2px 6px;
+		background: var(--color);
+		color: white;
+		border-bottom-right-radius: 3px;
+
+		white-space: nowrap;
+
+	}
+
+}
