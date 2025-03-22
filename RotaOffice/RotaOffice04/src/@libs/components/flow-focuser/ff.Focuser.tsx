@@ -1,5 +1,4 @@
-import { Component, useContext, type ReactNode } from "react";
-import ReactDOM from "react-dom";
+import { Component, createRef, useContext, useRef, type ReactNode } from "react";
 
 import { $defaultAnimationDurationMs, $log, Div, MuiColor, SpaWaitingMask } from "../core";
 
@@ -127,8 +126,8 @@ export interface FocuserProps
 
 
 
-	key?: React.Key | null,
-	ref?: React.Ref<Focuser>,
+	//key?: React.Key | null,
+	//ref?: React.Ref<Focuser>,
 
 	cls?: string;
 	name?: string;
@@ -248,7 +247,6 @@ export interface FocuserProps
 	//div?: boolean;
 	//className?: string;
 	//style?: React.CSSProperties;
-	children: ReactNode;
 
 	defaultEntered?: boolean;
 
@@ -334,10 +332,12 @@ export type FocuserEventName = keyof IFocuserListener;
 
 export module FocuserEventName
 {
+
 	export function toBehaviorEventName(eventName: FocuserEventName): FocuserBehaviorEventName
 	{
 		return `ff_on${eventName.toCapitalizeCase()}` as any;
 	}
+
 }
 
 
@@ -353,42 +353,6 @@ export type IFocuserBehaviorListener = (
 		ff_allowCtrlKey?: boolean;
 	}
 );
-
-//export interface IFocuserListener
-//{
-
-//	ff_allowCtrlKey?: boolean;
-
-//	ff_onFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-//	ff_onUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-//	ff_onItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-//	ff_onItemUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-//	ff_onChangeItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
-
-//	ff_onFocusLeft?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-//	ff_onFocusUp?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-//	ff_onFocusRight?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-//	ff_onFocusDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<void | boolean | Focuser>;
-
-
-//	ff_onClick?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
-//	ff_onContextMenu?(ff: Focuser, e: MouseEvent): void | boolean | Promise<any>;
-//	ff_onKeyDown?(ff: Focuser, e: KeyboardEvent): void | boolean | Promise<any>;
-
-//	ff_onEnter?(ff: Focuser): void | boolean | Promise<any>;
-//	ff_onItemEnter?(ff: Focuser, itemFf: Focuser): boolean | Promise<boolean>;
-//	ff_onExit?(ff: Focuser): void | boolean | Promise<void | boolean | Focuser>;
-
-//	ff_onInsert?(ff: Focuser): void | boolean | Promise<any>;
-//	//ff_onInspect?(ff: Focuser, e: InspectArgs): void | boolean | Promise<any>;
-//	ff_onDelete?(ff: Focuser): void | boolean | Promise<any>;
-//	ff_onActivate?(ff: Focuser, activated: boolean): void | boolean | Promise<any>;
-//	ff_onSelect?(ff: Focuser): void | boolean | Promise<any>;
-//	ff_onMount?(ff: Focuser): void;
-//	ff_onUnmount?(ff: Focuser): void;
-
-//}
-
 
 
 
@@ -456,14 +420,14 @@ export interface FocusActionProps extends Pick<FocuserProps, "domFocus">
 
 
 
-export class Focuser extends Component<FocuserProps>
+export class Focuser //extends Component<FocuserProps>
 {
 
 	//---
 
 
 
-	static use(): Focuser | null
+	static useContext(): Focuser | null
 	{
 		return useContext(FocuserContext);
 	}
@@ -492,14 +456,23 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	static override contextType = FocuserContext;
+	//static override contextType = FocuserContext;
 
-	override context: Focuser | undefined = undefined;
+	//override context: Focuser | undefined = undefined;
 
 
 
 	//---
 
+
+
+	constructor(
+		public parent: Focuser | null,
+		public props: FocuserProps
+	)
+	{
+
+	}
 
 
 	private static _instanceCount = 0;
@@ -553,13 +526,6 @@ export class Focuser extends Component<FocuserProps>
 
 	_cursorEl?: HTMLDivElement | null;
 	setCursorEl?: (value: HTMLDivElement) => void;
-
-
-
-	get parent() 	
-	{
-		return this.context;
-	}
 
 
 
@@ -646,34 +612,56 @@ export class Focuser extends Component<FocuserProps>
 
 
 	/** target element */
-	get el()
+	get el(): HTMLElement | null
 	{
 
-		//if (this.setEl)
-		//{
-		//	return this._el || null;
-		//}
+		let refEl = this.elRef.current;
 
 
-		if (this._el === undefined)
+		//$log.___("#el:", this.#el)
+		//$log.___("refEl:", refEl)
+
+		if (!this.#el && this.#el != refEl)
 		{
-			//if (this.props.element)
-			//	this._el = this.props.element();
-			//else
-			this._el = ReactDOM.findDOMNode(this) as HTMLElement || null;
-			//this._el = this.caret?.el;
+			this.#el = refEl;
 
-			this.initElement(this._el);
-
+			this.initElement(refEl);
 		}
 
 
-		return this._el;
+		return refEl || null;
+
+
+
+		//return this.elRef.current || null;
+
+		////if (this.setEl)
+		////{
+		////	return this._el || null;
+		////}
+
+
+		//if (this._el === undefined)
+		//{
+		//	//if (this.props.element)
+		//	//	this._el = this.props.element();
+		//	//else
+		//	this._el = ReactDOM.findDOMNode(this) as HTMLElement || null;
+		//	//this._el = this.caret?.el;
+
+		//	this.initElement(this._el);
+
+		//}
+
+
+		//return this._el;
 
 	}
+	#el?: HTMLElement | null;
 
-
-	private _el?: HTMLElement | null;
+	readonly elRef = createRef<HTMLElement>();
+	get divRef() { return this.elRef as React.RefObject<HTMLDivElement> }
+	//private _el?: HTMLElement | null;
 	//private setEl?: (value: HTMLElement) => void;
 
 
@@ -705,7 +693,7 @@ export class Focuser extends Component<FocuserProps>
 			this._level = (this.ghost ? 0 : 1) + (this.parent?.level || 0);
 		}
 
-		return this._level;
+		return this._level!;
 	}
 	private _level?: number;
 
@@ -718,7 +706,7 @@ export class Focuser extends Component<FocuserProps>
 			this._prioriry = (this.parent?.priority || 0) + (this.props.priority || 0);
 		}
 
-		return this._prioriry;
+		return this._prioriry!;
 	}
 
 	private _prioriry?: number;
@@ -868,7 +856,7 @@ export class Focuser extends Component<FocuserProps>
 		if (listeners.indexOf(listener) >= 0)
 			return null;
 
-	listeners.push(listener);
+		listeners.push(listener);
 
 		return listener;
 
@@ -1248,7 +1236,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	override toString()
+	toString()
 	{
 		return (
 			`Focuser[${this.id}] `
@@ -1276,8 +1264,8 @@ export class Focuser extends Component<FocuserProps>
 		//	sb.push(...this.caret.toLogValue());
 		//}
 
-		if (this._el)
-			sb.push(this._el);
+		if (this.el)
+			sb.push(this.el);
 
 		return sb;
 
@@ -1306,7 +1294,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	override componentDidMount()
+	componentDidMount()
 	{
 
 		//this._mounted = true;
@@ -1375,7 +1363,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	private initElement(el: HTMLElement | null | undefined)
+	initElement(el: HTMLElement | null | undefined)
 	{
 
 		if (!el)
@@ -1507,7 +1495,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	override shouldComponentUpdate(nextProps: any, nextState: any): boolean
+	shouldComponentUpdate()
 	{
 
 		this._prioriry = undefined;
@@ -1519,7 +1507,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	override componentDidUpdate()
+	componentDidUpdate()
 	{
 
 		this.updateBorderers();
@@ -1535,7 +1523,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	override componentWillUnmount()
+	componentWillUnmount()
 	{
 
 		this._unmounted = true;
@@ -1544,13 +1532,14 @@ export class Focuser extends Component<FocuserProps>
 		//$log("currentFocuser():", currentFocuser());
 
 
-		if (this.props.onUnmount || this.hasListenerEvent("unmount"))
+		if (this.props.onUnmount)
 		{
+			this.props.onUnmount(this);
+		}
 
-			this.props.onUnmount?.(this);
-
+		else if (this.hasListenerEvent("unmount"))
+		{
 			this.callListenerEvent("unmount", this);
-
 		}
 
 		else if (this.focused && currentFocuser() === this)
@@ -1578,12 +1567,13 @@ export class Focuser extends Component<FocuserProps>
 		//this.cursor?.removeFocuser(this);
 
 
+		let { el } = this;
 
-		this.el?.removeEventListener("mouseover", this.onHover);
-		this.el?.removeEventListener("mouseleave", this.onUnhover);
+		el?.removeEventListener("mouseover", this.onHover);
+		el?.removeEventListener("mouseleave", this.onUnhover);
 
 
-		this._el = undefined;
+		//this.#elRef.current = null;
 
 
 
@@ -1605,7 +1595,7 @@ export class Focuser extends Component<FocuserProps>
 
 
 
-	override render()
+	render(children: ReactNode)
 	{
 
 		this.clearState();
@@ -1614,17 +1604,14 @@ export class Focuser extends Component<FocuserProps>
 
 		let body: ReactNode = <FocuserContext.Provider
 			value={this}
-			children={this.props.children ?? null}
+			children={children}
 		/>;
 
 
 		if (this.props.cursor)
 		{
 
-			if (!this.setCursorEl)
-			{
-				this.setCursorEl = a => this._cursorEl = a;
-			}
+			this.setCursorEl ??= a => this._cursorEl = a;
 
 
 			body = <>
@@ -2830,8 +2817,10 @@ export class Focuser extends Component<FocuserProps>
 
 		//_$log("scrollIntoView");
 
+		let { el } = this;
 
-		if (this.props.scrollIntoView === false || !this.el || !this.cursorEl)
+
+		if (this.props.scrollIntoView === false || !el || !this.cursorEl)
 			return false;
 
 
@@ -2843,8 +2832,6 @@ export class Focuser extends Component<FocuserProps>
 
 		let topOffset = cfg?.topOffset ?? scrollIntoViewYOffset;
 
-
-		let el = this._el!;
 
 		let pos = el.getBoundingClientRect();
 		let cpos = container.getBoundingClientRect();
@@ -2898,10 +2885,11 @@ export class Focuser extends Component<FocuserProps>
 	scrollIntoViewTop(cfg?: ScrollIntoViewOptions): boolean
 	{
 
-		if (!this.el)
-			return false;
+		let { el } = this;
 
-		let el = this._el!;
+
+		if (!el)
+			return false;
 
 
 		let container = this.cursorEl?.parentElement;
@@ -4968,6 +4956,94 @@ export module Focuser
 	export type Listener = IFocuserBehaviorListener;
 
 	export var Tasks = Task;
+
+
+
+	export function use(props: FocuserProps): Focuser
+	{
+
+		let parent = Focuser.useContext();
+
+
+		let ffRef = useRef<Focuser>();
+
+		if (!ffRef.current)
+		{
+			ffRef.current = new Focuser(parent, props);
+		}
+
+
+		return ffRef.current;
+
+	}
+
+
+	export function useGhost(props?: FocuserProps): Focuser
+	{
+
+		return use({ ghost: true, ...props });
+
+	}
+
+
+
+
+
+	//export function Area({ ff }: { ff: Focuser | null })
+	//{
+
+	//	if (!ff)
+	//		return null;
+
+	//}
+
+
+
+	export class Area extends Component<{ ff: Focuser | null; children: ReactNode }>
+	{
+
+
+		override componentDidMount()
+		{
+			this.props.ff?.componentDidMount();
+		}
+
+		override shouldComponentUpdate(nextProps: any, nextState: any): boolean
+		{
+			this.props.ff?.shouldComponentUpdate();
+			return true;
+		}
+
+		override componentDidUpdate()
+		{
+			this.props.ff?.componentDidUpdate();
+		}
+
+		override componentWillUnmount()
+		{
+			this.props.ff?.componentWillUnmount();
+		}
+
+
+		override render()
+		{
+			return this.props.ff?.render(this.props.children);
+		}
+
+
+	}
+
+
+
+	export function Ghost({ children, ...props }: FocuserProps & { children: ReactNode })
+	{
+
+		let ff = use({ ghost: true, ...props });
+
+		return <Area ff={ff} children={children} />;
+
+	}
+
 
 
 }

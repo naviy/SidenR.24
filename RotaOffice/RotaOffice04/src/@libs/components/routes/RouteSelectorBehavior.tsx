@@ -23,7 +23,7 @@ export class RouteSelectorBehavior extends Repaintable()
 
 
 
-	ff!: RefObject<Focuser>;
+	ff!: Focuser;
 
 
 	router!: RouterBehavior;
@@ -42,6 +42,7 @@ export class RouteSelectorBehavior extends Repaintable()
 
 	use(cfg: Repaintable.UseConfig & {
 		router: RouterBehavior;
+		ff: Focuser.Props;
 	})
 	{
 
@@ -53,9 +54,9 @@ export class RouteSelectorBehavior extends Repaintable()
 		this.nextIndex = Math.min(this.nextIndex || 1, this.router.routes.length - 1);
 
 
-		this.ff = useRef<Focuser>(null);
+		this.ff = Focuser.use(cfg.ff);
 
-		
+
 		useEffect(() =>
 		{
 
@@ -205,7 +206,7 @@ export class RouteSelectorBehavior extends Repaintable()
 			return;
 
 
-		this.ff.current?.beginDelete();
+		this.ff.beginDelete();
 
 		try
 		{
@@ -220,7 +221,7 @@ export class RouteSelectorBehavior extends Repaintable()
 		}
 		catch (ex)
 		{
-			this.ff.current?.beginDelete();
+			this.ff.beginDelete();
 			throw ex;
 		}
 

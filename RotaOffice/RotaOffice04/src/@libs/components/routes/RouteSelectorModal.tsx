@@ -40,7 +40,20 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 	}
 
 
-	const selector = useNew(RouteSelectorBehavior).use({ router });
+	const selector = useNew(RouteSelectorBehavior).use({
+
+		router,
+
+		ff: {
+			root: true,
+			cursor: true,
+			ghost: true,
+			modal: true,
+			priority: 999999,
+			click: "unfocus",
+		},
+
+	});
 
 	const { nextIndex } = selector;
 
@@ -58,7 +71,7 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 			}}
 		>
 
-			<Focuser ref={selector.ff} root cursor ghost modal priority={999999} click="unfocus">
+			<Focuser.Area ff={selector.ff}>
 
 				{/*<DialogTitle>Route Selector</DialogTitle>*/}
 
@@ -78,7 +91,7 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 
 				</DialogContent>
 
-			</Focuser>
+			</Focuser.Area>
 
 		</Dialog>
 
@@ -118,25 +131,33 @@ function RouteLink({
 	let icon = route.icon();
 
 
-	return (
-		<Focuser
-			autoFocus={autoFocus}
-			allowShiftKey
-			onFocus={() => selector.selectRoute(route)}
-			onEnter={() => selector.hide()}
-			onClick={() =>
-			{
-				selector.selectRoute(route);
-				selector.hide();
-			}}
-			onDelete={async ff =>
-			{
-				await ff.focusPrior() || await ff.focusNext();
-				//await route.close?.();
-			}}
-		>
+	let ff = Focuser.use({
 
-			<Div relative>
+		autoFocus,
+		allowShiftKey: true,
+
+		onFocus: () => selector.selectRoute(route),
+		onEnter: () => selector.hide(),
+
+		onClick: () =>
+		{
+			selector.selectRoute(route);
+			selector.hide();
+		},
+
+		onDelete: async ff =>
+		{
+			await ff.focusPrior() || await ff.focusNext();
+			//await route.close?.();
+		},
+
+	});
+
+
+	return (
+		<Focuser.Area ff={ff}>
+
+			<Div ref={ff.divRef} relative>
 
 				<Focuser.Caret />
 
@@ -159,7 +180,7 @@ function RouteLink({
 
 			</Div>
 
-		</Focuser>
+		</Focuser.Area>
 	);
 
 }

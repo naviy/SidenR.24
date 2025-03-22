@@ -32,7 +32,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	{
 
 		if (cfg?.root)
-			this.rootFfRef = this.ffRef;
+			this.#rootFf = this.ff;
 
 
 		super.use(cfg);
@@ -58,21 +58,15 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 
 
-	rootFfRef?: RefObject<Focuser> | null;
-	get rootFf(): Focuser | null { return this.rootFfRef?.current || null; }
+	#rootFf?: Focuser | null;
+	get rootFf() { return this.#rootFf || null };
 
 
-	ffRef = createRef<Focuser>();
-	get ff(): Focuser | null { return this.ffRef.current; }
-
-
-	bodyFfRef = createRef<Focuser>();
-	get bodyFf(): Focuser | null { return this.bodyFfRef.current; }
+	ff: Focuser | null = null;
+	bodyFf: Focuser | null = null;
+	tailFf: Focuser | null = null;
+	
 	get bodyIsFocused() { return !!this.bodyFf?.isFocused; }
-
-
-	tailFfRef = createRef<Focuser>();
-	get tailFf(): Focuser | null { return this.tailFfRef.current; }
 
 	get tailFocused() { return !!this.tailFf?.isFocused; }
 
@@ -90,9 +84,9 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 		let { parent } = this;
 
 
-		if (this.rootFfRef === undefined)
+		if (this.#rootFf === undefined)
 		{
-			this.rootFfRef = parent instanceof PileRowNodeTenta ? parent.rootFfRef || null : null;
+			this.#rootFf = parent instanceof PileRowNodeTenta ? parent.#rootFf || null : null;
 		}
 
 	}
@@ -124,7 +118,7 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 
 	async focusTail(): Promise<Focuser | null>
 	{
-		return this.tailFfRef.current && await this.tailFfRef.current.enter();
+		return this.tailFf && await this.tailFf.enter();
 	}
 
 

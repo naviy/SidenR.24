@@ -328,7 +328,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 			focuserFocusStep(next, focusProps, true);
 			next?.scrollIntoView();
 		}
-		catch(ex)
+		catch (ex)
 		{
 			_isFocusing = false;
 			$log.error(ex);
@@ -466,7 +466,7 @@ function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | n
 		prior.caret?.recalcPosition();
 
 
-		let parent: Focuser | undefined = prior;
+		let parent: Focuser | null = prior;
 
 		while (parent)
 		{
@@ -482,7 +482,7 @@ function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | n
 	if (next)
 	{
 
-		let parent: Focuser | undefined = next;
+		let parent: Focuser | null = next;
 
 		while (parent)
 		{
@@ -998,38 +998,38 @@ const onClick = (async function onClick(e: MouseEvent)
 
 	(async () =>
 	{
-		//await $logb("ff.Core.onClick", async () =>
+		//await $log.b("ff.Core.onClick", async () =>
 		//{
 		//	$log("focusers:", _focusers);
 		//	$log("e:", e);
 
-		for (let ff of _focusers)
-		{
+			for (let ff of _focusers)
+			{
 
-			if (e.cancelBubble)
-				return;
-			//$log("ff:", ff);
-			//$log("ff.canClick():", ff.canClick());
-			if (!ff.canClick())
-				continue;
-
-
-			let el = ff.el;
-
-			//$log("e.target:", e.target);
-			//_$log("el:", el);
-			//__$log("el !== e.target:", el !== e.target);
-			//__$log("!el.contains(e.target as Node):", !el?.contains(e.target as Node));
-
-			if (!el || el !== e.target && !el.contains(e.target as Node))
-				continue;
+				if (e.cancelBubble)
+					return;
+				//$log("ff:", ff);
+				//$log._("ff.canClick():", ff.canClick());
+				if (!ff.canClick())
+					continue;
 
 
-			if (await ff.onClick(e))
-				break;
+				let el = ff.el;
 
-		}
-		//		});
+				//$log._("e.target:", e.target);
+				//$log.__("el:", el);
+				//$log.__("el !== e.target:", el !== e.target);
+				//$log.__("!el.contains(e.target as Node):", !el?.contains(e.target as Node));
+
+				if (!el || el !== e.target && !el.contains(e.target as Node))
+					continue;
+
+
+				if (await ff.onClick(e))
+					break;
+
+			}
+		//});
 	})();
 
 });

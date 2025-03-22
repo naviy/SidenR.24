@@ -27,7 +27,7 @@ export function DesktopContent(props: {
 
 			<ErrorBoundary>
 
-				<Focuser cursor ghost click="unfocus">
+				<Focuser.Ghost cursor click="unfocus">
 
 					<Div relative>
 
@@ -37,7 +37,7 @@ export function DesktopContent(props: {
 
 					</Div>
 
-				</Focuser>
+				</Focuser.Ghost>
 
 			</ErrorBoundary>
 

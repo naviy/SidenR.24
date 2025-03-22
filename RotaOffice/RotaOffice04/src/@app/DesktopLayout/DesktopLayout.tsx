@@ -28,7 +28,7 @@ export function DesktopLayout(props: { children?: ReactNode; })
 
 	return (
 
-		<Focuser root cursor ghost>
+		<Focuser.Ghost root cursor>
 
 			<Div id="desktop-layout" fill flex hidden>
 
@@ -40,7 +40,7 @@ export function DesktopLayout(props: { children?: ReactNode; })
 
 			</Div>
 
-		</Focuser>
+		</Focuser.Ghost>
 
 	);
 

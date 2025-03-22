@@ -88,16 +88,21 @@ export function PileRowNode({
 	//tailMt *= 4;
 
 
+	tenta.ff = Focuser.useGhost({
+		name: `pile-row-node--ff#${tenta.id}`,
+		//focusable: true,
+	});
+
+	tenta.tailFf = Focuser.useGhost({
+		name: `pile-row-node--tailFf#${tenta.id}`,
+	});
+
+
 	return (
 
 		<Tenta.ByPhaseProvider tenta={tenta}>
 
-			<Focuser
-				ref={tenta.ffRef}
-				//name={`pile-node#${id}`}
-				ghost
-				//focusable
-			>
+			<Focuser.Area ff={tenta.ff}			>
 
 				<Div relative>
 
@@ -120,10 +125,12 @@ export function PileRowNode({
 						/>
 
 
-						<Focuser ref={tenta.tailFfRef} ghost>
+						<Focuser.Area ff={tenta.tailFf}>
 
 							{/*<Div borderGreen border4 m8>*/}
 							<Pane.Col
+
+								ref={tenta.tailFf.divRef}
 
 								id={tenta + ""}
 								expanderRef={tailExpanderRef}
@@ -140,20 +147,20 @@ export function PileRowNode({
 
 							//borderGreen border4
 							>
-							{/*<Div borderBlue border4 m8>*/}
+								{/*<Div borderBlue border4 m8>*/}
 								{tailDecorator(tenta)}
-							{/*</Div>*/}
+								{/*</Div>*/}
 							</Pane.Col>
 							{/*</Div>*/}
 
-						</Focuser>
+						</Focuser.Area>
 
 
 					</PileRowAccentor>
 
 				</Div>
 
-			</Focuser>
+			</Focuser.Area>
 
 
 		</Tenta.ByPhaseProvider>
@@ -250,16 +257,21 @@ function PileRowNodeBody({
 	);
 
 
+	tenta.bodyFf = Focuser.use({
+		name: `pile-row-node--bodyFf#${tenta.id}`,
+		listener: tenta,
+		autoFocus: tenta.getGlobalProp("focused") ? 200 : undefined,
+	});
+
+
 	return (
 
-		<Focuser
-			ref={tenta.bodyFfRef}
-			//name={`pile-row-body#${id}`}
-			listener={tenta}
-			autoFocus={tenta.getGlobalProp("focused") ? 200 : undefined}
-		>
+		<Focuser.Area ff={tenta.bodyFf}>
 
 			<Pane.Row
+
+				ref={tenta.bodyFf.divRef}
+
 				//debug
 				start
 				end={!tailIsVisible || tailIsSeparated}
@@ -286,7 +298,7 @@ function PileRowNodeBody({
 
 			</Pane.Row>
 
-		</Focuser>
+		</Focuser.Area>
 
 	);
 
