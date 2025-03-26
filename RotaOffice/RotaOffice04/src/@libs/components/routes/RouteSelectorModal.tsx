@@ -45,6 +45,7 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 		router,
 
 		ff: {
+			name: "route-selector",
 			root: true,
 			cursor: true,
 			ghost: true,
@@ -132,6 +133,8 @@ function RouteLink({
 
 
 	let ff = Focuser.use({
+
+		name: "route-selector-link",
 
 		autoFocus,
 		allowShiftKey: true,

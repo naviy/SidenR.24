@@ -40,6 +40,12 @@ export default defineConfig({
 		port: 5203,
 	},
 
+
+	esbuild: {
+		target: "es2022",
+	},
+
+
 	build: {
 
 		//emptyOutDir: false,

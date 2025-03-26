@@ -132,7 +132,7 @@ function AppDesktop()
 
 			<Route.Router.Provider router={router}>
 
-				<DesktopLayout>
+				<DesktopLayout defaultSiderOpen={false}>
 
 
 					<Route.SelectorModal />

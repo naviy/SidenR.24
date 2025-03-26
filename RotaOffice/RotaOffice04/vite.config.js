@@ -24,6 +24,9 @@ export default defineConfig({
         open: true,
         port: 5203,
     },
+    esbuild: {
+        target: "es2022",
+    },
     build: {
         //emptyOutDir: false,
         sourcemap: true,

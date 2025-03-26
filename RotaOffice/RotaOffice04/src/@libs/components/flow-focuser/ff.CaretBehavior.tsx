@@ -1,7 +1,7 @@
 import { useTheme, type Theme } from "@mui/material/styles";
 import { useEffect, type CSSProperties } from "react";
 import { $log, MuiColor, Repaintable, UseHookProps, Values } from "../core";
-import { Caret, type CaretProps } from "./ff.Caret";
+import { Caret } from "./ff.Caret";
 import { FocuserContext, currentFocuser } from "./ff.Core";
 import { Focuser } from "./ff.Focuser";
 
@@ -53,7 +53,7 @@ export class CaretBehavior extends Repaintable()
 
 
 
-	props!: CaretProps;
+	props!: Caret.Props;
 
 	theme!: Theme;
 	ff?: Focuser | null;
@@ -89,7 +89,7 @@ export class CaretBehavior extends Repaintable()
 
 
 
-	use(props: CaretProps, cfg?: Repaintable.UseConfig)
+	use(props: Caret.Props, cfg?: Repaintable.UseConfig)
 	{
 
 		this.props = UseHookProps.use(props);

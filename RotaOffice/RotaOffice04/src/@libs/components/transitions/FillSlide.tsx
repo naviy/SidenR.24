@@ -87,7 +87,10 @@ export function FillSlide({
 					fill={fill}
 
 					children={
-						<Focuser.Ghost disabled={!transitionProps.in || status !== "entered"}>
+						<Focuser.Ghost
+							name="FillSlide"
+							disabled={!transitionProps.in || status !== "entered"}
+						>
 							<div>{children}</div>
 						</Focuser.Ghost>
 					}

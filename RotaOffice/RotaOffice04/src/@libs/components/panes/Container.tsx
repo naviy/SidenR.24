@@ -86,21 +86,17 @@ export interface RowProps extends ContainerProps<RowProps>, PrimitiveProps<HTMLD
 
 export var Div = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 {
-	return renderProvider("col", props, ref as React.RefObject<HTMLDivElement>)
+	return renderProvider("col", props, ref)
 });
 
-//export function Col(props: ColProps)
 export var Col = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 {
-	return renderProvider("col", props, ref as React.RefObject<HTMLDivElement>, "vflex")
-	//return renderProvider("col", props, "vflex");
+	return renderProvider("col", props, ref, "vflex")
 });
 
 export var Row = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
-//export function Row(props: RowProps)
 {
-	return renderProvider("row", props, ref as React.RefObject<HTMLDivElement>, "flex")
-	//return renderProvider("row", props, "flex");
+	return renderProvider("row", props, ref, "flex")
 });
 
 
@@ -118,7 +114,7 @@ export var Row = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 export function renderProvider(
 	layout: ContainerLayout | null | undefined,
 	props: ContainerProps<any> & PrimitiveProps<HTMLDivElement>,
-	elRef: React.RefObject<HTMLDivElement> | undefined,
+	ref: React.ForwardedRef<HTMLDivElement> | undefined,
 	addClassName?: string
 )
 {
@@ -128,6 +124,9 @@ export function renderProvider(
 	props = UseHookProps.use(props);
 
 	let parentInfo = ContainerInfo.use();
+
+
+	let elRef = ref as React.RefObject<HTMLDivElement> | undefined;
 
 
 	if (elRef === undefined)

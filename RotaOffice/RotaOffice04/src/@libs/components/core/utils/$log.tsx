@@ -240,6 +240,56 @@ export module $log
 
 
 
+	export function v(name: string | null | undefined, value: any, flatten = 1)
+	{
+
+		let args = [];
+
+
+		name && args.push(name + ":");
+
+		args.push(...toLogValues(value, flatten));
+
+
+		log(...args);
+
+
+		return value;
+
+	}
+
+
+
+	export function a(name: string, array: any[] | null | undefined)
+	{
+
+		console.group(name + ":", array?.length)
+
+		if (array)
+		{
+
+			for (let i = 0; i < array.length; i++)
+			{
+				console.log(
+					`%c[${i}]:%c`, "color: #aaaaaa;", "",
+					...toLogValues([array[i]])
+				);
+			}
+		}
+
+		console.groupEnd()
+
+
+		return array;
+
+	}
+
+
+
+	//---
+
+
+
 	function _log(args: any[], print: (msgs: any[]) => any)
 	{
 
@@ -288,21 +338,24 @@ export module $log
 
 
 
-	function toLogValues(args: any[]): any[]
+	function toLogValues(
+		args: any[],
+		flatten = 1 // глубина 
+	): any[]
 	{
 
 		let msgs: any[] = [];
 
 		for (let a of args)
 		{
-			pushLogValue(msgs, a, true);
+			pushLogValue(msgs, a, flatten);
 		}
 
 		return msgs;
 
 
 
-		function pushLogValue(msg: any[], value: any, flatten: boolean): void
+		function pushLogValue(msg: any[], value: any, flatten: number): void
 		{
 
 			if (!value)
@@ -315,7 +368,7 @@ export module $log
 
 				for (let a of value)
 				{
-					pushLogValue(value2, a, false);
+					pushLogValue(value2, a, Math.max(0, flatten - 1));
 				}
 
 				msg.push(value2);
@@ -446,6 +499,13 @@ export module $log
 		_blockLogCounts.push(0);
 
 	};
+
+
+
+	//---
+
+
+
 
 
 

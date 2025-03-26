@@ -1,4 +1,4 @@
-import { Component, createRef, useContext, useRef, type ReactNode } from "react";
+import { createRef, useContext, useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 
 import { $defaultAnimationDurationMs, $log, Div, MuiColor, SpaWaitingMask } from "../core";
 
@@ -6,7 +6,7 @@ import { adelay, arequestAnimationFrame, Keys, TaskQueue, Values } from "../core
 
 
 import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from "./ff.Anchor";
-import { Caret as Caret_, type CaretProps as CaretProps_, } from "./ff.Caret";
+import { Caret as Caret_ } from "./ff.Caret";
 import { CaretBehavior } from "./ff.CaretBehavior";
 import { $min_priority, Core, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, FocuserContext, focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus } from "./ff.Core";
 import { findInDirection } from "./ff.Navigation";
@@ -468,11 +468,21 @@ export class Focuser //extends Component<FocuserProps>
 
 	constructor(
 		public parent: Focuser | null,
-		public props: FocuserProps
 	)
 	{
 
 	}
+
+
+	props!: FocuserProps;
+
+
+	setProps(props: FocuserProps)
+	{
+		this.props = { ...props };
+	}
+
+
 
 
 	private static _instanceCount = 0;
@@ -615,25 +625,25 @@ export class Focuser //extends Component<FocuserProps>
 	get el(): HTMLElement | null
 	{
 
-		let refEl = this.elRef.current;
+		//let refEl = this.elRef.current;
 
 
 		//$log.___("#el:", this.#el)
 		//$log.___("refEl:", refEl)
 
-		if (!this.#el && this.#el != refEl)
-		{
-			this.#el = refEl;
+		//if (this.#el != refEl)
+		//{
+		//	this.#el = refEl;
 
-			this.initElement(refEl);
-		}
-
-
-		return refEl || null;
+		//	this.initElement(refEl);
+		//}
 
 
+		/*return refEl || null;*/
 
-		//return this.elRef.current || null;
+
+
+		return this.elRef.current || null;
 
 		////if (this.setEl)
 		////{
@@ -657,7 +667,7 @@ export class Focuser //extends Component<FocuserProps>
 		//return this._el;
 
 	}
-	#el?: HTMLElement | null;
+	//#el?: HTMLElement | null;
 
 	readonly elRef = createRef<HTMLElement>();
 	get divRef() { return this.elRef as React.RefObject<HTMLDivElement> }
@@ -989,6 +999,7 @@ export class Focuser //extends Component<FocuserProps>
 
 
 
+	//TODO: eventName заменить на метод
 	async callListenerEventUntilFocuser<
 		TEventName extends FocuserEventName,
 		TEvent extends NonNullable<IFocuserListener[TEventName]>,
@@ -1239,15 +1250,17 @@ export class Focuser //extends Component<FocuserProps>
 	toString()
 	{
 		return (
-			`Focuser[${this.id}] `
+			`Focuser[${this.id}]`
+			+ (this.ghost ? ".Ghost" : "")
+			+ " "
 			+ this.fullName()
 			+ (this.caret ? " " + this.caret : "")
 			+ (" -lvl:" + this.level)
 			+ (this.root ? " -root=" + this.root : "")
-			+ (this.ghost ? " -ghost" : "")
 			+ (this.props.focusable ? " -focusable" : "")
 			+ (this.focused ? " -focused" : "")
 			+ (this.itemFocused ? " -itemFocused" : "")
+			+ (this.disabled ? " -disabled" : "")
 		);
 	}
 
@@ -1292,59 +1305,226 @@ export class Focuser //extends Component<FocuserProps>
 
 	private _unmounted?: boolean;
 
+	get isFirstMount() { return this._unmounted === undefined; }
 
 
-	componentDidMount()
+	//@$log.m
+	willMount()
 	{
-
-		//this._mounted = true;
 
 		coreMountFocuser(this);
 
-		//this.cursor?.addFocuser(this);
+
+		this.#addToParent();
 
 
-		if (!this.root)
+		this._unmounted = false;
+
+	}
+
+
+	//@$log.m
+	updateDidMount()
+	{
+
+		this._prioriry = undefined;
+		this._level = undefined;
+
+		let { el, props } = this;
+
+
+		if (el && props.hover)
 		{
-
-			let parent = this.parent;
-
-			if (!parent)
-			{
-				$log.error(`Не удаётся найти parent`);
-				return;
-			}
-
-
-			parent.addItem(this);
-
-
-			if (this.props.exitSlot)
-			{
-				//$log("add exitSlot:", parent, ".exitSlot = ", this);
-				parent.exitSlot = this;
-			}
-
+			el.addEventListener("mouseover", this.#onHover, false);
+			el.addEventListener("mouseleave", this.#onUnhover, false);
 		}
 
 
-		this.focusOnMount();
+		let control: HTMLElement | null = null;
+
+		if (el && props.domFocus)
+		{
+			control = this.getDOMControl(el);
+			control?.addEventListener("focus", this.#controlFocus, false);
+		}
+
+
+
+		if (this.isFirstMount)
+		{
+			if (document.activeElement === control)
+				this.focus();
+			else
+				this.#focusOnMount();
+		}
+		else
+		{
+			this.#focusOnUpdate();
+		}
+
+
+		this.updateBorderers();
+
+	}
+
+
+	//@$log.m
+	didMount()
+	{
+
+		this.#addToParent();
 
 
 		this.props.onMount?.(this);
-
-
 		this.callListenerEvent("mount", this);
-
 
 	}
 
 
 
-	private async focusOnMount()
+
+	//@$log.m
+	updateDidUnmount()
 	{
 
-		let autoFocus = this.props.autoFocus;
+		let { el } = this;
+		if (!el) return;
+
+		el.removeEventListener("mouseover", this.#onHover);
+		el.removeEventListener("mouseleave", this.#onUnhover);
+
+		let control = this.getDOMControl(el);
+		control?.removeEventListener("focus", this.#controlFocus);
+
+	}
+
+
+	//@$log.m
+	didUnmount()
+	{
+
+		this._unmounted = true;
+
+
+		if (this.props.onUnmount)
+		{
+			this.props.onUnmount(this);
+		}
+
+		else if (this.hasListenerEvent("unmount"))
+		{
+			this.callListenerEvent("unmount", this);
+		}
+
+
+		this.#unfocusOnUnmount();
+
+
+
+		coreUnmountFocuser(this);
+
+
+		this.#removeFromParent();
+
+	}
+
+
+
+
+	#addToParent()
+	{
+
+		let parent = this.parent;
+
+		if (!parent)
+		{
+			!this.root && $log.error(`Не удаётся найти parent`);
+			return;
+		}
+
+
+		parent.addItem(this);
+
+
+		if (this.props.exitSlot)
+		{
+			//$log("add exitSlot:", parent, ".exitSlot = ", this);
+			parent.exitSlot = this;
+		}
+
+	}
+
+
+	#removeFromParent()
+	{
+
+		let parent = this.parent;
+
+		if (!parent)
+			return;
+
+		parent.removeItem(this);
+
+		if (parent.exitSlot === this)
+		{
+			parent.exitSlot = undefined;
+		}
+
+	}
+
+
+
+	//---
+
+
+
+	//componentDidMount()
+	//{
+
+	//	coreMountFocuser(this);
+
+
+	//	if (!this.root)
+	//	{
+
+	//		let parent = this.parent;
+
+	//		if (!parent)
+	//		{
+	//			$log.error(`Не удаётся найти parent`);
+	//			return;
+	//		}
+
+
+	//		parent.addItem(this);
+
+
+	//		if (this.props.exitSlot)
+	//		{
+	//			//$log("add exitSlot:", parent, ".exitSlot = ", this);
+	//			parent.exitSlot = this;
+	//		}
+
+	//	}
+
+
+	//	this.#focusOnMount();
+
+
+	//	this.props.onMount?.(this);
+
+
+	//	this.callListenerEvent("mount", this);
+
+
+	//}
+
+
+
+	async #focusOnMount()
+	{
+
+		let { autoFocus } = this.props;
 
 
 		if (autoFocus)
@@ -1362,47 +1542,85 @@ export class Focuser //extends Component<FocuserProps>
 	}
 
 
+	#controlFocus = () => this.focus();
 
-	initElement(el: HTMLElement | null | undefined)
+
+	async #focusOnUpdate()
 	{
 
-		if (!el)
-			return;
-
-
-		let props = this.props;
-		//this.domLevel = domLevel(el);
-
-
-		if (props.hover/* !== false*/)
+		if (this.focused && this.disabled /*&& !Bindera.$responseHasAction("focus")*/)
 		{
-			el.addEventListener("mouseover", e => this.onHover(e), false);
-			el.addEventListener("mouseleave", e => this.onUnhover(e), false);
+			await this.focusNearest();
 		}
-
-
-
-		if (props.domFocus)
-		{
-
-			let control = this.getDOMControl(el);
-
-			if (control)
-			{
-				control.addEventListener("focus", () => this.focus(), false);
-
-				if (document.activeElement === control)
-					this.focus();
-			}
-
-		}
-
-
-
-		//this.updateCarets(null);
-		this.updateBorderers();
 
 	}
+
+
+	async #unfocusOnUnmount()
+	{
+
+		if (this.focused && currentFocuser() === this)
+		{
+
+			//this.unfocus();
+
+			if (/*this.props.disabledFocusOnUnmount !== true &&*/
+				!isDisabledFocusOnUnmount()
+				//**&& !Bindera.$responseHasAction("focus")
+			)
+			{
+				Task.run(() => this.focusNearest());
+				//this.focusNearest();
+			}
+			else
+				this.unfocus();
+
+		}
+
+	}
+
+
+
+	//initElement(el: HTMLElement | null | undefined)
+	//{
+
+	//	if (!el)
+	//		return;
+
+
+	//	let props = this.props;
+	//	//this.domLevel = domLevel(el);
+
+
+	//	if (props.hover/* !== false*/)
+	//	{
+	//		el.addEventListener("mouseover", this.onHover, false);
+	//		el.addEventListener("mouseleave", this.onUnhover, false);
+	//	}
+
+
+
+	//	if (props.domFocus)
+	//	{
+
+	//		let control = this.getDOMControl(el);
+
+	//		if (control)
+	//		{
+	//			control.addEventListener("focus", () => this.focus(), false);
+
+	//			if (document.activeElement === control)
+	//				this.focus();
+	//		}
+
+	//	}
+
+
+
+	//	//this.updateCarets(null);
+	//	this.updateBorderers();
+
+	//}
 
 
 
@@ -1421,6 +1639,7 @@ export class Focuser //extends Component<FocuserProps>
 
 
 
+	//@$log.m
 	updateCarets(prior: Focuser | null, mustRepaint: boolean)
 	{
 
@@ -1495,106 +1714,107 @@ export class Focuser //extends Component<FocuserProps>
 
 
 
-	shouldComponentUpdate()
-	{
+	//shouldComponentUpdate()
+	//{
 
-		this._prioriry = undefined;
-		this._level = undefined;
+	//	this._prioriry = undefined;
+	//	this._level = undefined;
 
-		return true;// super.shouldComponentUpdate(nextProps, nextState);
+	//	return true;// super.shouldComponentUpdate(nextProps, nextState);
 
-	}
-
-
-
-	componentDidUpdate()
-	{
-
-		this.updateBorderers();
-		//this.updateCarets(null);
-
-
-		if (this.focused && this.disabled /*&& !Bindera.$responseHasAction("focus")*/)
-		{
-			this.focusNearest();
-		}
-
-	}
+	//}
 
 
 
-	componentWillUnmount()
-	{
+	//componentDidUpdate()
+	//{
 
-		this._unmounted = true;
-
-
-		//$log("currentFocuser():", currentFocuser());
+	//	this.updateBorderers();
+	//	//this.updateCarets(null);
 
 
-		if (this.props.onUnmount)
-		{
-			this.props.onUnmount(this);
-		}
+	//	if (this.focused && this.disabled /*&& !Bindera.$responseHasAction("focus")*/)
+	//	{
+	//		this.focusNearest();
+	//	}
 
-		else if (this.hasListenerEvent("unmount"))
-		{
-			this.callListenerEvent("unmount", this);
-		}
-
-		else if (this.focused && currentFocuser() === this)
-		{
-
-			//this.unfocus();
-
-			if (/*this.props.disabledFocusOnUnmount !== true &&*/
-				!isDisabledFocusOnUnmount()
-				//**&& !Bindera.$responseHasAction("focus")
-			)
-			{
-				Task.run(() => this.focusNearest());
-				//this.focusNearest();
-			}
-			else
-				this.unfocus();
-
-		}
+	//}
 
 
 
-		coreUnmountFocuser(this);
+	//componentWillUnmount()
+	//{
 
-		//this.cursor?.removeFocuser(this);
-
-
-		let { el } = this;
-
-		el?.removeEventListener("mouseover", this.onHover);
-		el?.removeEventListener("mouseleave", this.onUnhover);
+	//	this._unmounted = true;
 
 
-		//this.#elRef.current = null;
+	//	//$log("currentFocuser():", currentFocuser());
+
+
+	//	if (this.props.onUnmount)
+	//	{
+	//		this.props.onUnmount(this);
+	//	}
+
+	//	else if (this.hasListenerEvent("unmount"))
+	//	{
+	//		this.callListenerEvent("unmount", this);
+	//	}
+
+	//	else if (this.focused && currentFocuser() === this)
+	//	{
+
+	//		//this.unfocus();
+
+	//		if (/*this.props.disabledFocusOnUnmount !== true &&*/
+	//			!isDisabledFocusOnUnmount()
+	//			//**&& !Bindera.$responseHasAction("focus")
+	//		)
+	//		{
+	//			Task.run(() => this.focusNearest());
+	//			//this.focusNearest();
+	//		}
+	//		else
+	//			this.unfocus();
+
+	//	}
 
 
 
-		let parent = this.parent;
+	//	coreUnmountFocuser(this);
 
-		if (!parent)
-			return;
-
+	//	//this.cursor?.removeFocuser(this);
 
 
-		parent.removeItem(this);
+	//	let { el } = this;
 
-		if (parent.exitSlot === this)
-			parent.exitSlot = undefined;  //null;
+	//	el?.removeEventListener("mouseover", this.onHover);
+	//	el?.removeEventListener("mouseleave", this.onUnhover);
 
 
-
-	}
+	//	//this.#elRef.current = null;
 
 
 
+	//	let parent = this.parent;
+
+	//	if (!parent)
+	//		return;
+
+
+
+	//	parent.removeItem(this);
+
+	//	if (parent.exitSlot === this)
+	//		parent.exitSlot = undefined;  //null;
+
+
+
+	//}
+
+
+
+	//@$log.m
 	render(children: ReactNode)
 	{
 
@@ -1690,6 +1910,7 @@ export class Focuser //extends Component<FocuserProps>
 
 	addItem(item: Focuser)
 	{
+
 		//$$log("item:", item);
 
 		if (!this._items)
@@ -1699,8 +1920,10 @@ export class Focuser //extends Component<FocuserProps>
 			this._itemsChanged = this._items.register(item) || this._itemsChanged;
 		}
 
+
 		if (item.focused)
 			this.setLastFocusedItem(item);
+
 	}
 
 
@@ -2633,11 +2856,20 @@ export class Focuser //extends Component<FocuserProps>
 
 
 
-	onFocus(prior: Focuser | null, next: Focuser | null, focusProps: FocusActionProps | null | undefined, mustRepaint: boolean)
+	//@$log.m
+	onFocus(
+		prior: Focuser | null,
+		next: Focuser | null,
+		focusProps: FocusActionProps | null | undefined,
+		mustRepaint: boolean
+	)
 	{
 		//_$log("onFocus")
 
 		//$log("this.props.borderer:", this.props.borderer)
+
+
+		//$log("parent:", this.parent);
 
 		this.props.onFocus?.(this, prior, next);
 
@@ -2678,7 +2910,12 @@ export class Focuser //extends Component<FocuserProps>
 	}
 
 
-	onChangeItemFocus(prior: Focuser | null, next: Focuser | null, mustRepaint: boolean)
+	//@$log.m
+	onChangeItemFocus(
+		prior: Focuser | null,
+		next: Focuser | null,
+		mustRepaint: boolean
+	)
 	{
 		//_$log("onChangeItemFocus")
 		this.props.onChangeItemFocus?.(this, prior, next);
@@ -2692,8 +2929,12 @@ export class Focuser //extends Component<FocuserProps>
 	}
 
 
-
-	onUnfocus(prior: Focuser | null, next: Focuser | null, mustRepaint: boolean)
+	//@$log.m
+	onUnfocus(
+		prior: Focuser | null,
+		next: Focuser | null,
+		mustRepaint: boolean
+	)
 	{
 
 		if (this._unmounted)
@@ -4863,7 +5104,7 @@ export class Focuser //extends Component<FocuserProps>
 
 
 
-	onHover(e: MouseEvent)
+	#onHover = (e: MouseEvent) =>
 	{
 
 
@@ -4902,7 +5143,7 @@ export class Focuser //extends Component<FocuserProps>
 
 
 
-	onUnhover(e: MouseEvent)
+	#onUnhover = (e: MouseEvent) =>
 	{
 
 		//if (unhoverFocuser(this))
@@ -4935,7 +5176,7 @@ export module Focuser
 
 
 
-	export type CaretProps = CaretProps_;
+	export type CaretProps = Caret_.Props;
 	export import Caret = Caret_;
 
 
@@ -4967,13 +5208,13 @@ export module Focuser
 
 		let ffRef = useRef<Focuser>();
 
-		if (!ffRef.current)
-		{
-			ffRef.current = new Focuser(parent, props);
-		}
+		let ff = ffRef.current ?? (ffRef.current = new Focuser(parent));
 
 
-		return ffRef.current;
+		ff.setProps(props);
+
+
+		return ff;
 
 	}
 
@@ -4999,36 +5240,64 @@ export module Focuser
 
 
 
-	export class Area extends Component<{ ff: Focuser | null; children: ReactNode }>
+	//export class Area extends Component<{ ff: Focuser | null; children: ReactNode }>
+	//{
+
+
+	//	override componentDidMount()
+	//	{
+	//		this.props.ff?.componentDidMount();
+	//	}
+
+	//	override shouldComponentUpdate(nextProps: any, nextState: any): boolean
+	//	{
+	//		this.props.ff?.shouldComponentUpdate();
+	//		return true;
+	//	}
+
+	//	override componentDidUpdate()
+	//	{
+	//		this.props.ff?.componentDidUpdate();
+	//	}
+
+	//	override componentWillUnmount()
+	//	{
+	//		this.props.ff?.componentWillUnmount();
+	//	}
+
+
+	//	override render()
+	//	{
+	//		return this.props.ff?.render(this.props.children);
+	//	}
+
+
+	//}
+
+
+
+	export function Area({ ff, children }: { ff: Focuser | null; children: ReactNode })
 	{
 
-
-		override componentDidMount()
+		useLayoutEffect(() =>
 		{
-			this.props.ff?.componentDidMount();
-		}
+			ff?.willMount();
+		}, []);
 
-		override shouldComponentUpdate(nextProps: any, nextState: any): boolean
+		useLayoutEffect(() =>
 		{
-			this.props.ff?.shouldComponentUpdate();
-			return true;
-		}
+			ff?.updateDidMount();
+			return () => ff?.updateDidUnmount();
+		});
 
-		override componentDidUpdate()
+		useLayoutEffect(() =>
 		{
-			this.props.ff?.componentDidUpdate();
-		}
-
-		override componentWillUnmount()
-		{
-			this.props.ff?.componentWillUnmount();
-		}
+			ff?.didMount();
+			return () => ff?.didUnmount();
+		}, []);
 
 
-		override render()
-		{
-			return this.props.ff?.render(this.props.children);
-		}
+		return ff?.render(children);
 
 
 	}

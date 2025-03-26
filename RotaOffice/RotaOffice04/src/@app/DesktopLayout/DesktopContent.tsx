@@ -21,15 +21,22 @@ export function DesktopContent(props: {
 })
 {
 
+	let ff = Focuser.useGhost({
+		name: "DesktopContent",
+		cursor: true,
+		click: "unfocus",
+	});
+
+
 	return (
 
 		<Div fill scrollY>
 
 			<ErrorBoundary>
 
-				<Focuser.Ghost cursor click="unfocus">
+				<Focuser.Area ff={ff}>
 
-					<Div relative>
+					<Div ref={ff.divRef} relative>
 
 						{props.children}
 
@@ -37,7 +44,7 @@ export function DesktopContent(props: {
 
 					</Div>
 
-				</Focuser.Ghost>
+				</Focuser.Area>
 
 			</ErrorBoundary>
 

@@ -52,7 +52,7 @@ export module Page043
 
 		return <>
 
-			<Div mx200 m100>
+			<Div mx32 m32>
 				{tenta.render()}
 			</Div>
 
@@ -83,7 +83,7 @@ var UnitsPileTenta = PileNode2_2.createFactory((db: DB, units: Unit[]) => [
 				<>
 					<Pane start p12 vcenter>
 						<Pile.PhaseIcon />
-						<Txt.H4>{gsm.Unit.$Many}</Txt.H4>
+						<Txt.H6>{gsm.Unit.$Many}</Txt.H6>
 					</Pane>
 					<Pane end p12 textRight vcenter>111 1111 11111 111111</Pane>
 				</>
@@ -168,16 +168,16 @@ function UnitBody(
 				<Pile.PhaseIcon noindent={noindent} />
 			</Div>
 
-			<Div flex64px font54px vcenter textCenter>
+			<Div flex32px font32px vcenter textCenter>
 				{gsm.UnitType.$item(unit.type)!.$icon}
 			</Div>
 
 			<Div flex1 p12>
-				<Div fontLg><em>{name?.shortName}</em> {masterNames.map(a => a.shortName2).join(" ")}</Div>
+				<Div><em>{name?.shortName}</em> {masterNames.map(a => a.shortName2).join(" ")}</Div>
 				<ValueFader value={tenta.collapsed} expander>
 					{(collapsed) => (collapsed
-						? <Div opacity7><em>{name?.name}</em> {masterNames.map(a => a.name2).join(" ")}</Div>
-						: <Div opacity7><em>{name?.fullName}</em> {masterNames.map(a => a.fullName2).join(" ")}</Div>
+						? <Div opacity7 fontSm><em>{name?.name}</em> {masterNames.map(a => a.name2).join(" ")}</Div>
+						: <Div opacity7 fontSm><em>{name?.fullName}</em> {masterNames.map(a => a.fullName2).join(" ")}</Div>
 					)}
 				</ValueFader>
 			</Div>

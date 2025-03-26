@@ -18,17 +18,20 @@ import { DesktopContent } from "./DesktopContent";
 
 
 
-export function DesktopLayout(props: { children?: ReactNode; })
+export function DesktopLayout(props: {
+	defaultSiderOpen?: boolean;
+	children?: ReactNode;
+})
 {
 
 	const bhv = useNew(DesktopLayout.Behavior).use({
-		defaultSiderOpen: true,
+		defaultSiderOpen: props.defaultSiderOpen ?? true,
 	});
 
 
 	return (
 
-		<Focuser.Ghost root cursor>
+		<Focuser.Ghost name="DesktopLayout" root cursor>
 
 			<Div id="desktop-layout" fill flex hidden>
 

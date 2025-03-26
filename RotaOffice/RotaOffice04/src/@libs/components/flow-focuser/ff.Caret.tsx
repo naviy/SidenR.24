@@ -16,23 +16,7 @@ import { Focuser } from "./ff.Focuser";
 
 
 
-export interface CaretProps extends UseHookProps<CaretProps>
-{
-
-	debug?: boolean;
-
-	color?: MuiColor;
-	borderRadius?: Focuser.BorderRadius;
-	borderWidth?: Focuser.BorderWidth;
-
-	children?: ReactNode;
-
-}
-
-
-
-
-export function Caret(props: CaretProps)
+export function Caret(props: Caret.Props)
 {
 
 	//return null;
@@ -58,6 +42,27 @@ export function Caret(props: CaretProps)
 
 export module Caret
 {
+
+
+	//---
+
+
+
+
+	export interface Props extends UseHookProps<Props>
+	{
+
+		debug?: boolean;
+
+		color?: MuiColor;
+		borderRadius?: Focuser.BorderRadius;
+		borderWidth?: Focuser.BorderWidth;
+
+		children?: ReactNode;
+
+	}
+
+
 
 
 	//---

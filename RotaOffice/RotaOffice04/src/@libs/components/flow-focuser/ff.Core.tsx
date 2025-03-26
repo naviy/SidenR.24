@@ -433,189 +433,193 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 
 
 
-function focuserFocusStep(next: Focuser | null, focusProps: FocusActionProps | null | undefined, mustRepaint: boolean)
+function focuserFocusStep(
+	next: Focuser | null,
+	focusProps: FocusActionProps | null | undefined,
+	mustRepaint: boolean
+)
 {
-	//$log("focuserFocusStep " + next);
 
-	//$logb("focuserFocusStep()", () =>
+	//$log.b("focuserFocusStep()", () =>
 	//{
 
-	//$log("prior:", _currentFocuser);
-	//$log("next:", next);
+		let prior = _currentFocuser;
+
+
+		//$log("prior:", prior);
+		//$log("next:", next);
 
 
 
-	if (_currentFocuser === next || next && next.disabled)
-		return;
-
-
-	const prior = _currentFocuser;
-
-
-	let willUnfocus: Focuser[] = [];
-	let willFocus: Focuser[] = [];
-	let willItemUnfocus: Focuser[] = [];
-	let willItemFocus: Focuser[] = [];
-	let confirmFocus: Focuser[] = [];
-
-
-
-	if (prior)
-	{
-
-		prior.caret?.recalcPosition();
-
-
-		let parent: Focuser | null = prior;
-
-		while (parent)
-		{
-			willUnfocus.push(parent);
-			parent = parent.parent;
-		}
-	}
-
-
-	//$$log("willUnfocus0:", willUnfocus.map(a => a.el));
-
-
-	if (next)
-	{
-
-		let parent: Focuser | null = next;
-
-		while (parent)
-		{
-
-			if (willUnfocus.remove(parent))
-			{
-				confirmFocus.push(parent);
-			}
-			else
-			{
-				willFocus.push(parent);
-			}
-
-			parent = parent.parent;
-
-		}
-
-	}
-
-
-	//$log("willUnfocus:", willUnfocus.map(a => a.el));
-	//$log("willFocus:", willFocus.map(a => a.el));
-	//$log("confirmFocus:", confirmFocus.map(a => a.el));
-
-
-	for (let i = willUnfocus.length - 1; i >= 0; i--)
-	{
-		setItemFocused(willUnfocus[i], false);
-
-		//let a = willUnfocus[i];
-		//a.itemFocused = false;
-		//$log("itemFocused = ", a.itemFocused, a);
-	}
-
-
-	if (prior)
-	{
-		prior.focused = false;
-		//$log("focused = false", prior);
-	}
-
-
-	if (next)
-	{
-		next.focused = true;
-		//$log("focused = true", next);
-	}
-
-
-
-	_currentFocuser = next;
-
-
-
-	for (let a of confirmFocus)
-	{
-		setItemFocused(a, a !== next);
-	}
-
-
-	for (let a of willFocus)
-	{
-		setItemFocused(a, a !== next);
-	}
-
-
-
-	function setItemFocused(ff: Focuser, value: boolean)
-	{
-
-		if (ff.itemFocused === value)
+		if (prior === next || next?.disabled)
 			return;
 
 
-		if (value)
-			willItemFocus.push(ff);
-		else
-			willItemUnfocus.push(ff);
-
-
-		ff.itemFocused = value;
-
-	}
+		let willUnfocus: Focuser[] = [];
+		let willFocus: Focuser[] = [];
+		let willItemUnfocus: Focuser[] = [];
+		let willItemFocus: Focuser[] = [];
+		let confirmFocus: Focuser[] = [];
 
 
 
-	//AnimationFrame.beginUpdate();
-
-
-	try
-	{
-		//requestAnimationFrame(() =>
-		//{
-
-		//console.time("animate FF");
-
-		for (let a of willItemUnfocus)
+		if (prior)
 		{
-			a.onItemUnfocus(prior, next);
+
+			prior.caret?.recalcPosition();
+
+
+			let parent: Focuser | null = prior;
+
+			while (parent)
+			{
+				willUnfocus.push(parent);
+				parent = parent.parent;
+			}
 		}
 
-		for (let a of willItemFocus)
+
+		//$log("willUnfocus0:", willUnfocus.map(a => a.el));
+
+
+		if (next)
 		{
-			a.onItemFocus(prior, next);
+
+			let parent: Focuser | null = next;
+
+			while (parent)
+			{
+
+				if (willUnfocus.remove(parent))
+				{
+					confirmFocus.push(parent);
+				}
+				else
+				{
+					willFocus.push(parent);
+				}
+
+				parent = parent.parent;
+
+			}
+
 		}
+
+
+		//$log("willUnfocus:", willUnfocus.map(a => a.toString()));
+		//$log("willFocus:", willFocus.map(a => a.toString()));
+		//$log("confirmFocus:", confirmFocus.map(a => a.toString()));
+
+		//$log("willUnfocus:", willUnfocus.map(a => a.el));
+		//$log("willFocus:", willFocus.map(a => a.el));
+		//$log("confirmFocus:", confirmFocus.map(a => a.el));
+
+
+		for (let i = willUnfocus.length - 1; i >= 0; i--)
+		{
+			setItemFocused(willUnfocus[i], false);
+		}
+
+
+		if (prior)
+		{
+			prior.focused = false;
+			//$log("focused = false", prior);
+		}
+
+
+		if (next)
+		{
+			next.focused = true;
+			//$log("focused = true", next);
+		}
+
+
+
+		_currentFocuser = next;
+
 
 
 		for (let a of confirmFocus)
 		{
-			a.onChangeItemFocus(prior, next, /*mustRepaint*/willUnfocus.indexOf(a) < 0 && willFocus.indexOf(a) < 0);
+			setItemFocused(a, a !== next);
 		}
 
-		for (let a of willUnfocus)
-		{
-			a.onUnfocus(prior, next, /*mustRepaint*/willFocus.indexOf(a) < 0);
-		}
 
 		for (let a of willFocus)
 		{
-			a.onFocus(prior, next, focusProps, mustRepaint);
+			setItemFocused(a, a !== next);
 		}
 
-		//console.timeEnd("animate FF");
 
-		//});
-	}
-	finally
-	{
-		//AnimationFrame.endUpdate();
-	}
 
-	//$log("END focuserFocusStep");
+		function setItemFocused(ff: Focuser, value: boolean)
+		{
+
+			if (ff.itemFocused === value)
+				return;
+
+
+			if (value)
+				willItemFocus.push(ff);
+			else
+				willItemUnfocus.push(ff);
+
+
+			ff.itemFocused = value;
+
+		}
+
+
+
+		//AnimationFrame.beginUpdate();
+
+
+		try
+		{
+			//requestAnimationFrame(() =>
+			//{
+
+			//console.time("animate FF");
+
+			for (let a of willItemUnfocus)
+			{
+				a.onItemUnfocus(prior, next);
+			}
+
+			for (let a of willItemFocus)
+			{
+				a.onItemFocus(prior, next);
+			}
+
+
+			for (let a of confirmFocus)
+			{
+				a.onChangeItemFocus(prior, next, /*mustRepaint*/willUnfocus.indexOf(a) < 0 && willFocus.indexOf(a) < 0);
+			}
+
+			for (let a of willUnfocus)
+			{
+				a.onUnfocus(prior, next, /*mustRepaint*/willFocus.indexOf(a) < 0);
+			}
+
+			for (let a of willFocus)
+			{
+				a.onFocus(prior, next, focusProps, mustRepaint);
+			}
+
+			//console.timeEnd("animate FF");
+
+			//});
+		}
+		finally
+		{
+			//AnimationFrame.endUpdate();
+		}
+
+	//	$log("END focuserFocusStep");
 	//});
+
 }
 
 
@@ -1003,32 +1007,32 @@ const onClick = (async function onClick(e: MouseEvent)
 		//	$log("focusers:", _focusers);
 		//	$log("e:", e);
 
-			for (let ff of _focusers)
-			{
+		for (let ff of _focusers)
+		{
 
-				if (e.cancelBubble)
-					return;
-				//$log("ff:", ff);
-				//$log._("ff.canClick():", ff.canClick());
-				if (!ff.canClick())
-					continue;
-
-
-				let el = ff.el;
-
-				//$log._("e.target:", e.target);
-				//$log.__("el:", el);
-				//$log.__("el !== e.target:", el !== e.target);
-				//$log.__("!el.contains(e.target as Node):", !el?.contains(e.target as Node));
-
-				if (!el || el !== e.target && !el.contains(e.target as Node))
-					continue;
+			if (e.cancelBubble)
+				return;
+			//$log("ff:", ff);
+			//$log._("ff.canClick():", ff.canClick());
+			if (!ff.canClick())
+				continue;
 
 
-				if (await ff.onClick(e))
-					break;
+			let el = ff.el;
 
-			}
+			//$log._("e.target:", e.target);
+			//$log.__("el:", el);
+			//$log.__("el !== e.target:", el !== e.target);
+			//$log.__("!el.contains(e.target as Node):", !el?.contains(e.target as Node));
+
+			if (!el || el !== e.target && !el.contains(e.target as Node))
+				continue;
+
+
+			if (await ff.onClick(e))
+				break;
+
+		}
 		//});
 	})();
 

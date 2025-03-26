@@ -89,12 +89,12 @@ export function PileRowNode({
 
 
 	tenta.ff = Focuser.useGhost({
-		name: `pile-row-node--ff#${tenta.id}`,
+		name: `pile-row-node \ ff#${tenta.id}`,
 		//focusable: true,
 	});
 
 	tenta.tailFf = Focuser.useGhost({
-		name: `pile-row-node--tailFf#${tenta.id}`,
+		name: `pile-row-node \ tailFf#${tenta.id}`,
 	});
 
 
@@ -258,7 +258,7 @@ function PileRowNodeBody({
 
 
 	tenta.bodyFf = Focuser.use({
-		name: `pile-row-node--bodyFf#${tenta.id}`,
+		name: `pile-row-node \ bodyFf#${tenta.id}`,
 		listener: tenta,
 		autoFocus: tenta.getGlobalProp("focused") ? 200 : undefined,
 	});

@@ -120,7 +120,10 @@ export function FillFade(props: FillFadeProps & DivProps)
 						timeout: transitionProps.timeout ?? $defaultAnimationDurationMs,
 
 						children: (
-							<Focuser.Ghost disabled={!transitionProps.in || status !== 'entered'}>
+							<Focuser.Ghost
+								name="FillFade"
+								disabled={!transitionProps.in || status !== 'entered'}
+							>
 								<div className={props.wrapperCls}>{props.children}</div>
 							</Focuser.Ghost>
 						),
