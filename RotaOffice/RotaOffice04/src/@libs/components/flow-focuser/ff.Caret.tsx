@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/material/styles";
 import type { ReactNode } from "react";
-import { MuiColor, UseHookProps, useNew } from "../core";
+import { MuiColor, UseHookProps, useNew, Values } from "../core";
 import { CaretBehavior } from "./ff.CaretBehavior";
 import { Focuser } from "./ff.Focuser";
 
@@ -55,12 +55,29 @@ export module Caret
 		debug?: boolean;
 
 		color?: MuiColor;
-		borderRadius?: Focuser.BorderRadius;
-		borderWidth?: Focuser.BorderWidth;
+		borderRadius?: BorderRadius;
+		borderWidth?: BorderWidth;
 
 		children?: ReactNode;
 
 	}
+
+
+
+
+	export type BorderRadius = (
+		null /* 0 */ |
+		undefined |
+		"inherit" /* default */ |
+		string |
+		Values.Many<number | boolean>
+	);
+
+
+	export type BorderWidth = Values.Many<number | boolean>;
+
+
+
 
 
 
@@ -75,6 +92,9 @@ export module Caret
 
 	//export var bordererMask = ", 0 0 0 100vw rgba(0,16,32, 0.05)";
 	export var bordererMask = "";
+
+
+	export var defaultColor: MuiColor = "primary";
 
 
 
@@ -104,7 +124,7 @@ export module Caret
 
 		let color = (props.disabled || ff?.disabled
 			? '80,80,80'
-			: MuiColor.hex2rgb(MuiColor(theme, props.color || ff?.color || Focuser.defaultColor))
+			: MuiColor.hex2rgb(MuiColor(theme, props.color || ff?.color || Caret.defaultColor))
 		);
 
 

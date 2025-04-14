@@ -2,7 +2,7 @@ import { useTheme, type Theme } from "@mui/material/styles";
 import { useEffect, type CSSProperties } from "react";
 import { $log, MuiColor, Repaintable, UseHookProps, Values } from "../core";
 import { Caret } from "./ff.Caret";
-import { FocuserContext, currentFocuser } from "./ff.Core";
+import { currentFocuser } from "./ff.Core";
 import { Focuser } from "./ff.Focuser";
 
 
@@ -40,9 +40,9 @@ export class CaretBehavior extends Repaintable()
 
 
 
-	static contextType = FocuserContext;
+	//static contextType = Focuser.Context;
 
-	context: Focuser | undefined;
+	//context: Focuser | undefined;
 
 
 	id = instanceCount++;
@@ -80,8 +80,8 @@ export class CaretBehavior extends Repaintable()
 	private _position?: DOMRect | null;
 	/*private*/ _priorPosition?: DOMRect | null;
 	/*private*/ _priorColor?: MuiColor | null;
-	/*private*/ _priorBorderRadius?: Focuser.BorderRadius;
-	/*private*/ _priorBorderWidth?: Focuser.BorderWidth;
+	/*private*/ _priorBorderRadius?: Caret.BorderRadius;
+	/*private*/ _priorBorderWidth?: Caret.BorderWidth;
 
 
 
@@ -200,7 +200,7 @@ export class CaretBehavior extends Repaintable()
 			return undefined;
 
 
-		let color = MuiColor(this.theme, this._priorColor || ff.color || Focuser.defaultColor)!;
+		let color = MuiColor(this.theme, this._priorColor || ff.color || Caret.defaultColor)!;
 
 		let inset = this.getInset();
 

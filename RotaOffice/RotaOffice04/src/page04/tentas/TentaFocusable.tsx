@@ -35,7 +35,7 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 {
 
 	return class TentaFocusableClass extends Base
-		implements TentaFocusable, Focuser.Listener
+		implements TentaFocusable, Focuser.ff_Listener
 	{
 		
 		//---

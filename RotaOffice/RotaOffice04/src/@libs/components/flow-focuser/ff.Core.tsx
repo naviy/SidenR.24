@@ -1,7 +1,7 @@
 import GlobalStyles from "@mui/material/GlobalStyles";
 import React, { useEffect } from "react";
 import { $defaultAnimationDurationMs, $log, adelay } from "../core";
-import type { FocusActionProps, Focuser } from "./ff.Focuser";
+import type { Focuser } from "./ff.Focuser";
 
 
 
@@ -12,10 +12,6 @@ import type { FocusActionProps, Focuser } from "./ff.Focuser";
 
 
 
-
-
-
-export var FocuserContext = React.createContext<Focuser | null>(null);
 
 
 
@@ -305,14 +301,14 @@ export function currentFocuser()
 
 
 
-const _focusSteps: { next: Focuser | null, focusProps?: FocusActionProps | null }[] = [];
+const _focusSteps: { next: Focuser | null, focusProps?: Focuser.FocusActionProps | null }[] = [];
 let _isFocusing: boolean;
 //let _focuserFocusTimer = 0;
 
 
 
 
-export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps | null)
+export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusActionProps | null)
 {
 	//_$log("focuserFocus");
 
@@ -435,7 +431,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps
 
 function focuserFocusStep(
 	next: Focuser | null,
-	focusProps: FocusActionProps | null | undefined,
+	focusProps: Focuser.FocusActionProps | null | undefined,
 	mustRepaint: boolean
 )
 {
