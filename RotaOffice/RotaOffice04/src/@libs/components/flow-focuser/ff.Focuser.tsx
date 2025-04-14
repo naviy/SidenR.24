@@ -1,4 +1,4 @@
-import { createRef, useContext, useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
+import { createRef, useContext, useLayoutEffect, useRef, type ReactNode } from "react";
 
 import { $defaultAnimationDurationMs, $log, Div, MuiColor, SpaWaitingMask } from "../core";
 
@@ -5208,8 +5208,8 @@ export module Focuser
 
 		let ffRef = useRef<Focuser>();
 
-		let ff = ffRef.current ?? (ffRef.current = new Focuser(parent));
 
+		let ff = ffRef.current ?? (ffRef.current = new Focuser(parent));
 
 		ff.setProps(props);
 
@@ -5225,54 +5225,6 @@ export module Focuser
 		return use({ ghost: true, ...props });
 
 	}
-
-
-
-
-
-	//export function Area({ ff }: { ff: Focuser | null })
-	//{
-
-	//	if (!ff)
-	//		return null;
-
-	//}
-
-
-
-	//export class Area extends Component<{ ff: Focuser | null; children: ReactNode }>
-	//{
-
-
-	//	override componentDidMount()
-	//	{
-	//		this.props.ff?.componentDidMount();
-	//	}
-
-	//	override shouldComponentUpdate(nextProps: any, nextState: any): boolean
-	//	{
-	//		this.props.ff?.shouldComponentUpdate();
-	//		return true;
-	//	}
-
-	//	override componentDidUpdate()
-	//	{
-	//		this.props.ff?.componentDidUpdate();
-	//	}
-
-	//	override componentWillUnmount()
-	//	{
-	//		this.props.ff?.componentWillUnmount();
-	//	}
-
-
-	//	override render()
-	//	{
-	//		return this.props.ff?.render(this.props.children);
-	//	}
-
-
-	//}
 
 
 
