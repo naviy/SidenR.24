@@ -1,5 +1,6 @@
-import { currentFocuser, focusers } from "./ff.Core";
+import { currentFocuser, focusers, type FocusConfig } from "./ff.Core";
 import type { Focuser } from "./ff.Focuser";
+import type { FocuserProps } from "./ff.Props";
 
 
 
@@ -36,7 +37,7 @@ export function currentAnchor()
 
 
 
-export async function focusByAnchor(anchor: Anchor, focusProps?: Focuser.Props | null)
+export async function focusByAnchor(anchor: Anchor, focusCfg?: FocusConfig | null)
 {
 
 	//return await $logb("focusByAnchor()", async () =>
@@ -84,7 +85,7 @@ export async function focusByAnchor(anchor: Anchor, focusProps?: Focuser.Props |
 
 
 
-	return lastFF && await lastFF.focus(focusProps);
+	return lastFF && await lastFF.focus(focusCfg);
 	//});
 
 }

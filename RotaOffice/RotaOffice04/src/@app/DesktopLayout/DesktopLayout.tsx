@@ -31,7 +31,7 @@ export function DesktopLayout(props: {
 
 	return (
 
-		<Focuser.Ghost name="DesktopLayout" root cursor>
+		<Focuser ghost name="DesktopLayout" root cursor>
 
 			<Div id="desktop-layout" fill flex hidden>
 
@@ -43,7 +43,7 @@ export function DesktopLayout(props: {
 
 			</Div>
 
-		</Focuser.Ghost>
+		</Focuser>
 
 	);
 

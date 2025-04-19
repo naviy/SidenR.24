@@ -294,6 +294,8 @@ export function currentFocuser()
 
 
 
+
+
 //===
 
 
@@ -301,14 +303,46 @@ export function currentFocuser()
 
 
 
-const _focusSteps: { next: Focuser | null, focusProps?: Focuser.FocusActionProps | null }[] = [];
+
+
+
+
+
+
+export interface FocusConfig
+{
+
+	outer?: boolean;
+
+	focusFirst?: boolean;
+	focusLast?: boolean;
+
+	domFocus: boolean | "fast" | "lazy";
+
+	enter?: boolean;
+
+	/** Автоматически переходить на указанный focuser при выходе. Если exitTarget=true, то используется текущий */
+	exitTarget?: Focuser | true | null;
+
+	skipIfItemFocused?: boolean;
+
+
+	/** Вернуть результирующий focuser, не дожидаясь завершения анимации */
+	awaitImmidiate?: boolean;
+
+}
+
+
+
+
+const _focusSteps: { next: Focuser | null, focusCfg?: FocusConfig | null }[] = [];
 let _isFocusing: boolean;
 //let _focuserFocusTimer = 0;
 
 
 
 
-export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusActionProps | null)
+export function focuserFocus(next: Focuser | null, focusCfg?: FocusConfig | null)
 {
 	//_$log("focuserFocus");
 
@@ -321,7 +355,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusAct
 
 		try
 		{
-			focuserFocusStep(next, focusProps, true);
+			focuserFocusStep(next, focusCfg, true);
 			next?.scrollIntoView();
 		}
 		catch (ex)
@@ -346,7 +380,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusAct
 
 						let mustRepaint = true;//!_focusSteps.length;
 
-						focuserFocusStep(step.next, step.focusProps, mustRepaint);
+						focuserFocusStep(step.next, step.focusCfg, mustRepaint);
 
 						last = step.next ?? last;
 					}
@@ -374,14 +408,14 @@ export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusAct
 	else
 	{
 
-		_focusSteps.push({ next, focusProps });
+		_focusSteps.push({ next, focusCfg });
 
 
 		//while (_focusSteps.length > 1)
 		//{
 		//	let step = _focusSteps.shift()!;
 
-		//	focuserFocusStep(step.next, step.focusProps, false);
+		//	focuserFocusStep(step.next, step.focusCfg, false);
 		//}
 
 
@@ -392,11 +426,11 @@ export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusAct
 }
 
 
-//export function focuserFocus(next: Focuser | null, focusProps?: FocusActionProps | null): boolean
+//export function focuserFocus(next: Focuser | null, focusCfg?: FocusActionProps | null): boolean
 //{
 //	//_$log("focuserFocus");
 
-//	_focusSteps.push({ next, focusProps });
+//	_focusSteps.push({ next, focusCfg });
 
 
 //	if (_isFocusing)
@@ -413,7 +447,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusAct
 
 //			let mustRepaint = !_focusSteps.length;
 
-//			focuserFocusStep(step.next, step.focusProps, mustRepaint);
+//			focuserFocusStep(step.next, step.focusCfg, mustRepaint);
 //		}
 //	}
 //	finally
@@ -431,7 +465,7 @@ export function focuserFocus(next: Focuser | null, focusProps?: Focuser.FocusAct
 
 function focuserFocusStep(
 	next: Focuser | null,
-	focusProps: Focuser.FocusActionProps | null | undefined,
+	focusCfg: FocusConfig | null | undefined,
 	mustRepaint: boolean
 )
 {
@@ -601,7 +635,7 @@ function focuserFocusStep(
 
 			for (let a of willFocus)
 			{
-				a.onFocus(prior, next, focusProps, mustRepaint);
+				a.onFocus(prior, next, focusCfg, mustRepaint);
 			}
 
 			//console.timeEnd("animate FF");
@@ -692,7 +726,7 @@ export var unfocusEvent = (function unfocusEvent(e: Event)
 
 //export function $focus(
 //	model: IObserveModel,
-//	//focusProps?: FocusActionProps | null,
+//	//focusCfg?: FocusActionProps | null,
 //	listenerFilter?: (listener: IObserveListener) => boolean
 //)
 //{
@@ -712,7 +746,7 @@ export var unfocusEvent = (function unfocusEvent(e: Event)
 //	//$log("ls.listener:", ReactDOM.findDOMNode(ls.listener));
 
 
-//	return listener?.listener?.focus!(/*focusProps*/);
+//	return listener?.listener?.focus!(/*focusCfg*/);
 
 //}
 
@@ -1196,7 +1230,7 @@ function onKeyDown(e: KeyboardEvent)
 
 //	export interface IObserveListener
 //	{
-//		focus?(focusProps?: App.FlowFocuser.FocusActionProps | null): Promise<App.FlowFocuser.Focuser>;
+//		focus?(focusCfg?: App.FlowFocuser.FocusActionProps | null): Promise<App.FlowFocuser.Focuser>;
 //	}
 
 

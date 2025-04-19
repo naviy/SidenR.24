@@ -8,12 +8,19 @@ import { adelay, arequestAnimationFrame, Keys } from "../core";
 import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from "./ff.Anchor";
 import { Caret } from "./ff.Caret";
 import { CaretBehavior } from "./ff.CaretBehavior";
-import { $min_priority, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, focuserFocus, isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus } from "./ff.Core";
+
+import {
+	$min_priority, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, focuserFocus,
+	isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus,
+	type FocusConfig
+} from "./ff.Core";
+
 import { Events } from "./ff.Events";
 import type { Focuser } from "./ff.Focuser";
 import { findInDirection } from "./ff.Navigation";
-import { Scroll } from "./ff.Scroll";
+import type { FocuserProps, ScopeOptions } from "./ff.Props";
 import { Task } from "./ff.Task";
+import { scrollIntoView, vScroll } from "./ff.Scroll";
 
 
 
@@ -41,53 +48,14 @@ export var $focusExecutingCount = 0;
 
 
 
-//type Focuser = FocuserBehavior;
-type FocusActionProps = Focuser.FocusActionProps;
-
-
-
-
-
-
-export class FocuserBehavior //extends Component<FocuserProps>
+export class FocuserBehavior
 {
 
 	//---
 
 
 
-	//static useContext(): Focuser | null
-	//{
-	//	return useContext(FocuserContext);
-	//}
-
-
-
-	//static Core = Core;
-
-
-	//static current = currentFocuser;
-
-
-	//static defaultColor: MuiColor = "primary";
-
-
-
-	//---
-
-
-
 	static TRACE_DISABLED_CHECKS: boolean | undefined = false;
-
-
-
-	//---
-
-
-
-	//static override contextType = FocuserContext;
-
-	//override context: Focuser | undefined = undefined;
 
 
 
@@ -103,10 +71,10 @@ export class FocuserBehavior //extends Component<FocuserProps>
 	}
 
 
-	props!: Focuser.Props;
+	props!: FocuserProps;
 
 
-	setProps(props: Focuser.Props)
+	setProps(props: FocuserProps)
 	{
 		this.props = { ...props };
 	}
@@ -203,7 +171,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	get scopeOptions(): Focuser.ScopeOptions | null
+	get scopeOptions(): ScopeOptions | null
 	{
 
 		if (this._scopeOptions === undefined)
@@ -212,8 +180,8 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 			return (
 				this._scopeOptions = !scope ? null :
-					scope === true ? {} as Focuser.ScopeOptions :
-						scope as Focuser.ScopeOptions
+					scope === true ? {} as ScopeOptions :
+						scope as ScopeOptions
 			);
 		}
 
@@ -223,7 +191,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 	}
 
 
-	private _scopeOptions?: Focuser.ScopeOptions | null;
+	private _scopeOptions?: ScopeOptions | null;
 
 
 
@@ -2294,7 +2262,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	async focus(focusProps?: FocusActionProps | null): Promise<Focuser | null>
+	async focus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
 		if (this._unmounted)
@@ -2309,18 +2277,18 @@ export class FocuserBehavior //extends Component<FocuserProps>
 		let disabled = this.disabled;
 
 
-		if (focusProps)
+		if (focusCfg)
 		{
 
-			if (focusProps.skipIfItemFocused && this.itemFocused)
+			if (focusCfg.skipIfItemFocused && this.itemFocused)
 				return null;
 
 
-			let { focusFirst, focusLast, enter, exitTarget, ...focusProps2 } = focusProps;
+			let { focusFirst, focusLast, enter, exitTarget, ...focusCfg2 } = focusCfg;
 
 
 
-			if (!focusProps.exitTarget && this.props.exitToPrior)
+			if (!focusCfg.exitTarget && this.props.exitToPrior)
 			{
 				exitTarget = currentFocuser();
 			}
@@ -2336,7 +2304,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 			if (focusFirst && !disabled)
 			{
-				let ff2 = await this.focusFirst(focusProps2);
+				let ff2 = await this.focusFirst(focusCfg2);
 
 				if (ff2)
 					return ff2;
@@ -2345,7 +2313,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 			if (focusLast && !disabled)
 			{
-				let ff2 = await this.focusLast(focusProps2);
+				let ff2 = await this.focusLast(focusCfg2);
 
 				if (ff2)
 					return ff2;
@@ -2354,15 +2322,15 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 			if (enter && !disabled)
 			{
-				let ff2 = await this.enter(focusProps2) || await this.focus(focusProps2);
+				let ff2 = await this.enter(focusCfg2) || await this.focus(focusCfg2);
 
 				if (ff2)
 					return ff2;
 			}
 
-			if (focusProps.outer && !this.canFocus())
+			if (focusCfg.outer && !this.canFocus())
 			{
-				return await this.focusParent(focusProps2);
+				return await this.focusParent(focusCfg2);
 			}
 
 		}
@@ -2404,13 +2372,13 @@ export class FocuserBehavior //extends Component<FocuserProps>
 			await arequestAnimationFrame();
 
 
-			this.doFocus(focusProps);
+			this.doFocus(focusCfg);
 
 
-			//if (!(focusProps?.awaitImmidiate))
+			//if (!(focusCfg?.awaitImmidiate))
 			//await adelay($animationDurationMs + 50);
 
-			if (!(focusProps?.awaitImmidiate))
+			if (!(focusCfg?.awaitImmidiate))
 				await adelay(40);
 
 			return this;
@@ -2427,15 +2395,15 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	private doFocus(focusProps?: FocusActionProps | null)
+	private doFocus(focusCfg?: FocusConfig | null)
 	{
 
 		//$log("doFocus");
 
-		focuserFocus(this, focusProps);
+		focuserFocus(this, focusCfg);
 
 
-		let domFocus0 = focusProps?.domFocus;
+		let domFocus0 = focusCfg?.domFocus;
 		let domFocus1 = this.props.domFocus;
 		let domFocus = domFocus0 || domFocus1;
 
@@ -2488,7 +2456,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 	onFocus(
 		prior: Focuser | null,
 		next: Focuser | null,
-		focusProps: FocusActionProps | null | undefined,
+		focusCfg: FocusConfig | null | undefined,
 		mustRepaint: boolean
 	)
 	{
@@ -2681,112 +2649,44 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	scrollIntoView(cfg?: Scroll.ScrollIntoViewOptions)
+	scrollIntoView(cfg?: scrollIntoView.Options): boolean
 	{
 
-		//_$log("scrollIntoView");
+
+		if (this.props.scrollIntoView === false)
+			return false;
+
 
 		let { el } = this;
-
-
-		if (this.props.scrollIntoView === false || !el || !this.cursorEl)
-			return false;
-
-
-		let container = this.cursorEl.parentElement;
-		//$log("container:", container);
-		if (!container)
-			return false;
-
-
-		let topOffset = cfg?.topOffset ?? Scroll.scrollIntoViewYOffset;
-
-
-		let pos = el.getBoundingClientRect();
-		let cpos = container.getBoundingClientRect();
-
-
-		let top: number;
-
-		//$log("pos.top:", pos.top);
-		//$log("topOffset:", topOffset);
-		//$log("cpos.top:", cpos.top);
-
-		if (-cpos.top + pos.top - topOffset < 0)
-		{
-			top = container.scrollTop - cpos.top + pos.top - topOffset;
-			//$log("top:", top);
-		}
-
-		else if (-cpos.bottom + pos.bottom + topOffset > 0)
-		{
-			let top1 = container.scrollTop - container.clientHeight + pos.bottom + topOffset;
-
-			let top2 = container.scrollTop - cpos.top + pos.top - topOffset;
-
-			//$log("top1:", top1);
-			//$log("top2:", top2);
-			top = Math.min(top1, top2);
-		}
-		else
-		{
-			return false;
-		}
-
-
-		if (Math.abs(top - container.scrollTop) <= 1)
-		{
-			return false;
-		}
-
-		//$log("top:", top);
-
-
-		Scroll.scrollToTop(container, top);
-
-
-		return true;
-
-	}
-
-
-
-	scrollIntoViewTop(cfg?: Scroll.ScrollIntoViewOptions): boolean
-	{
-
-		let { el } = this;
-
-
 		if (!el)
 			return false;
 
 
 		let container = this.cursorEl?.parentElement;
-		//$log("container:", container);
 		if (!container)
 			return false;
 
 
-		let topOffset = cfg?.topOffset ?? Scroll.scrollIntoViewTopOffset;
+		return scrollIntoView(el, container, cfg);
 
-		let pos = el.getBoundingClientRect();
-		let cpos = container.getBoundingClientRect();
+	}
 
-		let top = container.scrollTop - cpos.top + pos.top - topOffset;
-		//$log("top:", top);
-		//$log("scrollTop:", container.scrollTop)
 
-		if (Math.abs(top - container.scrollTop) <= 1)
+
+	scrollIntoViewTop(cfg?: scrollIntoView.Options): boolean
+	{
+
+		let { el } = this;
+		if (!el)
 			return false;
 
-		//$log("container.scrollHeight:", container.scrollHeight);
-		//$log("el.clientHeight:", el.clientHeight);
-		top = Math.min(top, container.scrollHeight - el.clientHeight);
-		//$log("top:", top);
 
-		container.scrollTo({ top, behavior: "smooth" });
+		let container = this.cursorEl?.parentElement;
+		if (!container)
+			return false;
 
-		return true;
+
+		return scrollIntoView.toTop(el, container, cfg);
 
 	}
 
@@ -2830,53 +2730,53 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	async focusIfCan(focusProps?: FocusActionProps | null)
+	async focusIfCan(focusCfg?: FocusConfig | null)
 	{
 
 		if (!this.canFocus())
 			return null;
 
-		return await this.focus(focusProps);
+		return await this.focus(focusCfg);
 
 	}
 
 
 
-	focusFirst(focusProps?: FocusActionProps | null)
+	focusFirst(focusCfg?: FocusConfig | null)
 	{
-		return this.first()?.focus(focusProps);
+		return this.first()?.focus(focusCfg);
 	}
 
 
 
-	focusFirstWithHighPriority(focusProps?: FocusActionProps | null)
+	focusFirstWithHighPriority(focusCfg?: FocusConfig | null)
 	{
 
 		let first = this.first(null, ff => ff.itemsByPriority);
 
 		//$log("first:", first);
 
-		return first?.focus(focusProps);
+		return first?.focus(focusCfg);
 
 	}
 
 
 
-	focusLast(focusProps?: FocusActionProps | null)
+	focusLast(focusCfg?: FocusConfig | null)
 	{
-		return this.last()?.focus(focusProps);
+		return this.last()?.focus(focusCfg);
 	}
 
 
 
-	focusBy(match: (ff: Focuser) => boolean | Focuser, focusProps?: FocusActionProps | null)
+	focusBy(match: (ff: Focuser) => boolean | Focuser, focusCfg?: FocusConfig | null)
 	{
-		return this.itemBy(match)?.focus(focusProps);
+		return this.itemBy(match)?.focus(focusCfg);
 	}
 
 
 
-	focusByName(name: string, focusProps?: FocusActionProps | null)
+	focusByName(name: string, focusCfg?: FocusConfig | null)
 	{
 
 		if (!name)
@@ -2884,7 +2784,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 		let item = this.itemBy(a => a.name === name);
 
-		return item?.focus(focusProps);
+		return item?.focus(focusCfg);
 
 	}
 
@@ -2911,10 +2811,10 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	//async focusByAnchor(anchor: string[], focusProps?: FocuserProps | null)
+	//async focusByAnchor(anchor: string[], focusCfg?: FocuserProps | null)
 	//{
 	//	let item = this.itemByAnchor(anchor);
-	//	return item && await item.focus(focusProps);
+	//	return item && await item.focus(focusCfg);
 	//}
 
 
@@ -2926,16 +2826,16 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	focusNext(focusProps?: FocusActionProps | null, match?: (ff: Focuser) => boolean)
+	focusNext(focusCfg?: FocusConfig | null, match?: (ff: Focuser) => boolean)
 	{
-		return this.next(match)?.focus(focusProps) || null;
+		return this.next(match)?.focus(focusCfg) || null;
 	}
 
 
 
-	focusPrior(focusProps?: FocusActionProps | null, match?: (ff: Focuser) => boolean)
+	focusPrior(focusCfg?: FocusConfig | null, match?: (ff: Focuser) => boolean)
 	{
-		return this.prior(match)?.focus(focusProps) || null;
+		return this.prior(match)?.focus(focusCfg) || null;
 	}
 
 
@@ -2955,7 +2855,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 		if (next)
 		{
-			return next.focus(/*this.nextFocusProps()*/);
+			return next.focus(/*this.nextfocusCfg()*/);
 		}
 
 
@@ -2971,7 +2871,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 			}
 
 
-			return this._scope!.focus(/*this.nextFocusProps()*/);
+			return this._scope!.focus(/*this.nextfocusCfg()*/);
 
 		}
 
@@ -2982,18 +2882,18 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	focusParent(focusProps?: FocusActionProps | null)
+	focusParent(focusCfg?: FocusConfig | null)
 	{
 
 		let parent = this.parentBy();
 
-		return parent?.focus(focusProps) || null;
+		return parent?.focus(focusCfg) || null;
 
 	}
 
 
 
-	focusParentIfCan(focusProps?: FocusActionProps | null)
+	focusParentIfCan(focusCfg?: FocusConfig | null)
 	{
 
 		let parent = this.parentBy();
@@ -3001,24 +2901,24 @@ export class FocuserBehavior //extends Component<FocuserProps>
 		if (!parent?.canFocus())
 			return null;
 
-		return parent.focus(focusProps) || null;
+		return parent.focus(focusCfg) || null;
 
 	}
 
 
 
-	focusParentFirst(focusProps?: FocusActionProps | null)
+	focusParentFirst(focusCfg?: FocusConfig | null)
 	{
 
 		let parentFirst = this.parentBy(a => a.enabled)?.first();
 
-		return parentFirst?.focus(focusProps) || null;
+		return parentFirst?.focus(focusCfg) || null;
 
 	}
 
 
 
-	focusParentFirstIfCan(focusProps?: FocusActionProps | null)
+	focusParentFirstIfCan(focusCfg?: FocusConfig | null)
 	{
 
 		let parentFirst = this.parentBy(a => a.enabled)?.first();
@@ -3026,13 +2926,13 @@ export class FocuserBehavior //extends Component<FocuserProps>
 		if (!parentFirst?.canFocus())
 			return null;
 
-		return parentFirst.focus(focusProps) || null;
+		return parentFirst.focus(focusCfg) || null;
 
 	}
 
 
 
-	async focusNearest(focusProps?: FocusActionProps | null)
+	async focusNearest(focusCfg?: FocusConfig | null)
 	{
 
 		let ff = await this.focusExitTarget();
@@ -3050,17 +2950,17 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 			if (parent.disabled)
 			{
-				if ((ff = await parent.focusExitTarget(focusProps)))
+				if ((ff = await parent.focusExitTarget(focusCfg)))
 					return ff;
 			}
 			else if (parent.ghost)
 			{
-				if ((ff = await parent.focusLastItem(focusProps) || await parent.focusExitTarget(focusProps)))
+				if ((ff = await parent.focusLastItem(focusCfg) || await parent.focusExitTarget(focusCfg)))
 					return ff;
 			}
 			else
 			{
-				if ((ff = await parent.focusLastItem(focusProps) || await parent.focus(focusProps)))
+				if ((ff = await parent.focusLastItem(focusCfg) || await parent.focus(focusCfg)))
 					return ff;
 			}
 
@@ -3077,7 +2977,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	focusOuter(focusProps?: FocusActionProps | null)
+	focusOuter(focusCfg?: FocusConfig | null)
 	{
 
 		//$log("mounted:", this._mounted);
@@ -3092,9 +2992,9 @@ export class FocuserBehavior //extends Component<FocuserProps>
 		//$log("baseDisabled:", this.baseDisabled);
 
 		if (this.canFocus())
-			return this.focus(focusProps);
+			return this.focus(focusCfg);
 
-		return this.focusParent(focusProps);
+		return this.focusParent(focusCfg);
 	}
 
 
@@ -3143,20 +3043,20 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	focusLastItem(focusProps?: FocusActionProps | null)
+	focusLastItem(focusCfg?: FocusConfig | null)
 	{
-		return this.findLastItem()?.focus(focusProps);
+		return this.findLastItem()?.focus(focusCfg);
 	}
 
 
-	async focusLastItemOrFirst(focusProps?: FocusActionProps | null)
+	async focusLastItemOrFirst(focusCfg?: FocusConfig | null)
 	{
-		return await this.focusLastItem(focusProps) || await this.focusFirst(focusProps);
+		return await this.focusLastItem(focusCfg) || await this.focusFirst(focusCfg);
 	}
 
 
 
-	async focusLastItemOrFirstWithHighPriority(focusProps?: FocusActionProps | null)
+	async focusLastItemOrFirstWithHighPriority(focusCfg?: FocusConfig | null)
 	{
 		return await this.focusLastItem() || await this.focusFirstWithHighPriority();
 	}
@@ -3172,7 +3072,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	async focusLastItemLikeBro(focusProps?: FocusActionProps | null)
+	async focusLastItemLikeBro(focusCfg?: FocusConfig | null)
 	{
 
 		let cls = this.cls;
@@ -3197,7 +3097,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 			this.itemBy(a => a.cls === itemCls);
 
 
-		return item && await item.focus(focusProps);
+		return item && await item.focus(focusCfg);
 
 	}
 
@@ -3207,7 +3107,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 	findAutoFocus(): Focuser | null
 	{
 
-		let props: Focuser.Props = this.props;
+		let props = this.props;
 
 		//$log(this, "items:", this.items);
 		//$log(this, "autoFocus:", props.autoFocus);
@@ -3248,9 +3148,9 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	focusAutoFocus(focusProps?: FocusActionProps | null): Promise<Focuser | null> | null
+	focusAutoFocus(focusCfg?: FocusConfig | null): Promise<Focuser | null> | null
 	{
-		return this.findAutoFocus()?.focus(focusProps) || null;
+		return this.findAutoFocus()?.focus(focusCfg) || null;
 	}
 
 
@@ -3279,16 +3179,16 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	focusAutoFocusItem(focusProps?: FocusActionProps | null): Promise<Focuser | null> | null
+	focusAutoFocusItem(focusCfg?: FocusConfig | null): Promise<Focuser | null> | null
 	{
 
-		return this.findAutoFocusItem()?.focus(focusProps) || null;
+		return this.findAutoFocusItem()?.focus(focusCfg) || null;
 
 	}
 
 
 
-	focusExitTarget(focusProps?: FocusActionProps | null): Promise<Focuser | null> | null
+	focusExitTarget(focusCfg?: FocusConfig | null): Promise<Focuser | null> | null
 	{
 
 		//$log("exitTargetId:", this.exitTargetId);
@@ -3299,18 +3199,18 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 		this.exitTargetId = null;
 
-		return exitTarget?.focus(focusProps) || null;
+		return exitTarget?.focus(focusCfg) || null;
 
 	}
 
 
 
-	//nextFocusProps()
+	//nextfocusCfg()
 	//{
 
 	//	let domFocus = useWASD && this.domIsFocused() || undefined;
 
-	//	return { domFocus } as FocusActionProps;
+	//	return { domFocus } as FocusConfig;
 
 	//}
 
@@ -3399,7 +3299,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	async enter(focusProps?: FocusActionProps | null): Promise<Focuser | null>
+	async enter(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
 		if (this._unmounted)
@@ -3443,10 +3343,10 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-		//if (focusProps)
-		//	focusProps = { ...this.nextFocusProps(), ...focusProps } as FocusActionProps;
+		//if (focusCfg)
+		//	focusCfg = { ...this.nextfocusCfg(), ...focusCfg } as FocusConfig;
 		//else
-		//	focusProps = this.nextFocusProps();
+		//	focusCfg = this.nextfocusCfg();
 
 
 
@@ -3454,27 +3354,27 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-		if (props.lastItemLikeBro && (result = await this.focusLastItemLikeBro(focusProps)) && result !== this)
+		if (props.lastItemLikeBro && (result = await this.focusLastItemLikeBro(focusCfg)) && result !== this)
 		{
 			return result;
 		}
 
 
-		if ((result = await this.focusLastItem(focusProps)) && result !== this)
+		if ((result = await this.focusLastItem(focusCfg)) && result !== this)
 		{
 			return result;
 		}
 
 
 
-		//else if (this.props.exitSlot && (result = await this.focusFirst(this.nextFocusProps()) /*|| await this.exit()*/) && result !== this)
+		//else if (this.props.exitSlot && (result = await this.focusFirst(this.nextfocusCfg()) /*|| await this.exit()*/) && result !== this)
 		//{
 		//	return result;
 		//}
 
 
 
-		if ((result = await this.focusFirst(focusProps)))
+		if ((result = await this.focusFirst(focusCfg)))
 		{
 			return result;
 		}
@@ -3526,7 +3426,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-		//result = await this.focusNext(focusProps);
+		//result = await this.focusNext(focusCfg);
 
 
 
@@ -3536,16 +3436,16 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 
 
-	async enterOrFocus(focusProps?: FocusActionProps | null): Promise<Focuser | null>
+	async enterOrFocus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
 		if (this.hasItems && this._items!.find(a => a.enabled))
 		{
-			return await this.enter(focusProps) || await this.focus(focusProps);
+			return await this.enter(focusCfg) || await this.focus(focusCfg);
 		}
 		else
 		{
-			return await this.focus(focusProps);
+			return await this.focus(focusCfg);
 		}
 
 	}
@@ -3559,7 +3459,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 			return null;
 
 
-		return await this.enter() || await this.focusNext(/*this.nextFocusProps()*/);
+		return await this.enter() || await this.focusNext(/*this.nextfocusCfg()*/);
 
 	}
 
@@ -4207,7 +4107,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 	): Promise<boolean | Focuser | null>
 	{
 
-		//return await this.focusInDirection(dir, this.nextFocusProps());
+		//return await this.focusInDirection(dir, this.nextfocusCfg());
 		if (this._navigating)
 			return true;
 
@@ -4303,7 +4203,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 				}
 
 
-				return next && await next.focus(/*this.nextFocusProps()*/);
+				return next && await next.focus(/*this.nextfocusCfg()*/);
 
 			}
 
@@ -4382,7 +4282,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 				if (!await Task.run(() => this.navigate("up", e, ignoreOnKeyboardNavigation)))
 				{
-					Scroll.vScroll(this.cursorEl, /*this.el,*/ -1 as -1);
+					vScroll(this.cursorEl, /*this.el,*/ -1 as -1);
 				}
 
 			}
@@ -4395,7 +4295,7 @@ export class FocuserBehavior //extends Component<FocuserProps>
 
 				if (!await Task.run(() => this.navigate("down", e, ignoreOnKeyboardNavigation)))
 				{
-					Scroll.vScroll(this.cursorEl, /*this.el,*/ 1);
+					vScroll(this.cursorEl, /*this.el,*/ 1);
 				}
 
 			}
