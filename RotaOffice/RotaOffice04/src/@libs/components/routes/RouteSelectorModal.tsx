@@ -47,7 +47,7 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 		ff: {
 			name: "route-selector",
 			root: true,
-			cursor: true,
+			scrollable: true,
 			ghost: true,
 			modal: true,
 			priority: 999999,
@@ -55,6 +55,7 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 		},
 
 	});
+
 
 	const { nextIndex } = selector;
 

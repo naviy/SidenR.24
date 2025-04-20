@@ -1,15 +1,15 @@
-import { createRef } from "react";
+import React from "react";
 
-import { $defaultAnimationDurationMs, $log, SpaWaitingMask } from "../core";
+import { $defaultAnimationDurationMs, $log } from "../core";
 
 import { adelay, arequestAnimationFrame, Keys } from "../core";
 
 
 import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from "./ff.Anchor";
-import { Caret } from "./ff.Caret";
 import { CaretBehavior } from "./ff.CaretBehavior";
 
-import {
+import
+{
 	$min_priority, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, focuserFocus,
 	isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus,
 	type FocusConfig
@@ -19,8 +19,9 @@ import { Events } from "./ff.Events";
 import type { Focuser } from "./ff.Focuser";
 import { findInDirection } from "./ff.Navigation";
 import type { FocuserProps, ScopeOptions } from "./ff.Props";
+import { scrollIntoView } from "./ff.Scroll";
 import { Task } from "./ff.Task";
-import { scrollIntoView, vScroll } from "./ff.Scroll";
+import { SpaWaitingMask } from "./ff.SpaWaitingMask";
 
 
 
@@ -74,11 +75,51 @@ export class FocuserBehavior
 	props!: FocuserProps;
 
 
-	setProps(props: FocuserProps)
+	useProps(props: FocuserProps)
 	{
-		this.props = { ...props };
+
+		this.props = props;
+
+
+		let { parent } = this;
+
+
+		this.scrollContainer = props.scrollable ? this : parent?.scrollContainer || null;
+
+		this.scrollAnchorRef = props.scrollable ? React.createRef<HTMLDivElement>() : null;
+
+
+		this.scope = parent?.isScope && parent.enabled
+			? parent
+			: parent?.scope || null;
+
+		this.scopeOptions = props.scope === true
+			? {}
+			: props.scope || null;
+
+
+		this.level = (this.ghost ? 0 : 1) + (parent?.level || 0);
+
+		this.priority = (parent?.priority || 0) + (props.priority || 0);
+
+		this.ghost = !!(
+			props.ghost ||
+			props.ghostIfParentIsCollapsed && parent?.isCollapsed ||
+			props.ghostIfParentIsNotFocused && parent?.isNotFocused
+		);
+
+
+		this.ignoreOnKeyboardNavigation = (
+			this.isNotFocused &&
+			!!(props.ignoreOnKeyboardNavigation ?? parent?.ignoreOnKeyboardNavigation)
+		);
+
+
 	}
 
+
+
+	//---
 
 
 
@@ -102,240 +143,42 @@ export class FocuserBehavior
 
 	get data() { return this.props.data; }
 	get listener() { return this.props.listener; }
-	//get model() { return this.props.model; }
 
 
-	//get cursor(): Cursor | null
-	//{
 
-	//	if (this._cursor === undefined)
-	//	{
-	//		this._cursor = this.props.cursorRef?.current || this.parent?.cursor || null;
-	//		//$log("cursor:", this._cursor);
-	//		return this._cursor;
-	//	}
+	get scrollContainerEl() { return this.scrollContainer?.scrollAnchorRef?.current?.parentElement || null; }
 
-	//	return this._cursor;
-	//}
-
-	//private _cursor?: Cursor | null;
-
-
-	get cursorEl(): HTMLDivElement | null
-	{
-		if (this._cursorEl === undefined && !this.props.cursor)
-		{
-			this._cursorEl = this.parent?.cursorEl || null;
-		}
-
-		return this._cursorEl || null;
-	}
-
-	_cursorEl?: HTMLDivElement | null;
-	setCursorEl?: (value: HTMLDivElement) => void;
-
+	scrollContainer: FocuserBehavior | null = null;
+	scrollAnchorRef: React.RefObject<HTMLDivElement> | null = null;
 
 
 	get isScope() { return !!this.props.scope; }
+	scope: Focuser | null = null;
+	scopeOptions: ScopeOptions | null = null;
 
 
-
-	get scope(): Focuser | null
-	{
-
-		if (this._scope === undefined)
-		{
-
-			let parent = this.parent;
+	get isRoot(): boolean { return !!this.props.root };
 
 
-			if (!parent)
-				return this._scope = null;
-
-
-			return this._scope = (
-				(parent.props.scope) && parent.enabled
-					? parent
-					: parent.scope
-			);
-
-		}
-
-
-		return this._scope;
-
-	}
-
-
-	private _scope?: Focuser | null;
-
-
-
-	get scopeOptions(): ScopeOptions | null
-	{
-
-		if (this._scopeOptions === undefined)
-		{
-			let scope = this.props.scope;
-
-			return (
-				this._scopeOptions = !scope ? null :
-					scope === true ? {} as ScopeOptions :
-						scope as ScopeOptions
-			);
-		}
-
-
-		return this._scopeOptions;
-
-	}
-
-
-	private _scopeOptions?: ScopeOptions | null;
-
-
-
-	get root() { return !!this.props.root };
-
-
-	get local()
-	{
-		let local = this.props.local;
-		return local || local === undefined;
-	}
-
-
-
-	get isPositioned()
+	get isPositioned(): boolean
 	{
 		return !this.props.hnav && !this.props.vnav;
 	}
 
 
-	get color() { return this.caret?.props.color ?? this.props.color ?? Caret.defaultColor; }
-	get borderRadius() { return this.caret?.props.borderRadius ?? this.props.borderRadius; }
-	get borderWidth() { return this.caret?.props.borderWidth ?? this.props.borderWidth; }
-
-
-
 	/** target element */
-	get el(): HTMLElement | null
-	{
+	get el(): HTMLElement | null { return this.elRef.current || null; }
 
-		//let refEl = this.elRef.current;
-
-
-		//$log.___("#el:", this.#el)
-		//$log.___("refEl:", refEl)
-
-		//if (this.#el != refEl)
-		//{
-		//	this.#el = refEl;
-
-		//	this.initElement(refEl);
-		//}
-
-
-		/*return refEl || null;*/
-
-
-
-		return this.elRef.current || null;
-
-		////if (this.setEl)
-		////{
-		////	return this._el || null;
-		////}
-
-
-		//if (this._el === undefined)
-		//{
-		//	//if (this.props.element)
-		//	//	this._el = this.props.element();
-		//	//else
-		//	this._el = ReactDOM.findDOMNode(this) as HTMLElement || null;
-		//	//this._el = this.caret?.el;
-
-		//	this.initElement(this._el);
-
-		//}
-
-
-		//return this._el;
-
-	}
-	//#el?: HTMLElement | null;
-
-	readonly elRef = createRef<HTMLElement>();
+	readonly elRef = React.createRef<HTMLElement>();
 	get divRef() { return this.elRef as React.RefObject<HTMLDivElement> }
-	//private _el?: HTMLElement | null;
-	//private setEl?: (value: HTMLElement) => void;
 
 
-
-	//get mode(): CursorMode
-	//{
-	//	if (this.props.mode)
-	//		return this.props.mode;
-
-	//	if (this.props.domFocus && this.domIsFocused())
-	//		return "edit";
-
-	//	return this.parent?.mode || "default";
-	//}
+	get modal() { return !!this.props.modal; }
 
 
-
-	get modal()
-	{
-		return this.props.modal || false;
-	}
-
-
-
-	get level(): number
-	{
-		if (this._level === undefined)
-		{
-			this._level = (this.ghost ? 0 : 1) + (this.parent?.level || 0);
-		}
-
-		return this._level!;
-	}
-	private _level?: number;
-
-
-
-	get priority(): number
-	{
-		if (this._prioriry === undefined)
-		{
-			this._prioriry = (this.parent?.priority || 0) + (this.props.priority || 0);
-		}
-
-		return this._prioriry!;
-	}
-
-	private _prioriry?: number;
-
-
-
-	get ghost(): boolean
-	{
-
-		//if (this._ghost != null)
-		//	return this._ghost;
-
-		return this._ghost = !!(
-			this.props.ghost ||
-			//!this.el ||
-			this.props.ghostIfParentIsCollapsed && this.parentIsCollapsed ||
-			this.props.ghostIfParentIsNotFocused && this.parentIsNotFocused
-		);
-
-	};
-
-	private _ghost?: boolean;
+	level: number = 0;
+	priority: number = 0;
+	ghost: boolean = false;
 
 
 
@@ -354,20 +197,18 @@ export class FocuserBehavior
 		//if (this._baseDisabled != null)
 		//	return this._baseDisabled;
 
+		let { props, parent } = this;
 
-		return this._baseDisabled = !!(
-			this._unmounted /*|| this._externalDisabled*/ ||
-			(this.props.disabled && !this.props.forceEnabled) ||
-			this.parent?.baseDisabled ||
+		return !!(
+			this.#unmounted ||
+			props.disabled && !props.forceEnabled ||
+			parent?.baseDisabled ||
 			SpaWaitingMask.isWaiting() ||
-			this.props.disableIfParentIsCollapsed && this.parentIsCollapsed ||
-			this.props.disableIfParentIsNotFocused && this.parentIsNotFocused
+			props.disableIfParentIsCollapsed && this.parent?.isCollapsed ||
+			props.disableIfParentIsNotFocused && this.parent?.isNotFocused
 		);
 
 	}
-
-
-	private _baseDisabled?: boolean;
 
 
 
@@ -391,59 +232,20 @@ export class FocuserBehavior
 	get enabled() { return !this.disabled; }
 
 
-	get parentIsCollapsed(): boolean
-	{
-
-		return !!(
-			this.parent?.props.collapsed //||
-			//this.context.spread && !this.context.spread.expanded
-		);
-
-	}
+	get isCollapsed() { return !!this.props.collapsed; }
+	get isNotFocused() { return !(this.focused || this.itemFocused); }
 
 
-	get parentIsNotFocused(): boolean
-	{
-
-		let parent = this.parent;
-
-		return !!(
-			parent && !(parent.focused || parent.itemFocused)
-		);
-
-	}
+	ignoreOnKeyboardNavigation = false;
 
 
 
-	ignoreOnKeyboardNavigation(): boolean
-	{
-
-		if (this._ignoreOnKeyboardNavigation != null)
-		{
-			return this._ignoreOnKeyboardNavigation;
-		}
-
-
-		return this._ignoreOnKeyboardNavigation = !!(
-			!this.focused && !this.itemFocused &&
-			(this.props.ignoreOnKeyboardNavigation !== undefined
-				? this.props.ignoreOnKeyboardNavigation
-				: this.parent?.ignoreOnKeyboardNavigation()
-			)
-		);
-
-	}
-
-	private _ignoreOnKeyboardNavigation?: boolean;
-
-
-
-	clearState()
-	{
-		this._ghost = undefined; //null;
-		this._baseDisabled = undefined;//null;
-		this._ignoreOnKeyboardNavigation = undefined;//null;
-	}
+	//clearState()
+	//{
+	//	//this._ghost = undefined; //null;
+	//	//this._baseDisabled = undefined;//null;
+	//	//this._ignoreOnKeyboardNavigation = undefined;//null;
+	//}
 
 
 
@@ -595,7 +397,6 @@ export class FocuserBehavior
 
 
 
-	//TODO: eventName заменить на метод
 	async callListenerEventUntilFocuser<
 		TEventName extends Events.Name,
 		TEvent extends NonNullable<Events.Listener[TEventName]>,
@@ -852,7 +653,7 @@ export class FocuserBehavior
 			+ this.fullName()
 			+ (this.caret ? " " + this.caret : "")
 			+ (" -lvl:" + this.level)
-			+ (this.root ? " -root=" + this.root : "")
+			+ (this.isRoot ? " -root=" + this.isRoot : "")
 			+ (this.props.focusable ? " -focusable" : "")
 			+ (this.focused ? " -focused" : "")
 			+ (this.itemFocused ? " -itemFocused" : "")
@@ -899,9 +700,9 @@ export class FocuserBehavior
 
 
 
-	private _unmounted?: boolean;
+	#unmounted?: boolean;
 
-	get isFirstMount() { return this._unmounted === undefined; }
+	get isFirstMount() { return this.#unmounted === undefined; }
 
 
 	//@$log.m
@@ -914,7 +715,7 @@ export class FocuserBehavior
 		this.#addToParent();
 
 
-		this._unmounted = false;
+		this.#unmounted = false;
 
 	}
 
@@ -923,8 +724,8 @@ export class FocuserBehavior
 	updateDidMount()
 	{
 
-		this._prioriry = undefined;
-		this._level = undefined;
+		//this._prioriry = undefined;
+		//this._level = undefined;
 
 		let { el, props } = this;
 
@@ -999,7 +800,7 @@ export class FocuserBehavior
 	didUnmount()
 	{
 
-		this._unmounted = true;
+		this.#unmounted = true;
 
 
 		if (this.props.onUnmount)
@@ -1034,7 +835,7 @@ export class FocuserBehavior
 
 		if (!parent)
 		{
-			!this.root && $log.error(`Не удаётся найти parent`);
+			!this.isRoot && $log.error(`Не удаётся найти parent`);
 			return;
 		}
 
@@ -1071,49 +872,6 @@ export class FocuserBehavior
 
 
 	//---
-
-
-
-	//componentDidMount()
-	//{
-
-	//	coreMountFocuser(this);
-
-
-	//	if (!this.root)
-	//	{
-
-	//		let parent = this.parent;
-
-	//		if (!parent)
-	//		{
-	//			$log.error(`Не удаётся найти parent`);
-	//			return;
-	//		}
-
-
-	//		parent.addItem(this);
-
-
-	//		if (this.props.exitSlot)
-	//		{
-	//			//$log("add exitSlot:", parent, ".exitSlot = ", this);
-	//			parent.exitSlot = this;
-	//		}
-
-	//	}
-
-
-	//	this.#focusOnMount();
-
-
-	//	this.props.onMount?.(this);
-
-
-	//	this.callListenerEvent("mount", this);
-
-
-	//}
 
 
 
@@ -1177,46 +935,7 @@ export class FocuserBehavior
 
 
 
-	//initElement(el: HTMLElement | null | undefined)
-	//{
-
-	//	if (!el)
-	//		return;
-
-
-	//	let props = this.props;
-	//	//this.domLevel = domLevel(el);
-
-
-	//	if (props.hover/* !== false*/)
-	//	{
-	//		el.addEventListener("mouseover", this.onHover, false);
-	//		el.addEventListener("mouseleave", this.onUnhover, false);
-	//	}
-
-
-
-	//	if (props.domFocus)
-	//	{
-
-	//		let control = this.getDOMControl(el);
-
-	//		if (control)
-	//		{
-	//			control.addEventListener("focus", () => this.focus(), false);
-
-	//			if (document.activeElement === control)
-	//				this.focus();
-	//		}
-
-	//	}
-
-
-
-	//	//this.updateCarets(null);
-	//	this.updateBorderers();
-
-	//}
+	//---
 
 
 
@@ -1303,143 +1022,6 @@ export class FocuserBehavior
 
 		this.itemBorderers?.forEach(a => a(this));
 	}
-
-
-
-	//---
-
-
-
-	//shouldComponentUpdate()
-	//{
-
-	//	this._prioriry = undefined;
-	//	this._level = undefined;
-
-	//	return true;// super.shouldComponentUpdate(nextProps, nextState);
-
-	//}
-
-
-
-	//componentDidUpdate()
-	//{
-
-	//	this.updateBorderers();
-	//	//this.updateCarets(null);
-
-
-	//	if (this.focused && this.disabled /*&& !Bindera.$responseHasAction("focus")*/)
-	//	{
-	//		this.focusNearest();
-	//	}
-
-	//}
-
-
-
-	//componentWillUnmount()
-	//{
-
-	//	this._unmounted = true;
-
-
-	//	//$log("currentFocuser():", currentFocuser());
-
-
-	//	if (this.props.onUnmount)
-	//	{
-	//		this.props.onUnmount(this);
-	//	}
-
-	//	else if (this.hasListenerEvent("unmount"))
-	//	{
-	//		this.callListenerEvent("unmount", this);
-	//	}
-
-	//	else if (this.focused && currentFocuser() === this)
-	//	{
-
-	//		//this.unfocus();
-
-	//		if (/*this.props.disabledFocusOnUnmount !== true &&*/
-	//			!isDisabledFocusOnUnmount()
-	//			//**&& !Bindera.$responseHasAction("focus")
-	//		)
-	//		{
-	//			Task.run(() => this.focusNearest());
-	//			//this.focusNearest();
-	//		}
-	//		else
-	//			this.unfocus();
-
-	//	}
-
-
-
-	//	coreUnmountFocuser(this);
-
-	//	//this.cursor?.removeFocuser(this);
-
-
-	//	let { el } = this;
-
-	//	el?.removeEventListener("mouseover", this.onHover);
-	//	el?.removeEventListener("mouseleave", this.onUnhover);
-
-
-	//	//this.#elRef.current = null;
-
-
-
-	//	let parent = this.parent;
-
-	//	if (!parent)
-	//		return;
-
-
-
-	//	parent.removeItem(this);
-
-	//	if (parent.exitSlot === this)
-	//		parent.exitSlot = undefined;  //null;
-
-
-
-	//}
-
-
-
-	//@$log.m
-	//render(children: ReactNode)
-	//{
-
-	//	this.clearState();
-
-
-
-	//	let body: ReactNode = <FocuserContext.Provider
-	//		value={this}
-	//		children={children}
-	//	/>;
-
-
-	//	if (this.props.cursor)
-	//	{
-
-	//		this.setCursorEl ??= a => this._cursorEl = a;
-
-
-	//		body = <>
-	//			{body}
-	//			<Div ref={this.setCursorEl} display="none" />
-	//		</>;
-	//	}
-
-
-	//	return body;
-
-	//}
 
 
 
@@ -1594,10 +1176,10 @@ export class FocuserBehavior
 
 		this.position = null;
 
-		this.recalcPositionOfAll(ffs, _nvgId);
+		this.#recalcPositionOfAll(ffs, _nvgId);
 
 		if (!this.position)
-			this.recalcPosition();
+			this.#recalcPosition();
 
 
 		//$log("ffs:", ffs.filter(a => a.position));
@@ -1610,7 +1192,7 @@ export class FocuserBehavior
 
 
 
-	recalcPosition()
+	#recalcPosition()
 	{
 
 		let el = this.el;
@@ -1643,7 +1225,7 @@ export class FocuserBehavior
 
 
 
-	private recalcPositionOfAll(focusers: Focuser[], _nvgId: number | undefined)
+	#recalcPositionOfAll(focusers: Focuser[], _nvgId: number | undefined)
 	{
 
 		if (_nvgId === FocuserBehavior._lastNavigationId)
@@ -1657,7 +1239,7 @@ export class FocuserBehavior
 		{
 			if (ff.canFocus() && ff.isPositioned)
 			{
-				ff.recalcPosition();
+				ff.#recalcPosition();
 			}
 			else
 			{
@@ -1666,7 +1248,6 @@ export class FocuserBehavior
 		});
 
 	}
-
 
 
 
@@ -2131,7 +1712,7 @@ export class FocuserBehavior
 		while (parent)
 		{
 
-			if (parent.root)
+			if (parent.isRoot)
 				break;
 
 
@@ -2153,7 +1734,7 @@ export class FocuserBehavior
 		while (parent)
 		{
 
-			if (!parent.root && parent.canFocus())
+			if (!parent.isRoot && parent.canFocus())
 				return parent;
 
 
@@ -2196,7 +1777,7 @@ export class FocuserBehavior
 		while (parent)
 		{
 
-			if (parent.root)
+			if (parent.isRoot)
 				break;
 
 
@@ -2218,7 +1799,7 @@ export class FocuserBehavior
 		while (parent)
 		{
 
-			if (!parent.root && parent.canFocus())
+			if (!parent.isRoot && parent.canFocus())
 				return parent;
 
 
@@ -2265,7 +1846,7 @@ export class FocuserBehavior
 	async focus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
-		if (this._unmounted)
+		if (this.#unmounted)
 		{
 			//$error("Focuser: unmounted");
 			return null;
@@ -2372,7 +1953,7 @@ export class FocuserBehavior
 			await arequestAnimationFrame();
 
 
-			this.doFocus(focusCfg);
+			this.#doFocus(focusCfg);
 
 
 			//if (!(focusCfg?.awaitImmidiate))
@@ -2395,10 +1976,10 @@ export class FocuserBehavior
 
 
 
-	private doFocus(focusCfg?: FocusConfig | null)
+	#doFocus(focusCfg?: FocusConfig | null)
 	{
 
-		//$log("doFocus");
+		//$log("#doFocus");
 
 		focuserFocus(this, focusCfg);
 
@@ -2533,7 +2114,7 @@ export class FocuserBehavior
 	)
 	{
 
-		if (this._unmounted)
+		if (this.#unmounted)
 			return;
 
 		//_$log(this + " onUnfocus")
@@ -2646,87 +2227,6 @@ export class FocuserBehavior
 
 
 	//---
-
-
-
-	scrollIntoView(cfg?: scrollIntoView.Options): boolean
-	{
-
-
-		if (this.props.scrollIntoView === false)
-			return false;
-
-
-		let { el } = this;
-		if (!el)
-			return false;
-
-
-		let container = this.cursorEl?.parentElement;
-		if (!container)
-			return false;
-
-
-		return scrollIntoView(el, container, cfg);
-
-	}
-
-
-
-	scrollIntoViewTop(cfg?: scrollIntoView.Options): boolean
-	{
-
-		let { el } = this;
-		if (!el)
-			return false;
-
-
-		let container = this.cursorEl?.parentElement;
-		if (!container)
-			return false;
-
-
-		return scrollIntoView.toTop(el, container, cfg);
-
-	}
-
-
-
-	//getScrollParent(element, includeHidden?)
-	//{
-
-	//	let style = getComputedStyle(element);
-
-	//	let excludeStaticParent = style.position === "absolute";
-
-	//	let overflowRegex = includeHidden ? /(auto|scroll|hidden)/ : /(auto|scroll)/;
-
-
-	//	if (style.position === "fixed")
-	//	{
-	//		return document.body;
-	//	}
-
-
-	//	for (let parent = element; (parent = parent.parentElement);)
-	//	{
-
-	//		style = getComputedStyle(parent);
-
-	//		if (excludeStaticParent && style.position === "static")
-	//			continue;
-
-	//		if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX))
-	//		{
-	//			return parent;
-	//		}
-
-	//	}
-
-
-	//	return document.body;
-
-	//}
 
 
 
@@ -2860,18 +2360,18 @@ export class FocuserBehavior
 
 
 
-		let through = this._scope?.scopeOptions?.through;
+		let through = this.scopeOptions?.through;
 
 		if (through && (through === true || through[dir]))
 		{
 
-			if (this._scope!.ghost)
+			if (this.scope!.ghost)
 			{
-				return this._scope!.navigate(dir, e, match, _nvgId);
+				return this.scope!.navigate(dir, e, match, _nvgId);
 			}
 
 
-			return this._scope!.focus(/*this.nextfocusCfg()*/);
+			return this.scope!.focus(/*this.nextfocusCfg()*/);
 
 		}
 
@@ -3253,9 +2753,9 @@ export class FocuserBehavior
 		//}
 
 
-		if (this._unmounted)
+		if (this.#unmounted)
 		{
-			$log.__error("unmounted:", this._unmounted);
+			$log.__error("unmounted:", this.#unmounted);
 		}
 
 
@@ -3271,17 +2771,17 @@ export class FocuserBehavior
 		}
 
 
-		if (this.props.disableIfParentIsCollapsed && this.parentIsCollapsed)
+		if (this.props.disableIfParentIsCollapsed && this.parent?.isCollapsed)
 		{
 			$log.__error("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
-			$log.__error("parentIsCollapsed:", this.parentIsCollapsed);
+			$log.__error("parentIsCollapsed:", this.parent?.isCollapsed);
 		}
 
 
-		if (this.props.disableIfParentIsNotFocused && this.parentIsNotFocused)
+		if (this.props.disableIfParentIsNotFocused && this.parent?.isNotFocused)
 		{
 			$log.__error("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
-			$log.__error("parentIsNotFocused:", this.parentIsNotFocused);
+			$log.__error("parentIsNotFocused:", this.parent?.isNotFocused);
 		}
 
 
@@ -3302,7 +2802,7 @@ export class FocuserBehavior
 	async enter(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
-		if (this._unmounted)
+		if (this.#unmounted)
 			return null;
 
 
@@ -3455,7 +2955,7 @@ export class FocuserBehavior
 	async enterOrFocusNext(): Promise<Focuser | null>
 	{
 
-		if (this._unmounted)
+		if (this.#unmounted)
 			return null;
 
 
@@ -3521,7 +3021,7 @@ export class FocuserBehavior
 			if (exitSlot && exitSlot !== this && !this.parentBy(a => a === exitSlot) && exitSlot.enabled)
 			{
 
-				if (!exitSlot.root)
+				if (!exitSlot.isRoot)
 				{
 
 					let result = await exitSlot.focus();
@@ -3574,7 +3074,7 @@ export class FocuserBehavior
 
 				}
 
-				else if (!parent.root)
+				else if (!parent.isRoot)
 				{
 
 					let result = await parent.focus();
@@ -3990,6 +3490,67 @@ export class FocuserBehavior
 
 
 
+	scrollIntoView(cfg?: scrollIntoView.Options): boolean
+	{
+
+
+		if (this.props.scrollIntoView === false)
+			return false;
+
+
+		let { el } = this;
+		if (!el)
+			return false;
+
+
+		let container = this.scrollContainerEl;
+		if (!container)
+			return false;
+
+
+		return scrollIntoView(el, container, cfg);
+
+	}
+
+
+
+	scrollIntoViewTop(cfg?: scrollIntoView.Options): boolean
+	{
+
+		let { el } = this;
+		if (!el)
+			return false;
+
+
+		let container = this.scrollContainerEl;
+		if (!container)
+			return false;
+
+
+		return scrollIntoView.toTop(el, container, cfg);
+
+	}
+
+
+
+	scrollContainerTo(dir: -1 | 1)
+	{
+
+		let { scrollContainerEl } = this;
+
+		scrollContainerEl?.scrollBy({
+			top: dir * scrollContainerEl.offsetHeight / 10,
+			behavior: "smooth",
+		});
+
+	}
+
+
+
+	//---
+
+
+
 	canKeyDown()
 	{
 		return this.enabled;
@@ -4003,10 +3564,8 @@ export class FocuserBehavior
 		if (!this.canKeyDown())
 			return;
 
-		//let e2 = cloneEvent(e) as KeyboardEvent;
 
-
-		if (this.root)
+		if (this.isRoot)
 		{
 			await this.rootKeyDown(e/*e2*/);
 		}
@@ -4024,22 +3583,6 @@ export class FocuserBehavior
 				$log.error(ex);
 			}
 		}
-
-
-
-		//function cloneEvent<TEvent extends Event>(evt: TEvent, props?): TEvent
-		//{
-
-		//	const proxy = new Proxy(evt, {
-		//		get: (target, prop) => props && props[prop] || target[prop]
-		//	});
-
-
-		//	let cnstr = evt.constructor as any;
-
-		//	return new cnstr(evt.type, proxy) as TEvent;
-
-		//}
 
 	}
 
@@ -4260,7 +3803,7 @@ export class FocuserBehavior
 
 				e.preventDefault();
 
-				await Task.run(() => this.navigate("left", e, ignoreOnKeyboardNavigation));
+				await Task.run(() => this.navigate("left", e, isNavigable));
 
 			}
 
@@ -4270,7 +3813,7 @@ export class FocuserBehavior
 
 				e.preventDefault();
 
-				await Task.run(() => this.navigate("right", e, ignoreOnKeyboardNavigation));
+				await Task.run(() => this.navigate("right", e, isNavigable));
 
 			}
 
@@ -4280,9 +3823,9 @@ export class FocuserBehavior
 
 				e.preventDefault();
 
-				if (!await Task.run(() => this.navigate("up", e, ignoreOnKeyboardNavigation)))
+				if (!await Task.run(() => this.navigate("up", e, isNavigable)))
 				{
-					vScroll(this.cursorEl, /*this.el,*/ -1 as -1);
+					this.scrollContainerTo(-1);
 				}
 
 			}
@@ -4293,9 +3836,9 @@ export class FocuserBehavior
 
 				e.preventDefault();
 
-				if (!await Task.run(() => this.navigate("down", e, ignoreOnKeyboardNavigation)))
+				if (!await Task.run(() => this.navigate("down", e, isNavigable)))
 				{
-					vScroll(this.cursorEl, /*this.el,*/ 1);
+					this.scrollContainerTo(1);
 				}
 
 			}
@@ -4406,9 +3949,9 @@ export class FocuserBehavior
 
 
 
-		function ignoreOnKeyboardNavigation(ff: Focuser)
+		function isNavigable(ff: Focuser)
 		{
-			return !ff.ignoreOnKeyboardNavigation();
+			return !ff.ignoreOnKeyboardNavigation;
 		}
 
 	}

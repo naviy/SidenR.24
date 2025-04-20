@@ -48,8 +48,6 @@ export module SpaWaitingMask
 
 
 
-
-
 	//---
 
 
@@ -60,13 +58,13 @@ export module SpaWaitingMask
 	export function use(): boolean
 	{
 
-		const [__isWaiting, setIsWaiting] = useState(false);
+		const [__isWaiting, __setIsWaiting] = useState(false);
 
 		useEffect(onEffect, []);
 
 		_isWaiting = __isWaiting;
 
-		isWaitingSetter = setIsWaiting;
+		isWaitingSetter = __setIsWaiting;
 
 		return __isWaiting;
 

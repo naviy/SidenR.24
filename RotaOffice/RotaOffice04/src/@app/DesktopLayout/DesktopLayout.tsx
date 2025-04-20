@@ -31,7 +31,7 @@ export function DesktopLayout(props: {
 
 	return (
 
-		<Focuser ghost name="DesktopLayout" root cursor>
+		<Focuser ghost name="DesktopLayout" root scrollable>
 
 			<Div id="desktop-layout" fill flex hidden>
 
@@ -48,6 +48,8 @@ export function DesktopLayout(props: {
 	);
 
 }
+
+
 
 
 

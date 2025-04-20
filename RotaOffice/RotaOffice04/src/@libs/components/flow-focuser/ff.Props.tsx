@@ -35,7 +35,7 @@ export interface FocuserProps
 	initAnchorProps?: () => AnchorProps;
 	applyAnchorProps?: (props: AnchorProps | null) => any;
 
-	cursor?: boolean;
+	scrollable?: boolean;
 
 	noCaret?: boolean;
 
@@ -47,8 +47,8 @@ export interface FocuserProps
 	/** является scope для дочерних */
 	scope?: boolean | ScopeOptions;
 
-	/** навигация с клавиатуры осуществляется только в пределах scope */
-	local?: boolean;
+	/** навигация с клавиатуры осуществляется БЕЗ учёта scope */
+	ignoreScope?: boolean;
 
 
 	ghost?: boolean;

@@ -41,7 +41,7 @@ export function DesktopSider(props: {
 
 				<Sider variant="persistent" open={siderIsOpened} width={width}>
 
-					<Focuser ghost name="DesktopSider" cursor>
+					<Focuser ghost name="DesktopSider" scrollable>
 
 						<div>
 

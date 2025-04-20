@@ -85,7 +85,7 @@ export function coreMountFocuser(ff: Focuser)
 	}
 
 
-	if (ff.root && _rootFocusers.register(ff))
+	if (ff.isRoot && _rootFocusers.register(ff))
 	{
 		refreshRootFocusers();
 	}

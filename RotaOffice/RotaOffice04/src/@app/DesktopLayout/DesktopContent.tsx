@@ -23,7 +23,7 @@ export function DesktopContent(props: {
 
 	let ff = Focuser.useGhost({
 		name: "DesktopContent",
-		cursor: true,
+		scrollable: true,
 		click: "unfocus",
 	});
 
@@ -37,6 +37,8 @@ export function DesktopContent(props: {
 				<Focuser.Area ff={ff}>
 
 					<Div ref={ff.divRef} relative>
+
+						<div style={{ height: "80vh" }} />
 
 						{props.children}
 

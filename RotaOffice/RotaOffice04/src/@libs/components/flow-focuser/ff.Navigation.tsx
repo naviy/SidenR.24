@@ -227,74 +227,72 @@ export function findDown(
 ): Focuser | null
 {
 
-	return $log.b("findDown", () =>
+	//return $log.b("findDown", () =>
+	//{
+	//	$log.a("focusers", focusers);
+
+
+	let p0 = ff0.position!;
+	let x01 = p0.x1;
+	let x02 = p0.x2;
+	let y02 = p0.y2;
+
+	let nearest = new NearestPos("nearest");
+	let nearest2 = new NearestPos("nearest-2");
+
+
+
+	for (let ff of focusers)
 	{
-		$log.a("focusers", focusers);
+
+		if (!canNavigateFrom(ff0, ff, match))
+			continue;
 
 
-		let p0 = ff0.position!;
-		let x01 = p0.x1;
-		let x02 = p0.x2;
-		let y02 = p0.y2;
+		let p = ff.position;
 
-		let nearest = new NearestPos("nearest");
-		let nearest2 = new NearestPos("nearest-2");
+		let overlap = ff.props.overlapY ?? ff.props.overlap ?? defaultOverlap;
+
+		//$log({ p, y02, py1: p?.y1 });
+
+		if (!p || p.y1 < y02 - overlap)
+			continue;
 
 
+		//$log("ff2:", ff);
 
-		for (let ff of focusers)
+
+		let dy = p.y1 - y02;
+
+		//let delta = (p.y2 + p.y1) / 2 - y02;
+		let delta = p.y1 - y02;
+		let delta2 = Math.abs((p.x1 + p.x2 - x01 - x02) / 2);
+
+
+		if (p.x2 >= x01 - .5 * dy && p.x1 <= x02 + .5 * dy)
 		{
-
-			if (!canNavigateFrom(ff0, ff, match))
-				continue;
-
-
-			let p = ff.position;
-
-			let overlap = ff.props.overlapY ?? ff.props.overlap ?? defaultOverlap;
-
-			//$log({ p, y02, py1: p?.y1 });
-
-			if (!p || p.y1 < y02 - overlap)
-				continue;
-
-
-			//$log("ff2:", ff);
-
-
-			let dy = p.y1 - y02;
-
-			//let delta = (p.y2 + p.y1) / 2 - y02;
-			let delta = p.y1 - y02;
-			let delta2 = Math.abs((p.x1 + p.x2 - x01 - x02) / 2);
-
-
-			if (p.x2 >= x01 - .5 * dy && p.x1 <= x02 + .5 * dy)
-			{
-				//$$log("area: 0.5");
-				nearest.setIfNearest(ff, delta, delta2);
-			}
-			else if (p.x2 >= x01 - dy && p.x1 <= x02 + dy)
-			{
-				//$$log("area: 1.0");
-				nearest2.setIfNearest(ff, delta, delta2);
-			}
-
+			//$$log("area: 0.5");
+			nearest.setIfNearest(ff, delta, delta2);
+		}
+		else if (p.x2 >= x01 - dy && p.x1 <= x02 + dy)
+		{
+			//$$log("area: 1.0");
+			nearest2.setIfNearest(ff, delta, delta2);
 		}
 
-
-		let best = nearest.bestFF(nearest2);
-
-
-		//$log("best:", best);
+	}
 
 
-		return best;
+	let best = nearest.bestFF(nearest2);
 
 
-	})!;
+	//$log("best:", best);
 
 
+	return best;
+
+
+	//})!;
 
 }
 
@@ -318,10 +316,13 @@ function canNavigateFrom(fromFF: Focuser, toFF: Focuser, match: undefined | ((ff
 		return false;
 
 
-	let scope0 = fromFF.local ? fromFF.scope : null;
-
-	if (scope0 && scope0 !== toFF && !scope0.isParentOf(toFF))
-		return false;
+	if (!fromFF.props.ignoreScope)
+	{
+		let fromScope = fromFF.scope;
+				
+		if (fromScope && fromScope !== toFF && !fromScope.isParentOf(toFF))
+			return false; // если не в пределах scope
+	}
 
 
 	return true;

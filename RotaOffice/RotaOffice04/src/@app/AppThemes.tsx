@@ -1,7 +1,6 @@
 import type { PaletteMode, Theme } from "@mui/material";
 import { createTheme, ThemeProvider, type ThemeOptions } from "@mui/material/styles";
 import { type ReactNode } from "react";
-import { $log } from "../@libs";
 
 
 
@@ -41,7 +40,6 @@ class AppThemesClass
 
 
 
-	@$log.m
 	init(cfg: {
 
 		default?: PaletteMode;

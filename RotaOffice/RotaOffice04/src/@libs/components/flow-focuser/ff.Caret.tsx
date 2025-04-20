@@ -124,7 +124,7 @@ export module Caret
 
 		let color = (props.disabled || ff?.disabled
 			? '80,80,80'
-			: MuiColor.hex2rgb(MuiColor(theme, props.color || ff?.color || Caret.defaultColor))
+			: MuiColor.hex2rgb(MuiColor(theme, props.color || ff?.caret?.color || Caret.defaultColor))
 		);
 
 

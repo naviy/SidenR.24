@@ -1,13 +1,12 @@
 import React from "react";
 
-import { Div } from "../core";
-
 import { Caret as Caret_ } from "./ff.Caret";
 import { Core as Core_, currentFocuser } from "./ff.Core";
 import { Events as Events_ } from "./ff.Events";
 import { FocuserBehavior } from "./ff.FocuserBehavior";
 import { Task as Task_ } from "./ff.Task";
 import type { FocuserProps } from "./ff.Props";
+import { SpaWaitingMask as SpaWaitingMask_ } from "./ff.SpaWaitingMask";
 
 
 
@@ -26,6 +25,8 @@ export type Focuser = FocuserBehavior;
 
 
 
+
+
 export function Focuser({ children, ...props }: FocuserProps & { children: React.ReactNode })
 {
 
@@ -34,6 +35,7 @@ export function Focuser({ children, ...props }: FocuserProps & { children: React
 	return <Focuser.Area ff={ff} children={children} />;
 
 }
+
 
 
 
@@ -68,6 +70,8 @@ export module Focuser
 	export type Listener = Events_.Listener;
 	export type ff_Listener = Events_.ff_Listener;
 
+
+	export import SpaWaitingMask = SpaWaitingMask_;
 
 	export var Tasks = Task_;
 
@@ -106,7 +110,7 @@ export module Focuser
 
 		let ff = ffRef.current ?? (ffRef.current = new FocuserBehavior(parent));
 
-		ff.setProps(props);
+		ff.useProps(props);
 
 
 		return ff;
@@ -132,6 +136,9 @@ export module Focuser
 	export function Area({ ff, children }: { ff: Focuser | null; children: React.ReactNode })
 	{
 
+		//ff?.clearState();
+
+
 		React.useLayoutEffect(() =>
 		{
 			ff?.willMount();
@@ -151,12 +158,9 @@ export module Focuser
 
 
 
+
 		if (!ff)
 			return null;
-
-
-
-		ff.clearState();
 
 
 
@@ -166,15 +170,13 @@ export module Focuser
 		/>;
 
 
-		if (ff.props.cursor)
+		if (ff.props.scrollable)
 		{
-
-			ff.setCursorEl ??= a => ff._cursorEl = a;
 
 
 			body = <>
 				{body}
-				<Div ref={ff.setCursorEl} display="none" />
+				<div ref={ff.scrollAnchorRef} className="displayNone" />
 			</>;
 		}
 
@@ -182,18 +184,6 @@ export module Focuser
 		return body;
 
 	}
-
-
-
-
-	//export function Ghost({ children, ...props }: FocuserProps & { children: React.ReactNode })
-	//{
-
-	//	let ff = use({ ghost: true, ...props });
-
-	//	return <Focuser ff={ff} children={children} />;
-
-	//}
 
 
 

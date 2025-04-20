@@ -76,6 +76,11 @@ export class CaretBehavior extends Repaintable()
 	};
 
 
+	get color() { return this.props.color ?? this.ff?.props.color ?? Caret.defaultColor; }
+	get borderRadius() { return this.props.borderRadius ?? this.ff?.props.borderRadius; }
+	get borderWidth() { return this.props.borderWidth ?? this.ff?.props.borderWidth; }
+
+
 
 	private _position?: DOMRect | null;
 	/*private*/ _priorPosition?: DOMRect | null;
@@ -200,12 +205,12 @@ export class CaretBehavior extends Repaintable()
 			return undefined;
 
 
-		let color = MuiColor(this.theme, this._priorColor || ff.color || Caret.defaultColor)!;
+		let color = MuiColor(this.theme, this._priorColor || this.color || Caret.defaultColor)!;
 
 		let inset = this.getInset();
 
 
-		let borderRadius_ = this._priorBorderRadius ?? ff.borderRadius;
+		let borderRadius_ = this._priorBorderRadius ?? this.borderRadius;
 
 		let borderRadius = (
 			borderRadius_ === undefined ? Caret.defaultBorderRadius :
@@ -221,7 +226,7 @@ export class CaretBehavior extends Repaintable()
 
 		let borderWidth = (Values
 			.manyn(
-				this._priorBorderWidth ?? ff.borderWidth,
+				this._priorBorderWidth ?? this.borderWidth,
 				a => a === undefined ? undefined /*`${Caret.defaultBorderWidth}px`*/ : a === null ? "0" : `${a}px`
 			)
 			.join(" ")
@@ -313,7 +318,7 @@ export class CaretBehavior extends Repaintable()
 
 
 
-			this.#assignPriorProps(prior);
+			this.#assignPriorProps(prior?.caret);
 
 
 			if (!this._priorPosition)
@@ -351,9 +356,9 @@ export class CaretBehavior extends Repaintable()
 
 
 
-	#assignPriorProps(prior: Focuser | null)
+	#assignPriorProps(prior: CaretBehavior | null | undefined)
 	{
-		this._priorPosition = prior?.caret?.recalcPosition();
+		this._priorPosition = prior?.recalcPosition();
 		this._priorColor = prior?.color;
 		this._priorBorderRadius = prior?.borderRadius;
 		this._priorBorderWidth = prior?.borderWidth;
