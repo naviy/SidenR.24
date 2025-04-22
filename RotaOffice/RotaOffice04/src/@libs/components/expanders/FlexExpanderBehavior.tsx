@@ -40,11 +40,11 @@ export class FlexExpanderBehavior<P extends FlexExpanderProps = FlexExpanderProp
 
 
 
-	ref!: RefObject<HTMLDivElement>;
+	elRef: RefObject<HTMLDivElement> = null!;
 	flex: string | number | undefined;
 
 
-	get el() { return this.ref.current; }
+	get el() { return this.elRef.current; }
 
 
 
@@ -53,14 +53,14 @@ export class FlexExpanderBehavior<P extends FlexExpanderProps = FlexExpanderProp
 
 
 	use(
-		ref: RefObject<HTMLDivElement> | null | undefined,
+		elRef: RefObject<HTMLDivElement>,
 		flex: string | number | null | undefined,
 		props: P,
 		cfg?: Repaintable.UseConfig
 	)
 	{
 
-		this.ref = this.ref || ref || createRef<HTMLDivElement>();
+		this.elRef = elRef;
 		this.flex = flex || undefined;
 
 		ExpanderBaseBehavior.use(this, props, cfg);

@@ -1,4 +1,5 @@
 import { styled } from "@mui/material/styles";
+import React from "react";
 import { Div, UseHookProps, Values, createPrimitive, useNew, type DivProps } from "../core";
 import { ExpanderBehavior, ExpanderProps } from "./ExpanderBehavior";
 import { FlexExpanderBehavior } from "./FlexExpanderBehavior";
@@ -20,7 +21,10 @@ export function FlexExpander(props: FlexExpander.Props & DivProps)
 
 	props = UseHookProps.use(props);
 
-	let bhv = useNew(FlexExpanderBehavior).use(null, props.l || 1, props);
+	let elRef = React.createRef<HTMLDivElement>();
+
+
+	let bhv = useNew(FlexExpanderBehavior).use(elRef, props.l || 1, props);
 
 
 	let body = bhv.childrenShouldBeRendered && Values.one(props.children);
@@ -29,7 +33,7 @@ export function FlexExpander(props: FlexExpander.Props & DivProps)
 	body = createPrimitive(
 		FlexExpander.Root,
 		{
-			ref: bhv.ref,
+			ref: elRef,
 
 			timeout: bhv.timeout,
 			onTransitionEnd: bhv.onTransitionEnd,

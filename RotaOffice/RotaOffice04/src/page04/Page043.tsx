@@ -43,6 +43,7 @@ export module Page043
 
 
 		let [tenta] = useState(() => UnitsPileTenta(db, units));
+		//let [tenta] = useState(() => UnitSubunitTenta(db, units[0].subunits![0]));
 
 		tenta.use({ root: true, });
 		//tenta.initPhase({ defaultPhase: 1 });
@@ -206,6 +207,8 @@ function UnitActions({ db, unit, ...props }: { db: DB, unit: Unit } & Pane.Props
 
 function UnitRow({ children }: { children: ReactNode })
 {
+
+	//$log("*** UnitRow");
 
 	let tenta = PileNode2_2.Tenta.useByPhase();
 

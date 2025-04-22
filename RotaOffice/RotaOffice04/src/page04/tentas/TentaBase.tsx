@@ -1,4 +1,4 @@
-import { $log, Focuser, GlobalState, Repaintable } from '@libs';
+import { Focuser, GlobalState, Repaintable } from '@libs';
 import type React from "react";
 import { type ReactNode } from "react";
 import { TentaCollector, type TentaCollectorPropsAlias, type TentaCollectorPropsAliases } from "./TentaCollector";
@@ -230,6 +230,13 @@ export class TentaBase extends Repaintable()
 	override toString()
 	{
 		return `T##${this.iid}`;
+	}
+
+
+
+	toLogValue()
+	{
+		return [`T##${this.iid}`];
 	}
 
 
@@ -635,6 +642,7 @@ export class TentaBase extends Repaintable()
 	}
 
 
+	//@$log.m
 	repaintNearests()
 	{
 		//__$log("repaintNearests " + this)
@@ -659,7 +667,7 @@ export class TentaBase extends Repaintable()
 			if (a?.parentCollector && !a.parentCollector.isVisible())
 				return;
 
-			//___$log("repaint " + a)
+			//a && $log("repaint", a)
 			a?.repaint()
 		});
 		//});
@@ -856,6 +864,7 @@ export class TentaBase extends Repaintable()
 
 
 
+	//@$log.m
 	decPhase(match?: (state: TentaState, bhv: this) => boolean): boolean
 	{
 
@@ -865,6 +874,7 @@ export class TentaBase extends Repaintable()
 
 	}
 
+	//@$log.m
 	incPhase(match?: (state: TentaState, bhv: this) => boolean): boolean
 	{
 

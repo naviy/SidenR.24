@@ -241,11 +241,19 @@ export module PileNode2_2
 	export function TabsRow({ tenta }: { tenta: Tenta })
 	{
 
+		//$log("*** TabsRow");
+
+
 		let indent = usePileCellIndent();
 
 
 		return (
-			<Pane.Row expanded={tenta.opened} end bt="sm" >
+			<Pane.Row
+				id={tenta + "-TabsRow.row"}
+				expanded={tenta.opened}
+				end
+				bt="sm"
+			>
 				<Pane start end p8 pl48>
 					<Div style={{ width: indent + 8 }} animated />
 					<PileNode2_2.Tabs tenta={tenta} />

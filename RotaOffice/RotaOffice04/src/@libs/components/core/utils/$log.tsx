@@ -41,6 +41,12 @@ export module $log
 
 
 
+	export function print(...args: any[])
+	{
+		return _log(args, msgs => console.log(...msgs));
+	}
+
+
 	export function log(...args: any[])
 	{
 		return _log(args, msgs =>
@@ -147,7 +153,7 @@ export module $log
 		else if (
 			args.length === 2 &&
 			typeof args[0] === "string" &&
-			args[1] && args[1] && typeof args[1] === "object" && args[1].message
+			typeof args[1] === "object" && args[1].message
 		)
 		{
 
@@ -168,7 +174,7 @@ export module $log
 
 				args.push(args[0]);
 
-				printLogTrace(args2);
+				printErrorTrace(args2);
 
 			}
 			else
@@ -200,9 +206,11 @@ export module $log
 
 
 			if (useLogTrace())
-				printLogTrace(msg);
+				printErrorTrace(msg);
 			else
+			{
 				console.log(...msg);
+			}
 
 		}
 
@@ -328,7 +336,27 @@ export module $log
 	{
 		console.groupCollapsed(...msgs);
 		//console.groupCollapsed("%c%s", "font-weight: normal", ...msgs);
+		//console.trace();
+		console.groupEnd();
+	}
+
+
+
+	function printErrorTrace(msgs: any[], stackTrace?: any)
+	{
+		//console.groupCollapsed(...msgs);
+
+
+		let prms = formatConsoleParams(msgs);
+
+		console.groupCollapsed(
+			"%c" + prms.fmt,
+			"font-weight: normal; color: maroon; background: #fdf2f5; display: block; width: 100%; padding: 4px; margin: -4px",
+			prms.args
+		);
+		stackTrace && console.error(stackTrace);
 		console.trace();
+
 		console.groupEnd();
 	}
 
@@ -587,7 +615,7 @@ export module $log
 
 				//$disablePrintStack = true;
 
-				log(`%cthis: %c${valueFmt}`,
+				print(`    %cthis: %c${valueFmt}`,
 					"color: blue; font-weight: 400;",
 					"color: gray; font-weight: 400;",
 					...logValue
@@ -711,7 +739,47 @@ export module $log
 
 
 
-		let argsFmt = "";
+		let formatedArgs = formatConsoleParams(args);
+
+		// all emoji: https://unicode.org/emoji/charts/full-emoji-list.html
+		let icon = String.fromCodePoint(0x1F4D1);
+
+
+		let fmt = `${icon} %c${objName ? objName + "." : ""}%c${methodName}%c(%c${formatedArgs.fmt}%c)`//`    %c%O`;
+
+
+		return {
+			fmt,
+			args: [
+				"color: #1f3795; font-weight: normal;",
+				"color: #c5790f; font-weight: bold;",
+				"",
+				"color: gray; font-style: italic; font-weight: normal;",
+				...formatedArgs.args,
+				"",
+				//"color: red;",
+				////{ method }
+				//method
+			]
+
+
+		};
+
+	}
+
+
+
+	function consoleFormatParamTypeOf(arg: any)
+	{
+		return typeof arg === "number" ? "%d" : typeof arg === "string" ? "%s" : "%o";
+	}
+
+
+
+	function formatConsoleParams(args: any[])
+	{
+
+		let fmt = "";
 		let args2 = [];
 
 		let allArgsIsPrimitive = true;
@@ -736,10 +804,10 @@ export module $log
 
 			if (allArgsIsPrimitive)
 			{
-				if (argsFmt)
-					argsFmt += ", ";
+				if (fmt)
+					fmt += ", ";
 
-				argsFmt += consoleFormatParamTypeOf(arg);
+				fmt += consoleFormatParamTypeOf(arg);
 			}
 
 		}
@@ -747,44 +815,17 @@ export module $log
 
 		if (!allArgsIsPrimitive)
 		{
-			argsFmt = "%O";
+			fmt = "%O";
 			args2 = [{ args: args2.length === 1 ? args2[0] : args2 }];
 		}
 
 
-		// all emoji: https://unicode.org/emoji/charts/full-emoji-list.html
-		let icon = String.fromCodePoint(0x1F4D1);
-
-
-		let fmt = `${icon} %c${objName ? objName + "." : ""}%c${methodName}%c(%c${argsFmt}%c)`//`    %c%O`;
-
-
 		return {
 			fmt,
-			args: [
-				"color: #1f3795; font-weight: normal;",
-				"color: #c5790f; font-weight: bold;",
-				"",
-				"color: gray; font-style: italic; font-weight: normal;",
-				...args2,
-				"",
-				//"color: red;",
-				////{ method }
-				//method
-			]
-
-
+			args: args2,
 		};
 
 	}
-
-
-
-	function consoleFormatParamTypeOf(arg: any)
-	{
-		return typeof arg === "number" ? "%d" : typeof arg === "string" ? "%s" : "%o";
-	}
-
 
 
 	//---

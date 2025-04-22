@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import type { RefObject } from "react";
+import React from "react";
 import { Div, UseHookProps, Values, createPrimitive, useNew, type DivProps } from "../core";
 import { ExpanderBehavior, ExpanderProps } from "./ExpanderBehavior";
 
@@ -18,9 +18,15 @@ import { ExpanderBehavior, ExpanderProps } from "./ExpanderBehavior";
 export function Expander(props: Expander.Props & DivProps)
 {
 
+	//$log.__("*** Expander", props.id || " ");
+
+
 	props = UseHookProps.use(props);
 
-	let bhv = useNew(ExpanderBehavior).use(null, props.wrapperRef, props);
+	let elRef = React.createRef<HTMLDivElement>();
+
+
+	let bhv = useNew(ExpanderBehavior).use(elRef, props.wrapperRef, props);
 
 
 	let body = bhv.childrenShouldBeRendered && Values.one(props.children);
@@ -39,7 +45,7 @@ export function Expander(props: Expander.Props & DivProps)
 	body = createPrimitive(
 		Expander.Root,
 		{
-			ref: bhv.ref,
+			ref: elRef,
 
 			timeout: bhv.timeout,
 			onTransitionEnd: bhv.onTransitionEnd,
@@ -74,7 +80,7 @@ export module Expander
 
 	export interface Props extends ExpanderProps, UseHookProps<Props> 
 	{
-		wrapperRef?: RefObject<HTMLDivElement>;
+		wrapperRef?: React.RefObject<HTMLDivElement>;
 		wrapperCls?: string;
 	}
 

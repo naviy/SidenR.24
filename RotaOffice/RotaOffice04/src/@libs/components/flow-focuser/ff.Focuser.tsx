@@ -7,6 +7,7 @@ import { FocuserBehavior } from "./ff.FocuserBehavior";
 import { Task as Task_ } from "./ff.Task";
 import type { FocuserProps } from "./ff.Props";
 import { SpaWaitingMask as SpaWaitingMask_ } from "./ff.SpaWaitingMask";
+import { $log } from "../core";
 
 
 
@@ -135,6 +136,9 @@ export module Focuser
 
 	export function Area({ ff, children }: { ff: Focuser | null; children: React.ReactNode })
 	{
+
+		//$log("***", ff + "");
+
 
 		//ff?.clearState();
 

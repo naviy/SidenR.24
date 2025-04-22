@@ -124,15 +124,14 @@ export function PileRowNode({
 							children={children}
 						/>
 
-
 						<Focuser.Area ff={tenta.tailFf}>
 
-							{/*<Div borderGreen border4 m8>*/}
+							{/*	*/}{/*<Div borderGreen border4 m8>*/}
 							<Pane.Col
 
 								ref={tenta.tailFf.divRef}
 
-								id={tenta + ""}
+								id={tenta + "-PileRowNode.tailCol"}
 								expanderRef={tailExpanderRef}
 
 								start={tailIsSeparated}
@@ -163,7 +162,7 @@ export function PileRowNode({
 			</Focuser.Area>
 
 
-		</Tenta.ByPhaseProvider>
+		</Tenta.ByPhaseProvider >
 	);
 
 }

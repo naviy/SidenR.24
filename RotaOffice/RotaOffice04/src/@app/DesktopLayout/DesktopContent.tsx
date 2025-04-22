@@ -38,8 +38,6 @@ export function DesktopContent(props: {
 
 					<Div ref={ff.divRef} relative>
 
-						<div style={{ height: "80vh" }} />
-
 						{props.children}
 
 						<div style={{ height: "80vh" }} />

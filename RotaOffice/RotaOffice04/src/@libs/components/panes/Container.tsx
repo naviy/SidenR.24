@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import clsx from "clsx";
 import React, { useRef, type ReactNode, type MutableRefObject } from "react";
 import { Focuser } from "..";
-import { $defaultAnimationDurationMs, $log, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
+import { $defaultAnimationDurationMs, PrimitiveProps, UseHookProps, Values, createPrimitive, useNew } from "../core";
 import { Expander, ExpanderBaseBehavior, ExpanderBaseProps, ExpanderBehavior, FlexExpanderBehavior } from "../expanders";
 import { Block } from "./Block";
 import { ContainerInfo } from "./ContainerInfo";
@@ -86,17 +86,19 @@ export interface RowProps extends ContainerProps<RowProps>, PrimitiveProps<HTMLD
 
 export var Div = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 {
-	return renderProvider("col", props, ref)
+	return renderContainer("col", props, ref)
 });
 
 export var Col = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 {
-	return renderProvider("col", props, ref, "vflex")
+	return renderContainer("col", props, ref, "vflex")
 });
 
 export var Row = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 {
-	return renderProvider("row", props, ref, "flex")
+	//$log._("*** Pane.Row", props.id || ' ');
+
+	return renderContainer("row", props, ref, "flex")
 });
 
 
@@ -111,7 +113,7 @@ export var Row = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
 
 
 
-export function renderProvider(
+export function renderContainer(
 	layout: ContainerLayout | null | undefined,
 	props: ContainerProps<any> & PrimitiveProps<HTMLDivElement>,
 	ref: React.ForwardedRef<HTMLDivElement> | undefined,
@@ -119,20 +121,23 @@ export function renderProvider(
 )
 {
 
-	//_$log(type, props.id)
+	//$log.__("***", layout, props.id || " ");
+
+	if (ref && typeof ref === "function")
+	{
+		throw Error(
+			`Pane.Container ${props.id || ''}: параметр 'ref' не может принимать в качестве значения функции, только RefObject`
+		);
+	}
+
 
 	props = UseHookProps.use(props);
 
 	let parentInfo = ContainerInfo.use();
 
 
-	let elRef = ref as React.RefObject<HTMLDivElement> | undefined;
+	let elRef = (ref as React.RefObject<HTMLDivElement>) || useRef<HTMLDivElement>(null);
 
-
-	if (elRef === undefined)
-	{
-		elRef = useRef<HTMLDivElement>(null);
-	}
 
 	//props.id && $log(type, props.id)
 	//props.id && _$log("ppx", props.ppx);
@@ -160,8 +165,8 @@ export function renderProvider(
 		}
 		else
 		{
-			//$log("expander", props.id);
-			expander = useNew(Expander.Behavior).use(elRef, null, props);
+			//$log.___("*** expander");
+			expander = useNew(Expander.Behavior).use(elRef, undefined, props);
 			preExpanding = expander.expanded && expander.collapsed;
 		}
 
@@ -222,7 +227,12 @@ export function renderProvider(
 
 		body = expander.childrenShouldBeRendered && Values.one(body);
 
-		body = <div ref={expander.wrapperRef} className={clsx("pane-expander flexi relative", wrapperCls)} children={body} />;
+		body = <div
+			ref={expander.wrapperRef}
+			className={clsx("pane-expander flexi relative", wrapperCls)}
+			children={body}
+		/>;
+
 		wrapperCls = undefined;
 
 		expanderProps = {

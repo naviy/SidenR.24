@@ -1,6 +1,7 @@
 import { createRef, type RefObject } from "react";
 
 import { ExpanderBaseBehavior, ExpanderBaseProps } from "./ExpanderBaseBehavior";
+//import { $log } from "../core/utils/$log";
 
 
 
@@ -47,11 +48,11 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 
 
 
-	ref!: RefObject<HTMLDivElement>;
-	wrapperRef!: RefObject<HTMLDivElement>;
+	elRef: RefObject<HTMLDivElement> = null!;
+	wrapperRef: RefObject<HTMLDivElement> = null!;
 
 
-	get el() { return this.ref.current; }
+	get el() { return this.elRef.current; }
 	get wrapperEl() { return this.wrapperRef.current; }
 
 
@@ -61,19 +62,24 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 
 
 	use(
-		ref: RefObject<HTMLDivElement> | null | undefined,
-		wrapperRef: RefObject<HTMLDivElement> | null | undefined,
+		elRef: RefObject<HTMLDivElement>,
+		wrapperRef: RefObject<HTMLDivElement> | undefined,
 		props: Props,
 		cfg?: ExpanderBaseBehavior.UseConfig
 	)
 	{
 
-		this.ref = this.ref || ref || createRef<HTMLDivElement>();
-		this.wrapperRef = this.wrapperRef || wrapperRef || createRef<HTMLDivElement>();
+		//return $log.b(this + ".use()", () =>
+		//{
+		//	$log("elRef:", elRef);
+		//	$log("wrapperRef:", wrapperRef);
+			this.elRef = elRef;
+			this.wrapperRef = wrapperRef || createRef<HTMLDivElement>();
 
-		ExpanderBaseBehavior.use(this, props, cfg);
+			ExpanderBaseBehavior.use(this, props, cfg);
 
-		return this;
+			return this;
+		//})!;
 
 	}
 
@@ -95,6 +101,7 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 	}
 
 
+	//@$log.m
 	setSizes(
 		overflow: "hidden" | "visible",
 		size: string | null | undefined,
@@ -102,6 +109,7 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 	)
 	{
 		let { el } = this;
+		//$log("el:", el)
 		if (!el) return;
 
 		el.style.overflow = overflow;

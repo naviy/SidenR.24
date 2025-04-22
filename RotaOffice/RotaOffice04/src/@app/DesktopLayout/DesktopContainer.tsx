@@ -8,6 +8,8 @@ import { AppThemes } from "../AppThemes";
 export function DesktopContainer(props: { children?: ReactNode; })
 {
 
+	//$log("*** DesktopContainer");
+
 	return (
 
 		<AppThemes.Navigation>

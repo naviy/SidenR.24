@@ -1,6 +1,6 @@
 import { useLayoutEffect } from "react";
 
-import { $defaultAnimationDurationMs, $log, adelay, arequestAnimationFrame, Repaintable } from "../core";
+import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
 
 
 
@@ -85,7 +85,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	get timeout() { return this.props.timeout ?? $defaultAnimationDurationMs; }
 
 	collapsed!: boolean;
-	private _startSize?: string | number | null;
+	#startSize?: string | number | null;
 
 
 	protected priorAddExpandedHeight?: number;
@@ -94,6 +94,17 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	get childrenShouldBeRendered()
 	{
 		return this.props.forceRender || !this.collapsed || this.expanded;
+	}
+
+
+
+	//---
+
+
+
+	override toString()
+	{
+		return `${this.constructor.name} ${this.props?.id || ''}`;
 	}
 
 
@@ -139,29 +150,33 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	)
 	{
 
-		Repaintable.use(me, cfg);
+		//return $log.b("ExpanderBaseBehavior.use()", () =>
+		//{
 
-		let prevProps = me.props;
-		me.props = props;
+			Repaintable.use(me, cfg);
 
-
-		if (!prevProps)
-		{
-			me.collapsed = !me.expanded;
-		}
+			let prevProps = me.props;
+			me.props = props;
 
 
-		me._startSize = me.getCurrentSize();
-
-
-		useLayoutEffect(() =>
-		{
 			if (!prevProps)
-				me.componentDidMount();
-			else
-				me.componentDidUpdate(prevProps);
-		});
+			{
+				me.collapsed = !me.expanded;
+			}
 
+
+			me.#startSize = me.getCurrentSize();
+			//$log("startSize:", me.#startSize);
+
+			useLayoutEffect(() =>
+			{
+				if (!prevProps)
+					me.componentDidMount();
+				else
+					me.componentDidUpdate(prevProps);
+			});
+
+		//})!;
 	}
 
 
@@ -170,17 +185,28 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 
-	componentDidMount()
+	toLogValue()
 	{
-		//____$log("Expander.componentDidMount()"+ this.props.id)
-		this.expanded ? this.setExpanded() : this.setCollapsed();
-
-		this._priorMaxSize = this.getMaxSize();
-
+		return [this.constructor.name, " ", this.props.id];
 	}
 
 
 
+	//---
+
+
+
+	//@$log.m
+	componentDidMount()
+	{
+		this.expanded ? this.#setExpanded() : this.#setCollapsed();
+
+		this._priorMaxSize = this.getMaxSize();
+	}
+
+
+
+	//@$log.m
 	async componentDidUpdate(prevProps: Props)
 	{
 
@@ -196,27 +222,27 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 		if (!prevExpanded && expanded)
 		{
-			await this.expand();
+			await this.#expand();
 		}
 
 		else if (!expanded && prevExpanded)
 		{
-			await this.collapse();
+			await this.#collapse();
 		}
 
-		else if (expanded && this._startSize != null)
+		else if (expanded && this.#startSize != null)
 		{
 
 			if (!props.noreexpand || this.mustReexpandCount)
 			{
 				this.mustReexpandCount = Math.max(0, this.mustReexpandCount - 1);
 				//_____$log("reexpand");
-				await this.reexpand();
+				await this.#reexpand();
 			}
 
 			else if (this._priorMaxSize !== this.getMaxSize())
 			{
-				this.setExpanded();
+				this.#setExpanded();
 			}
 			else
 			{
@@ -277,7 +303,8 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 
-	private async expand()
+	//@$log.m
+	async #expand()
 	{
 
 		this.collapsed = false;
@@ -312,13 +339,14 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 			return;
 
 
-		this.setExpanded();
+		this.#setExpanded();
 
 	}
 
 
 
-	private setExpanded()
+	//@$log.m
+	#setExpanded()
 	{
 
 		this.priorAddExpandedHeight = this.props.addExpandedHeight;
@@ -335,7 +363,8 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 
-	private async collapse()
+	//@$log.m
+	async #collapse()
 	{
 
 		let ri = ++this._reexpandIndex;
@@ -344,13 +373,13 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 		{
 			this.setSizes(
 				"hidden", //?
-				this.getExpandedSize(this._startSize ?? this.getCurrentSize()!, false),
+				this.getExpandedSize(this.#startSize ?? this.getCurrentSize()!, false),
 				null
 			);
 		});
 
 
-		await arequestAnimationFrame(() => this.setCollapsed());
+		await arequestAnimationFrame(() => this.#setCollapsed());
 
 
 		if (ri !== this._reexpandIndex)
@@ -364,7 +393,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 			return;
 
 
-		this._startSize = null;
+		this.#startSize = null;
 
 		this.collapsed = true;
 
@@ -375,7 +404,8 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 
-	private setCollapsed()
+	//@$log.m
+	#setCollapsed()
 	{
 		this.priorAddExpandedHeight = 0;
 		//$log(this.id, "set3 priorAddExpandedHeight =", this.priorAddExpandedHeight);
@@ -393,7 +423,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 		const { props, expanded } = this;
 
-		expanded ? this.setExpanded() : this.setCollapsed();
+		expanded ? this.#setExpanded() : this.#setCollapsed();
 
 		props.onExpanedChange?.();
 
@@ -407,18 +437,23 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 
 
-	//@$logm
-	private async reexpand()
+	//@$log.m
+	async #reexpand()
 	{
 
 		let ri = ++this._reexpandIndex;
+
+		let expandSize1 = this.getExpandedSize(this.#startSize!, false);
+
+		//$log("startSize:", this.#startSize);
+		//$log("expandSize1:", expandSize1);
 
 
 		await arequestAnimationFrame(() =>
 		{
 			this.setSizes(
 				"hidden",
-				this.getExpandedSize(this._startSize!, false),
+				expandSize1,
 				null
 			);
 		});
@@ -427,14 +462,16 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 		if (ri !== this._reexpandIndex)
 			return false;
 
+		let expandSize2 = this.getExpandedSize(this.getCurrentSize()!, true);
+		//$log("expandSize2:", expandSize2);
 
 		await arequestAnimationFrame(() =>
 		{
-			this._startSize = null;
+			this.#startSize = null;
 
 			this.setSizes(
 				"hidden", //?
-				this.getExpandedSize(this.getCurrentSize()!, true),
+				expandSize2,
 				null
 			);
 		});
@@ -447,7 +484,7 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 			return false;
 
 
-		this.setExpanded();
+		this.#setExpanded();
 
 		return true;
 
