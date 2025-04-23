@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import React from "react";
 
 import { $defaultAnimationDurationMs, adelay, arequestAnimationFrame, Repaintable } from "../core";
 
@@ -104,7 +104,14 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 
 	override toString()
 	{
-		return `${this.constructor.name} ${this.props?.id || ''}`;
+		return `${this.constructor.name}_#${this.props?.id || ''}`;
+	}
+
+
+
+	toLogValue()
+	{
+		return [this.constructor.name, "_#", this.props.id];
 	}
 
 
@@ -150,44 +157,33 @@ export abstract class ExpanderBaseBehavior<Props extends ExpanderBaseProps = Exp
 	)
 	{
 
-		//return $log.b("ExpanderBaseBehavior.use()", () =>
+		//return $log.b(me + ".base.use()", () =>
 		//{
 
-			Repaintable.use(me, cfg);
+		Repaintable.use(me, cfg);
 
-			let prevProps = me.props;
-			me.props = props;
+		let prevProps = me.props;
+		me.props = props;
 
+
+		if (!prevProps)
+		{
+			me.collapsed = !me.expanded;
+		}
+
+
+		React.useLayoutEffect(() =>
+		{
+			me.#startSize = me.getCurrentSize();
+			//$log(me + ".startSize:", me.#startSize);
 
 			if (!prevProps)
-			{
-				me.collapsed = !me.expanded;
-			}
-
-
-			me.#startSize = me.getCurrentSize();
-			//$log("startSize:", me.#startSize);
-
-			useLayoutEffect(() =>
-			{
-				if (!prevProps)
-					me.componentDidMount();
-				else
-					me.componentDidUpdate(prevProps);
-			});
+				me.componentDidMount();
+			else
+				me.componentDidUpdate(prevProps);
+		});
 
 		//})!;
-	}
-
-
-
-	//---
-
-
-
-	toLogValue()
-	{
-		return [this.constructor.name, " ", this.props.id];
 	}
 
 

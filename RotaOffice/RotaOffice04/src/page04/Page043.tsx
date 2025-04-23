@@ -43,6 +43,7 @@ export module Page043
 
 
 		let [tenta] = useState(() => UnitsPileTenta(db, units));
+		//let [tenta] = useState(() => RootUnitTenta(db, units[0]));
 		//let [tenta] = useState(() => UnitSubunitTenta(db, units[0].subunits![0]));
 
 		tenta.use({ root: true, });
@@ -165,23 +166,30 @@ function UnitBody(
 
 		<Pane flex1 start end>
 
+
 			<Div vcenter pl8>
 				<Pile.PhaseIcon noindent={noindent} />
 			</Div>
+
 
 			<Div flex32px font32px vcenter textCenter>
 				{gsm.UnitType.$item(unit.type)!.$icon}
 			</Div>
 
+
 			<Div flex1 p12>
+
 				<Div><em>{name?.shortName}</em> {masterNames.map(a => a.shortName2).join(" ")}</Div>
+
 				<ValueFader value={tenta.collapsed} expander>
-					{(collapsed) => (collapsed
+					{tentaCollapsed => (tentaCollapsed
 						? <Div opacity7 fontSm><em>{name?.name}</em> {masterNames.map(a => a.name2).join(" ")}</Div>
-						: <Div opacity7 fontSm><em>{name?.fullName}</em> {masterNames.map(a => a.fullName2).join(" ")}</Div>
+						: <Div opacity7 fontSm><em>{name?.fullName}</em><br/><em>{name?.fullName}</em><br/><em>{name?.fullName}</em> {masterNames.map(a => a.fullName2).join(" ")}</Div>
 					)}
 				</ValueFader>
+
 			</Div>
+
 
 		</Pane>
 

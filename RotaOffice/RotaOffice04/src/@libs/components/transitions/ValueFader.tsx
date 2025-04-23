@@ -144,11 +144,11 @@ export function ValueFader<TValue>({
 
 	if (typeof expander === 'object')
 	{
-		body = <Expander {...expander} children={body} />;
+		body = <Expander id="ValueFader" {...expander} children={body} />;
 	}
 	else if (expander)
 	{
-		body = <Expander children={body} />;
+		body = <Expander id="ValueFader" children={body} />;
 	}
 
 

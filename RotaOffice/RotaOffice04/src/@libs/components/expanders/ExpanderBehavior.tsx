@@ -1,6 +1,7 @@
 import { createRef, type RefObject } from "react";
 
 import { ExpanderBaseBehavior, ExpanderBaseProps } from "./ExpanderBaseBehavior";
+import { $log } from "../core";
 //import { $log } from "../core/utils/$log";
 
 
@@ -41,8 +42,10 @@ export module ExpanderProps
 
 
 
-export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> extends ExpanderBaseBehavior<Props>
+export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps>
+	extends ExpanderBaseBehavior<Props>
 {
+
 
 	//---
 
@@ -101,7 +104,7 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 	}
 
 
-	//@$log.m
+	//@$log.m({ filter: (bhv: ExpanderBehavior) => bhv.props.id === "ValueFader" })
 	setSizes(
 		overflow: "hidden" | "visible",
 		size: string | null | undefined,
@@ -129,6 +132,7 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps> exten
 
 
 	//---
+
 
 }
 

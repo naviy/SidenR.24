@@ -40,6 +40,17 @@ export module $log
 
 
 
+	function incIndent()
+	{
+		indent += "    ";
+	}
+
+	function decIndent()
+	{
+		indent = indent.substring(0, indent.length - 4) || "";
+	}
+
+
 
 	export function print(...args: any[])
 	{
@@ -336,7 +347,7 @@ export module $log
 	{
 		console.groupCollapsed(...msgs);
 		//console.groupCollapsed("%c%s", "font-weight: normal", ...msgs);
-		//console.trace();
+		console.trace();
 		console.groupEnd();
 	}
 
@@ -481,7 +492,7 @@ export module $log
 	export function e(...msgs: any[])
 	{
 
-		indent = indent.substring(0, indent.length - 4) || "";
+		decIndent();
 
 
 		forceAllowLogTrace = false;
@@ -489,7 +500,7 @@ export module $log
 		console.groupEnd();
 
 		let logCount = _blockLogCounts[_blockLogCounts.length - 1];
-		logCount && log("}", ...msgs);
+		logCount && log("  }", ...msgs);
 
 		forceAllowLogTrace = undefined;
 
@@ -523,7 +534,7 @@ export module $log
 		forceAllowLogTrace = undefined;
 
 
-		indent += "    ";
+		incIndent();
 		_blockLogCounts.push(0);
 
 	};
@@ -543,7 +554,7 @@ export module $log
 
 	export interface MethodLogConfig
 	{
-		filter?: (target: any, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => boolean;
+		filter?: (target: any, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => any;// boolean | null | undefined | number;
 		async?: boolean;
 	}
 
@@ -615,7 +626,7 @@ export module $log
 
 				//$disablePrintStack = true;
 
-				print(`    %cthis: %c${valueFmt}`,
+				print(` %cthis: %c${valueFmt}`,
 					"color: blue; font-weight: 400;",
 					"color: gray; font-weight: 400;",
 					...logValue
@@ -629,8 +640,12 @@ export module $log
 
 			let startTime = new Date().getTime();
 
+			//incIndent();
+
 			let result = originalMethod.apply(this, args);
 			//$log(`%c${methodName}%c.result: `, "color: #c5790f; font-weight: bold;", "", result);
+
+			//decIndent();
 
 
 			if (result === undefined)
@@ -739,13 +754,13 @@ export module $log
 
 
 
-		let formatedArgs = formatConsoleParams(args);
+		let prms = formatConsoleParams(args);
 
 		// all emoji: https://unicode.org/emoji/charts/full-emoji-list.html
 		let icon = String.fromCodePoint(0x1F4D1);
 
 
-		let fmt = `${icon} %c${objName ? objName + "." : ""}%c${methodName}%c(%c${formatedArgs.fmt}%c)`//`    %c%O`;
+		let fmt = `${icon}%c${objName ? objName + "." : ""}%c${methodName}%c(%c${prms.fmt}%c)`//`    %c%O`;
 
 
 		return {
@@ -755,7 +770,7 @@ export module $log
 				"color: #c5790f; font-weight: bold;",
 				"",
 				"color: gray; font-style: italic; font-weight: normal;",
-				...formatedArgs.args,
+				...prms.args,
 				"",
 				//"color: red;",
 				////{ method }
@@ -788,15 +803,19 @@ export module $log
 		for (let arg of args)
 		{
 
-			arg = !arg || typeof arg !== "object" ?
-				arg :
-				arg.toLogName ?
-					arg.toLogName() :
-					arg;
+			arg = (
+				!arg || typeof arg !== "object"
+					? arg
+					: arg.toLogName
+						? arg.toLogName()
+						: arg
+			);
 
 
-			if (typeof arg === "object" || typeof arg === "function")
+			if (arg && typeof arg === "object" || typeof arg === "function")
+			{
 				allArgsIsPrimitive = false;
+			}
 
 
 			args2.push(arg);
