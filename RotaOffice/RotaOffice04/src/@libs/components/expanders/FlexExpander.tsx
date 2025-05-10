@@ -21,7 +21,7 @@ export function FlexExpander(props: FlexExpander.Props & DivProps)
 
 	props = UseHookProps.use(props);
 
-	let elRef = React.createRef<HTMLDivElement>();
+	let elRef = React.useRef<HTMLDivElement>(null);
 
 
 	let bhv = useNew(FlexExpanderBehavior).use(elRef, props.l || 1, props);
@@ -43,7 +43,6 @@ export function FlexExpander(props: FlexExpander.Props & DivProps)
 		props,
 		FlexExpander.propNames
 	);
-
 
 
 	return body;

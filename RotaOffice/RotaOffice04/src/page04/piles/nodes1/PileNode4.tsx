@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Tenta as Tenta_ } from "../../tentas";
 import { PileRowNode } from "./PileRowNode";
 
@@ -14,7 +15,7 @@ import { PileRowNode } from "./PileRowNode";
 
 
 export function PileNode4(props: PileNode4.Props & {
-	children: JSX.Element
+	children: ReactNode
 })
 {
 	//$log("PileNode4 " + props.tenta)

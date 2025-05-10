@@ -54,7 +54,7 @@ export function FillSlide({
 })
 {
 
-	const nodeRef = useRef<any>();
+	var nodeRef = useRef<HTMLDivElement>(null);
 
 
 	return (

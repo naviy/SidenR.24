@@ -24,12 +24,12 @@ export interface GlobalState
 export function GlobalState(props: {
 	state: GlobalState | undefined;
 	children: ReactNode;
-}): JSX.Element;
+}): ReactNode;
 
 export function GlobalState(props: {
 	name: string;
 	children: ReactNode;
-}): JSX.Element;
+}): ReactNode;
 
 export function GlobalState(props: {
 	state?: GlobalState;

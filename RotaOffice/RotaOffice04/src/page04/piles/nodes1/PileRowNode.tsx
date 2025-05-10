@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "@app";
 import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
-import { useEffect, useMemo, useState, type ReactNode, type RefObject } from "react";
+import React, { type ReactNode } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -27,7 +27,7 @@ export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeT
 	linkToNext?: boolean;
 	backfill?: boolean;
 
-	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
+	tailExpanderRef?: React.RefObject<ExpanderBaseBehavior | null>;
 	tailReexpand?: boolean;
 
 	tailDecorator?: PileRowNode.TailDecorator<TTenta>;
@@ -55,7 +55,7 @@ export function PileRowNode({
 
 }: PileRowNodeProps & {
 
-	children?: JSX.Element | (() => JSX.Element)
+	children?: ReactNode | (() => ReactNode)
 
 })
 {
@@ -176,14 +176,14 @@ function PileRowAccentor({
 	children,
 }: {
 	tenta: PileRowNodeTenta;
-	children: [body: JSX.Element, tail: JSX.Element];
+	children: [body: ReactNode, tail: ReactNode];
 })
 {
 
 	//$log("PileRowAccentor " + tenta)
 
 	//let forceUpdate = useForceUpdate();
-	let [tailIsFocused, setTailIsFocused] = useState(false);
+	let [tailIsFocused, setTailIsFocused] = React.useState(false);
 
 
 	function updateTailFocuser(tailFf: Focuser)
@@ -207,7 +207,7 @@ function PileRowAccentor({
 	let tailAccent = tenta.tailIsVisible && !tenta.tailIsSeparated ? accent : Tenta.Accent.Min;
 
 
-	useEffect(() =>
+	React.useEffect(() =>
 
 		tenta.tailFf!.on({
 			focus: updateTailFocuser,
@@ -240,7 +240,7 @@ function PileRowNodeBody({
 }: {
 	tenta: PileRowNodeTenta;
 	rowProps: Pane.RowProps;
-	children?: JSX.Element | (() => JSX.Element)
+	children?: ReactNode | (() => ReactNode)
 })
 {
 
@@ -251,7 +251,7 @@ function PileRowNodeBody({
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
 
 	let children2 = (typeof children === "function"
-		? useMemo(children, [tenta.phase, tenta.stage])
+		? React.useMemo(children, [tenta.phase, tenta.stage])
 		: children
 	);
 
@@ -311,7 +311,7 @@ function PileRowNodeBody({
 function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 {
 
-	let [isFocused, setIsFocused] = useState(!tenta.rootFf?.itemFocused);
+	let [isFocused, setIsFocused] = React.useState(!tenta.rootFf?.itemFocused);
 
 
 	function updateFocuser(/*ff: Focuser*/)
@@ -327,7 +327,7 @@ function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
 	}
 
 
-	useEffect(() =>
+	React.useEffect(() =>
 	{
 
 		let { rootFf, ff } = tenta

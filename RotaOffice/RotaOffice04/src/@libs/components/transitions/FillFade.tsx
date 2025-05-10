@@ -100,7 +100,7 @@ export function FillFade(props: FillFadeProps & DivProps)
 
 	let transitionProps = TransitionProps.extract(props);
 
-	const nodeRef = useRef<any>();
+	var nodeRef = useRef<HTMLDivElement>(null);
 
 
 	return (

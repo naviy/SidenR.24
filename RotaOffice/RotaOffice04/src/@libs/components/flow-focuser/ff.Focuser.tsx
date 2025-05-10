@@ -105,7 +105,7 @@ export module Focuser
 		let parent = useContext();
 
 
-		let ffRef = React.useRef<Focuser>();
+		let ffRef = React.useRef<Focuser>(null);
 
 
 		let ff = ffRef.current ?? (ffRef.current = new FocuserBehavior(parent));

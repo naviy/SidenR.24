@@ -1,11 +1,12 @@
+import { $log, Div, FillFade, Pane } from "@libs";
 import Tab from "@mui/material/Tab";
 import muiTabs from "@mui/material/Tabs";
 import { styled } from "@mui/material/styles";
+import type { ReactNode } from "react";
 import { TentaStage, Tenta as Tenta_ } from "../../tentas";
-import { PileRowNode } from "./PileRowNode";
-import { $log, Div, FillFade, Pane } from "@libs";
-import { PileNodeTail1 } from "./PileNodeTail1";
 import { usePileCellIndent } from "../core/PileCellIndent";
+import { PileNodeTail1 } from "./PileNodeTail1";
+import { PileRowNode } from "./PileRowNode";
 
 
 
@@ -20,7 +21,7 @@ import { usePileCellIndent } from "../core/PileCellIndent";
 
 
 export function PileNode2_2(props: PileNode2_2.Props & {
-	children: JSX.Element | (() => JSX.Element)
+	children: ReactNode | (() => ReactNode)
 })
 {
 	//$log("PileNode2_2 " + props.tenta)

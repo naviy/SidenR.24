@@ -41,7 +41,7 @@ export function ValueSlider<TValue>({
 {
 
 	let oldKeyRef = useRef(0);
-	let oldValueRef = useRef<TValue | undefined>();
+	let oldValueRef = useRef<TValue>(undefined);
 
 
 	let newKey = useMemo(

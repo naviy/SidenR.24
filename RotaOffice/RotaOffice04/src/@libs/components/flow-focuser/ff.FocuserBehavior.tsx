@@ -149,7 +149,7 @@ export class FocuserBehavior
 	get scrollContainerEl() { return this.scrollContainer?.scrollAnchorRef?.current?.parentElement || null; }
 
 	scrollContainer: FocuserBehavior | null = null;
-	scrollAnchorRef: React.RefObject<HTMLDivElement> | null = null;
+	scrollAnchorRef: React.RefObject<HTMLDivElement | null> | null = null;
 
 
 	get isScope() { return !!this.props.scope; }

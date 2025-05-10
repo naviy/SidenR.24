@@ -92,7 +92,7 @@ export class TentaCollector extends Repaintable()
 	get globalState() { return this.#globalState ??= GlobalState.node(this.parentTenta?.globalState, this.id + ""); }
 
 
-	#defaultListElement?: JSX.Element;
+	#defaultListElement?: ReactNode;
 	defaultListElement()
 	{
 		return this.#defaultListElement ??= <TentaCollector.List key={this.id} bhv={this} />;
@@ -310,7 +310,7 @@ export module TentaCollector
 			bhv: TentaCollector;
 			children?: ReactNode;
 		}
-	): JSX.Element
+	): ReactNode
 	{
 
 		let { bhv } = props;

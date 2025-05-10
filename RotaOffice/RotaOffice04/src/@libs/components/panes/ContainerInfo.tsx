@@ -109,7 +109,7 @@ export module ContainerInfo
 	export function useChangedOrCurrent(newValue: ContainerInfo, id?: React.Key): ContainerInfo
 	{
 
-		var valueRef = useRef<ContainerInfo | null>();
+		var valueRef = useRef<ContainerInfo>(null);
 
 		if (valueRef.current == null)
 		{

@@ -4,6 +4,7 @@ import { FillFade, Pane } from "@libs";
 import { styled } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
+import type { ReactNode } from "react";
 import { Tenta as Tenta_ } from "../../tentas";
 import { PilePhaseIcon } from "../core/PilePhaseIcon";
 import { PileNodeTail1 } from "./PileNodeTail1";
@@ -39,7 +40,7 @@ export function PileTabsNode(props: PileTabsNodeProps)
 	tenta.use();
 
 
-	let body: JSX.Element;
+	let body: ReactNode;
 
 
 	//$log("tenta.activeTabIndex:", tenta.activeTabIndex)

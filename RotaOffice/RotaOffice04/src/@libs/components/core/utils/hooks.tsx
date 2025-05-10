@@ -20,10 +20,10 @@ export function useNew<T>(
 ): T
 {
 
-	const ref = useRef<T>();
+	var ref = useRef<T>(null);
 
 
-	let obj = ref.current;
+	var obj = ref.current;
 
 
 	if (!obj)
@@ -50,7 +50,7 @@ export function useNew<T>(
 export function useArray<T>(): T[]
 {
 
-	const ref = useRef<T[]>();
+	const ref = useRef<T[]>(null);
 
 
 	if (!ref.current)
@@ -77,7 +77,7 @@ export function useForceUpdate(customForceUpdate?: () => void): () => void
 
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_, update] = useReducer(a => a + 1, 0);
+	var [_, update] = useReducer(a => a + 1, 0);
 	
 	function forceUpdate() { update(); }
 
@@ -92,10 +92,10 @@ export function useForceUpdate(customForceUpdate?: () => void): () => void
 export function useForceUpdateAsync(): () => Promise<void>
 {
 
-	const [updateCount, incUpdateCount] = useReducer(a => a + 1, 0);
+	var [updateCount, incUpdateCount] = useReducer(a => a + 1, 0);
 
 
-	const resolveRef = useRef<null | ((value?: any) => void)>();
+	var resolveRef = useRef<((value?: any) => void)>(null);
 
 
 	useEffect(

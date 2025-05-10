@@ -2,8 +2,7 @@ import { GlobalStyles, type GlobalStylesProps } from "@mui/material";
 import * as muiColors from "@mui/material/colors";
 import { type CSSObject } from "@mui/material/styles";
 import clsx from "clsx";
-import * as React from "react";
-import { forwardRef, type ReactNode } from "react";
+import React, { forwardRef, type ReactNode } from "react";
 import { $defaultAnimationDurationMs } from "./__debug";
 import { Values } from "./utils";
 
@@ -934,7 +933,7 @@ export function GlobalStylesOfPrimitives(props: {
 
 export function createPrimitive<TElement extends Element>(
 
-	tag: keyof React.ReactHTML | React.FunctionComponent<any>,
+	tag: keyof React.JSX.IntrinsicElements | React.FC<any>,
 
 	elementProps: any,
 	primitiveProps: Readonly<PrimitiveProps<TElement>>,

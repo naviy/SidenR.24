@@ -50,8 +50,8 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps>
 
 
 
-	elRef: RefObject<HTMLDivElement> = null!;
-	wrapperRef: RefObject<HTMLDivElement> = null!;
+	elRef: RefObject<HTMLDivElement | null> = null!;
+	wrapperRef: RefObject<HTMLDivElement | null> = null!;
 
 
 	get el() { return this.elRef.current; }
@@ -64,8 +64,8 @@ export class ExpanderBehavior<Props extends ExpanderProps = ExpanderProps>
 
 
 	use(
-		elRef: RefObject<HTMLDivElement>,
-		wrapperRef: RefObject<HTMLDivElement> | undefined,
+		elRef: RefObject<HTMLDivElement | null>,
+		wrapperRef: RefObject<HTMLDivElement | null> | undefined,
 		props: Props,
 		cfg?: ExpanderBaseBehavior.UseConfig
 	)
