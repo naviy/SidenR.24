@@ -1,5 +1,4 @@
-import { type GlobalProps } from "@emotion/react";
-import GlobalStyles from "@mui/material/GlobalStyles";
+import { GlobalStyles, type GlobalStylesProps } from "@mui/material";
 import * as muiColors from "@mui/material/colors";
 import { type CSSObject } from "@mui/material/styles";
 import clsx from "clsx";
@@ -894,10 +893,10 @@ export function GlobalStylesOfPrimitives(props: {
 
 
 
-	function prefixedStyles(src: any/*GlobalProps["styles"]*/): GlobalProps["styles"]
+	function prefixedStyles(src: any/*GlobalProps["styles"]*/): GlobalStylesProps["styles"]
 	{
 
-		let dest: GlobalProps["styles"] = {};
+		let dest: GlobalStylesProps["styles"] = {};
 		let prefix = `.${primitiveClsPrefix}`;
 
 
@@ -1110,7 +1109,7 @@ export function primitivePropsToClassName(
 function range(cls: string, min: number, max: number, step: number, style: (i: number) => CSSObject)
 {
 
-	let styles: GlobalProps["styles"] = {};
+	let styles: GlobalStylesProps["styles"] = {};
 
 
 	for (let i = min; i <= max; i += step)
@@ -1127,7 +1126,7 @@ function range(cls: string, min: number, max: number, step: number, style: (i: n
 function rangeMP(cls: string | ((i: number) => string), values: ReadonlyArray<number>, style: (i: number) => CSSObject)
 {
 
-	let styles: GlobalProps["styles"] = {};
+	let styles: GlobalStylesProps["styles"] = {};
 
 
 	let cls2 = typeof cls === "function" ? cls : ((i: number) => cls + i);
@@ -1147,7 +1146,7 @@ function rangeMP(cls: string | ((i: number) => string), values: ReadonlyArray<nu
 function rangeOP(cls: string, obj: Object, style: (value: any) => CSSObject)
 {
 
-	let styles: GlobalProps["styles"] = {};
+	let styles: GlobalStylesProps["styles"] = {};
 
 	for (let p in obj)
 	{

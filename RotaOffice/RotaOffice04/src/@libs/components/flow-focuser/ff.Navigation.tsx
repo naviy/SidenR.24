@@ -1,4 +1,3 @@
-import { $log } from "../core";
 import type { Focuser } from "./ff.Focuser";
 
 

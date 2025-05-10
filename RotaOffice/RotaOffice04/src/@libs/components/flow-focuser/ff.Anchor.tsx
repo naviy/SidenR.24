@@ -1,6 +1,5 @@
 import { currentFocuser, focusers, type FocusConfig } from "./ff.Core";
 import type { Focuser } from "./ff.Focuser";
-import type { FocuserProps } from "./ff.Props";
 
 
 
@@ -149,15 +148,15 @@ function pureAnchorEquals(anchor: Anchor, start: Anchor)
 
 
 
-function toPureAnchor(anchor: Anchor)
-{
+//function toPureAnchor(anchor: Anchor)
+//{
 
-	if (!anchor || !anchor.length)
-		return null;
+//	if (!anchor || !anchor.length)
+//		return null;
 
-	return anchor.map(toPureAnchorPart);
+//	return anchor.map(toPureAnchorPart);
 
-}
+//}
 
 
 

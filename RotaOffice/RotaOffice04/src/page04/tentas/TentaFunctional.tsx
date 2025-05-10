@@ -1,8 +1,8 @@
-import type React from "react";
-import type { TentaBase } from "./TentaBase";
-import { createElement, type FC, type ReactNode } from "react";
 import type { Constructor } from "@libs";
-import type { TentaCollectorProps, TentaCollectorPropsAlias, TentaCollectorPropsAliases } from "./TentaCollector";
+import type React from "react";
+import { createElement, type FC, type ReactNode } from "react";
+import type { TentaBase } from "./TentaBase";
+import type { TentaCollectorProps, TentaCollectorPropsAliases } from "./TentaCollector";
 
 
 

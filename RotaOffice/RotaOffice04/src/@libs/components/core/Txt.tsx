@@ -3,7 +3,6 @@ import type { TypographyProps } from "@mui/material/Typography";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
-import { $log } from ".";
 import type { ReactNode } from "react";
 
 

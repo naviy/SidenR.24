@@ -1,4 +1,4 @@
-import type { MutableRefObject, RefObject } from "react";
+import type { RefObject } from "react";
 import type { ExpanderBaseBehavior } from "../expanders";
 import { Block } from "./Block";
 import type { PaneBorder } from "./PaneBorder";

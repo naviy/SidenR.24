@@ -1,5 +1,5 @@
 import GlobalStyles from "@mui/material/GlobalStyles";
-import React, { useEffect } from "react";
+import React from "react";
 import { $defaultAnimationDurationMs, $log, adelay } from "../core";
 import type { Focuser } from "./ff.Focuser";
 
@@ -1253,7 +1253,7 @@ function onKeyDown(e: KeyboardEvent)
 export function Core()
 {
 
-	useEffect(() => runCore(), []);
+	React.useEffect(() => runCore(), []);
 
 
 	return (

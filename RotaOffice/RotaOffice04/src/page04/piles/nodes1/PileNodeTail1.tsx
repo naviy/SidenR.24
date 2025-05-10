@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { $log, Pane } from '@libs';
+import { Pane } from '@libs';
 import clsx from "clsx";
 import type { Tenta } from "../../tentas";
 import { Pile } from "../core";

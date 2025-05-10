@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { useEffect } from "react";
-import { $log, Repaintable, Values, useNew } from "../core";
+import { Repaintable, Values, useNew } from "../core";
 import * as Route from "./Route";
 import type { RouteBehavior } from "./RouteBehavior";
 

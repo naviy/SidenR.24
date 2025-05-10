@@ -1,15 +1,16 @@
 {
 	"compilerOptions": {
 
+
 		"target": "ES2022",
-		"lib": [
-			"DOM",
-			"DOM.Iterable",
-			"ESNext"
-		],
+		"useDefineForClassFields": true,
+		"lib": [ "ESNext", "DOM", "DOM.Iterable" ],
+		"module": "ESNext",
+		"skipLibCheck": true,
 
 
 		"baseUrl": "src",
+
 		"paths": {
 			"@app": [ "@app" ],
 			"@icons": [ "@icons" ],
@@ -17,33 +18,44 @@
 		},
 
 
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"resolveJsonModule": true,
+
+
+		/* Linting */
+		"strict": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true,
+
+
 		"allowJs": false,
-		"removeComments":  true,
-		"skipLibCheck": true,
+		"removeComments": true,
 		"esModuleInterop": false,
 		"allowSyntheticDefaultImports": true,
-		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitOverride": true,
-		"strictNullChecks":  true,
-		"verbatimModuleSyntax": true,
+		"strictNullChecks": true,
+		"verbatimModuleSyntax": true
 
-		"useDefineForClassFields": true,
-
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"noEmit": true,
-		"jsx": "react-jsx"
 
 	},
+
 
 	"include": [ "src" ],
 	"exclude": [ "node_modules" ],
 
+
 	"references": [
 		{ "path": "./tsconfig.node.json" }
 	]
+
 
 }

@@ -4,10 +4,9 @@ import { Caret as Caret_ } from "./ff.Caret";
 import { Core as Core_, currentFocuser } from "./ff.Core";
 import { Events as Events_ } from "./ff.Events";
 import { FocuserBehavior } from "./ff.FocuserBehavior";
-import { Task as Task_ } from "./ff.Task";
 import type { FocuserProps } from "./ff.Props";
 import { SpaWaitingMask as SpaWaitingMask_ } from "./ff.SpaWaitingMask";
-import { $log } from "../core";
+import { Task as Task_ } from "./ff.Task";
 
 
 

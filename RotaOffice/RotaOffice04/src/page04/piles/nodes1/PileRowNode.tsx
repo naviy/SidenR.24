@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "@app";
-import { $log, Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
+import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
 import { useEffect, useMemo, useState, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";

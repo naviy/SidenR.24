@@ -176,6 +176,7 @@ export class CaretBehavior extends Repaintable()
 
 
 
+	//@$log.m
 	getInset(): string
 	{
 
@@ -184,6 +185,9 @@ export class CaretBehavior extends Repaintable()
 
 		let pd = this.ff?.safePadding() ?? zeroPadding;
 
+		//$log("p:", p)
+		//$log("pp:", pp)
+		//$log("pd:", pd)
 
 		if (p && pp)
 		{
@@ -197,6 +201,7 @@ export class CaretBehavior extends Repaintable()
 
 
 
+	//@$log.m
 	getStyle(): CSSProperties | undefined
 	{
 
@@ -208,6 +213,7 @@ export class CaretBehavior extends Repaintable()
 		let color = MuiColor(this.theme, this._priorColor || this.color || Caret.defaultColor)!;
 
 		let inset = this.getInset();
+		//$log("inset:", inset);
 
 
 		let borderRadius_ = this._priorBorderRadius ?? this.borderRadius;
@@ -285,9 +291,11 @@ export class CaretBehavior extends Repaintable()
 
 
 
-	//@$logm
+	//@$log.m
 	update(prior: Focuser | null, mustRepaint: boolean)
 	{
+
+		//$log("prior:", prior);
 
 		//__$log("UPDATE " + this);
 
@@ -329,16 +337,17 @@ export class CaretBehavior extends Repaintable()
 			else
 			{
 
-				//mustRepaint && await this.#updateBody();
+				////mustRepaint && await this.#updateBody();
 				mustRepaint && this.repaint();
-				//await adelay(0);
+				////await adelay(0);
+
 
 				window.setTimeout(() =>
 				{
 					this.#assignPriorProps(null);
 					mustRepaint && this.repaint();
-				});
-				//mustRepaint && await this.#updateBody();
+				}, 1);
+				////mustRepaint && await this.#updateBody();
 
 			}
 		}
@@ -356,9 +365,11 @@ export class CaretBehavior extends Repaintable()
 
 
 
+	//@$log.m
 	#assignPriorProps(prior: CaretBehavior | null | undefined)
 	{
 		this._priorPosition = prior?.recalcPosition();
+		//$log("priorPosition:", this._priorPosition);
 		this._priorColor = prior?.color;
 		this._priorBorderRadius = prior?.borderRadius;
 		this._priorBorderWidth = prior?.borderWidth;

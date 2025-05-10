@@ -146,7 +146,7 @@ export function renderContainer(
 
 	let expander: ExpanderBehavior | undefined = undefined;
 	let flexExpander: FlexExpanderBehavior | undefined = undefined;
-	let preExpanding = false;
+	//let preExpanding = false;
 
 	let { isFlex, ...sizes } = Block.getBoxSizes(
 		parentInfo?.layout || "col",
@@ -161,13 +161,13 @@ export function renderContainer(
 		{
 			//___$log("flexExpander", props.id);
 			flexExpander = useNew(FlexExpanderBehavior).use(elRef, sizes.flex, props);
-			preExpanding = flexExpander.expanded && flexExpander.collapsed;
+			//preExpanding = flexExpander.expanded && flexExpander.collapsed;
 		}
 		else
 		{
 			//$log.___("*** expander");
 			expander = useNew(Expander.Behavior).use(elRef, undefined, props);
-			preExpanding = expander.expanded && expander.collapsed;
+			//preExpanding = expander.expanded && expander.collapsed;
 		}
 
 	}

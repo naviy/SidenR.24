@@ -1,5 +1,5 @@
-import { $log, ExpanderBaseBehavior, Focuser } from "@libs";
-import { createRef, type RefObject } from "react";
+import { ExpanderBaseBehavior, Focuser } from "@libs";
+import React from "react";
 import { Tenta } from "../../tentas";
 
 
@@ -65,12 +65,12 @@ export class PileRowNodeTenta extends Tenta.Focusable(Tenta.Base)
 	ff: Focuser | null = null;
 	bodyFf: Focuser | null = null;
 	tailFf: Focuser | null = null;
-	
+
 	get bodyIsFocused() { return !!this.bodyFf?.isFocused; }
 
 	get tailFocused() { return !!this.tailFf?.isFocused; }
 
-	tailExpanderRef = createRef<ExpanderBaseBehavior | null>();
+	tailExpanderRef = React.createRef<ExpanderBaseBehavior | null>();
 
 
 

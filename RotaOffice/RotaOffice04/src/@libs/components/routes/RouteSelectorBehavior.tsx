@@ -1,8 +1,8 @@
-import { useEffect, type RefObject, useRef } from "react";
-import { Focuser } from "../flow-focuser";
-import type { RouterBehavior } from "./RouterBehavior";
-import type { RouteBehavior } from "./RouteBehavior";
+import { useEffect } from "react";
 import { Keys, Repaintable } from "../core";
+import { Focuser } from "../flow-focuser";
+import type { RouteBehavior } from "./RouteBehavior";
+import type { RouterBehavior } from "./RouterBehavior";
 
 
 
