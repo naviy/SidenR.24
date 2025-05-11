@@ -1,9 +1,11 @@
 import { ErrorBoundary } from "@app";
 import { Div, ExpanderBaseBehavior, Focuser, Pane } from '@libs';
-import React, { type ReactNode } from "react";
+import { useMemo, type ReactNode, type RefObject } from "react";
 import { Tenta, Tenta as Tenta_ } from "../../tentas";
 import { Pile } from "../core";
 import { PileNodeTail1 } from "./PileNodeTail1";
+import { PileRowNodeAccentor } from "./PileRowNodeAccentor";
+import { PileRowNodeForefill } from "./PileRowNodeForefill";
 import { PileRowNodeTenta } from "./PileRowNodeTenta";
 
 
@@ -27,7 +29,7 @@ export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeT
 	linkToNext?: boolean;
 	backfill?: boolean;
 
-	tailExpanderRef?: React.RefObject<ExpanderBaseBehavior | null>;
+	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
 	tailReexpand?: boolean;
 
 	tailDecorator?: PileRowNode.TailDecorator<TTenta>;
@@ -115,7 +117,7 @@ export function PileRowNode({
 					/>}
 
 
-					<PileRowAccentor tenta={tenta}>
+					<PileRowNodeAccentor tenta={tenta}>
 
 
 						<PileRowNodeBody
@@ -124,14 +126,13 @@ export function PileRowNode({
 							children={children}
 						/>
 
+
 						<Focuser.Area ff={tenta.tailFf}>
 
-							{/*	*/}{/*<Div borderGreen border4 m8>*/}
+							{/*<Div borderGreen border4 m8>*/}
 							<Pane.Col
 
-								ref={tenta.tailFf.divRef}
-
-								id={tenta + "-PileRowNode.tailCol"}
+								id={tenta + ""}
 								expanderRef={tailExpanderRef}
 
 								start={tailIsSeparated}
@@ -155,80 +156,17 @@ export function PileRowNode({
 						</Focuser.Area>
 
 
-					</PileRowAccentor>
+					</PileRowNodeAccentor>
 
 				</Div>
 
 			</Focuser.Area>
 
 
-		</Tenta.ByPhaseProvider >
+		</Tenta.ByPhaseProvider>
 	);
 
 }
-
-
-
-
-
-function PileRowAccentor({
-	tenta,
-	children,
-}: {
-	tenta: PileRowNodeTenta;
-	children: [body: ReactNode, tail: ReactNode];
-})
-{
-
-	//$log("PileRowAccentor " + tenta)
-
-	//let forceUpdate = useForceUpdate();
-	let [tailIsFocused, setTailIsFocused] = React.useState(false);
-
-
-	function updateTailFocuser(tailFf: Focuser)
-	{
-		let itemFocused = !!tailFf.itemFocused && tenta.tailIsSeparated;
-
-		if (tailIsFocused !== itemFocused)
-			setTailIsFocused(itemFocused);
-	}
-
-
-	let parentAccent = Tenta.Accent.use();
-
-	let accent = Math.max(
-		tenta.bodyAccent,
-		tailIsFocused ? Tenta.Accent.Max : 0,
-		parentAccent
-	) as Tenta.Accent;
-
-
-	let tailAccent = tenta.tailIsVisible && !tenta.tailIsSeparated ? accent : Tenta.Accent.Min;
-
-
-	React.useEffect(() =>
-
-		tenta.tailFf!.on({
-			focus: updateTailFocuser,
-			unfocus: updateTailFocuser,
-		})
-
-	);
-
-
-	return <>
-
-		<Tenta.Accent.Provider accent={accent} children={children[0]} />
-		{/*children[0]*/}
-		{/*children[1]*/}
-		<Tenta.Accent.Provider accent={tailAccent} children={children[1]} />
-
-	</>;
-
-}
-
-
 
 
 
@@ -251,9 +189,15 @@ function PileRowNodeBody({
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
 
 	let children2 = (typeof children === "function"
-		? React.useMemo(children, [tenta.phase, tenta.stage])
+		? useMemo(children, [tenta.expandPhase, tenta.openPhase])
 		: children
 	);
+
+
+	let bl: Pane.Border = accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
+	let br: Pane.Border = accent === 2 ? "xl" : accent === 1 ? "lg" : "md";
+	let bt: Pane.Border = topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm";
+	let bb: Pane.Border = btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : "";
 
 
 	tenta.bodyFf = Focuser.use({
@@ -268,9 +212,6 @@ function PileRowNodeBody({
 		<Focuser.Area ff={tenta.bodyFf}>
 
 			<Pane.Row
-
-				ref={tenta.bodyFf.divRef}
-
 				//debug
 				start
 				end={!tailIsVisible || tailIsSeparated}
@@ -278,10 +219,10 @@ function PileRowNodeBody({
 				rt={topMargin >= 2 ? "md" : topMargin === 1 ? "sm" : ""}
 				rb={btmMargin >= 2 ? "md" : btmMargin === 1 ? "sm" : ""}
 
-				bl={accent === 2 ? "xl" : accent === 1 ? "lg" : "md"}
-				br={accent === 2 ? "xl" : accent === 1 ? "lg" : "md"}
-				bt={topMargin && accent === 2 ? "xl" : topMargin && accent === 1 ? "lg" : topMargin >= 2 ? "md" : topMargin === 1 ? "md" : "sm"}
-				bb={btmMargin && accent === 2 ? "xl" : btmMargin && accent === 1 ? "lg" : btmMargin >= 2 ? "md" : btmMargin === 1 ? "md" : ""}
+				bl={bl}
+				br={br}
+				bt={bt}
+				bb={bb}
 
 				{...rowProps}
 
@@ -293,79 +234,21 @@ function PileRowNodeBody({
 					{/*<Div absolute top0 style={{left: 40} }>tailFf: {tenta.tailFf + ""}</Div>*/}
 				</ErrorBoundary>
 
-				<PileRowNodeForefill tenta={tenta} />
+				<PileRowNodeForefill
+					tenta={tenta}
+					bl={bl}
+					br={br}
+					bt={bt}
+					bb={bb}
+					//bt={topMargin ? bt : ""}
+					//bb={btmMargin ? bb : ""}
+				/>
 
 			</Pane.Row>
 
 		</Focuser.Area>
 
 	);
-
-}
-
-
-
-
-
-
-function PileRowNodeForefill({ tenta }: { tenta: PileRowNodeTenta })
-{
-
-	let [isFocused, setIsFocused] = React.useState(!tenta.rootFf?.itemFocused);
-
-
-	function updateFocuser(/*ff: Focuser*/)
-	{
-
-		let focused = !!tenta.bodyFf?.focused || !!tenta.tailFf?.itemFocused || !tenta.rootFf?.itemFocused;
-
-		if (isFocused !== focused)
-		{
-			setIsFocused(focused);
-		}
-
-	}
-
-
-	React.useEffect(() =>
-	{
-
-		let { rootFf, ff } = tenta
-
-		let unmount0 = rootFf?.on({
-
-			focus: updateFocuser,
-			unfocus: () => setIsFocused(true),
-
-		});
-
-
-		let unmount1 = ff?.on({
-
-			itemFocus: updateFocuser,
-			itemUnfocus: updateFocuser,
-
-		});
-
-
-		return () =>
-		{
-			unmount0?.();
-			unmount1?.();
-		}
-
-	});
-
-
-	return <Div
-		fill
-		bgBlack
-		opacity0
-		opacity0_2={!isFocused}
-		animated
-		nomouse
-		style={{ willChange: "opacity" }}
-	/>;
 
 }
 
