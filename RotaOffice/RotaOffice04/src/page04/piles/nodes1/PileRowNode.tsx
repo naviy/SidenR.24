@@ -285,7 +285,7 @@ function PileRowNodeBody({
 
 				{...rowProps}
 
-				ff
+				ffCaret
 			>
 
 				<ErrorBoundary>

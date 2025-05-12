@@ -267,6 +267,9 @@ function PileRowNodeBody({
 		<Focuser.Area ff={tenta.bodyFf}>
 
 			<Pane.Row
+
+				ref={tenta.bodyFf.divRef}
+
 				//debug
 				start
 				end={!tailIsVisible || tailIsSeparated}
@@ -281,7 +284,7 @@ function PileRowNodeBody({
 
 				{...rowProps}
 
-				ff
+				ffCaret
 			>
 
 				<ErrorBoundary>

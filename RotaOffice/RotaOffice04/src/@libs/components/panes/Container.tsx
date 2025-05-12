@@ -175,7 +175,7 @@ export function renderContainer(
 
 	if (props.expanderRef)
 	{
-		(props.expanderRef as MutableRefObject<ExpanderBaseBehavior | null>).current = expander || flexExpander || null;
+		props.expanderRef.current = expander || flexExpander || null;
 	}
 
 
@@ -196,7 +196,7 @@ export function renderContainer(
 
 
 
-	if (props.ff)
+	if (props.ffCaret)
 	{
 		body = <>
 			<Focuser.Caret use={usePaneCaretProps} />
@@ -323,7 +323,7 @@ function usePaneCaretProps(): Focuser.CaretProps
 	let row = ContainerInfo.use();
 
 	return {
-		borderRadius: row && PaneRadius.css(row.rtl, row.rtr, row.rbr, row.rbl, { min: 4 })
+		borderRadius: row && PaneRadius.css2(row, { min: 4 })
 	};
 
 }

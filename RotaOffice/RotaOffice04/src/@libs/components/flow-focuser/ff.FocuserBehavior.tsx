@@ -730,6 +730,16 @@ export class FocuserBehavior
 		let { el, props } = this;
 
 
+		if (!el && !this.ghost && !this.disabled)
+		{
+			$log.error(`Focuser: el is null`);
+			$log._("ff:", this);
+			$log._("Свяжите Focuser с элементом <div ref={ff.divRef}>...</div>", );
+		}
+
+
+
+
 		if (el && props.hover)
 		{
 			el.addEventListener("mouseover", this.#onHover, false);

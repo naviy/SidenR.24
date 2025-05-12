@@ -81,11 +81,11 @@ var EntitiesPileTenta = PileGroupNode2.createFactory((db: Db, entities: Entity[]
 	"EntitiesPile",
 
 	{
-		cols: () => entities.map(entity => EntityTenta(db, entity)),
-
 		init: tenta => tenta.init({
 			defaultOpenPhase: 1,
 		}),
+
+		cols: () => entities.map(entity => EntityTenta(db, entity)),
 
 		//use: tenta => tenta.use({
 		//	globalState: true,

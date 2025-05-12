@@ -27,13 +27,16 @@ export module PaneBorder
 
 
 	export var styles: Record<
-		Exclude<PaneBorder, "">,
+		PaneBorder,
 		{
 			width: number;
 			color: string;
 			borderCss?: string;
 		}> =
 	{
+
+		"": { width: 0, color: "transparent" },
+
 		"xs": { width: 1, color: blueGrey[50] },
 		"sm": { width: 1, color: blueGrey[100] },
 		//"sm": { width: 1, color: "red" },
@@ -61,7 +64,7 @@ export module PaneBorder
 
 	export function width(b: PaneBorder): number | undefined
 	{
-		let style = (styles as any)[b] || undefined;
+		let style = styles[b] || undefined;
 
 		if (!style)
 			return undefined;

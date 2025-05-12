@@ -64,7 +64,7 @@ export interface ContainerBaseProps extends Block.Props
 
 
 	debug?: boolean;
-	ff?: boolean;
+	ffCaret?: boolean;
 
 	wrapperCls?: string | null;
 	addHeight?: number;
@@ -108,7 +108,7 @@ export module ContainerBaseProps
 		bg: true,
 
 		debug: true,
-		ff: true,
+		ffCaret: true,
 		wrapperCls: true,
 		addHeight: true,
 

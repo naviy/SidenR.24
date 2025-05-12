@@ -35,7 +35,6 @@ export function PileNode2_2(props: PileNode2_2.Props & {
 
 		...props,
 
-		tailExpanderRef: props.tenta.tailExpanderRef,
 		tailDecorator: PileNode2_2.defaultTailDecorator as PileRowNode.TailDecorator,
 
 	});

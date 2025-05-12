@@ -29,7 +29,6 @@ export interface PileRowNodeProps<TTenta extends PileRowNodeTenta = PileRowNodeT
 	linkToNext?: boolean;
 	backfill?: boolean;
 
-	tailExpanderRef?: RefObject<ExpanderBaseBehavior | null>;
 	tailReexpand?: boolean;
 
 	tailDecorator?: PileRowNode.TailDecorator<TTenta>;
@@ -47,7 +46,6 @@ export function PileRowNode({
 	linkToNext,
 	backfill,
 
-	tailExpanderRef,
 	tailReexpand,
 	tailDecorator,
 
@@ -133,7 +131,7 @@ export function PileRowNode({
 							<Pane.Col
 
 								id={tenta + ""}
-								expanderRef={tailExpanderRef}
+								expanderRef={tenta.tailExpanderRef}
 
 								start={tailIsSeparated}
 								expanded={tailIsVisible}
@@ -212,6 +210,9 @@ function PileRowNodeBody({
 		<Focuser.Area ff={tenta.bodyFf}>
 
 			<Pane.Row
+
+				ref={tenta.bodyFf.divRef}
+
 				//debug
 				start
 				end={!tailIsVisible || tailIsSeparated}
@@ -226,7 +227,7 @@ function PileRowNodeBody({
 
 				{...rowProps}
 
-				ff
+				ffCaret
 			>
 
 				<ErrorBoundary>

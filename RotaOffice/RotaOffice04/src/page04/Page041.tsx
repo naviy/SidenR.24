@@ -52,7 +52,7 @@ export module Page041
 
 		return <>
 
-			<Div mx200 m100>
+			<Div mx32 m32>
 				{tenta.render()}
 			</Div>
 
