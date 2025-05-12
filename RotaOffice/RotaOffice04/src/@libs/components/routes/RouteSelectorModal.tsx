@@ -175,8 +175,10 @@ function RouteLink({
 
 					<ListItemText
 						primary={route.title()}
-						//secondary={autoFocus + ''}
-						//secondary={route.lastActivateTime && moment(route.lastActivateTime).format('HH:mm:ss')}
+						//secondary={autoFocus + ''}
+
+						//secondary={route.lastActivateTime && moment(route.lastActivateTime).format('HH:mm:ss')}
+
 						secondary={route.description() || undefined}
 					/>
 
