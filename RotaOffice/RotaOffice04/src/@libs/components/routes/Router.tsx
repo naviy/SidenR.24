@@ -70,12 +70,15 @@ export module Router
 
 
 
+	export type Behavior = RouterBehavior;
+
+
+
+
 	export var Context = createContext<{ router: RouterBehavior | null }>({ router: null });
 
 
-
-
-	export function use(): RouterBehavior | null
+	export function useCurrent(): RouterBehavior | null
 	{
 
 		return useContext(Context).router;

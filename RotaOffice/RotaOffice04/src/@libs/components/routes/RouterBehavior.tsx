@@ -36,7 +36,7 @@ export function useRouterBehavior(props?: RouterBehaviorProps): RouterBehavior
 export interface RouterBehaviorProps
 {
 
-	//ref?: React.MutableRefObject<RouterBehavior>,
+	//ref?: React.RefObject<RouterBehavior>,
 
 	routes?: Values.Many<RouteBehavior | false | 0>,
 
@@ -47,6 +47,7 @@ export interface RouterBehaviorProps
 
 
 	onActivating?: (route: RouteBehavior) => Promise<string | boolean | null | undefined | void> | string | boolean | null | undefined | void;
+	onActivated?: (route: RouteBehavior) => void;
 
 }
 
@@ -119,7 +120,7 @@ export class RouterBehavior extends Repaintable()
 		Repaintable.use(this, cfg);
 
 
-		this.parentRoute = Route.use();
+		this.parentRoute = Route.useCurrent();
 
 
 		if (!props)
@@ -384,10 +385,12 @@ export class RouterBehavior extends Repaintable()
 		}
 
 
+		//route?.focusContent();
+
+
 		return true;
 
 	}
-
 
 
 	#setActiveKey(value: string | null | undefined)
@@ -410,20 +413,20 @@ export class RouterBehavior extends Repaintable()
 
 
 
-	#setActiveRoute(value: RouteBehavior | null)
+	#setActiveRoute(route: RouteBehavior | null)
 	{
 
-		if (this.#activeRoute === value)
+		if (this.#activeRoute === route)
 			return;
 
 
 		this.#routesIsChanged = true;
 
-		this.#setActiveKey(value?.key);
+		this.#setActiveKey(route?.key);
 
-		this.#activeRoute = value;
+		this.#activeRoute = route;
 
-		value?.activated();
+		route?.activated();
 
 	}
 
@@ -461,6 +464,14 @@ export class RouterBehavior extends Repaintable()
 		return await this.activate(route);
 
 	}
+
+
+
+	//@$log.m
+	//focusActiveContent()
+	//{
+	//	this.#activeRoute && this.props.focusContent?.(this.#activeRoute);
+	//}
 
 
 

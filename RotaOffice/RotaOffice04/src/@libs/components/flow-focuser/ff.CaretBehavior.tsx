@@ -106,7 +106,7 @@ export class CaretBehavior extends Repaintable()
 		this.theme = useTheme();
 
 
-		let ff = Focuser.useContext();
+		let ff = Focuser.useCurrent();
 
 		while (ff && ff.props.noCaret)
 		{

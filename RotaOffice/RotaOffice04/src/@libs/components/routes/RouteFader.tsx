@@ -41,7 +41,7 @@ export function RouteFader/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 	if (router === undefined)
 	{
-		router = Router.use();
+		router = Router.useCurrent();
 	}
 
 	let activeRoute = router?.activeRoute;

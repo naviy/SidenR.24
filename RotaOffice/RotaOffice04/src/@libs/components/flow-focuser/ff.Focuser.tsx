@@ -7,6 +7,7 @@ import { FocuserBehavior } from "./ff.FocuserBehavior";
 import type { FocuserProps } from "./ff.Props";
 import { SpaWaitingMask as SpaWaitingMask_ } from "./ff.SpaWaitingMask";
 import { Task as Task_ } from "./ff.Task";
+import { $log } from "../core";
 
 
 
@@ -86,7 +87,7 @@ export module Focuser
 	export var Context = React.createContext<Focuser | null>(null);
 
 
-	export function useContext(): Focuser | null
+	export function useCurrent(): Focuser | null
 	{
 		return React.useContext(Context);
 	}
@@ -102,7 +103,7 @@ export module Focuser
 	export function use(props: FocuserProps): Focuser
 	{
 
-		let parent = useContext();
+		let parent = useCurrent();
 
 
 		let ffRef = React.useRef<Focuser>(null);
@@ -136,11 +137,13 @@ export module Focuser
 	export function Area({ ff, children }: { ff: Focuser | null; children: React.ReactNode })
 	{
 
-		//$log("***", ff + "");
-
-
-		//ff?.clearState();
-
+		//return $log.b(
+		//	["Focuser.Area", ff],
+		//	{
+		//		filter: () => ff?.name == "route-selector",
+		//	},
+		//	() =>
+		//	{
 
 		React.useLayoutEffect(() =>
 		{
@@ -149,8 +152,8 @@ export module Focuser
 
 		React.useLayoutEffect(() =>
 		{
-			ff?.updateDidMount();
-			return () => ff?.updateDidUnmount();
+			ff?.updateMount();
+			return () => ff?.updateUnmount();
 		});
 
 		React.useLayoutEffect(() =>
@@ -185,6 +188,8 @@ export module Focuser
 
 
 		return body;
+
+		//});
 
 	}
 

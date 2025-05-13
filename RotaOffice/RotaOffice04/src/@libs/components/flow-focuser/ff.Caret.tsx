@@ -119,7 +119,7 @@ export module Caret
 	{
 
 		let theme = useTheme()
-		let ff = Focuser.useContext();
+		let ff = Focuser.useCurrent();
 
 
 		let color = (props.disabled || ff?.disabled

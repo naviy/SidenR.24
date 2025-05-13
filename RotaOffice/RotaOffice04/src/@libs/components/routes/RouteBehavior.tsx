@@ -94,7 +94,7 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 	registred(router: RouterBehavior)
 	{
-		this.#router=router;
+		this.#router = router;
 	}
 
 	//use(props?: { defaultActive?: boolean; })
@@ -143,16 +143,39 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 
 	activate = async (): Promise<boolean> =>
 	{
-		return await this.#router?.activate(this) || false;
+
+		if (this.active)
+		{
+			//await this.focusContent();
+			return false;
+		}
+
+
+		let activated = await this.#router?.activate(this) || false;
+
+		return activated;
+
 	}
 
 
 
 	activated()
 	{
+
 		this.lastActivateTime = new Date();
+
 		this.props.onActivated?.();
+
+		this.#router?.props.onActivated?.(this);
+
 	}
+
+
+	//@$log.m
+	//async focusContent()
+	//{
+	//	this.#router?.props.focusContent?.(this);
+	//}
 
 
 
@@ -193,17 +216,6 @@ export class RouteBehavior<TProps extends RouteBehaviorProps = RouteBehaviorProp
 			? (this.props.content as any)?.(this) || undefined
 			: this.props.content || undefined
 		);
-	}
-
-
-
-	//---
-
-
-
-	async focusContent()
-	{
-
 	}
 
 

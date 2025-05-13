@@ -467,15 +467,55 @@ export module $log
 
 
 
-	export function b<T>(msg?: string | any[], action?: () => T): T | undefined
+	interface BlockOptions
 	{
+		filter?: () => boolean;
+		filtered?: () => void;
+	}
+
+
+	export function b(): void;
+
+	export function b(msg: string | any[]): void;
+
+	export function b<T>(msg: string | any[], body: () => T): T;
+
+	export function b<T>(msg: string | any[], o: BlockOptions, body: () => T): T | undefined;
+
+	export function b<T>(
+		msg?: string | any[],
+		arg1?: (() => T) | BlockOptions,
+		body?: () => T
+	): T | undefined | void
+	{
+
+		let o: BlockOptions | null = null;
+
+		if (typeof arg1 === "function")
+		{
+			body = arg1 as () => T;
+		}
+		else if (typeof arg1 === "object")
+		{
+			o = arg1 as BlockOptions;
+		}
+
+
+		if (o?.filter && !o.filter())
+		{
+			return body?.();
+		}
+
+
+		o?.filtered?.();
+
 
 		blockHeader(msg);
 
 
-		if (action)
+		if (body)
 		{
-			let result = action();
+			let result = body();
 
 			e();
 
@@ -552,42 +592,43 @@ export module $log
 
 
 
-	export interface MethodLogConfig
+	export interface MethodLogConfig<TTarget>
 	{
-		filter?: (target: any, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => any;// boolean | null | undefined | number;
+		filter?: (target: TTarget, arg0?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any) => any;// boolean | null | undefined | number;
+		filtered?: (target: TTarget) => void;
 		async?: boolean;
 	}
 
 
 
 	export function m(originalMethod: any, context: ClassMethodDecoratorContext): any;
-	export function m(cfg: MethodLogConfig): ((originalMethod: any, context: ClassMethodDecoratorContext) => any);
+	export function m<TTarget = any>(cfg: MethodLogConfig<TTarget>): ((originalMethod: any, context: ClassMethodDecoratorContext) => any);
 
 
 
-	export function m(arg0: any, arg1?: any): ((this: any, ...args: any[]) => any)
+	export function m<TTarget = any>(arg0: any, arg1?: any): ((this: any, ...args: any[]) => any)
 	{
 
 		if (typeof arg0 === "object")
 		{
 			return (originalMethod: any, context: ClassMethodDecoratorContext) =>
 			{
-				return _logm(originalMethod, context, arg0 as MethodLogConfig);
+				return _logm(originalMethod, context, arg0 as MethodLogConfig<TTarget>);
 			}
 		}
 
 
-		return _logm(arg0, arg1);
+		return _logm<TTarget>(arg0, arg1);
 
 	}
 
 
 
 
-	function _logm(
+	function _logm<TTarget>(
 		originalMethod: any,
 		context: ClassMethodDecoratorContext,
-		cfg?: MethodLogConfig
+		cfg?: MethodLogConfig<TTarget>
 	)
 	{
 
@@ -636,6 +677,8 @@ export module $log
 
 			}
 
+
+			cfg?.filtered?.(this);
 
 
 			let startTime = new Date().getTime();
@@ -693,9 +736,19 @@ export module $log
 
 				if (!result || typeof result !== "object" || result["$$typeof"] !== Symbol.for("react.element"))
 				{
-					let result2 = typeof result === "object" ? { "return": result } : result;
+
+					let result2 = (
+						typeof result === "object"
+							? result["toLogValue"]
+								? result["toLogValue"]()
+								: { "return": result }
+							: result
+					);
+
 					forceAllowLogTrace = false;
+
 					log(`= %c${methodName}%c => `, "color: #c5790f; font-weight: bold;", "", result2);
+
 				}
 
 				e(endTime - startTime, "ms");

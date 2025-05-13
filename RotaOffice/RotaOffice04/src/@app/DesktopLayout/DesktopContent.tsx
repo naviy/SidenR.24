@@ -1,5 +1,5 @@
-import { Div, Focuser } from "@libs";
-import type { ReactNode } from "react";
+import { $defaultAnimationDurationMs, Div, Focuser } from "@libs";
+import React, { type ReactNode } from "react";
 import { ErrorBoundary } from "./ErrorBoundary";
 
 
@@ -26,6 +26,17 @@ export function DesktopContent(props: {
 		scrollable: true,
 		click: "unfocus",
 	});
+
+
+	React.useEffect(() =>
+	{
+
+		if (ff.canFocus())
+			ff.focusLastItem()
+		else
+			window.setTimeout(() => ff.focusLastItem(), $defaultAnimationDurationMs + 50);
+	}, []);
+
 
 
 	return (

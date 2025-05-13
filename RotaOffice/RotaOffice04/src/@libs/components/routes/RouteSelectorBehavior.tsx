@@ -163,7 +163,7 @@ export class RouteSelectorBehavior extends Repaintable()
 
 
 	//@$logm
-	hide = () =>
+	hide = async () =>
 	{
 
 		if (this.showTimerId)
@@ -172,7 +172,7 @@ export class RouteSelectorBehavior extends Repaintable()
 			clearTimeout(this.showTimerId);
 			this.showTimerId = null;
 
-			this.activateSelectedRoute();
+			await this.activateSelectedRoute();
 
 		}
 
@@ -180,10 +180,11 @@ export class RouteSelectorBehavior extends Repaintable()
 		{
 
 			this.visible = false;
-			this.repaint();
+			await this.repaint();
 
 			if (!this.pageActivated)
-				this.activateSelectedRoute();
+				await this.activateSelectedRoute();
+
 		}
 
 	}
@@ -210,14 +211,7 @@ export class RouteSelectorBehavior extends Repaintable()
 
 		try
 		{
-			if (!selectedRoute.active)
-			{
-				await selectedRoute.activate();
-			}
-			else
-			{
-				await selectedRoute.focusContent();
-			}
+			await selectedRoute.activate();
 		}
 		catch (ex)
 		{

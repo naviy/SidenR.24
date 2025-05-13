@@ -41,7 +41,7 @@ export function create(props: RouteBehaviorProps)
 
 
 
-const Context = createContext<RouteBehavior | null>(null);
+var Context = createContext<RouteBehavior | null>(null);
 
 
 export function Provider(props: { route: RouteBehavior | null; children: ReactNode })
@@ -53,17 +53,17 @@ export function Provider(props: { route: RouteBehavior | null; children: ReactNo
 }
 
 
-export function use(): RouteBehavior | null
+export function useCurrent(): RouteBehavior | null
 {
 	return useContext(Context);
 }
 
 
 
-export function useActive()
-{
-	return Router.use()?.activeRoute;
-}
+//export function useActive()
+//{
+//	return Router.use()?.activeRoute;
+//}
 
 
 
@@ -114,6 +114,7 @@ export type Children/*<TRoute extends RouteBehavior = RouteBehavior>*/ = (
 
 export interface ChildrenProps
 {
+	router?: Router.Behavior | null;
 	route?: RouteBehavior | null;
 	globalState?: boolean | GlobalState;
 }
@@ -122,17 +123,26 @@ export interface ChildrenProps
 
 
 export function Children(
-	{ route, globalState }: ChildrenProps,
+	{
+		router,
+		route,
+		globalState
+	}: ChildrenProps,
 	children?: Children
 )
 {
 
+	if (router === undefined)
+	{
+		router = Router.useCurrent();
+	}
+
+
 	if (route === undefined)
 	{
-		let currentRoute = use();
-		let activeRoute = useActive();
+		let currentRoute = useCurrent();
 
-		route = currentRoute || activeRoute;
+		route = currentRoute || router?.activeRoute;
 	}
 
 

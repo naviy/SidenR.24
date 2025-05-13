@@ -78,6 +78,17 @@ export class FocuserBehavior
 	useProps(props: FocuserProps)
 	{
 
+		//if (this.#unmounted === true)
+		//{
+		//	this.#unmounted = undefined;
+		//}
+
+		if (this.isUnmounted)
+		{
+			this.isMounting = true;
+		}
+
+
 		this.props = props;
 
 
@@ -200,7 +211,7 @@ export class FocuserBehavior
 		let { props, parent } = this;
 
 		return !!(
-			this.#unmounted ||
+			this.isUnmounted ||
 			props.disabled && !props.forceEnabled ||
 			parent?.baseDisabled ||
 			SpaWaitingMask.isWaiting() ||
@@ -214,17 +225,43 @@ export class FocuserBehavior
 
 	get disabled()
 	{
-		//$log("mounted:", this._mounted);
-		//$log("props.disabled:", this.props.disabled);
-		//$log("parent.baseDisabled:", this.parent?.baseDisabled);
-		//$log("loadingMask.loading:", this.context.loadingMask?.loading);
-		//$log("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
-		//$log("spread.expanded:", this.context.spread && !this.context.spread.expanded);
 
-		//$log("priority:", this.priority);
-		//$log("$min_priority:", $min_priority);
-		//$log("baseDisabled:", this.baseDisabled);
-		return this.priority < $min_priority || this.baseDisabled;
+		var { baseDisabled } = this;
+		var disabled = this.priority < $min_priority || baseDisabled;
+
+
+		//if (disabled)
+		//{
+		//	$log("disabled:", disabled);
+
+		//	$log._("ff:", this);
+		//	let __ = this.toString
+
+		//	$log._("priority:", this.priority);
+		//	$log._("$min_priority:", $min_priority);
+
+		//	$log._("baseDisabled:", this.baseDisabled);
+		//	$log.__("unmounted:", this.isUnmounted);
+		//	$log.__("props.disabled:", this.props.disabled);
+		//	$log.__("parent.baseDisabled:", this.parent?.baseDisabled);
+		//	if (this.parent?.baseDisabled)
+		//	{
+		//		$log.b("parent.baseDisabled:", () =>
+		//		{
+		//			this.parent!.disabled;
+		//		});
+		//	}
+		//	$log.__("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
+		//	$log.__("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
+		//	$log.__("parent.isCollapsed:", this.parent?.isCollapsed);
+		//	$log.__("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
+		//	$log.__("parent.isNotFocused:", this.parent?.isNotFocused);
+
+		//}
+
+
+		return disabled;
+
 	}
 
 
@@ -667,13 +704,6 @@ export class FocuserBehavior
 
 		let sb: any[] = [this.toString()];
 
-
-		//if (this.caret)
-		//{
-		//	sb.push(" => ");
-		//	sb.push(...this.caret.toLogValue());
-		//}
-
 		if (this.el)
 			sb.push(this.el);
 
@@ -700,28 +730,44 @@ export class FocuserBehavior
 
 
 
-	#unmounted?: boolean;
-
-	get isFirstMount() { return this.#unmounted === undefined; }
+	//#unmounted?: boolean;
 
 
-	//@$log.m
+	#mountStatus = 0;
+
+	get isMounting(): boolean { return this.#mountStatus == 0; }
+	set isMounting(value: true) { this.#mountStatus = 0; }
+
+	get isMounted(): boolean { return this.#mountStatus == 1; }
+	set isMounted(value: true) { this.#mountStatus = 1; }
+
+	get isUnmounted(): boolean { return this.#mountStatus == 2; }
+	set isUnmounted(value: true) { this.#mountStatus = 2; }
+
+
+
+
+	//@$log.m({ filter: (ff: FocuserBehavior) => ff.name == "route-selector-link" })
 	willMount()
 	{
 
+		this.isMounting = true;
+
 		coreMountFocuser(this);
 
-
 		this.#addToParent();
-
-
-		this.#unmounted = false;
 
 	}
 
 
-	//@$log.m
-	updateDidMount()
+	//@$log.m<FocuserBehavior>({
+	//	filter: (ff) => ff.name == "route-selector-link",
+	//	filtered: (ff) =>
+	//	{
+	//		$log("#mountStatus:", ff.#mountStatus);
+	//	},
+	//})
+	updateMount()
 	{
 
 		//this._prioriry = undefined;
@@ -734,7 +780,7 @@ export class FocuserBehavior
 		{
 			$log.error(`Focuser: el is null`);
 			$log._("ff:", this);
-			$log._("Свяжите Focuser с элементом <div ref={ff.divRef}>...</div>", );
+			$log._("Свяжите Focuser с элементом <div ref={ff.divRef}>...</div>",);
 		}
 
 
@@ -757,7 +803,7 @@ export class FocuserBehavior
 
 
 
-		if (this.isFirstMount)
+		if (this.isMounting)
 		{
 			if (document.activeElement === control)
 				this.focus();
@@ -775,7 +821,7 @@ export class FocuserBehavior
 	}
 
 
-	//@$log.m
+	//@$log.m({ filter: (ff: FocuserBehavior) => ff.name == "route-selector-link" })
 	didMount()
 	{
 
@@ -785,13 +831,15 @@ export class FocuserBehavior
 		this.props.onMount?.(this);
 		this.callListenerEvent("mount", this);
 
+		this.isMounted = true;
+
 	}
 
 
 
 
-	//@$log.m
-	updateDidUnmount()
+	//@$log.m({ filter: (ff: FocuserBehavior) => ff.name == "route-selector-link" })
+	updateUnmount()
 	{
 
 		let { el } = this;
@@ -806,11 +854,11 @@ export class FocuserBehavior
 	}
 
 
-	//@$log.m
+	//@$log.m({ filter: (ff: FocuserBehavior) => ff.name == "route-selector-link" })
 	didUnmount()
 	{
 
-		this.#unmounted = true;
+		this.isUnmounted = true;
 
 
 		if (this.props.onUnmount)
@@ -885,6 +933,7 @@ export class FocuserBehavior
 
 
 
+	//@$log.m({ filter: (ff: FocuserBehavior) => ff.name == "route-selector-link" })
 	async #focusOnMount()
 	{
 
@@ -907,6 +956,7 @@ export class FocuserBehavior
 
 
 	#controlFocus = () => this.focus();
+
 
 
 	async #focusOnUpdate()
@@ -1853,10 +1903,11 @@ export class FocuserBehavior
 
 
 
+	//@$log.m
 	async focus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
-		if (this.#unmounted)
+		if (this.isUnmounted)
 		{
 			//$error("Focuser: unmounted");
 			return null;
@@ -2124,7 +2175,7 @@ export class FocuserBehavior
 	)
 	{
 
-		if (this.#unmounted)
+		if (this.isUnmounted)
 			return;
 
 		//_$log(this + " onUnfocus")
@@ -2613,7 +2664,6 @@ export class FocuserBehavior
 
 
 
-
 	findAutoFocus(): Focuser | null
 	{
 
@@ -2763,9 +2813,9 @@ export class FocuserBehavior
 		//}
 
 
-		if (this.#unmounted)
+		if (this.isUnmounted)
 		{
-			$log.__error("unmounted:", this.#unmounted);
+			$log.__error("unmounted:", this.isUnmounted);
 		}
 
 
@@ -2812,7 +2862,7 @@ export class FocuserBehavior
 	async enter(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
-		if (this.#unmounted)
+		if (this.isUnmounted)
 			return null;
 
 
@@ -2965,7 +3015,7 @@ export class FocuserBehavior
 	async enterOrFocusNext(): Promise<Focuser | null>
 	{
 
-		if (this.#unmounted)
+		if (this.isUnmounted)
 			return null;
 
 

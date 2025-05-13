@@ -30,7 +30,7 @@ export function RouteSelectorModal({ router }: { router?: RouterBehavior | null 
 
 	if (router === undefined)
 	{
-		router = Router.use();
+		router = Router.useCurrent();
 	}
 
 
@@ -143,7 +143,7 @@ function RouteLink({
 		onFocus: () => selector.selectRoute(route),
 		onEnter: () => selector.hide(),
 
-		onClick: () =>
+		onClick: (ff) =>
 		{
 			selector.selectRoute(route);
 			selector.hide();
@@ -175,11 +175,10 @@ function RouteLink({
 
 					<ListItemText
 						primary={route.title()}
-						//secondary={autoFocus + ''}
 
-						//secondary={route.lastActivateTime && moment(route.lastActivateTime).format('HH:mm:ss')}
-
-						secondary={route.description() || undefined}
+						secondary={`autoFocus: ${autoFocus}, disabled: ${ff.disabled}`}
+						////secondary={route.lastActivateTime && moment(route.lastActivateTime).format('HH:mm:ss')}
+						//secondary={route.description() || undefined}
 					/>
 
 				</ListItemButton>

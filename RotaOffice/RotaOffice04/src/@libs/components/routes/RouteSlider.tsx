@@ -51,7 +51,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 	if (router === undefined)
 	{
-		router = Router.use();
+		router = Router.useCurrent();
 	}
 
 

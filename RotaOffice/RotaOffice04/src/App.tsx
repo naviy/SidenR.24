@@ -2,7 +2,7 @@ import "./AppThemes";
 
 
 import { DesktopLayout } from "@app";
-import { $log, Div, HR, Route, Txt, useForceUpdate } from "@libs";
+import { $log, Div, Focuser, HR, Route, Txt, useForceUpdate } from "@libs";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Button } from "@mui/material";
 import List from "@mui/material/List";
@@ -21,6 +21,7 @@ import { Page043 } from "./page04/Page043";
 import { Page051 } from "./page051/Page051";
 import { Page052 } from "./page052/Page052";
 import { Page061 } from "./page06/Page061";
+import React from "react";
 
 
 
@@ -99,14 +100,14 @@ function AppDesktop()
 	let location = ReactRouter.useLocation();
 	let navigate = ReactRouter.useNavigate();
 
-	const routes = [
-		Page04.route,
-		Page041.route,
+	let routes = [
+		//Page04.route,
+		//Page041.route,
 		Page042.route,
 		Page043.route,
-		Page051.route,
-		Page052.route,
-		Page061.route,
+		//Page051.route,
+		//Page052.route,
+		//Page061.route,
 	];
 
 
@@ -120,7 +121,10 @@ function AppDesktop()
 
 		activeKey: location.pathname.substring(1) || defaultActiveKey,
 
-		onActivating: (route) => { navigate("/" + route.key) },
+		onActivating: (route) =>
+		{
+			navigate("/" + route.key);
+		},
 
 	});
 
