@@ -73,7 +73,7 @@ export class TentaCollector extends Repaintable()
 		return this.#defaultListElement ??= <TentaCollector.List key={this.id} bhv={this} />;
 	}
 
-
+	
 
 	//---
 
