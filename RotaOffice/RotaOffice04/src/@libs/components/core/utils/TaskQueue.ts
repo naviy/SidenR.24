@@ -94,6 +94,7 @@ export class TaskQueue
 
 		this.callTasks();
 
+
 		return task.promise;
 
 	}

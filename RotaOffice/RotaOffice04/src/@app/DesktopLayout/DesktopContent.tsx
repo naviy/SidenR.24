@@ -28,14 +28,14 @@ export function DesktopContent(props: {
 	});
 
 
-	React.useEffect(() =>
-	{
+	//React.useEffect(() =>
+	//{
 
-		if (ff.canFocus())
-			ff.focusLastItem()
-		else
-			window.setTimeout(() => ff.focusLastItem(), $defaultAnimationDurationMs + 50);
-	}, []);
+	//	if (ff.canFocus())
+	//		ff.focusLastItem()
+	//	else
+	//		window.setTimeout(() => ff.focusLastItem(), $defaultAnimationDurationMs + 50);
+	//}, []);
 
 
 

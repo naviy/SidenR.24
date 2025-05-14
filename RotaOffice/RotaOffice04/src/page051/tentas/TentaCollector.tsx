@@ -107,6 +107,12 @@ export class TentaCollector extends Repaintable()
 	}
 
 
+	toLogValue()
+	{
+		return [this.toString()];
+	}
+
+
 
 	//---
 

@@ -27,6 +27,8 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 	mountOnEnter,
 	unmountOnExit,
 
+	autoFocus,
+
 	children,
 
 	...sliderProps
@@ -42,6 +44,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 	mountOnEnter?: boolean;
 	unmountOnExit?: boolean;
 
+	autoFocus?: boolean;
 	//expander?: boolean;
 
 	children?: Children/*<TRoute>*/;
@@ -65,6 +68,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 			<FillSlide
 
+				id={route.key}
 				key={route.key}
 
 				appear={false}
@@ -82,6 +86,8 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 				mountOnEnter={mountOnEnter !== false}
 				unmountOnExit={unmountOnExit !== false}
+
+				autoFocus={autoFocus}
 
 				children={Children({ route }, children)}
 

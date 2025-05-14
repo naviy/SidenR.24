@@ -167,8 +167,10 @@ export interface FocuserProps
 	lastItemLikeBro?: boolean;
 
 
-	//// запрет перехода фокуса на ближайший focuser в случае unmount текущего
-	//disabledFocusOnUnmount?: boolean;
+	///** Разрешает переход фокуса на ближайший focuser в случае unmount текущего
+	//* default: true
+	//*/
+	//focusOnUnmount?: boolean; 
 
 
 	//---

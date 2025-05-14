@@ -7,7 +7,6 @@ import { FocuserBehavior } from "./ff.FocuserBehavior";
 import type { FocuserProps } from "./ff.Props";
 import { SpaWaitingMask as SpaWaitingMask_ } from "./ff.SpaWaitingMask";
 import { Task as Task_ } from "./ff.Task";
-import { $log } from "../core";
 
 
 

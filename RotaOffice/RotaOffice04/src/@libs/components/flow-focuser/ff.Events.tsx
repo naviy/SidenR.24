@@ -29,6 +29,9 @@ export module Events
 
 		focus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
 		unfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+		changeFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
+
+
 		itemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
 		itemUnfocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;
 		changeItemFocus?(ff: Focuser, prior: Focuser | null, next: Focuser | null): void;

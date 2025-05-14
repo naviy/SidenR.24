@@ -944,47 +944,47 @@ export function endFreeze()
 
 
 
-let _disabledFocusOnUnmount = 0;
+//let _disabledFocusOnUnmount = 0;
 
 
 
-export function isDisabledFocusOnUnmount(): boolean
-{
-	return !!_disabledFocusOnUnmount;
-}
+//export function isDisabledFocusOnUnmount(): boolean
+//{
+//	return !!_disabledFocusOnUnmount;
+//}
 
 
 
 
-export async function focusAfter<T>(action: () => Promise<T>, focus: () => Promise<Focuser>): Promise<T>
-{
+//export async function focusAfter<T>(action: () => Promise<T>, focus: () => Promise<Focuser>): Promise<T>
+//{
 
-	let result: T | undefined = undefined;
-
-
-	_disabledFocusOnUnmount++;
+//	let result: T | undefined = undefined;
 
 
-	try
-	{
-
-		result = await action();
-
-		await focus();
-
-	}
-	finally
-	{
-		_disabledFocusOnUnmount--;
-
-		if (_disabledFocusOnUnmount < 0)
-			_disabledFocusOnUnmount = 0;
-	}
+//	_disabledFocusOnUnmount++;
 
 
-	return result;
+//	try
+//	{
 
-}
+//		result = await action();
+
+//		await focus();
+
+//	}
+//	finally
+//	{
+//		_disabledFocusOnUnmount--;
+
+//		if (_disabledFocusOnUnmount < 0)
+//			_disabledFocusOnUnmount = 0;
+//	}
+
+
+//	return result;
+
+//}
 
 
 

@@ -1,4 +1,4 @@
-import { Keys, type Constructor, type Focuser } from "@libs";
+import { $log, Keys, type Constructor, type Focuser } from "@libs";
 import type { TentaBase } from "./TentaBase";
 
 
@@ -65,17 +65,12 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 
 
 
-		ff_onFocus(ff: Focuser)
+		ff_onChangeFocus(ff: Focuser)
 		{
+			$log(this, ".ff_onChangeFocus: ff.isFocused:", ff.isFocused);
 			this.setGlobalProp("focused", ff.isFocused, false)
 		}
 
-
-
-		ff_onUnfocus(ff: Focuser)
-		{
-			this.setGlobalProp("focused", ff.isFocused, false)
-		}
 
 
 

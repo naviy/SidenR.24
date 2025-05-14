@@ -201,7 +201,7 @@ function PileRowNodeBody({
 	tenta.bodyFf = Focuser.use({
 		name: `pile-row-node \ bodyFf#${tenta.id}`,
 		listener: tenta,
-		autoFocus: tenta.getGlobalProp("focused") ? 200 : undefined,
+		autoFocus: tenta.getGlobalProp("focused"),// ? 200 : undefined,
 	});
 
 

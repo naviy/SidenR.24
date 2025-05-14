@@ -205,7 +205,7 @@ export module GlobalState
 		TState extends GlobalState,
 		TProp extends keyof TState,
 	>(
-		state: TState | undefined,
+		state: TState | null | undefined ,
 		propName: TProp,
 		defaultValue?: TState[TProp],
 	): TState[TProp] | undefined
@@ -232,7 +232,7 @@ export module GlobalState
 		TState extends GlobalState,
 		TProp extends keyof TState,
 	>(
-		state: TState | undefined,
+		state: TState | null | undefined,
 		propName: TProp,
 		value: TState[TProp],
 		defaultValue?: TState[TProp]

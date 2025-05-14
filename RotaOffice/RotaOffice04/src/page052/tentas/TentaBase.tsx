@@ -19,8 +19,8 @@ import type { TentaAccent } from './TentaAccent';
 export interface TentaGlobalState extends GlobalState
 {
 
-	expandPhase: TentaExpandPhase;
-	openPhase: TentaOpenPhase;
+	expandPhase?: TentaExpandPhase;
+	openPhase?: TentaOpenPhase;
 	focused?: boolean;
 
 }
@@ -300,10 +300,7 @@ export class TentaBase<
 		this.#nextSibling = next || null;
 
 
-		if (this.globalState === undefined)
-		{
-			this.globalState = GlobalState.node(collector?.globalState, this.id + "");
-		}
+		this.globalState ??= GlobalState.node(collector?.globalState, this.id + "");
 
 
 		this.#loadFromGlobalState();
@@ -1215,7 +1212,7 @@ export class TentaBase<
 
 
 
-	globalState?: TentaGlobalState;
+	globalState: TentaGlobalState | null = null;
 
 
 

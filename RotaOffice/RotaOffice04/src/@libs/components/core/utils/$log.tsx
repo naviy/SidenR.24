@@ -738,7 +738,7 @@ export module $log
 				{
 
 					let result2 = (
-						typeof result === "object"
+						result && typeof result === "object"
 							? result["toLogValue"]
 								? result["toLogValue"]()
 								: { "return": result }

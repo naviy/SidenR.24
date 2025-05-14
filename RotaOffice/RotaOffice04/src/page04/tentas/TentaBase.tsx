@@ -330,10 +330,7 @@ export class TentaBase extends Repaintable()
 		this.#nextSibling = next || null;
 
 
-		if (this.globalState === undefined)
-		{
-			this.globalState = GlobalState.node(collector?.globalState, this.id + "");
-		}
+		this.globalState ??= GlobalState.node(collector?.globalState, this.id + "");
 
 
 		this.#loadFromGlobalState();
@@ -1315,7 +1312,7 @@ export class TentaBase extends Repaintable()
 
 
 
-	globalState?: TentaGlobalState;
+	globalState: TentaGlobalState | null = null;
 
 
 

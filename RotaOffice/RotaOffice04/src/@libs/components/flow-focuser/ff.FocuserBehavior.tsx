@@ -11,7 +11,7 @@ import { CaretBehavior } from "./ff.CaretBehavior";
 import
 {
 	$min_priority, coreMountFocuser, coreUnmountFocuser, currentFocuser, focuserById, focuserFocus,
-	isDisabledFocusOnUnmount, positionedFocusers, refreshModalFocusers, unfocus,
+	positionedFocusers, refreshModalFocusers, unfocus,
 	type FocusConfig
 } from "./ff.Core";
 
@@ -524,31 +524,31 @@ export class FocuserBehavior
 	itemBorderers?: Array<(ff: Focuser) => void>;
 
 
-	private _items?: Focuser[] | null;
+	#items: Focuser[] | null = null;
 
 	/**	items, отсортированные по priority */
-	private _itemsByPriority?: Focuser[] | null;
+	#itemsByPriority: Focuser[] | null = null;
 
-	private _itemsChanged?: boolean;
+	#itemsChanged: boolean = false;
 
 
-	get items(): Focuser[] | null | undefined
+	get items(): Focuser[] | null
 	{
 
-		this.resyncItems();
+		this.#resyncItems();
 
-		return this._items;
+		return this.#items;
 
 	}
 
 
 
-	get itemsByPriority(): Focuser[] | null | undefined
+	get itemsByPriority(): Focuser[] | null
 	{
 
-		this.resyncItems();
+		this.#resyncItems();
 
-		return this._itemsByPriority;
+		return this.#itemsByPriority;
 
 	}
 
@@ -872,7 +872,10 @@ export class FocuserBehavior
 		}
 
 
-		this.#unfocusOnUnmount();
+		if (this.focused && currentFocuser() === this)
+		{
+			this.#unfocusOnUnmount();
+		}
 
 
 
@@ -973,23 +976,17 @@ export class FocuserBehavior
 	async #unfocusOnUnmount()
 	{
 
-		if (this.focused && currentFocuser() === this)
-		{
+		this.unfocus();
 
-			//this.unfocus();
+		//if (this.props.focusOnUnmount === false)// || isDisabledFocusOnUnmount() || Bindera.$responseHasAction("focus"))
+		//{
+		//	this.unfocus();
+		//}
+		//else
+		//{
 
-			if (/*this.props.disabledFocusOnUnmount !== true &&*/
-				!isDisabledFocusOnUnmount()
-				//**&& !Bindera.$responseHasAction("focus")
-			)
-			{
-				Task.run(() => this.focusNearest());
-				//this.focusNearest();
-			}
-			else
-				this.unfocus();
-
-		}
+		//	Task.run(async () => await this.focusNearest() || this.unfocus());
+		//}
 
 	}
 
@@ -1090,29 +1087,33 @@ export class FocuserBehavior
 
 
 	/** сотрирует items по положению в DOM */
-	private resyncItems()
+	#resyncItems()
 	{
 
 
-		if (!this._itemsChanged)
+		if (!this.#itemsChanged)
 		{
 			return;
 		}
 
 
 
-		let items = this._items;
+		let items = this.#items;
 
 
 		if (!items || !items.length)
 		{
-			this._items = null;
-			this._itemsByPriority = null;
+			this.#items = null;
+			this.#itemsByPriority = null;
+
+			this.#itemsChanged = false;
+
+			return;
 		}
 
 
 
-		items!.sort((a, b) =>
+		items.sort((a, b) =>
 		{
 
 			if (a === b)
@@ -1135,12 +1136,12 @@ export class FocuserBehavior
 		});
 
 
-		this._itemsByPriority = [...items!];
+		this.#itemsByPriority = [...items];
 
-		this._itemsByPriority.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+		this.#itemsByPriority.sort((a, b) => (b.priority || 0) - (a.priority || 0));
 
 
-		this._itemsChanged = false;
+		this.#itemsChanged = false;
 
 	}
 
@@ -1151,16 +1152,21 @@ export class FocuserBehavior
 
 		//$$log("item:", item);
 
-		if (!this._items)
-			this._items = [item];
-		else
+		if (!this.#items)
 		{
-			this._itemsChanged = this._items.register(item) || this._itemsChanged;
+			this.#items = [item];
+			this.#itemsChanged = true;
+		}
+		else if (this.#items.register(item))
+		{
+			this.#itemsChanged = true;
 		}
 
 
 		if (item.focused)
+		{
 			this.setLastFocusedItem(item);
+		}
 
 	}
 
@@ -1170,9 +1176,9 @@ export class FocuserBehavior
 	{
 		//$$log("item:", item);
 
-		if (this._items)
+		if (this.#items)
 		{
-			this._itemsChanged = this._items.remove(item) || this._itemsChanged;
+			this.#itemsChanged = this.#items.remove(item) || this.#itemsChanged;
 		}
 
 
@@ -1903,7 +1909,6 @@ export class FocuserBehavior
 
 
 
-	//@$log.m
 	async focus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
@@ -2112,6 +2117,7 @@ export class FocuserBehavior
 		this.props.onFocus?.(this, prior, next);
 
 		this.callListenerEvent("focus", this, prior, next);
+		this.callListenerEvent("changeFocus", this, prior, next);
 
 
 		this.parent?.setLastFocusedItem(this);
@@ -2185,6 +2191,7 @@ export class FocuserBehavior
 		this.props.onUnfocus?.(this, prior, next);
 
 		this.callListenerEvent("unfocus", this, prior, next);
+		this.callListenerEvent("changeFocus", this, prior, next);
 
 		this.updateCarets(prior, mustRepaint);
 		this.updateBorderers();
@@ -2561,6 +2568,7 @@ export class FocuserBehavior
 
 
 
+	//@$log.m
 	findLastItem(): Focuser | null
 	{
 
@@ -2667,18 +2675,18 @@ export class FocuserBehavior
 	findAutoFocus(): Focuser | null
 	{
 
-		let props = this.props;
+		let { autoFocus } = this.props;
 
 		//$log(this, "items:", this.items);
-		//$log(this, "autoFocus:", props.autoFocus);
+		//$log(this, "autoFocus:", autoFocus);
 
 
-		if (props.autoFocus === true)
+		if (autoFocus === true)
 		{
 			return this; //.focus({ domFocus: "fast" });
 		}
 
-		else if (props.autoFocus === "lazy")
+		else if (autoFocus === "lazy")
 		{
 
 			this.parent?.setLastFocusedItem(this);
@@ -2687,7 +2695,7 @@ export class FocuserBehavior
 
 		}
 
-		else if (props.autoFocus === "first")
+		else if (autoFocus === "first")
 		{
 
 			let first = this.first();
@@ -2696,7 +2704,7 @@ export class FocuserBehavior
 
 		}
 
-		else if (props.autoFocus && !this.ghost)
+		else if (autoFocus && !this.ghost)
 		{
 			return this; //.focus({ domFocus: "fast" });
 		}
@@ -2999,7 +3007,7 @@ export class FocuserBehavior
 	async enterOrFocus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
-		if (this.hasItems && this._items!.find(a => a.enabled))
+		if (this.hasItems && this.#items!.find(a => a.enabled))
 		{
 			return await this.enter(focusCfg) || await this.focus(focusCfg);
 		}

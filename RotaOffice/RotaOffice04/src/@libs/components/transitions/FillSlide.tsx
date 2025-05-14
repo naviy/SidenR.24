@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
-import { useRef, type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { Transition, type TransitionStatus } from "react-transition-group";
-import { $defaultAnimationDurationMs, Focuser } from "..";
+import { $defaultAnimationDurationMs, $log, Focuser } from "..";
 import { type TransitionProps } from "./TransitionProps";
 
 
@@ -38,6 +38,8 @@ export function FillSlide({
 	flex,
 	fill,
 
+	autoFocus,
+
 	children,
 
 	...transitionProps
@@ -49,12 +51,14 @@ export function FillSlide({
 	flex?: boolean;
 	fill?: boolean;
 
+	autoFocus?: boolean;
+
 	children?: ReactNode;
 
 })
 {
 
-	var nodeRef = useRef<HTMLDivElement>(null);
+	var nodeRef = React.useRef<HTMLDivElement>(null);
 
 
 	return (
@@ -87,13 +91,12 @@ export function FillSlide({
 					fill={fill}
 
 					children={
-						<Focuser
-							ghost
-							name="FillSlide"
+						<SlideFocuser
+							id={transitionProps.id}
 							disabled={!transitionProps.in || status !== "entered"}
-						>
-							<div>{children}</div>
-						</Focuser>
+							autoFocus={autoFocus}
+							children={children}
+						/>
 					}
 
 				/>
@@ -105,6 +108,42 @@ export function FillSlide({
 
 }
 
+
+
+
+function SlideFocuser(props: {
+	id?: string;
+	disabled?: boolean;
+	autoFocus?: boolean;
+	children?: ReactNode;
+})
+{
+
+	var ff = Focuser.useGhost({
+		name: `FillSlide${props.id ? "#" + props.id : ""}`,
+		disabled: props.disabled,
+	});
+
+
+	React.useEffect(() =>
+	{
+		//$log(ff);
+		//$log._("autoFocus:", props.autoFocus);
+		//$log._("disabled:", props.disabled);
+		if (props.autoFocus && !props.disabled)
+		{
+			//Focuser.Tasks.run(() => ff.focusAutoFocusItem());
+			ff.focusAutoFocusItem();
+		}
+	});
+
+
+	return (
+		<Focuser.Area ff={ff}>
+			<div>{props.children}</div>
+		</Focuser.Area>
+	);
+}
 
 
 
