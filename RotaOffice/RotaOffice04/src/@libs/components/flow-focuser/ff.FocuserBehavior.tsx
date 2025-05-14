@@ -1,8 +1,6 @@
 import React from "react";
 
-import { $defaultAnimationDurationMs, $log } from "../core";
-
-import { adelay, arequestAnimationFrame, Keys } from "../core";
+import { $defaultAnimationDurationMs, $LOG, adelay, arequestAnimationFrame, Keys } from "../core";
 
 
 import { anchorPropsToString, type Anchor, type AnchorPart, type AnchorProps } from "./ff.Anchor";
@@ -95,6 +93,9 @@ export class FocuserBehavior
 		let { parent } = this;
 
 
+		this.#root = !parent ? null : parent.isRoot ? parent : parent.#root;
+
+
 		this.scrollContainer = props.scrollable ? this : parent?.scrollContainer || null;
 
 		this.scrollAnchorRef = props.scrollable ? React.createRef<HTMLDivElement>() : null;
@@ -168,7 +169,11 @@ export class FocuserBehavior
 	scopeOptions: ScopeOptions | null = null;
 
 
+
 	get isRoot(): boolean { return !!this.props.root };
+
+	#root: FocuserBehavior | null = null;
+	get root() { return this.#root; }
 
 
 	get isPositioned(): boolean
@@ -195,15 +200,6 @@ export class FocuserBehavior
 
 	get baseDisabled(): boolean
 	{
-		//$log("mounted:", this._mounted);
-		//$log("props.disabled:", this.props.disabled);
-		//$log("parent.baseDisabled:", this.parent?.baseDisabled);
-		//$log("loadingMask.loading:", this.context.loadingMask?.loading);
-		//$log("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
-		//_$log("parentIsCollapsed:", this.parentIsCollapsed);
-		//$log("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
-		//_$log("parentIsNotFocused:", this.parentIsNotFocused);
-
 
 		//if (this._baseDisabled != null)
 		//	return this._baseDisabled;
@@ -232,30 +228,30 @@ export class FocuserBehavior
 
 		//if (disabled)
 		//{
-		//	$log("disabled:", disabled);
+		//	$LOG("disabled:", disabled);
 
-		//	$log._("ff:", this);
+		//	$LOG._("ff:", this);
 		//	let __ = this.toString
 
-		//	$log._("priority:", this.priority);
-		//	$log._("$min_priority:", $min_priority);
+		//	$LOG._("priority:", this.priority);
+		//	$LOG._("$min_priority:", $min_priority);
 
-		//	$log._("baseDisabled:", this.baseDisabled);
-		//	$log.__("unmounted:", this.isUnmounted);
-		//	$log.__("props.disabled:", this.props.disabled);
-		//	$log.__("parent.baseDisabled:", this.parent?.baseDisabled);
+		//	$LOG._("baseDisabled:", this.baseDisabled);
+		//	$LOG.__("unmounted:", this.isUnmounted);
+		//	$LOG.__("props.disabled:", this.props.disabled);
+		//	$LOG.__("parent.baseDisabled:", this.parent?.baseDisabled);
 		//	if (this.parent?.baseDisabled)
 		//	{
-		//		$log.b("parent.baseDisabled:", () =>
+		//		$LOG.b("parent.baseDisabled:", () =>
 		//		{
 		//			this.parent!.disabled;
 		//		});
 		//	}
-		//	$log.__("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
-		//	$log.__("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
-		//	$log.__("parent.isCollapsed:", this.parent?.isCollapsed);
-		//	$log.__("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
-		//	$log.__("parent.isNotFocused:", this.parent?.isNotFocused);
+		//	$LOG.__("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
+		//	$LOG.__("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
+		//	$LOG.__("parent.isCollapsed:", this.parent?.isCollapsed);
+		//	$LOG.__("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
+		//	$LOG.__("parent.isNotFocused:", this.parent?.isNotFocused);
 
 		//}
 
@@ -270,7 +266,7 @@ export class FocuserBehavior
 
 
 	get isCollapsed() { return !!this.props.collapsed; }
-	get isNotFocused() { return !(this.focused || this.itemFocused); }
+	get isNotFocused() { return !this.focused && !this.itemFocused; }
 
 
 	ignoreOnKeyboardNavigation = false;
@@ -561,10 +557,10 @@ export class FocuserBehavior
 
 
 
-	focusing?: boolean;
+	isFocusing = false;
 
-	focused?: boolean;
-	itemFocused?: boolean;
+	focused = false;
+	itemFocused = false;
 
 	get isFocused() { return !!this.focused && !this.itemFocused }
 	//get wasPriorFocused() { return !this.isFocused && this.id === priorFocuserId() }
@@ -778,9 +774,9 @@ export class FocuserBehavior
 
 		if (!el && !this.ghost && !this.disabled)
 		{
-			$log.error(`Focuser: el is null`);
-			$log._("ff:", this);
-			$log._("Свяжите Focuser с элементом <div ref={ff.divRef}>...</div>",);
+			$LOG.error(`Focuser: el is null`);
+			$LOG._("ff:", this);
+			$LOG._("Свяжите Focuser с элементом <div ref={ff.divRef}>...</div>",);
 		}
 
 
@@ -896,7 +892,7 @@ export class FocuserBehavior
 
 		if (!parent)
 		{
-			!this.isRoot && $log.error(`Не удаётся найти parent`);
+			!this.isRoot && $LOG.error(`Не удаётся найти parent`);
 			return;
 		}
 
@@ -1015,15 +1011,10 @@ export class FocuserBehavior
 	updateCarets(prior: Focuser | null, mustRepaint: boolean)
 	{
 
-		if (!this.canFocusCaret())
-			return;
-
-
-		if (!this.carets.length)
+		if (!this.carets.length && this.canFocusCaret())
 		{
-			$log.error(`Focuser: не найден Focuser.Caret для "${this}"`);
-			$log._("focuser:", this);
-			$log._("focuser.el:", this.el);
+			$LOG.error(`Focuser: не найден Focuser.Caret для "${this}"`);
+			$LOG._("focuser:", this);
 		}
 
 		else if (this.carets.length === 1)
@@ -1075,7 +1066,7 @@ export class FocuserBehavior
 	updateItemBorderers()
 	{
 
-		this.itemBorderers && $log(this + " updateItemBorderers")
+		//this.itemBorderers && $LOG(this + " updateItemBorderers")
 
 		this.itemBorderers?.forEach(a => a(this));
 	}
@@ -1686,7 +1677,7 @@ export class FocuserBehavior
 
 		if (i < 0)
 		{
-			$log.error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
+			$LOG.error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
 			throw Error(`Как-то странно: не нашёл себя в parent.items`);
 
 		}
@@ -1731,7 +1722,7 @@ export class FocuserBehavior
 
 		if (i < 0)
 		{
-			$log.error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
+			$LOG.error("Как-то странно:", this, "не нашёл себя в items в", this.parent);
 			throw Error(`Как-то странно: не нашёл себя в parent.items`);
 		}
 
@@ -1909,6 +1900,7 @@ export class FocuserBehavior
 
 
 
+	//@$log.m
 	async focus(focusCfg?: FocusConfig | null): Promise<Focuser | null>
 	{
 
@@ -2013,7 +2005,7 @@ export class FocuserBehavior
 
 			//FlowFocuser.$hoveringFocuserDisabled = true;
 
-			this.focusing = true;
+			this.isFocusing = true;
 
 
 			await arequestAnimationFrame();
@@ -2032,7 +2024,7 @@ export class FocuserBehavior
 		}
 		finally
 		{
-			this.focusing = false;
+			this.isFocusing = false;
 
 			if ($focusExecutingCount > 0)
 				$focusExecutingCount--;
@@ -2087,6 +2079,7 @@ export class FocuserBehavior
 
 
 
+	//@$log.m
 	unfocus()
 	{
 
@@ -2799,64 +2792,64 @@ export class FocuserBehavior
 
 
 
-		$log.error("Попытка провести операцию над disabled-focuser-ом!");
-		$log._("ff:", this);
+		$LOG.error("Попытка провести операцию над disabled-focuser-ом!");
+		$LOG._("ff:", this);
 
-		$log._error("disabled:", this.disabled);
+		$LOG._error("disabled:", this.disabled);
 
 		if (this.priority < $min_priority)
 		{
-			$log.__error("priority < $min_priority");
-			$log.___error("priority:", this.priority);
-			$log.___error("$min_priority:", $min_priority);
+			$LOG.__error("priority < $min_priority");
+			$LOG.___error("priority:", this.priority);
+			$LOG.___error("$min_priority:", $min_priority);
 		}
 
 
-		$log._error("baseDisabled:", this.baseDisabled);
+		$LOG._error("baseDisabled:", this.baseDisabled);
 
 
 		//if (this._baseDisabled)
 		//{
-		//	$log.__error("this._baseDisabled:", this._baseDisabled);
+		//	$LOG.__error("this._baseDisabled:", this._baseDisabled);
 		//}
 
 
 		if (this.isUnmounted)
 		{
-			$log.__error("unmounted:", this.isUnmounted);
+			$LOG.__error("unmounted:", this.isUnmounted);
 		}
 
 
 		if (this.props.disabled && !this.props.forceEnabled)
 		{
-			$log.__error("props.disabled:", this.props.disabled);
+			$LOG.__error("props.disabled:", this.props.disabled);
 		}
 
 
 		if (SpaWaitingMask.isWaiting())
 		{
-			$log.__error("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
+			$LOG.__error("SpaWaitingMask.isWaiting:", SpaWaitingMask.isWaiting());
 		}
 
 
 		if (this.props.disableIfParentIsCollapsed && this.parent?.isCollapsed)
 		{
-			$log.__error("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
-			$log.__error("parentIsCollapsed:", this.parent?.isCollapsed);
+			$LOG.__error("props.disableIfParentIsCollapsed:", this.props.disableIfParentIsCollapsed);
+			$LOG.__error("parentIsCollapsed:", this.parent?.isCollapsed);
 		}
 
 
 		if (this.props.disableIfParentIsNotFocused && this.parent?.isNotFocused)
 		{
-			$log.__error("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
-			$log.__error("parentIsNotFocused:", this.parent?.isNotFocused);
+			$LOG.__error("props.disableIfParentIsNotFocused:", this.props.disableIfParentIsNotFocused);
+			$LOG.__error("parentIsNotFocused:", this.parent?.isNotFocused);
 		}
 
 
 		if (this.parent?.baseDisabled)
 		{
-			$log.__error("parent.baseDisabled:", this.parent!.baseDisabled);
-			$log.b("parent:", () => this.parent!.checkDisabled());
+			$LOG.__error("parent.baseDisabled:", this.parent!.baseDisabled);
+			$LOG.b("parent:", () => this.parent!.checkDisabled());
 		}
 
 
@@ -3306,9 +3299,8 @@ export class FocuserBehavior
 
 
 
-	get activated() { return this._activated === true; }
-	protected _activated?: boolean;
-
+	#activated = false;
+	get activated() { return this.#activated === true; }
 	set activated(value: boolean) { this.toggleActivated(value); }
 
 
@@ -3349,12 +3341,12 @@ export class FocuserBehavior
 
 		if (force === undefined)
 		{
-			this._activated = !this._activated;
+			this.#activated = !this.#activated;
 		}
 
-		else if (force !== !!this._activated)
+		else if (force !== this.#activated)
 		{
-			this._activated = force;
+			this.#activated = force;
 		}
 
 		else
@@ -3376,14 +3368,14 @@ export class FocuserBehavior
 			//	return true;
 			//}
 			//else
-			if (await props.onActivate(this, this._activated) !== false)
+			if (await props.onActivate(this, this.#activated) !== false)
 			{
 				return true;
 			}
 		}
 
 
-		if (await this.callListenerEventUntil("activate", this, !!this._activated))
+		if (await this.callListenerEventUntil("activate", this, this.#activated))
 		{
 			return true;
 		}
@@ -3397,7 +3389,7 @@ export class FocuserBehavior
 
 
 
-		if (this._activated)
+		if (this.#activated)
 		{
 			return !!await this.enter();
 		}
@@ -3648,7 +3640,7 @@ export class FocuserBehavior
 			}
 			catch (ex)
 			{
-				$log.error(ex);
+				$LOG.error(ex);
 			}
 		}
 

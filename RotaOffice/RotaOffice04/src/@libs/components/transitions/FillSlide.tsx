@@ -39,6 +39,7 @@ export function FillSlide({
 	fill,
 
 	autoFocus,
+	root,
 
 	children,
 
@@ -52,6 +53,7 @@ export function FillSlide({
 	fill?: boolean;
 
 	autoFocus?: boolean;
+	root?: boolean;
 
 	children?: ReactNode;
 
@@ -95,8 +97,12 @@ export function FillSlide({
 							id={transitionProps.id}
 							disabled={!transitionProps.in || status !== "entered"}
 							autoFocus={autoFocus}
-							children={children}
-						/>
+							root={root}
+						>
+							<div>
+								{children}
+							</div>
+						</SlideFocuser>
 					}
 
 				/>
@@ -112,27 +118,30 @@ export function FillSlide({
 
 
 function SlideFocuser(props: {
+
 	id?: string;
+
 	disabled?: boolean;
+
 	autoFocus?: boolean;
+	root?: boolean;
+
 	children?: ReactNode;
+
 })
 {
 
 	var ff = Focuser.useGhost({
 		name: `FillSlide${props.id ? "#" + props.id : ""}`,
 		disabled: props.disabled,
+		root: props.root,
 	});
 
 
 	React.useEffect(() =>
 	{
-		//$log(ff);
-		//$log._("autoFocus:", props.autoFocus);
-		//$log._("disabled:", props.disabled);
 		if (props.autoFocus && !props.disabled)
 		{
-			//Focuser.Tasks.run(() => ff.focusAutoFocusItem());
 			ff.focusAutoFocusItem();
 		}
 	});
@@ -140,7 +149,7 @@ function SlideFocuser(props: {
 
 	return (
 		<Focuser.Area ff={ff}>
-			<div>{props.children}</div>
+			{props.children}
 		</Focuser.Area>
 	);
 }

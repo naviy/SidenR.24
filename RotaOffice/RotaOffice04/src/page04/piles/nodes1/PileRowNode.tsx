@@ -248,13 +248,13 @@ function PileRowNodeBody({
 
 	let topMargin = tenta.topMargin();
 	let btmMargin = tenta.btmMargin();
+
 	let { tailIsVisible, tailIsSeparated } = tenta.state;
 
 	let children2 = (typeof children === "function"
 		? React.useMemo(children, [tenta.phase, tenta.stage])
 		: children
 	);
-
 
 
 	tenta.bodyFf = Focuser.use({

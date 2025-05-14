@@ -904,3 +904,8 @@ export module $log
 
 
 }
+
+
+
+
+export var $LOG = $log;

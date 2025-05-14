@@ -65,10 +65,23 @@ export function TentaFocusable<TBase extends Constructor<TentaBase & {}>>(Base: 
 
 
 
-		ff_onChangeFocus(ff: Focuser)
+		ff_onFocus(ff: Focuser)
 		{
-			$log(this, ".ff_onChangeFocus: ff.isFocused:", ff.isFocused);
+			//$log(this, ".ff_onFocus: ff.isFocused:", ff.isFocused);
 			this.setGlobalProp("focused", ff.isFocused, false)
+		}
+
+
+
+		ff_onUnfocus(ff: Focuser)
+		{
+			//$log(this, ".ff_onUnfocus: ff.focused:", ff.focused);
+			//$log._("ff.root.itemFocused:", ff.root?.itemFocused);
+
+			if (ff.root?.itemFocused === true)
+			{
+				this.setGlobalProp("focused", false, false)
+			}
 		}
 
 

@@ -23,6 +23,9 @@ export function RouteFader/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 	mountOnEnter,
 	unmountOnExit,
 
+	autoFocus,
+	root,
+
 	children,
 
 	...faderProps
@@ -33,6 +36,9 @@ export function RouteFader/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 	mountOnEnter?: boolean;
 	unmountOnExit?: boolean;
+
+	autoFocus?: boolean;
+	root?: boolean;
 
 	children?: Children/*<TRoute>*/;
 
@@ -65,6 +71,9 @@ export function RouteFader/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 
 				mountOnEnter={mountOnEnter !== false}
 				unmountOnExit={unmountOnExit !== false}
+
+				autoFocus={autoFocus}
+				root={root}
 
 				children={Children({ route }, children)}
 

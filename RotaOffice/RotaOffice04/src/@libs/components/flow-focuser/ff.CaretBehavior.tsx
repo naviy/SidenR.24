@@ -1,6 +1,6 @@
 import { useTheme, type Theme } from "@mui/material/styles";
 import { useEffect, type CSSProperties } from "react";
-import { $log, MuiColor, Repaintable, UseHookProps, Values } from "../core";
+import { $LOG, MuiColor, Repaintable, UseHookProps, Values } from "../core";
 import { Caret } from "./ff.Caret";
 import { currentFocuser } from "./ff.Core";
 import { Focuser } from "./ff.Focuser";
@@ -317,7 +317,7 @@ export class CaretBehavior extends Repaintable()
 
 			if (prior && !prior!.caret)
 			{
-				$log.error(`prior && !prior.caret`);
+				$LOG.error(`prior && !prior.caret`);
 			}
 
 

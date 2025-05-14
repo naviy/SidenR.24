@@ -28,6 +28,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 	unmountOnExit,
 
 	autoFocus,
+	root,
 
 	children,
 
@@ -45,6 +46,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 	unmountOnExit?: boolean;
 
 	autoFocus?: boolean;
+	root?: boolean;
 	//expander?: boolean;
 
 	children?: Children/*<TRoute>*/;
@@ -88,6 +90,7 @@ export function RouteSlider/*<TRoute extends RouteBehavior = RouteBehavior>*/({
 				unmountOnExit={unmountOnExit !== false}
 
 				autoFocus={autoFocus}
+				root={root}
 
 				children={Children({ route }, children)}
 

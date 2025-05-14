@@ -105,8 +105,8 @@ function AppDesktop()
 		//Page041.route,
 		Page042.route,
 		Page043.route,
-		Page051.route,
-		Page052.route,
+		//Page051.route,
+		//Page052.route,
 		//Page061.route,
 	];
 
@@ -181,7 +181,7 @@ function AppDesktop()
 
 						<DesktopLayout.Main>
 
-							<Route.Slider router={router} fill vertical offset={64} autoFocus>
+							<Route.Slider router={router} fill vertical offset={64} autoFocus root>
 
 								<DesktopLayout.Content>
 									<Route.Content globalState />
