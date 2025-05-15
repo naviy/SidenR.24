@@ -64,6 +64,73 @@ export var useWASD = false;
 
 
 
+export function runCore()
+{
+
+	if (!_rootFocuser)
+		throw new Error(`Не объявлен корневой <Focuser root />`);
+
+
+	//*startRefresh();
+
+	removeEvents();
+	addEvents();
+
+	_started = true;
+
+}
+
+
+
+export function stopCore()
+{
+	removeEvents();
+}
+
+
+
+
+function addEvents()
+{
+
+	document.addEventListener("click", onClick, false);
+	document.addEventListener("contextmenu", onContextMenu, false);
+	document.addEventListener("keydown", onKeyDown, false);
+
+	document.addEventListener("visibilitychange", onDocumentVisibilityChange, false);
+	document.addEventListener("pointerdown", onDocumentPointerDown, true);
+	window.addEventListener("blur", onWindowBlur, false);
+	window.addEventListener("focus", onWindowFocus, false);
+
+}
+
+
+function removeEvents()
+{
+
+	document.removeEventListener("click", onClick);
+	document.removeEventListener("contextmenu", onContextMenu);
+	document.removeEventListener("keydown", onKeyDown);
+
+	document.removeEventListener("visibilitychange", onDocumentVisibilityChange);
+	document.removeEventListener("pointerdown", onDocumentPointerDown);
+	window.removeEventListener("blur", onWindowBlur);
+	window.removeEventListener("focus", onWindowFocus);
+
+}
+
+
+
+
+
+
+//===
+
+
+
+
+
+
 export function coreMountFocuser(ff: Focuser)
 {
 
@@ -473,179 +540,179 @@ function focuserFocusStep(
 	//$log.b("focuserFocusStep()", () =>
 	//{
 
-		let prior = _currentFocuser;
+	let prior = _currentFocuser;
 
 
-		//$log("prior:", prior);
-		//$log("next:", next);
+	//$log("prior:", prior);
+	//$log("next:", next);
 
 
 
-		if (prior === next || next?.disabled)
+	if (prior === next || next?.disabled)
+		return;
+
+
+	let willUnfocus: Focuser[] = [];
+	let willFocus: Focuser[] = [];
+	let willItemUnfocus: Focuser[] = [];
+	let willItemFocus: Focuser[] = [];
+	let confirmFocus: Focuser[] = [];
+
+
+
+	if (prior)
+	{
+
+		prior.caret?.recalcPosition();
+
+
+		let parent: Focuser | null = prior;
+
+		while (parent)
+		{
+			willUnfocus.push(parent);
+			parent = parent.parent;
+		}
+	}
+
+
+	//$log("willUnfocus0:", willUnfocus.map(a => a.el));
+
+
+	if (next)
+	{
+
+		let parent: Focuser | null = next;
+
+		while (parent)
+		{
+
+			if (willUnfocus.remove(parent))
+			{
+				confirmFocus.push(parent);
+			}
+			else
+			{
+				willFocus.push(parent);
+			}
+
+			parent = parent.parent;
+
+		}
+
+	}
+
+
+	//$log("willUnfocus:", willUnfocus.map(a => a.toString()));
+	//$log("willFocus:", willFocus.map(a => a.toString()));
+	//$log("confirmFocus:", confirmFocus.map(a => a.toString()));
+
+	//$log("willUnfocus:", willUnfocus.map(a => a.el));
+	//$log("willFocus:", willFocus.map(a => a.el));
+	//$log("confirmFocus:", confirmFocus.map(a => a.el));
+
+
+	for (let i = willUnfocus.length - 1; i >= 0; i--)
+	{
+		setItemFocused(willUnfocus[i], false);
+	}
+
+
+	if (prior)
+	{
+		prior.focused = false;
+		//$log("focused = false", prior);
+	}
+
+
+	if (next)
+	{
+		next.focused = true;
+		//$log("focused = true", next);
+	}
+
+
+
+	_currentFocuser = next;
+
+
+
+	for (let a of confirmFocus)
+	{
+		setItemFocused(a, a !== next);
+	}
+
+
+	for (let a of willFocus)
+	{
+		setItemFocused(a, a !== next);
+	}
+
+
+
+	function setItemFocused(ff: Focuser, value: boolean)
+	{
+
+		if (ff.itemFocused === value)
 			return;
 
 
-		let willUnfocus: Focuser[] = [];
-		let willFocus: Focuser[] = [];
-		let willItemUnfocus: Focuser[] = [];
-		let willItemFocus: Focuser[] = [];
-		let confirmFocus: Focuser[] = [];
+		if (value)
+			willItemFocus.push(ff);
+		else
+			willItemUnfocus.push(ff);
+
+
+		ff.itemFocused = value;
+
+	}
 
 
 
-		if (prior)
+	//AnimationFrame.beginUpdate();
+
+
+	try
+	{
+		//requestAnimationFrame(() =>
+		//{
+
+		//console.time("animate FF");
+
+		for (let a of willItemUnfocus)
 		{
-
-			prior.caret?.recalcPosition();
-
-
-			let parent: Focuser | null = prior;
-
-			while (parent)
-			{
-				willUnfocus.push(parent);
-				parent = parent.parent;
-			}
+			a.onItemUnfocus(prior, next);
 		}
 
-
-		//$log("willUnfocus0:", willUnfocus.map(a => a.el));
-
-
-		if (next)
+		for (let a of willItemFocus)
 		{
-
-			let parent: Focuser | null = next;
-
-			while (parent)
-			{
-
-				if (willUnfocus.remove(parent))
-				{
-					confirmFocus.push(parent);
-				}
-				else
-				{
-					willFocus.push(parent);
-				}
-
-				parent = parent.parent;
-
-			}
-
+			a.onItemFocus(prior, next);
 		}
-
-
-		//$log("willUnfocus:", willUnfocus.map(a => a.toString()));
-		//$log("willFocus:", willFocus.map(a => a.toString()));
-		//$log("confirmFocus:", confirmFocus.map(a => a.toString()));
-
-		//$log("willUnfocus:", willUnfocus.map(a => a.el));
-		//$log("willFocus:", willFocus.map(a => a.el));
-		//$log("confirmFocus:", confirmFocus.map(a => a.el));
-
-
-		for (let i = willUnfocus.length - 1; i >= 0; i--)
-		{
-			setItemFocused(willUnfocus[i], false);
-		}
-
-
-		if (prior)
-		{
-			prior.focused = false;
-			//$log("focused = false", prior);
-		}
-
-
-		if (next)
-		{
-			next.focused = true;
-			//$log("focused = true", next);
-		}
-
-
-
-		_currentFocuser = next;
-
 
 
 		for (let a of confirmFocus)
 		{
-			setItemFocused(a, a !== next);
+			a.onChangeItemFocus(prior, next, /*mustRepaint*/willUnfocus.indexOf(a) < 0 && willFocus.indexOf(a) < 0);
 		}
 
+		for (let a of willUnfocus)
+		{
+			a.onUnfocus(prior, next, /*mustRepaint*/willFocus.indexOf(a) < 0);
+		}
 
 		for (let a of willFocus)
 		{
-			setItemFocused(a, a !== next);
+			a.onFocus(prior, next, focusCfg, mustRepaint);
 		}
 
+		//console.timeEnd("animate FF");
 
-
-		function setItemFocused(ff: Focuser, value: boolean)
-		{
-
-			if (ff.itemFocused === value)
-				return;
-
-
-			if (value)
-				willItemFocus.push(ff);
-			else
-				willItemUnfocus.push(ff);
-
-
-			ff.itemFocused = value;
-
-		}
-
-
-
-		//AnimationFrame.beginUpdate();
-
-
-		try
-		{
-			//requestAnimationFrame(() =>
-			//{
-
-			//console.time("animate FF");
-
-			for (let a of willItemUnfocus)
-			{
-				a.onItemUnfocus(prior, next);
-			}
-
-			for (let a of willItemFocus)
-			{
-				a.onItemFocus(prior, next);
-			}
-
-
-			for (let a of confirmFocus)
-			{
-				a.onChangeItemFocus(prior, next, /*mustRepaint*/willUnfocus.indexOf(a) < 0 && willFocus.indexOf(a) < 0);
-			}
-
-			for (let a of willUnfocus)
-			{
-				a.onUnfocus(prior, next, /*mustRepaint*/willFocus.indexOf(a) < 0);
-			}
-
-			for (let a of willFocus)
-			{
-				a.onFocus(prior, next, focusCfg, mustRepaint);
-			}
-
-			//console.timeEnd("animate FF");
-
-			//});
-		}
-		finally
-		{
-			//AnimationFrame.endUpdate();
-		}
+		//});
+	}
+	finally
+	{
+		//AnimationFrame.endUpdate();
+	}
 
 	//	$log("END focuserFocusStep");
 	//});
@@ -757,112 +824,6 @@ export var unfocusEvent = (function unfocusEvent(e: Event)
 
 //===
 
-
-
-
-
-
-export function runCore()
-{
-
-	if (!_rootFocuser)
-		throw new Error(`Не объявлен корневой <Focuser root />`);
-
-
-	//*startRefresh();
-
-	removeEvents();
-	addEvents();
-
-	_started = true;
-
-}
-
-
-
-export function stopCore()
-{
-
-	//**stopRefresh();
-
-	removeEvents();
-
-}
-
-
-
-
-function addEvents()
-{
-
-	document.addEventListener("click", onClick, false);
-	document.addEventListener("contextmenu", onContextMenu, false);
-	document.addEventListener("keydown", onKeyDown, false);
-
-}
-
-
-function removeEvents()
-{
-
-	document.removeEventListener("click", onClick);
-	document.removeEventListener("contextmenu", onContextMenu);
-	//document.removeEventListener("mouseover", onHover);
-	document.removeEventListener("keydown", onKeyDown);
-
-}
-
-
-
-
-//**export function startRefresh()
-//**{
-//**
-//**	if (!isFreezed())
-//**	{
-//**		refreshAllCursors();
-//**	}
-//**
-//**	//$log("isFreezed:", isFreezed());
-//**
-//**
-//**	if (_currentFocuser && _currentFocuser.useNoAnimation && !_currentFocuser.useForceAnimation && !_currentFocuser.useFastAnimation)
-//**	{
-//**		return _animationFrameHandle = window.requestAnimationFrame(startRefresh);
-//**	}
-//**	else
-//**	{
-//**		return _animationFrameHandle = window.setTimeout(() =>
-//**			window.requestAnimationFrame(startRefresh),
-//**			20
-//**		);
-//**	}
-//**
-//**}
-
-
-
-
-//**export function stopRefresh()
-//**{
-//**
-//**	if (!_animationFrameHandle)
-//**		return;
-//**
-//**
-//**	clearTimeout(_animationFrameHandle);
-//**	window.cancelAnimationFrame(_animationFrameHandle);
-//**
-//**	_animationFrameHandle = null;
-//**
-//**}
-
-
-
-
-
-
-//===
 
 
 
@@ -996,12 +957,117 @@ export function endFreeze()
 
 
 
+// #region Отменяем первый onClick по неактивному окну
 
 
-let lastClickTimeStamp: number;
+
+let windowIsActive = true;
+let windowFocusedTime = performance.now();
 
 
-const onClick = (async function onClick(e: MouseEvent)
+
+function onDocumentVisibilityChange()
+{
+	if (document.visibilityState === 'hidden')
+	{
+		//$log("document.hidden");
+		windowIsActive = false;
+	}
+}
+
+function onWindowBlur()
+{
+	//$log("onWindowBlur");
+	windowIsActive = false;
+}
+
+function onWindowFocus()
+{
+	//$log("onWindowFocus");
+	windowIsActive = true;
+	windowFocusedTime = performance.now();
+}
+
+
+function onDocumentPointerDown(e: Event)
+{
+
+	//$log("onDocumentPointerDown");
+	var now = performance.now();
+	var cameFromInactive = !windowIsActive || (now - windowFocusedTime < 50);
+
+	//$log._("cameFromInactive:", cameFromInactive);
+	//$log.__("windowIsActive:", windowIsActive);
+	//$log.__("now:", now);
+	//$log.__("windowFocusedTime:", windowFocusedTime);
+	//$log.__("now - windowFocusedTime:", now - windowFocusedTime);
+
+
+	windowIsActive = true;
+	windowFocusedTime = performance.now();
+
+
+	if (cameFromInactive)
+	{
+		function blockClick(ee: Event)
+		{
+			//$log("blockClick");
+			ee.stopImmediatePropagation(); // до остальных слушателей не дойдёт
+			ee.preventDefault();           // не будет перехода по ссылкам, фокуса и т.-д.
+			document.removeEventListener('click', blockClick, true);
+		};
+
+		document.addEventListener('click', blockClick, true); // capture = true
+	}
+
+}
+
+
+
+//var lastFocusTs = performance.now();
+
+
+//function onWindowFocus(e: FocusEvent)
+//{
+//	lastFocusTs = performance.now();
+//	$log("onWindowFocus");
+//	$log._("lastFocusTs:", lastFocusTs);
+//}
+
+
+
+//function onWindowPointerDown(e: FocusEvent)
+//{
+
+//	var now = performance.now();
+
+//	// 50 мс обычно хватает: focus приходит первым, затем pointerdown в той же серии событий
+//	var justRegainedFocus = now - lastFocusTs < 50;
+
+//	$log("onWindowPointerDown");
+//	$log._("now:", now);
+//	$log.__("lastFocusTs:", lastFocusTs);
+//	$log.__("now - lastFocusTs:", now - lastFocusTs);
+//	$log._("justRegainedFocus:", justRegainedFocus);
+
+
+//	if (justRegainedFocus)
+//	{
+//		e.preventDefault();
+//		e.stopImmediatePropagation();
+//	}
+
+//}
+
+
+// #endregion
+
+
+
+var lastClickTimeStamp: number;
+
+
+var onClick = (async function onClick(e: MouseEvent)
 {
 
 	if (!_started)
@@ -1022,6 +1088,7 @@ const onClick = (async function onClick(e: MouseEvent)
 	if (lastClickTimeStamp === e.timeStamp)
 		return;
 
+	//$log("ONCLICK")
 
 	lastClickTimeStamp = e.timeStamp;
 

@@ -176,9 +176,9 @@ function RouteLink({
 					<ListItemText
 						primary={route.title()}
 
-						secondary={`autoFocus: ${autoFocus}, disabled: ${ff.disabled}`}
+						//secondary={`autoFocus: ${autoFocus}, disabled: ${ff.disabled}`}
 						////secondary={route.lastActivateTime && moment(route.lastActivateTime).format('HH:mm:ss')}
-						//secondary={route.description() || undefined}
+						secondary={route.description() || undefined}
 					/>
 
 				</ListItemButton>

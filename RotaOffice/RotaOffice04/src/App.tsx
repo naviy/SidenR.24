@@ -101,13 +101,13 @@ function AppDesktop()
 	let navigate = ReactRouter.useNavigate();
 
 	let routes = [
-		//Page04.route,
-		//Page041.route,
+		Page04.route,
+		Page041.route,
 		Page042.route,
 		Page043.route,
-		//Page051.route,
-		//Page052.route,
-		//Page061.route,
+		Page051.route,
+		Page052.route,
+		Page061.route,
 	];
 
 
